@@ -23,3 +23,4 @@ public class ShooterSubsystem extends SubsystemBase {
         return run(() -> shooterMotor.setVoltage(voltage));
     }
 }
+
