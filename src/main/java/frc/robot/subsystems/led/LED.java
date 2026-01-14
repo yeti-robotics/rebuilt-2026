@@ -9,6 +9,7 @@ public class LED extends SubsystemBase {
     private final AddressableLEDBuffer ledBuffer;
     private final AddressableLEDBufferView leftStrip;
     private final AddressableLEDBufferView rightStrip;
+    private LEDPattern currentPattern;
 
     public LED() {
         ledStrip = new AddressableLED(LEDConstants.LED_STRIP_PORT);
@@ -29,9 +30,13 @@ public class LED extends SubsystemBase {
         if (!gameData.isEmpty()) {
             switch (gameData.charAt(0)) {
                 case 'B':
-                    applyPattern(LEDModes.BLUE_ALLIANCE_ACTIVE.pattern);
+                    if (currentPattern != LEDModes.BLUE_ALLIANCE_ACTIVE.pattern) {
+                        applyPattern(LEDModes.BLUE_ALLIANCE_ACTIVE.pattern);
+                    }
                 case 'R':
-                    applyPattern(LEDModes.RED_ALLIANCE_ACTIVE.pattern);
+                    if (currentPattern != LEDModes.RED_ALLIANCE_ACTIVE.pattern) {
+                        applyPattern(LEDModes.RED_ALLIANCE_ACTIVE.pattern);
+                    }
                 default:
                     break;
             }
@@ -41,9 +46,10 @@ public class LED extends SubsystemBase {
     public void applyPattern(LEDPattern pattern) {
         pattern.applyTo(leftStrip);
         pattern.applyTo(rightStrip);
+        currentPattern = pattern;
     }
 
     public Command runPattern(LEDModes pattern) {
-        return runOnce(() -> applyPattern(pattern.pattern)).repeatedly().ignoringDisable(true);
+        return runOnce(() -> applyPattern(pattern.pattern)).repeatedly().ignoringDisable(true).andThen(() -> currentPattern = pattern.pattern);
     }
 }
