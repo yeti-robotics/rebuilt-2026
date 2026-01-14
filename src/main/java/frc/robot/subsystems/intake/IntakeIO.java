@@ -10,7 +10,7 @@ public interface IntakeIO {
         public double rollerVoltage = 0;
     }
 
-    public default void updateInputs(IntakeIOInputs inputs){}
+    public default void updateInputs(IntakeIOInputs inputs) {}
 
     public default void setIntakeMotorDuty(double volts) {}
 }

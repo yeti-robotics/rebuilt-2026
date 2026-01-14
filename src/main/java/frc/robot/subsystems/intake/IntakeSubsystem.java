@@ -12,11 +12,11 @@ public class IntakeSubsystem extends SubsystemBase {
         io.updateInputs(inputs);
     }
 
-    public IntakeSubsystem(IntakeIO io){
+    public IntakeSubsystem(IntakeIO io) {
         this.io = io;
     }
 
-    public boolean isEngaged(){
+    public boolean isEngaged() {
         return inputs.isEngaged;
     }
 

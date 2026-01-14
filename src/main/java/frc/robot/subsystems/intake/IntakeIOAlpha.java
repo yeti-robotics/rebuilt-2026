@@ -9,13 +9,13 @@ public class IntakeIOAlpha implements IntakeIO {
     public final TalonFX intakeMotor;
     public final CANrange canRangeIntake;
 
-    public IntakeIOAlpha(){
+    public IntakeIOAlpha() {
         intakeMotor = new TalonFX(IntakeConfigs.intakeMotorID, Constants.canBus);
         canRangeIntake = new CANrange(IntakeConfigs.intakeSensorID, Constants.canBus);
     }
 
     @Override
-    public void updateInputs(IntakeIOInputs inputs){
+    public void updateInputs(IntakeIOInputs inputs) {
         inputs.rollerRPM = intakeMotor.getVelocity().getValueAsDouble();
         inputs.isEngaged = canRangeIntake.getIsDetected().getValue();
         inputs.rollerVoltage = intakeMotor.getMotorVoltage().getValueAsDouble();
