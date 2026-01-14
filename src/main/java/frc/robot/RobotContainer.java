@@ -39,6 +39,9 @@ public class RobotContainer {
     private final Drive drive;
     private final LED led;
 
+    // Commands
+    private final frc.robot.commands.LED.ShooterLEDCommand ledCommand;
+
     // Controller
     private final CommandXboxController controller = new CommandXboxController(0);
 

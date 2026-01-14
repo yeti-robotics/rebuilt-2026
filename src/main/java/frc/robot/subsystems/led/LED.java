@@ -5,7 +5,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class LED extends SubsystemBase {
-    public AddressableLED ledStrip;
+    private final AddressableLED ledStrip;
     private final AddressableLEDBuffer ledBuffer;
     private final AddressableLEDBufferView leftStrip;
     private final AddressableLEDBufferView rightStrip;
@@ -23,8 +23,6 @@ public class LED extends SubsystemBase {
 
     @Override
     public void periodic() {
-        ledStrip.setData(ledBuffer);
-
         String gameData;
         gameData = DriverStation.getGameSpecificMessage();
         if (!gameData.isEmpty()) {
@@ -47,6 +45,19 @@ public class LED extends SubsystemBase {
         pattern.applyTo(leftStrip);
         pattern.applyTo(rightStrip);
         currentPattern = pattern;
+        sendData();
+    }
+
+    public int getBufferLength() {
+        return ledBuffer.getLength();
+    }
+
+    public void setRGB(int i, int r, int g, int b) {
+        ledBuffer.setRGB(i, r, g, b);
+    }
+
+    public void sendData() {
+        ledStrip.setData(ledBuffer);
     }
 
     public Command runPattern(LEDModes pattern) {
