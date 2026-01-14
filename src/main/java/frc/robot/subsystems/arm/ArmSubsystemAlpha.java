@@ -1,13 +1,13 @@
 package frc.robot.subsystems.arm;
 
+import static edu.wpi.first.wpilibj2.command.Commands.runOnce;
+
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.littletonrobotics.junction.Logger;
 
-import static edu.wpi.first.wpilibj2.command.Commands.runOnce;
-
-public class ArmSubsystemAlpha extends SubsystemBase{
+public class ArmSubsystemAlpha extends SubsystemBase {
     private ArmIOAlpha io;
     private ArmIOAlphaInputsAutoLogged inputs = new ArmIOAlphaInputsAutoLogged();
 
@@ -32,6 +32,4 @@ public class ArmSubsystemAlpha extends SubsystemBase{
     public double getTargetPosition() {
         return inputs.targetPositionRotation;
     }
-
-
 }

@@ -12,14 +12,14 @@ public class ArmConfigsAlpha {
 
     private static final Slot0Configs SLOT_0_CONFIGS = Robot.isReal()
             ? new Slot0Configs()
-            .withKP(0) // placeholder values
-            .withKI(0)
-            .withKD(0)
-            .withKG(0)
-            .withKV(0)
-            .withKA(0)
-            .withKS(0)
-            .withGravityType(GravityTypeValue.Arm_Cosine)
+                    .withKP(0) // placeholder values
+                    .withKI(0)
+                    .withKD(0)
+                    .withKG(0)
+                    .withKV(0)
+                    .withKA(0)
+                    .withKS(0)
+                    .withGravityType(GravityTypeValue.Arm_Cosine)
             : new Slot0Configs();
 
     static final TalonFXConfiguration armTalonFXConfigs = new TalonFXConfiguration()
@@ -32,5 +32,4 @@ public class ArmConfigsAlpha {
             .withMotorOutput(new MotorOutputConfigs()
                     .withInverted(InvertedValue.CounterClockwise_Positive)
                     .withNeutralMode(NeutralModeValue.Brake));
-
 }
