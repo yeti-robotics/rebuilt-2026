@@ -3,7 +3,9 @@ package frc.robot.subsystems.intake;
 import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.hardware.CANrange;
 import com.ctre.phoenix6.hardware.TalonFX;
+import frc.robot.Robot;
 import frc.robot.constants.Constants;
+import frc.robot.util.sim.PhysicsSim;
 
 public class IntakeIOAlpha implements IntakeIO {
     public final TalonFX intakeMotor;
@@ -11,7 +13,10 @@ public class IntakeIOAlpha implements IntakeIO {
 
     public IntakeIOAlpha() {
         intakeMotor = new TalonFX(IntakeConfigs.intakeMotorID, Constants.canBus);
-        canRangeIntake = new CANrange(IntakeConfigs.intakeSensorID, Constants.canBus);
+        canRangeIntake = new CANrange(IntakeConfigs.intakeCanRangeID, Constants.canBus);
+        if (Robot.isSimulation()){
+            PhysicsSim.getInstance().addTalonFX(intakeMotor);
+        }
     }
 
     @Override

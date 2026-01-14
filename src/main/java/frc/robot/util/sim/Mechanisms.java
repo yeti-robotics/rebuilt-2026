@@ -5,8 +5,7 @@ import edu.wpi.first.epilogue.Logged;
 @Logged
 public class Mechanisms {
 
-    public Mechanisms() {
-    }
-    public void publishComponentPoses() {
-    }
+    public Mechanisms() {}
+
+    public void publishComponentPoses() {}
 }

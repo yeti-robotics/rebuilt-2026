@@ -22,7 +22,7 @@ public class IntakeSubsystem extends SubsystemBase {
         return inputs.isEngaged;
     }
 
-    public Command setIntake(double power) {
+    public Command setRoller(double power) {
         return runEnd(
                 () -> {
                     io.setIntakeMotorDuty(power);
