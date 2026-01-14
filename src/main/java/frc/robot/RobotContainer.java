@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.DriveCommands;
+import frc.robot.commands.ShooterLEDCommand;
 import frc.robot.constants.Constants;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.drive.Drive;
@@ -40,7 +41,7 @@ public class RobotContainer {
     private final LED led;
 
     // Commands
-    private final frc.robot.commands.LED.ShooterLEDCommand ledCommand;
+    private final ShooterLEDCommand shooterLEDCommand;
 
     // Controller
     private final CommandXboxController controller = new CommandXboxController(0);
@@ -61,7 +62,6 @@ public class RobotContainer {
                         new ModuleIOTalonFX(TunerConstants.FrontRight),
                         new ModuleIOTalonFX(TunerConstants.BackLeft),
                         new ModuleIOTalonFX(TunerConstants.BackRight));
-                led = new LED();
 
                 break;
 
@@ -73,7 +73,6 @@ public class RobotContainer {
                         new ModuleIOSim(TunerConstants.FrontRight),
                         new ModuleIOSim(TunerConstants.BackLeft),
                         new ModuleIOSim(TunerConstants.BackRight));
-                led = new LED();
 
                 break;
 
@@ -81,10 +80,12 @@ public class RobotContainer {
                 // Replayed robot, disable IO implementations
                 drive = new Drive(
                         new GyroIO() {}, new ModuleIO() {}, new ModuleIO() {}, new ModuleIO() {}, new ModuleIO() {});
-                led = new LED();
 
                 break;
         }
+
+        led = new LED();
+        shooterLEDCommand = new ShooterLEDCommand(led);
 
         // Set up auto routines
         autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
