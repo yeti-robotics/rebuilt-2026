@@ -66,12 +66,4 @@ public class ShooterLEDCommand extends Command {
         }
         ledSubsystem.sendData();
     }
-
-    @Override
-    public void end(boolean interrupted) {}
-
-    @Override
-    public boolean isFinished() {
-        return false;
-    }
 }
