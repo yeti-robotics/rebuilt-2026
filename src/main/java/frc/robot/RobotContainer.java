@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.ShooterLEDCommand;
+import frc.robot.commands.SnowfallLEDCommand;
 import frc.robot.constants.Constants;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.drive.Drive;
@@ -42,6 +43,7 @@ public class RobotContainer {
 
     // Commands
     private final ShooterLEDCommand shooterLEDCommand;
+    private final SnowfallLEDCommand snowfallLEDCommand;
 
     // Controller
     private final CommandXboxController controller = new CommandXboxController(0);
@@ -86,6 +88,7 @@ public class RobotContainer {
 
         led = new LED();
         shooterLEDCommand = new ShooterLEDCommand(led);
+        snowfallLEDCommand = new SnowfallLEDCommand(led, 2);
 
         // Set up auto routines
         autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
