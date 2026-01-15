@@ -9,7 +9,7 @@ public class LED extends SubsystemBase {
     private final AddressableLEDBuffer ledBuffer;
     private final AddressableLEDBufferView leftStrip;
     private final AddressableLEDBufferView rightStrip;
-    private LEDPattern currentPattern;
+    private LEDModes currentLEDMode;
 
     public LED() {
         ledStrip = new AddressableLED(LEDConstants.LED_STRIP_PORT);
@@ -17,34 +17,93 @@ public class LED extends SubsystemBase {
         leftStrip = ledBuffer.createView(0, (LEDConstants.LED_COUNT / 2) - 1);
         rightStrip = ledBuffer.createView(LEDConstants.LED_COUNT / 2, LEDConstants.LED_COUNT - 1).reversed();
         ledStrip.setLength(ledBuffer.getLength());
-        ledStrip.setData(ledBuffer);
         ledStrip.start();
     }
 
+    public enum ShiftType {
+        TRANSITION_SHIFT,
+        RED_SHIFT,
+        BLUE_SHIFT,
+        ENDGAME_SHIFT;
+
+        public ShiftType invert() {
+            return this == RED_SHIFT ? BLUE_SHIFT : RED_SHIFT;
+        }
+    }
+
+    private ShiftType firstShift = ShiftType.TRANSITION_SHIFT;
+    boolean teleopDataRead = false;
+
     @Override
     public void periodic() {
-        String gameData;
-        gameData = DriverStation.getGameSpecificMessage();
-        if (!gameData.isEmpty()) {
-            switch (gameData.charAt(0)) {
-                case 'B':
-                    if (currentPattern != LEDModes.BLUE_ALLIANCE_ACTIVE.pattern) {
-                        applyPattern(LEDModes.BLUE_ALLIANCE_ACTIVE.pattern);
+        if (currentLEDMode != null && currentLEDMode.isAnimation) {
+            updateCurrentPattern();
+        }
+        ShiftType currentShift = null;
+
+        if (DriverStation.isTeleopEnabled()) {
+            double matchTime = DriverStation.getMatchTime();
+            if (!teleopDataRead) {
+                String gameData = DriverStation.getGameSpecificMessage();
+
+                if (!gameData.isEmpty()) {
+                    switch (gameData.charAt(0)) {
+                        case 'B':
+                            firstShift = ShiftType.RED_SHIFT;
+                            teleopDataRead = true;
+                            break;
+                        case 'R':
+                            firstShift = ShiftType.BLUE_SHIFT;
+                            teleopDataRead = true;
+                            break;
+                        default:
+                            break;
                     }
-                case 'R':
-                    if (currentPattern != LEDModes.RED_ALLIANCE_ACTIVE.pattern) {
-                        applyPattern(LEDModes.RED_ALLIANCE_ACTIVE.pattern);
-                    }
-                default:
-                    break;
+                }
+            }
+
+            if (matchTime >= 130) {
+                currentShift = ShiftType.TRANSITION_SHIFT;
+            } else if (matchTime <= 30) {
+                currentShift = ShiftType.ENDGAME_SHIFT;
+            } else {
+                int blockTime = (int) (130 - matchTime) / 25;
+                currentShift = blockTime % 2 == 0 ? firstShift : firstShift.invert();
+            }
+        }
+
+        if (currentLEDMode != null && currentLEDMode.isAnimation) {
+            updateCurrentPattern();
+        }
+
+        if (currentShift != null) {
+            LEDModes computedLEDMode = mapShiftToLED(currentShift);
+            if (currentLEDMode != computedLEDMode) {
+                applyPattern(computedLEDMode);
             }
         }
     }
 
-    public void applyPattern(LEDPattern pattern) {
-        pattern.applyTo(leftStrip);
-        pattern.applyTo(rightStrip);
-        currentPattern = pattern;
+    public LEDModes mapShiftToLED(ShiftType shift) {
+        return switch (shift) {
+            case TRANSITION_SHIFT -> LEDModes.TRANSITION_ACTIVE;
+            case RED_SHIFT -> LEDModes.RED_ALLIANCE_ACTIVE;
+            case BLUE_SHIFT -> LEDModes.BLUE_ALLIANCE_ACTIVE;
+            case ENDGAME_SHIFT ->  LEDModes.ENDGAME_ACTIVE;
+        };
+    }
+
+    private void applyPattern(LEDModes mode) {
+        currentLEDMode = mode;
+        updateCurrentPattern();
+    }
+
+    public void updateCurrentPattern() {
+        if (currentLEDMode == null) return;
+
+        currentLEDMode.pattern.applyTo(leftStrip);
+        currentLEDMode.pattern.applyTo(rightStrip);
+
         sendData();
     }
 
@@ -61,6 +120,6 @@ public class LED extends SubsystemBase {
     }
 
     public Command runPattern(LEDModes pattern) {
-        return runOnce(() -> applyPattern(pattern.pattern)).repeatedly().ignoringDisable(true).andThen(() -> currentPattern = pattern.pattern);
+        return runOnce(() -> applyPattern(pattern)).ignoringDisable(true);
     }
 }

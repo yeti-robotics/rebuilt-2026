@@ -9,31 +9,31 @@ import frc.robot.subsystems.led.LED;
 
 public class SnowfallLEDCommand extends Command {
     /** Creates a new SnowfallLEDCommand. */
-    private final LED ledSubsystem;
+    private final LED leds;
 
     long waitTime;
     long startTime;
     int stage;
 
-    public SnowfallLEDCommand(LED ledSubsystem, long waitTime) {
-        this.ledSubsystem = ledSubsystem;
+    public SnowfallLEDCommand(LED leds, long waitTime) {
+        this.leds = leds;
         this.waitTime = waitTime;
         this.startTime = System.currentTimeMillis();
         stage = 0;
-        addRequirements(ledSubsystem);
+        addRequirements(leds);
     }
 
     // Called when the command is initially scheduled.
     @Override
     public void initialize() {
-        for (int i = 0; i < ledSubsystem.getBufferLength(); i++) {
+        for (int i = 0; i < leds.getBufferLength(); i++) {
             if (i % 4 == stage) {
-                ledSubsystem.setRGB(i, 255, 255, 255);
+                leds.setRGB(i, 255, 255, 255);
                 continue;
             }
-            ledSubsystem.setRGB(i, 20, 120, 255);
+            leds.setRGB(i, 20, 120, 255);
         }
-        ledSubsystem.sendData();
+        leds.sendData();
         stage++;
     }
 
@@ -41,14 +41,14 @@ public class SnowfallLEDCommand extends Command {
     @Override
     public void execute() {
         if (System.currentTimeMillis() - startTime >= waitTime) {
-            for (int i = 0; i < ledSubsystem.getBufferLength(); i++) {
+            for (int i = 0; i < leds.getBufferLength(); i++) {
                 if (i % 4 == stage) {
-                    ledSubsystem.setRGB(i, 255, 255, 255);
+                    leds.setRGB(i, 255, 255, 255);
                     continue;
                 }
-                ledSubsystem.setRGB(i, 20, 120, 255);
+                leds.setRGB(i, 20, 120, 255);
             }
-            ledSubsystem.sendData();
+            leds.sendData();
             stage = stage + 1 > 3 ? 0 : stage + 1;
             startTime = System.currentTimeMillis();
         }

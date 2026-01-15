@@ -28,6 +28,7 @@ import frc.robot.subsystems.drive.ModuleIO;
 import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOTalonFX;
 import frc.robot.subsystems.led.LED;
+import frc.robot.subsystems.led.LEDModes;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
@@ -134,6 +135,12 @@ public class RobotContainer {
                                 () -> drive.setPose(new Pose2d(drive.getPose().getTranslation(), Rotation2d.kZero)),
                                 drive)
                         .ignoringDisable(true));
+
+        controller.button(1).onTrue(led.runPattern(LEDModes.BLUE_ALLIANCE_ACTIVE));
+        controller.button(2).onTrue(led.runPattern(LEDModes.RED_ALLIANCE_ACTIVE));
+        controller.button(3).onTrue(led.runPattern(LEDModes.BLUE_TO_RED_TRANSITION));
+        controller.button(4).onTrue(led.runPattern(LEDModes.RED_TO_BLUE_TRANSITION));
+        controller.button(5).onTrue(led.runPattern(LEDModes.RAINBOW));
     }
 
     /**
