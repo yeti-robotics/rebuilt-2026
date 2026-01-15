@@ -5,9 +5,9 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.signals.InvertedValue;
 
 public class IntakeConfigs {
-    static final int intakeMotorID = 33;
-    static final int intakeCanRangeID = 34;
+    static final int INTAKE_MOTOR_ID = 33;
+    static final int INTAKE_SENSOR_ID = 34;
 
-    static TalonFXConfiguration intakeTalonFXConfigs = new TalonFXConfiguration()
+    static TalonFXConfiguration INTAKE_TALONFX_CONFIGS = new TalonFXConfiguration()
             .withMotorOutput(new MotorOutputConfigs().withInverted(InvertedValue.Clockwise_Positive));
 }

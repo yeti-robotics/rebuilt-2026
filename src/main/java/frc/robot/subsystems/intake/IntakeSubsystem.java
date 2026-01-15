@@ -22,13 +22,10 @@ public class IntakeSubsystem extends SubsystemBase {
         return inputs.isEngaged;
     }
 
-    public Command setRoller(double power) {
-        return runEnd(
-                () -> {
-                    io.setIntakeMotorDuty(power);
-                },
-                () -> {
-                    io.setIntakeMotorDuty(0);
-                });
+    public Command setRoller(double volts) {
+        return startEnd(
+                () -> io.setIntakeMotorDuty(volts),
+                () -> io.setIntakeMotorDuty(0)
+        );
     }
 }
