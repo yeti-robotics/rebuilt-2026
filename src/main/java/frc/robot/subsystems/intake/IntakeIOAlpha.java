@@ -1,6 +1,5 @@
 package frc.robot.subsystems.intake;
 
-import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.CANrange;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -17,7 +16,7 @@ public class IntakeIOAlpha implements IntakeIO {
     public IntakeIOAlpha() {
         intakeMotor = new TalonFX(IntakeConfigs.INTAKE_MOTOR_ID, Constants.canBus);
         canRangeIntake = new CANrange(IntakeConfigs.INTAKE_SENSOR_ID, Constants.canBus);
-        if (Robot.isSimulation()){
+        if (Robot.isSimulation()) {
             PhysicsSim.getInstance().addTalonFX(intakeMotor);
         }
     }
@@ -25,7 +24,7 @@ public class IntakeIOAlpha implements IntakeIO {
     @Override
     public void updateInputs(IntakeIOInputs inputs) {
         inputs.rollerRPM = intakeMotor.getVelocity().getValueAsDouble();
-        inputs.isEngaged = canRangeIntake.getIsDetected().getValue();
+        inputs.isDetected = canRangeIntake.getIsDetected().getValue();
         inputs.rollerVoltage = intakeMotor.getMotorVoltage().getValueAsDouble();
     }
 

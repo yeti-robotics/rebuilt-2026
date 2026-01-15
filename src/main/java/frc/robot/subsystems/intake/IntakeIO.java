@@ -6,7 +6,7 @@ public interface IntakeIO {
     @AutoLog
     public static class IntakeIOInputs {
         public double rollerRPM = 0.0;
-        public boolean isEngaged = false;
+        public boolean isDetected = false;
         public double rollerVoltage = 0;
     }
 
