@@ -14,9 +14,9 @@ public class ClimberIOAlpha implements ClimberIO {
     private final TalonFX climberMotor;
     private static CANrange climberSensor;
 
-    private ClimberIOAlpha() {
-        climberMotor = new TalonFX(ClimberConfig.climberMotorID, Constants.canBus);
-        climberSensor = new CANrange(ClimberConfig.climberSensorID, Constants.canBus);
+    public ClimberIOAlpha() {
+        climberMotor = new TalonFX(ClimberConfig.climberMotorID, Constants.rioBus);
+        climberSensor = new CANrange(ClimberConfig.climberSensorID, Constants.rioBus);
         if (Robot.isSimulation()) {
             PhysicsSim.getInstance().addTalonFX(climberMotor);
         }
@@ -40,6 +40,7 @@ public class ClimberIOAlpha implements ClimberIO {
     public void updateInputs(ClimberIOInputs inputs) {
         inputs.position = climberMotor.getPosition().getValueAsDouble();
         inputs.isAtBottom = climberSensor.getIsDetected().getValue();
+        inputs.targetPosition = climberMotor.getClosedLoopReference().getValueAsDouble();
     }
 
 

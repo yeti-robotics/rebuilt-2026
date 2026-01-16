@@ -7,6 +7,7 @@ public interface ClimberIO {
     public static class ClimberIOInputs {
         public boolean isAtBottom = true;
         public double position = 0.0;
+        public double targetPosition = 0.0;
     }
 
     public default void updateInputs(ClimberIOInputs inputs) {}

@@ -19,6 +19,8 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.DriveCommands;
 import frc.robot.constants.Constants;
 import frc.robot.generated.TunerConstants;
+import frc.robot.subsystems.climber.Climber;
+import frc.robot.subsystems.climber.ClimberIOAlpha;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
 import frc.robot.subsystems.drive.GyroIOPigeon2;
@@ -26,6 +28,7 @@ import frc.robot.subsystems.drive.ModuleIO;
 import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOTalonFX;
 import frc.robot.subsystems.led.LED;
+import frc.robot.util.sim.Mechanisms;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
@@ -38,6 +41,9 @@ public class RobotContainer {
     // Subsystems
     private final Drive drive;
     private final LED led;
+    private final Climber climber;
+
+    final Mechanisms mechanisms;
 
     // Controller
     private final CommandXboxController controller = new CommandXboxController(0);
@@ -59,6 +65,7 @@ public class RobotContainer {
                         new ModuleIOTalonFX(TunerConstants.BackLeft),
                         new ModuleIOTalonFX(TunerConstants.BackRight));
                 led = new LED();
+                climber = new Climber(new ClimberIOAlpha());
 
                 break;
 
@@ -71,6 +78,7 @@ public class RobotContainer {
                         new ModuleIOSim(TunerConstants.BackLeft),
                         new ModuleIOSim(TunerConstants.BackRight));
                 led = new LED();
+                climber = new Climber(new ClimberIOAlpha());
 
                 break;
 
@@ -79,12 +87,16 @@ public class RobotContainer {
                 drive = new Drive(
                         new GyroIO() {}, new ModuleIO() {}, new ModuleIO() {}, new ModuleIO() {}, new ModuleIO() {});
                 led = new LED();
+                climber = new Climber(new ClimberIOAlpha() {});
 
                 break;
         }
 
         // Set up auto routines
         autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
+
+        // Set up simulatable mechanisms
+        mechanisms = new Mechanisms();
 
         // Set up SysId routines
         autoChooser.addOption("Drive Wheel Radius Characterization", DriveCommands.wheelRadiusCharacterization(drive));
@@ -127,6 +139,12 @@ public class RobotContainer {
                                 () -> drive.setPose(new Pose2d(drive.getPose().getTranslation(), Rotation2d.kZero)),
                                 drive)
                         .ignoringDisable(true));
+    }
+
+    public void updateMechanisms() {
+        mechanisms.publishComponentPoses(climber.getCurrentPosition(), true);
+        mechanisms.publishComponentPoses(climber.getTargetPosition(), false);
+        mechanisms.updateClimberMechanism(climber.getCurrentPosition());
     }
 
     /**

@@ -27,6 +27,14 @@ public class Climber extends SubsystemBase {
         return inputs.isAtBottom;
     }
 
+    public double getCurrentPosition() {
+        return inputs.position;
+    }
+
+    public double getTargetPosition() {
+        return inputs.targetPosition;
+    }
+
     public Command moveToPosition(double position) {
         return run(() -> io.setClimberPosition(position));
     }
