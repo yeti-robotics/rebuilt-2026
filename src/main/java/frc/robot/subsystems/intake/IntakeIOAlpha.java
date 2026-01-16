@@ -7,6 +7,8 @@ import frc.robot.Robot;
 import frc.robot.constants.Constants;
 import frc.robot.util.sim.PhysicsSim;
 
+import static frc.robot.subsystems.intake.IntakeConfigs.INTAKE_TALONFX_CONFIGS;
+
 public class IntakeIOAlpha implements IntakeIO {
     private final TalonFX intakeMotor;
     private final CANrange canRangeIntake;
@@ -19,6 +21,8 @@ public class IntakeIOAlpha implements IntakeIO {
         if (Robot.isSimulation()) {
             PhysicsSim.getInstance().addTalonFX(intakeMotor);
         }
+
+        intakeMotor.getConfigurator().apply(INTAKE_TALONFX_CONFIGS);
     }
 
     @Override
