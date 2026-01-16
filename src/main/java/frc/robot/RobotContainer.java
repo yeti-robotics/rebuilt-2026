@@ -21,6 +21,7 @@ import frc.robot.constants.Constants;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.climber.Climber;
 import frc.robot.subsystems.climber.ClimberIOAlpha;
+import frc.robot.subsystems.climber.ClimberPosition;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
 import frc.robot.subsystems.drive.GyroIOPigeon2;
@@ -139,6 +140,18 @@ public class RobotContainer {
                                 () -> drive.setPose(new Pose2d(drive.getPose().getTranslation(), Rotation2d.kZero)),
                                 drive)
                         .ignoringDisable(true));
+
+        controller
+                .leftTrigger().onTrue(climber.moveToPosition(ClimberPosition.BOTTOM.getHeight()));
+        controller
+                .leftBumper().onTrue(climber.moveToPosition(ClimberPosition.L1.getHeight()));
+        controller
+                .rightTrigger().onTrue(climber.moveToPosition(ClimberPosition.L2.getHeight()));
+        controller
+                .rightBumper().onTrue(climber.moveToPosition(ClimberPosition.L3.getHeight()));
+
+
+
     }
 
     public void updateMechanisms() {

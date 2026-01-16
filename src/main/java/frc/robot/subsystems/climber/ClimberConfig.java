@@ -7,7 +7,7 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import frc.robot.Robot;
 
 public class ClimberConfig {
-    static final int CLIMBER_MOTOR_ID = 100;
+    static final int CLIMBER_MOTOR_ID = 9;
     static final int CLIMBER_SENSOR_ID = 101;
 
     // get the proper gear ratio;
