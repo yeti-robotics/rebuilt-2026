@@ -1,5 +1,7 @@
 package frc.robot.subsystems.shooter;
 
+import static frc.robot.subsystems.shooter.ShooterConfigs.*;
+
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -7,15 +9,14 @@ import com.ctre.phoenix6.signals.MotorAlignmentValue;
 import frc.robot.Robot;
 import frc.robot.constants.Constants;
 import frc.robot.util.sim.PhysicsSim;
-import static frc.robot.subsystems.shooter.ShooterConfigs.*;
 
 public class ShooterIOTalonFXAlpha implements ShooterIO {
     public TalonFX topMotor;
     public TalonFX bottomMotor;
 
     public ShooterIOTalonFXAlpha() {
-        topMotor = new TalonFX(ShooterConfigs.TOP_MOTOR_ID, Constants.canBus);
-        bottomMotor = new TalonFX(ShooterConfigs.BOTTOM_MOTOR_ID, Constants.canBus);
+        topMotor = new TalonFX(ShooterConfigs.TOP_MOTOR_ID, Constants.rioBus);
+        bottomMotor = new TalonFX(ShooterConfigs.BOTTOM_MOTOR_ID, Constants.rioBus);
         bottomMotor.setControl(new Follower(ShooterConfigs.TOP_MOTOR_ID, MotorAlignmentValue.Opposed));
         topMotor.getConfigurator().apply(TOP_MOTOR_CONFIGS);
         bottomMotor.getConfigurator().apply(BOTTOM_MOTOR_CONFIGS);
