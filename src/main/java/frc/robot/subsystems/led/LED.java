@@ -15,7 +15,9 @@ public class LED extends SubsystemBase {
         ledStrip = new AddressableLED(LEDConstants.LED_STRIP_PORT);
         ledBuffer = new AddressableLEDBuffer(LEDConstants.LED_COUNT);
         leftStrip = ledBuffer.createView(0, (LEDConstants.LED_COUNT / 2) - 1);
-        rightStrip = ledBuffer.createView(LEDConstants.LED_COUNT / 2, LEDConstants.LED_COUNT - 1).reversed();
+        rightStrip = ledBuffer
+                .createView(LEDConstants.LED_COUNT / 2, LEDConstants.LED_COUNT - 1)
+                .reversed();
         ledStrip.setLength(ledBuffer.getLength());
         ledStrip.start();
     }
@@ -89,7 +91,7 @@ public class LED extends SubsystemBase {
             case TRANSITION_SHIFT -> LEDModes.TRANSITION_ACTIVE;
             case RED_SHIFT -> LEDModes.RED_ALLIANCE_ACTIVE;
             case BLUE_SHIFT -> LEDModes.BLUE_ALLIANCE_ACTIVE;
-            case ENDGAME_SHIFT ->  LEDModes.ENDGAME_ACTIVE;
+            case ENDGAME_SHIFT -> LEDModes.ENDGAME_ACTIVE;
         };
     }
 

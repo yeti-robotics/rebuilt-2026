@@ -27,6 +27,9 @@ import frc.robot.subsystems.drive.GyroIOPigeon2;
 import frc.robot.subsystems.drive.ModuleIO;
 import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOTalonFX;
+import frc.robot.subsystems.intake.IntakeIO;
+import frc.robot.subsystems.intake.IntakeIOAlpha;
+import frc.robot.subsystems.intake.IntakeSubsystem;
 import frc.robot.subsystems.led.LED;
 import frc.robot.subsystems.led.LEDModes;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
@@ -41,6 +44,7 @@ public class RobotContainer {
     // Subsystems
     private final Drive drive;
     private final LED led;
+    private final IntakeSubsystem intake;
 
     // Commands
     private final ShooterLEDCommand shooterLEDCommand;
@@ -65,6 +69,7 @@ public class RobotContainer {
                         new ModuleIOTalonFX(TunerConstants.FrontRight),
                         new ModuleIOTalonFX(TunerConstants.BackLeft),
                         new ModuleIOTalonFX(TunerConstants.BackRight));
+                intake = new IntakeSubsystem(new IntakeIOAlpha());
 
                 break;
 
@@ -76,6 +81,7 @@ public class RobotContainer {
                         new ModuleIOSim(TunerConstants.FrontRight),
                         new ModuleIOSim(TunerConstants.BackLeft),
                         new ModuleIOSim(TunerConstants.BackRight));
+                intake = new IntakeSubsystem(new IntakeIOAlpha());
 
                 break;
 
@@ -83,6 +89,7 @@ public class RobotContainer {
                 // Replayed robot, disable IO implementations
                 drive = new Drive(
                         new GyroIO() {}, new ModuleIO() {}, new ModuleIO() {}, new ModuleIO() {}, new ModuleIO() {});
+                intake = new IntakeSubsystem(new IntakeIO() {});
 
                 break;
         }
