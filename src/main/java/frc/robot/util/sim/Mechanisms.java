@@ -31,7 +31,7 @@ public class Mechanisms {
     }
 
     public void updateClimberMechanism(double climberPosition) {
-        liftLigament.setLength(Units.inchesToMeters((climberPosition * 6) + 1));
+        liftLigament.setLength(Units.inchesToMeters((climberPosition * 1) + 1));
         SmartDashboard.putData("Mechanisms/Climber", climberMechanism);
     }
 
