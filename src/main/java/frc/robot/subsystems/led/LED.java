@@ -3,6 +3,7 @@ package frc.robot.subsystems.led;
 import edu.wpi.first.wpilibj.*;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.util.ShiftHandler;
 
 public class LED extends SubsystemBase {
     private final AddressableLED ledStrip;
@@ -10,6 +11,7 @@ public class LED extends SubsystemBase {
     private final AddressableLEDBufferView leftStrip;
     private final AddressableLEDBufferView rightStrip;
     private LEDModes currentLEDMode;
+    private final ShiftHandler shiftHandler;
 
     public LED() {
         ledStrip = new AddressableLED(LEDConstants.LED_STRIP_PORT);
@@ -18,81 +20,27 @@ public class LED extends SubsystemBase {
         rightStrip = ledBuffer
                 .createView(LEDConstants.LED_COUNT / 2, LEDConstants.LED_COUNT - 1)
                 .reversed();
+
+        shiftHandler = new ShiftHandler();
+
         ledStrip.setLength(ledBuffer.getLength());
         ledStrip.start();
     }
 
-    public enum ShiftType {
-        TRANSITION_SHIFT,
-        RED_SHIFT,
-        BLUE_SHIFT,
-        ENDGAME_SHIFT;
-
-        public ShiftType invert() {
-            return this == RED_SHIFT ? BLUE_SHIFT : RED_SHIFT;
-        }
-    }
-
-    private ShiftType firstShift = ShiftType.TRANSITION_SHIFT;
-    boolean teleopDataRead = false;
-
     @Override
     public void periodic() {
-        if (currentLEDMode != null && currentLEDMode.isAnimation) {
-            updateCurrentPattern();
-        }
-        ShiftType currentShift = null;
+        ShiftHandler.ShiftType currentShift = shiftHandler.getCurrentShift();
 
-        if (DriverStation.isTeleopEnabled()) {
-            double matchTime = DriverStation.getMatchTime();
-            if (!teleopDataRead) {
-                String gameData = DriverStation.getGameSpecificMessage();
-
-                if (!gameData.isEmpty()) {
-                    switch (gameData.charAt(0)) {
-                        case 'B':
-                            firstShift = ShiftType.RED_SHIFT;
-                            teleopDataRead = true;
-                            break;
-                        case 'R':
-                            firstShift = ShiftType.BLUE_SHIFT;
-                            teleopDataRead = true;
-                            break;
-                        default:
-                            break;
-                    }
-                }
-            }
-
-            if (matchTime >= 130) {
-                currentShift = ShiftType.TRANSITION_SHIFT;
-            } else if (matchTime <= 30) {
-                currentShift = ShiftType.ENDGAME_SHIFT;
-            } else {
-                int blockTime = (int) (130 - matchTime) / 25;
-                currentShift = blockTime % 2 == 0 ? firstShift : firstShift.invert();
-            }
-        }
-
-        if (currentLEDMode != null && currentLEDMode.isAnimation) {
-            updateCurrentPattern();
-        }
-
-        if (currentShift != null) {
-            LEDModes computedLEDMode = mapShiftToLED(currentShift);
+        if (shiftHandler.getCurrentShift() != null) {
+            LEDModes computedLEDMode = ShiftHandler.mapShiftToLED(currentShift);
             if (currentLEDMode != computedLEDMode) {
                 applyPattern(computedLEDMode);
             }
         }
-    }
 
-    public LEDModes mapShiftToLED(ShiftType shift) {
-        return switch (shift) {
-            case TRANSITION_SHIFT -> LEDModes.TRANSITION_ACTIVE;
-            case RED_SHIFT -> LEDModes.RED_ALLIANCE_ACTIVE;
-            case BLUE_SHIFT -> LEDModes.BLUE_ALLIANCE_ACTIVE;
-            case ENDGAME_SHIFT -> LEDModes.ENDGAME_ACTIVE;
-        };
+        if (currentLEDMode != null && currentLEDMode.isAnimation) {
+            updateCurrentPattern();
+        }
     }
 
     private void applyPattern(LEDModes mode) {
