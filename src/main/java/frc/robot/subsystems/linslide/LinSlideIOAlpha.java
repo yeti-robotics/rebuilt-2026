@@ -18,8 +18,8 @@ public class LinSlideIOAlpha implements LinearSlideIO {
     private final MotionMagicTorqueCurrentFOC magicRequest = new MotionMagicTorqueCurrentFOC(0);
 
     public LinSlideIOAlpha() {
-        LinSlideMotor = new TalonFX(LinSlideMotorID, canBus);
-        LinSlideCANCoder = new CANcoder(LinSLideCANCoderID, canBus);
+        LinSlideMotor = new TalonFX(LIN_SLIDE_MOTOR_ID, canBus);
+        LinSlideCANCoder = new CANcoder(LIN_SLIDE_CANCODER_ID, canBus);
         if (Robot.isSimulation()) {
             PhysicsSim.getInstance().addTalonFX(LinSlideMotor);
         }

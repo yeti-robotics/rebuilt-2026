@@ -8,9 +8,9 @@ import com.ctre.phoenix6.signals.SensorDirectionValue;
 import frc.robot.Robot;
 
 public class LinSlideConfigsAlpha {
-    static final int LinSlideMotorID = 99;
-    static final int LinSLideCANCoderID = 98;
-    static final double gearRatio = 1;
+    static final int LIN_SLIDE_MOTOR_ID = 99;
+    static final int LIN_SLIDE_CANCODER_ID = 98;
+    static final double GEAR_RATIO = 1;
 
     private static final Slot0Configs SLOT_0_CONFIGS = Robot.isReal()
             ? new Slot0Configs()
@@ -30,7 +30,7 @@ public class LinSlideConfigsAlpha {
                     .withMotionMagicAcceleration(1) // placeholder values
                     .withMotionMagicCruiseVelocity(1)
                     .withMotionMagicJerk(0))
-            .withFeedback(new FeedbackConfigs().withRotorToSensorRatio(1).withSensorToMechanismRatio(gearRatio))
+            .withFeedback(new FeedbackConfigs().withRotorToSensorRatio(1).withSensorToMechanismRatio(GEAR_RATIO))
             .withMotorOutput(new MotorOutputConfigs()
                     .withInverted(InvertedValue.CounterClockwise_Positive)
                     .withNeutralMode(NeutralModeValue.Brake));
