@@ -5,9 +5,9 @@ import edu.wpi.first.units.measure.Angle;
 
 public enum ClimberPosition {
     BOTTOM(0.0),
-    TOWER1(0),
-    TOWER2(0),
-    TOWER3(0);
+    L1(29.0),
+    L2(47.0),
+    L3(65.0);
 
     private final Angle height;
 

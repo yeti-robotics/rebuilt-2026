@@ -1,12 +1,8 @@
 package frc.robot.subsystems.climber;
 
-import com.ctre.phoenix6.configs.CANrangeConfiguration;
-import com.ctre.phoenix6.configs.DigitalInputsConfigs;
 import com.ctre.phoenix6.controls.MotionMagicTorqueCurrentFOC;
 import com.ctre.phoenix6.controls.NeutralOut;
-import com.ctre.phoenix6.hardware.CANrange;
 import com.ctre.phoenix6.hardware.TalonFX;
-import com.ctre.phoenix6.signals.UpdateModeValue;
 import edu.wpi.first.wpilibj.DigitalInput;
 import frc.robot.Robot;
 import frc.robot.constants.Constants;
@@ -28,23 +24,21 @@ public class ClimberIOAlpha implements ClimberIO {
 
     public static void applyConfigs() {
         // update these values for realzees
-        //var DigitalInputConfig = new DigitalInputsConfigs();
-        //DigitalInputConfig.
-        //climberSensor.getConfigurator().apply(CANrangeConfig);
+        // var DigitalInputConfig = new DigitalInputsConfigs();
+        // DigitalInputConfig.
+        // climberSensor.getConfigurator().apply(CANrangeConfig);
 
     }
 
     @Override
     public void updateInputs(ClimberIOInputs inputs) {
         inputs.position = climberMotor.getPosition().getValueAsDouble();
-        //for a canrange
-        //inputs.isAtBottom = climberSensor.getIsDetected().getValue();
-        //for a limit switch
+        // for a canrange
+        // inputs.isAtBottom = climberSensor.getIsDetected().getValue();
+        // for a limit switch
         inputs.isAtBottom = climberSensor.get();
         inputs.targetPosition = climberMotor.getClosedLoopReference().getValueAsDouble();
     }
-
-
 
     @Override
     public void setClimberPosition(double position) {
@@ -52,9 +46,12 @@ public class ClimberIOAlpha implements ClimberIO {
     }
 
     @Override
-    public void zeroPosition() {climberMotor.setPosition(0);}
+    public void zeroPosition() {
+        climberMotor.setPosition(0);
+    }
 
     @Override
-    public void neutralizeClimber() {climberMotor.setControl(new NeutralOut());}
-
+    public void neutralizeClimber() {
+        climberMotor.setControl(new NeutralOut());
+    }
 }

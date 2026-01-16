@@ -19,12 +19,12 @@ public class Mechanisms {
     public Mechanisms() {
         climberMechanism = new Mechanism2d(Units.inchesToMeters(60), Units.inchesToMeters(100));
 
-        //fix all values from here down
+        // fix all values from here down
         liftLigament = climberMechanism
                 .getRoot("startPoint", Units.inchesToMeters(30), Units.inchesToMeters(4))
                 .append(new MechanismLigament2d("lift", Units.feetToMeters(3), 90, 6, new Color8Bit(Color.kRed)));
 
-        //except this one
+        // except this one
         climberMechanism
                 .getRoot("startPoint", Units.inchesToMeters(30), Units.inchesToMeters(4))
                 .append(new MechanismLigament2d("bottom", Units.feetToMeters(3), 0, 6, new Color8Bit(Color.kGreen)));
@@ -36,7 +36,7 @@ public class Mechanisms {
     }
 
     public void publishComponentPoses(double climberPosition, boolean useRealPoses) {
-        //double climberStageHeight = Units.inchesToMeters(climberPos * 8.6);
+        // double climberStageHeight = Units.inchesToMeters(climberPos * 8.6);
 
         Logger.recordOutput(
                 "ComponentPoses/" + (useRealPoses ? "Real" : "Target"),

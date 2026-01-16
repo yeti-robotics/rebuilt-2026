@@ -14,7 +14,8 @@ public class Climber extends SubsystemBase {
 
     public Climber(ClimberIO io) {
         this.io = io;
-        new Trigger(() -> inputs.isAtBottom).onTrue(Commands.runOnce(io::zeroPosition).andThen(io::neutralizeClimber));
+        new Trigger(() -> inputs.isAtBottom)
+                .onTrue(Commands.runOnce(io::zeroPosition).andThen(io::neutralizeClimber));
     }
 
     @Override
