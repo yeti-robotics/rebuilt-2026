@@ -28,6 +28,9 @@ import frc.robot.subsystems.drive.GyroIOPigeon2;
 import frc.robot.subsystems.drive.ModuleIO;
 import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOTalonFX;
+import frc.robot.subsystems.intake.IntakeIO;
+import frc.robot.subsystems.intake.IntakeIOAlpha;
+import frc.robot.subsystems.intake.IntakeSubsystem;
 import frc.robot.subsystems.led.LED;
 import frc.robot.util.sim.Mechanisms;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
@@ -42,6 +45,7 @@ public class RobotContainer {
     // Subsystems
     private final Drive drive;
     private final LED led;
+    private final IntakeSubsystem intake;
     private final Climber climber;
 
     final Mechanisms mechanisms;
@@ -66,6 +70,7 @@ public class RobotContainer {
                         new ModuleIOTalonFX(TunerConstants.BackLeft),
                         new ModuleIOTalonFX(TunerConstants.BackRight));
                 led = new LED();
+                intake = new IntakeSubsystem(new IntakeIOAlpha());
                 climber = new Climber(new ClimberIOAlpha());
 
                 break;
@@ -79,6 +84,7 @@ public class RobotContainer {
                         new ModuleIOSim(TunerConstants.BackLeft),
                         new ModuleIOSim(TunerConstants.BackRight));
                 led = new LED();
+                intake = new IntakeSubsystem(new IntakeIOAlpha());
                 climber = new Climber(new ClimberIOAlpha());
 
                 break;
@@ -88,6 +94,7 @@ public class RobotContainer {
                 drive = new Drive(
                         new GyroIO() {}, new ModuleIO() {}, new ModuleIO() {}, new ModuleIO() {}, new ModuleIO() {});
                 led = new LED();
+                intake = new IntakeSubsystem(new IntakeIO() {});
                 climber = new Climber(new ClimberIOAlpha() {});
 
                 break;
