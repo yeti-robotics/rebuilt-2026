@@ -4,7 +4,7 @@ import org.littletonrobotics.junction.AutoLog;
 
 public interface ShooterIO {
     @AutoLog
-    public static class ShooterIOAlphaInputs {
+    public static class ShooterIOInputs {
         public double topMotorVoltage = 0;
         public double topMotorRPM = 0;
 
@@ -12,7 +12,7 @@ public interface ShooterIO {
         public double bottomMotorRPM = 0;*/
     }
 
-    public default void updateInputs(ShooterIOAlphaInputs inputs) {}
+    public default void updateInputs(ShooterIOInputs inputs) {}
 
     public default void rollMotors(double volts) {}
 }
