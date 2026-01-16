@@ -1,13 +1,12 @@
 package frc.robot.subsystems.intake;
 
+import static frc.robot.subsystems.intake.IntakeConfigs.INTAKE_TALONFX_CONFIGS;
+
 import com.ctre.phoenix6.controls.VoltageOut;
-import com.ctre.phoenix6.hardware.CANrange;
 import com.ctre.phoenix6.hardware.TalonFX;
 import frc.robot.Robot;
 import frc.robot.constants.Constants;
 import frc.robot.util.sim.PhysicsSim;
-
-import static frc.robot.subsystems.intake.IntakeConfigs.INTAKE_TALONFX_CONFIGS;
 
 public class IntakeIOAlpha implements IntakeIO {
     private final TalonFX intakeMotor;
@@ -30,7 +29,7 @@ public class IntakeIOAlpha implements IntakeIO {
     }
 
     @Override
-    public void setIntakeMotorDuty(double volts) {
+    public void setIntakeMotor(double volts) {
         intakeMotor.setControl(voltageRequest.withOutput(volts));
     }
 }
