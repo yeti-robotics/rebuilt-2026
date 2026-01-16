@@ -1,24 +1,22 @@
-package frc.robot.subsystems.arm;
-
-import static edu.wpi.first.wpilibj2.command.Commands.runOnce;
+package frc.robot.subsystems.linslide;
 
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.littletonrobotics.junction.Logger;
 
-public class ArmSubsystemAlpha extends SubsystemBase {
-    private ArmIOAlpha io;
-    private ArmIOAlphaInputsAutoLogged inputs = new ArmIOAlphaInputsAutoLogged();
+public class LinSlideSubsystem extends SubsystemBase {
+    private LinearSlideIO io;
+    private LinSlideIOInputsAutoLogged inputs = new LinSlideIOInputsAutoLogged();
 
-    public ArmSubsystemAlpha(ArmIOAlpha io) {
+    public LinSlideSubsystem(LinearSlideIO io) {
         this.io = io;
     }
 
     @Override
     public void periodic() {
         io.updateInputs(inputs);
-        Logger.processInputs("Arm", inputs);
+        Logger.processInputs("LinSlide", inputs);
     }
 
     public Command moveToPosition(Angle position) {
@@ -32,4 +30,6 @@ public class ArmSubsystemAlpha extends SubsystemBase {
     public double getTargetPosition() {
         return inputs.targetPositionRotation;
     }
+
+    public boolean isDeployed(){return inputs.isDeployed;}
 }

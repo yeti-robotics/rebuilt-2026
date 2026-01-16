@@ -15,7 +15,9 @@ public class LED extends SubsystemBase {
         ledStrip = new AddressableLED(LEDConstants.LED_STRIP_PORT);
         ledBuffer = new AddressableLEDBuffer(LEDConstants.LED_COUNT);
         leftStrip = ledBuffer.createView(0, (LEDConstants.LED_COUNT / 2) - 1);
-        rightStrip = ledBuffer.createView(LEDConstants.LED_COUNT / 2, LEDConstants.LED_COUNT - 1).reversed();
+        rightStrip = ledBuffer
+                .createView(LEDConstants.LED_COUNT / 2, LEDConstants.LED_COUNT - 1)
+                .reversed();
         ledStrip.setLength(ledBuffer.getLength());
         ledStrip.setData(ledBuffer);
         ledStrip.start();
@@ -50,6 +52,9 @@ public class LED extends SubsystemBase {
     }
 
     public Command runPattern(LEDModes pattern) {
-        return runOnce(() -> applyPattern(pattern.pattern)).repeatedly().ignoringDisable(true).andThen(() -> currentPattern = pattern.pattern);
+        return runOnce(() -> applyPattern(pattern.pattern))
+                .repeatedly()
+                .ignoringDisable(true)
+                .andThen(() -> currentPattern = pattern.pattern);
     }
 }
