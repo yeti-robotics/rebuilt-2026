@@ -48,7 +48,7 @@ public class LED extends SubsystemBase {
         updateCurrentPattern();
     }
 
-    public void updateCurrentPattern() {
+    private void updateCurrentPattern() {
         if (currentLEDMode == null) return;
 
         currentLEDMode.pattern.applyTo(leftStrip);
