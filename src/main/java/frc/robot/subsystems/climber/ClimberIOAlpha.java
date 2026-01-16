@@ -15,11 +15,12 @@ public class ClimberIOAlpha implements ClimberIO {
     private static CANrange climberSensor;
 
     public ClimberIOAlpha() {
-        climberMotor = new TalonFX(ClimberConfig.climberMotorID, Constants.rioBus);
-        climberSensor = new CANrange(ClimberConfig.climberSensorID, Constants.rioBus);
+        climberMotor = new TalonFX(ClimberConfig.CLIMBER_MOTOR_ID, Constants.rioBus);
+        climberSensor = new CANrange(ClimberConfig.CLIMBER_SENSOR_ID, Constants.rioBus);
         if (Robot.isSimulation()) {
             PhysicsSim.getInstance().addTalonFX(climberMotor);
         }
+        climberMotor.getConfigurator().apply(ClimberConfig.primaryTalonFXConfigs);
         applyConfigs();
     }
 
@@ -34,6 +35,7 @@ public class ClimberIOAlpha implements ClimberIO {
         CANrangeConfig.ProximityParams.ProximityThreshold = 0.10;
         CANrangeConfig.ProximityParams.ProximityHysteresis = 0.02;
         climberSensor.getConfigurator().apply(CANrangeConfig);
+
     }
 
     @Override

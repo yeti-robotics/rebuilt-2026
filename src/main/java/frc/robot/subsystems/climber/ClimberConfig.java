@@ -7,11 +7,11 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import frc.robot.Robot;
 
 public class ClimberConfig {
-    static final int climberMotorID = 100;
-    static final int climberSensorID = 101;
+    static final int CLIMBER_MOTOR_ID = 100;
+    static final int CLIMBER_SENSOR_ID = 101;
 
     //get the proper gear ratio;
-    static final double gearRatio = 0;
+    static final double GEAR_RATIO = 0;
 
     //tune the sim values - the bottom ones
     private static final Slot0Configs SLOT_0_CONFIGS = Robot.isReal()
@@ -40,7 +40,7 @@ public class ClimberConfig {
                     .withMotionMagicAcceleration(30)
                     .withMotionMagicCruiseVelocity(15)
                     .withMotionMagicJerk(0))
-            .withFeedback(new FeedbackConfigs().withRotorToSensorRatio(1).withSensorToMechanismRatio(gearRatio))
+            .withFeedback(new FeedbackConfigs().withRotorToSensorRatio(1).withSensorToMechanismRatio(GEAR_RATIO))
             .withMotorOutput(new MotorOutputConfigs()
                     .withInverted(InvertedValue.CounterClockwise_Positive)
                     .withNeutralMode(NeutralModeValue.Brake));
