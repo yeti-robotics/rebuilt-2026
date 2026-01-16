@@ -14,8 +14,8 @@ public class IntakeIOAlpha implements IntakeIO {
     private final VoltageOut voltageRequest = new VoltageOut(0);
 
     public IntakeIOAlpha() {
-        intakeMotor = new TalonFX(IntakeConfigs.INTAKE_MOTOR_ID, Constants.canBus);
-        canRangeIntake = new CANrange(IntakeConfigs.INTAKE_SENSOR_ID, Constants.canBus);
+        intakeMotor = new TalonFX(IntakeConfigs.INTAKE_MOTOR_ID, Constants.rioBus);
+        canRangeIntake = new CANrange(IntakeConfigs.INTAKE_SENSOR_ID, Constants.rioBus);
         if (Robot.isSimulation()) {
             PhysicsSim.getInstance().addTalonFX(intakeMotor);
         }
