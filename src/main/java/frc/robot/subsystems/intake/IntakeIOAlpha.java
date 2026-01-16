@@ -11,13 +11,11 @@ import static frc.robot.subsystems.intake.IntakeConfigs.INTAKE_TALONFX_CONFIGS;
 
 public class IntakeIOAlpha implements IntakeIO {
     private final TalonFX intakeMotor;
-    private final CANrange canRangeIntake;
 
     private final VoltageOut voltageRequest = new VoltageOut(0);
 
     public IntakeIOAlpha() {
         intakeMotor = new TalonFX(IntakeConfigs.INTAKE_MOTOR_ID, Constants.rioBus);
-        canRangeIntake = new CANrange(IntakeConfigs.INTAKE_SENSOR_ID, Constants.rioBus);
         if (Robot.isSimulation()) {
             PhysicsSim.getInstance().addTalonFX(intakeMotor);
         }
@@ -28,7 +26,6 @@ public class IntakeIOAlpha implements IntakeIO {
     @Override
     public void updateInputs(IntakeIOInputs inputs) {
         inputs.rollerRPM = intakeMotor.getVelocity().getValueAsDouble();
-        inputs.isDetected = canRangeIntake.getIsDetected().getValue();
         inputs.rollerVoltage = intakeMotor.getMotorVoltage().getValueAsDouble();
     }
 

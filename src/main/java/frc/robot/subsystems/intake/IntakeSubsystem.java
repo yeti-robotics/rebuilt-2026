@@ -18,10 +18,6 @@ public class IntakeSubsystem extends SubsystemBase {
         this.io = io;
     }
 
-    public boolean isDetected() {
-        return inputs.isDetected;
-    }
-
     public Command setRoller(double volts) {
         return startEnd(() -> io.setIntakeMotorDuty(volts), () -> io.setIntakeMotorDuty(0));
     }
