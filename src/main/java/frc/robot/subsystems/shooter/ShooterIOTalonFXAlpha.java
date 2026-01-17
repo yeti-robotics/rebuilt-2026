@@ -31,6 +31,8 @@ public class ShooterIOTalonFXAlpha implements ShooterIO {
     public void updateInputs(ShooterIOInputs inputs) {
         inputs.topMotorVoltage = topMotor.getMotorVoltage().getValueAsDouble();
         inputs.topMotorRPM = topMotor.getVelocity().getValueAsDouble();
+        inputs.bottomMotorVoltage = bottomMotor.getMotorVoltage().getValueAsDouble();
+        inputs.bottomMotorRPM = bottomMotor.getVelocity().getValueAsDouble();
     }
 
     @Override

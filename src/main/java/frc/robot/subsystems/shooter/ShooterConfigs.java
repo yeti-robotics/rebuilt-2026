@@ -8,8 +8,14 @@ public class ShooterConfigs {
     static final int BOTTOM_MOTOR_ID = 6;
 
     static final TalonFXConfiguration TOP_MOTOR_CONFIGS =
-            new TalonFXConfiguration().withFeedback(new FeedbackConfigs().withSensorToMechanismRatio(2));
+            new TalonFXConfiguration().withFeedback(
+                    new FeedbackConfigs()
+                            .withSensorToMechanismRatio(2)
+                            .withRotorToSensorRatio(1));
 
     static final TalonFXConfiguration BOTTOM_MOTOR_CONFIGS =
-            new TalonFXConfiguration().withFeedback(new FeedbackConfigs().withSensorToMechanismRatio(1));
+            new TalonFXConfiguration().withFeedback(
+                    new FeedbackConfigs()
+                            .withSensorToMechanismRatio(1)
+                            .withRotorToSensorRatio(1));
 }
