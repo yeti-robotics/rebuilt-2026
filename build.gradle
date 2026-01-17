@@ -178,6 +178,14 @@ idea {
     }
 }
 
+sourceSets {
+    main {
+        java {
+            srcDir "${buildDir.absolutePath}/generated/sources/annotationProcessor/java/main"
+        }
+    }
+}
+
 spotless {
     java {
         target fileTree('.') {
