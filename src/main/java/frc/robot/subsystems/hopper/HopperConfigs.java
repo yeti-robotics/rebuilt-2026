@@ -2,8 +2,6 @@ package frc.robot.subsystems.hopper;
 
 import com.ctre.phoenix6.configs.*;
 import com.ctre.phoenix6.signals.GravityTypeValue;
-import com.ctre.phoenix6.signals.InvertedValue;
-import com.ctre.phoenix6.signals.NeutralModeValue;
 
 public class HopperConfigs {
     static final int ROLLER_ID = 500;
@@ -25,5 +23,4 @@ public class HopperConfigs {
                     .withMotionMagicAcceleration(2)
                     .withMotionMagicCruiseVelocity(4)
                     .withMotionMagicJerk(0));
-
 }
