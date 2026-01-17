@@ -78,7 +78,7 @@ public class RobotContainer {
 
         Pose3d frontCameraPose = new Pose3d(drive.getPose()).transformBy(VisionConstants.frontCamTrans);
 
-        Logger.recordOutput("Rear Cam Transform", backCameraPose);
+        Logger.recordOutput("Back Cam Transform", backCameraPose);
         Logger.recordOutput("Front Cam Transform", frontCameraPose);
     }
 
