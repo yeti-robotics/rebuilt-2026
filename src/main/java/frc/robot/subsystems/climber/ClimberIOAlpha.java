@@ -20,7 +20,6 @@ public class ClimberIOAlpha implements ClimberIO {
         climberMotor.getConfigurator().apply(ClimberConfig.primaryTalonFXConfigs);
     }
 
-
     @Override
     public void updateInputs(ClimberIOInputs inputs) {
         inputs.position = climberMotor.getPosition().getValueAsDouble();
