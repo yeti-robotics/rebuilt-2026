@@ -29,7 +29,9 @@ public class AutoNamedCommands {
             ShooterSubsystem shooter,
             Climber climber,
             LinSlideSubsystem linSlide,
-            AutoAimCommands autoAim, Drive drive, CommandXboxController controller) {
+            AutoAimCommands autoAim,
+            Drive drive,
+            CommandXboxController controller) {
         this.intake = intake;
         this.hopper = hopper;
         this.shooter = shooter;
@@ -42,16 +44,16 @@ public class AutoNamedCommands {
     }
 
     public void registerCommands() {
-        NamedCommands.registerCommand("GroundIntake", Commands.sequence(
-                linSlide.applyPower(),
-                intake.setRoller(0.0)));
-        NamedCommands.registerCommand("AutoAlignShoot", Commands.sequence(
-                AutoAimCommands.autoAim(
-                        drive,
-                        () -> -controller.getLeftY(),
-                        () -> -controller.getLeftX(),
-                        centerHubOpening.toTranslation2d()),
-                hopper.spinHopper(0),
-                shooter.shoot(0)));
+        NamedCommands.registerCommand("GroundIntake", Commands.sequence(linSlide.applyPower(), intake.setRoller(0.0)));
+        NamedCommands.registerCommand(
+                "AutoAlignShoot",
+                Commands.sequence(
+                        AutoAimCommands.autoAim(
+                                drive,
+                                () -> -controller.getLeftY(),
+                                () -> -controller.getLeftX(),
+                                centerHubOpening.toTranslation2d()),
+                        hopper.spinHopper(0),
+                        shooter.shoot(0)));
     }
 }
