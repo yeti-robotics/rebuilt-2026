@@ -57,6 +57,6 @@ public class AutoAim extends Command {
 
     @Override
     public void end(boolean interrupted) {
-        drivetrain.runVelocity(new ChassisSpeeds());
+        drivetrain.stop();
     }
 }
