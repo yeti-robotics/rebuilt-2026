@@ -41,10 +41,7 @@ public class AutoAim extends Command {
 
     @Override
     public void execute() {
-        if (LimelightHelpers.getFiducialID(
-                        VisionConstants.camera0Name.isBlank()
-                                ? VisionConstants.camera0Name
-                                : VisionConstants.camera1Name)
+        if (LimelightHelpers.getFiducialID(VisionConstants.camera0Name)
                 == currentTag) {
             drivetrain.run(() -> poseAimRequest
                     .withVelocityX(xVelSupplier.getAsDouble() * 1.5)
