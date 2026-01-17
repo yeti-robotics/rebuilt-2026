@@ -201,7 +201,7 @@ public class RobotContainer {
         controller
                 .y()
                 .whileTrue(AutoAimCommands.autoAim(
-                        drive, controller::getLeftX, controller::getLeftY, centerHubOpening.toTranslation2d()));
+                        drive, () -> -controller.getLeftY(), () -> -controller.getLeftX(), centerHubOpening.toTranslation2d()));
     }
 
     public void updateMechanisms() {
