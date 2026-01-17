@@ -20,7 +20,7 @@ public class AutoAimCommands {
         }
 
         Rotation2d currentHeading = currentPose.getRotation();
-        Rotation2d desiredHeading = target.minus(currentPose.getTranslation()).getAngle();
+        Rotation2d desiredHeading = target.minus(currentPose.getTranslation()).getAngle().rotateBy(Rotation2d.k180deg); // Remove this .rotateBy() if needed for real bot
 
         return headingController.calculate(currentHeading.getRadians(), desiredHeading.getRadians());
     }

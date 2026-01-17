@@ -7,6 +7,8 @@
 
 package frc.robot;
 
+import static frc.robot.constants.FieldConstants.Hub.centerHubOpening;
+
 import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.math.geometry.*;
 import edu.wpi.first.math.util.Units;
@@ -16,6 +18,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import frc.robot.commands.AutoAimCommands;
 import frc.robot.commands.DriveCommands;
 import frc.robot.constants.Constants;
 import frc.robot.generated.TunerConstants;
@@ -116,7 +119,7 @@ public class RobotContainer {
                                                 Units.inchesToMeters(3),
                                                 Units.inchesToMeters(0),
                                                 Units.inchesToMeters(15)),
-                                        new Rotation3d(0, Math.toRadians(0), Math.toRadians(180))),
+                                        new Rotation3d(0, Math.toRadians(0), Math.toRadians(0))),
                                 drive::getPose));
                 shooter = new ShooterSubsystem(new ShooterIOAlpha());
 
@@ -174,7 +177,7 @@ public class RobotContainer {
 
         // Reset gyro to 0° when B button is pressed
         controller
-                .b()
+                .start()
                 .onTrue(Commands.runOnce(
                                 () -> drive.setPose(new Pose2d(drive.getPose().getTranslation(), Rotation2d.kZero)),
                                 drive)
@@ -182,6 +185,9 @@ public class RobotContainer {
 
         controller.leftTrigger().whileTrue(hopper.spinHopper(HopperConfigs.HOPPER_SPIN_VOLTAGE));
         controller.button(1).whileTrue(shooter.shoot(6));
+        controller.y()
+                .whileTrue(AutoAimCommands.autoAim(
+                        drive, controller::getLeftX, controller::getLeftY, centerHubOpening.toTranslation2d()));
     }
 
     /**
