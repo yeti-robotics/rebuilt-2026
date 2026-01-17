@@ -25,6 +25,10 @@ import frc.robot.subsystems.drive.GyroIOPigeon2;
 import frc.robot.subsystems.drive.ModuleIO;
 import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOTalonFX;
+import frc.robot.subsystems.hopper.Hopper;
+import frc.robot.subsystems.hopper.HopperConfigs;
+import frc.robot.subsystems.hopper.HopperIO;
+import frc.robot.subsystems.hopper.HopperIOAlpha;
 import frc.robot.subsystems.intake.IntakeIO;
 import frc.robot.subsystems.intake.IntakeIOAlpha;
 import frc.robot.subsystems.intake.IntakeSubsystem;
@@ -42,6 +46,7 @@ public class RobotContainer {
     private final Drive drive;
     private final LED led;
     private final IntakeSubsystem intake;
+    private final Hopper hopper;
 
     // Controller
     private final CommandXboxController controller = new CommandXboxController(0);
@@ -64,6 +69,7 @@ public class RobotContainer {
                         new ModuleIOTalonFX(TunerConstants.BackRight));
                 led = new LED();
                 intake = new IntakeSubsystem(new IntakeIOAlpha());
+                hopper = new Hopper(new HopperIOAlpha());
 
                 break;
 
@@ -77,6 +83,7 @@ public class RobotContainer {
                         new ModuleIOSim(TunerConstants.BackRight));
                 led = new LED();
                 intake = new IntakeSubsystem(new IntakeIOAlpha());
+                hopper = new Hopper(new HopperIOAlpha());
 
                 break;
 
@@ -86,6 +93,7 @@ public class RobotContainer {
                         new GyroIO() {}, new ModuleIO() {}, new ModuleIO() {}, new ModuleIO() {}, new ModuleIO() {});
                 led = new LED();
                 intake = new IntakeSubsystem(new IntakeIO() {});
+                hopper = new Hopper(new HopperIO() {});
 
                 break;
         }
@@ -134,6 +142,8 @@ public class RobotContainer {
                                 () -> drive.setPose(new Pose2d(drive.getPose().getTranslation(), Rotation2d.kZero)),
                                 drive)
                         .ignoringDisable(true));
+
+        controller.leftTrigger().whileTrue(hopper.spinHopper(HopperConfigs.HOPPER_SPIN_VOLTAGE));
     }
 
     /**
