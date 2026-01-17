@@ -143,7 +143,7 @@ public class RobotContainer {
                                 drive)
                         .ignoringDisable(true));
 
-        controller.leftTrigger().whileTrue(hopper.spinHopper(HopperConfigs.hopperSpinVoltage));
+        controller.leftTrigger().whileTrue(hopper.spinHopper(HopperConfigs.HOPPER_SPIN_VOLTAGE));
     }
 
     /**

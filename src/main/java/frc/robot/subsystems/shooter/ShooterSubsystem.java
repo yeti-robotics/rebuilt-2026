@@ -19,6 +19,6 @@ public class ShooterSubsystem extends SubsystemBase {
     }
 
     public Command shoot() {
-        return run(() -> io.rollMotors(6));
+        return startEnd(() -> io.spinMotors());
     }
 }

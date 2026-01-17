@@ -3,6 +3,7 @@ package frc.robot.subsystems.shooter;
 import static frc.robot.subsystems.shooter.ShooterConfigs.*;
 
 import com.ctre.phoenix6.controls.Follower;
+import com.ctre.phoenix6.controls.MotionMagicVelocityVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.MotorAlignmentValue;
@@ -36,7 +37,7 @@ public class ShooterIOTalonFXAlpha implements ShooterIO {
     }
 
     @Override
-    public void rollMotors(double volts) {
-        topMotor.setControl(new VoltageOut(volts));
+    public void spinMotors(double volts) {
+        topMotor.setControl(new MotionMagicVelocityVoltage(volts))
     }
 }

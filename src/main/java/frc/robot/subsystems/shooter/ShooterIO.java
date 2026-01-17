@@ -15,5 +15,5 @@ public interface ShooterIO {
 
     public default void updateInputs(ShooterIOInputs inputs) {}
 
-    public default void rollMotors(double volts) {}
+    public default void spinMotors(double volts) {}
 }
