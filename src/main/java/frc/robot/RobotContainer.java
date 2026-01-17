@@ -75,18 +75,10 @@ public class RobotContainer {
 
     public void updateVisionSim() {
         Pose3d rearCameraPose = new Pose3d(drive.getPose())
-                .transformBy(new Transform3d(
-                        VisionConstants.backCamTrans.getX(),
-                        VisionConstants.backCamTrans.getY(),
-                        VisionConstants.backCamTrans.getZ(),
-                        VisionConstants.backCamTrans.getRotation()));
+                .transformBy(VisionConstants.backCamTrans);
 
         Pose3d rightFrontCameraPose = new Pose3d(drive.getPose())
-                .transformBy(new Transform3d(
-                        VisionConstants.frontCamTrans.getX(),
-                        VisionConstants.frontCamTrans.getY(),
-                        VisionConstants.frontCamTrans.getZ(),
-                        VisionConstants.frontCamTrans.getRotation()));
+                .transformBy(VisionConstants.frontCamTrans);
 
         Logger.recordOutput("Rear Cam Transform", rearCameraPose);
         Logger.recordOutput("Front Cam Transform", rightFrontCameraPose);
