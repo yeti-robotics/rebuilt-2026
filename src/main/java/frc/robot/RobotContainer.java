@@ -34,6 +34,9 @@ import frc.robot.subsystems.intake.IntakeIO;
 import frc.robot.subsystems.intake.IntakeIOAlpha;
 import frc.robot.subsystems.intake.IntakeSubsystem;
 import frc.robot.subsystems.led.LED;
+import frc.robot.subsystems.shooter.ShooterIO;
+import frc.robot.subsystems.shooter.ShooterIOAlpha;
+import frc.robot.subsystems.shooter.ShooterSubsystem;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
@@ -48,6 +51,7 @@ public class RobotContainer {
     private final LED led;
     private final IntakeSubsystem intake;
     private final Hopper hopper;
+    private final ShooterSubsystem shooter;
 
     // Controller
     private final CommandXboxController controller = new CommandXboxController(0);
@@ -71,6 +75,7 @@ public class RobotContainer {
                 led = new LED();
                 intake = new IntakeSubsystem(new IntakeIOAlpha());
                 hopper = new Hopper(new HopperIOAlpha());
+                shooter = new ShooterSubsystem(new ShooterIOAlpha());
 
                 break;
 
@@ -85,6 +90,7 @@ public class RobotContainer {
                 led = new LED();
                 intake = new IntakeSubsystem(new IntakeIOAlpha());
                 hopper = new Hopper(new HopperIOAlpha());
+                shooter = new ShooterSubsystem(new ShooterIOAlpha());
 
                 break;
 
@@ -95,6 +101,7 @@ public class RobotContainer {
                 led = new LED();
                 intake = new IntakeSubsystem(new IntakeIO() {});
                 hopper = new Hopper(new HopperIO() {});
+                shooter = new ShooterSubsystem((new ShooterIO() {}));
 
                 break;
         }
@@ -144,7 +151,8 @@ public class RobotContainer {
                                 drive)
                         .ignoringDisable(true));
 
-        controller.leftTrigger().whileTrue(hopper.spinHopper(HopperConfigs.hopperSpinVoltage));
+        controller.leftTrigger().whileTrue(hopper.spinHopper(HopperConfigs.HOPPER_SPIN_VOLTAGE));
+        controller.button(1).whileTrue(shooter.shoot(6));
     }
 
     /**

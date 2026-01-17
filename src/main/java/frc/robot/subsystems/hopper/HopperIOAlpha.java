@@ -1,6 +1,6 @@
 package frc.robot.subsystems.hopper;
 
-import com.ctre.phoenix6.controls.VoltageOut;
+import com.ctre.phoenix6.controls.MotionMagicVelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import frc.robot.Robot;
 import frc.robot.constants.Constants;
@@ -11,6 +11,7 @@ public class HopperIOAlpha implements HopperIO {
 
     public HopperIOAlpha() {
         hopperRoller = new TalonFX(HopperConfigs.ROLLER_ID, Constants.rioBus);
+        hopperRoller.getConfigurator().apply(HopperConfigs.TalonFXConfigs);
         if (Robot.isSimulation()) {
             PhysicsSim.getInstance().addTalonFX(hopperRoller);
         }
@@ -23,6 +24,6 @@ public class HopperIOAlpha implements HopperIO {
 
     @Override
     public void spinHopperRoller(double volts) {
-        hopperRoller.setControl(new VoltageOut(volts));
+        hopperRoller.setControl(new MotionMagicVelocityVoltage(volts));
     }
 }
