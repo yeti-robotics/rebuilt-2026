@@ -1,10 +1,10 @@
 package frc.robot.subsystems.led;
 
+import static edu.wpi.first.units.Units.Seconds;
+
 import edu.wpi.first.units.Units;
 import edu.wpi.first.wpilibj.LEDPattern;
 import edu.wpi.first.wpilibj.util.Color;
-
-import static edu.wpi.first.units.Units.Seconds;
 
 public enum LEDModes {
     RED_TO_BLUE_TRANSITION(
@@ -13,10 +13,10 @@ public enum LEDModes {
             LEDPattern.gradient(LEDPattern.GradientType.kContinuous, LEDConstants.YETI_BLUE, LEDConstants.VIHAAN_RED)),
     BLUE_ALLIANCE_ACTIVE(LEDPattern.solid(LEDConstants.YETI_BLUE)),
     RED_ALLIANCE_ACTIVE(LEDPattern.solid(LEDConstants.VIHAAN_RED)),
-    RAINBOW(LEDPattern.rainbow(255, 128).scrollAtAbsoluteSpeed(Units.MetersPerSecond.of(1), LEDConstants.LED_SPACING)),
+    RAINBOW(LEDPattern.rainbow(255, 128).scrollAtAbsoluteSpeed(Units.MetersPerSecond.of(1), LEDConstants.LED_SPACING), true),
     TRANSITION_ACTIVE(LEDPattern.solid(Color.kPurple)),
     ENDGAME_ACTIVE(LEDPattern.solid(Color.kGreen)),
-    LOCKED_GREEN(LEDPattern.solid(Color.kGreen).blink(Seconds.of(1))),
+    LOCKED_GREEN(LEDPattern.solid(Color.kGreen).blink(Seconds.of(1)), true),
     NOT_LOCKED_RED(LEDPattern.solid(Color.kRed));
 
     public final LEDPattern pattern;

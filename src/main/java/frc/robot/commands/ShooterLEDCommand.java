@@ -4,7 +4,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.led.LED;
 import frc.robot.subsystems.led.LEDModes;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -13,7 +12,7 @@ public class ShooterLEDCommand extends Command {
     private final LED leds;
     private final ShooterSubsystem shooter;
     private final int[] green = {0, 255, 0};
-    private final int[] white = {255, 255, 255};
+    private final int[] red = {255, 0, 0};
     private ArrayList<int[]> colorQueue;
 
     public ShooterLEDCommand(LED leds, ShooterSubsystem shooter) {
@@ -28,7 +27,7 @@ public class ShooterLEDCommand extends Command {
         int[] currRGB = green.clone();
 
         int end = (int) Math.ceil(leds.getBufferLength() / 2.0);
-        int[] increments = {(white[0] - green[0]) / end, (white[1] - green[1]) / end, (white[2] - green[2]) / end};
+        int[] increments = {(red[0] - green[0]) / end, (red[1] - green[1]) / end, (red[2] - green[2]) / end};
 
         for (int i = 0; i < end; i++) {
             initialState[i] = new int[] {currRGB[0], currRGB[1], currRGB[2]};
@@ -51,9 +50,10 @@ public class ShooterLEDCommand extends Command {
     public void execute() {
         double tolerance = 6.0; // TODO: Calculate
         double idealDistanceToHub = 82; // TODO: Calculate
-        if (shooter.getVelocity() == 120
-                && Math.abs(Limelight.getDistance() - idealDistanceToHub)
-                <= tolerance) {
+        //        if (shooter.getVelocity() == 120
+        //                && Math.abs(Limelight.getDistance() - idealDistanceToHub)
+        //                <= tolerance) {
+        if (0 == 0) {
             // wave effect
             for (int i = 0; i < leds.getBufferLength(); i++) {
                 leds.setRGB(

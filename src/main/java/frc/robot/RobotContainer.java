@@ -13,7 +13,6 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
@@ -166,7 +165,8 @@ public class RobotContainer {
         controller.button(3).onTrue(led.runPattern(LEDModes.BLUE_TO_RED_TRANSITION));
         controller.button(4).onTrue(led.runPattern(LEDModes.RED_TO_BLUE_TRANSITION));
         controller.button(5).onTrue(led.runPattern(LEDModes.RAINBOW));
-        controller.button(6).onTrue(shooter.shoot(120).alongWith(shooterLEDCommand));
+        controller.button(6).onTrue(led.runPattern(LEDModes.LOCKED_GREEN));
+        controller.button(7).onTrue(shooter.shoot(120).alongWith(shooterLEDCommand));
     }
 
     /**
