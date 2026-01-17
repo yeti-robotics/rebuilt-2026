@@ -74,14 +74,12 @@ public class RobotContainer {
     private final LoggedDashboardChooser<Command> autoChooser;
 
     public void updateVisionSim() {
-        Pose3d rearCameraPose = new Pose3d(drive.getPose())
-                .transformBy(VisionConstants.backCamTrans);
+        Pose3d rearCameraPose = new Pose3d(drive.getPose()).transformBy(VisionConstants.backCamTrans);
 
-        Pose3d rightFrontCameraPose = new Pose3d(drive.getPose())
-                .transformBy(VisionConstants.frontCamTrans);
+        Pose3d frontCameraPose = new Pose3d(drive.getPose()).transformBy(VisionConstants.frontCamTrans);
 
         Logger.recordOutput("Rear Cam Transform", rearCameraPose);
-        Logger.recordOutput("Front Cam Transform", rightFrontCameraPose);
+        Logger.recordOutput("Front Cam Transform", frontCameraPose);
     }
 
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -124,14 +122,8 @@ public class RobotContainer {
                 hopper = new Hopper(new HopperIOAlpha());
                 vision = new Vision(
                         drive,
-                        new VisionIOPhotonVisionSim(
-                                "Front Camera",
-                                VisionConstants.frontCamTrans,
-                                drive::getPose),
-                        new VisionIOPhotonVisionSim(
-                                "Back Camera",
-                                VisionConstants.backCamTrans,
-                                drive::getPose));
+                        new VisionIOPhotonVisionSim("Front Camera", VisionConstants.frontCamTrans, drive::getPose),
+                        new VisionIOPhotonVisionSim("Back Camera", VisionConstants.backCamTrans, drive::getPose));
                 climber = new Climber(new ClimberIOAlpha());
                 shooter = new ShooterSubsystem(new ShooterIOAlpha());
 
