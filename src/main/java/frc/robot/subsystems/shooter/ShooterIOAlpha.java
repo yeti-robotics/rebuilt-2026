@@ -13,6 +13,7 @@ import frc.robot.util.sim.PhysicsSim;
 public class ShooterIOAlpha implements ShooterIO {
     public TalonFX topMotor;
     public TalonFX bottomMotor;
+    private final MotionMagicVelocityVoltage MOTION_MAGIC_REQUEST = new MotionMagicVelocityVoltage(0);
 
     public ShooterIOAlpha() {
         topMotor = new TalonFX(ShooterConfigs.TOP_MOTOR_ID, Constants.rioBus);
@@ -37,8 +38,7 @@ public class ShooterIOAlpha implements ShooterIO {
 
     @Override
     public void spinMotors(double volts) {
-        MotionMagicVelocityVoltage mmcRequest = new MotionMagicVelocityVoltage(volts);
-        topMotor.setControl(mmcRequest.withVelocity(volts));
+        topMotor.setControl(MOTION_MAGIC_REQUEST.withVelocity(volts));
     }
 
     @Override
