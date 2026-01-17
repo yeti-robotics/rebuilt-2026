@@ -32,8 +32,7 @@ public class AutoAim extends Command {
 
     @Override
     public void initialize() {
-        currentTag = LimelightHelpers.getFiducialID(
-                VisionConstants.camera0Name.isBlank() ? VisionConstants.camera0Name : VisionConstants.camera1Name);
+        currentTag = LimelightHelpers.getFiducialID(VisionConstants.camera0Name);
 
         Translation2d speakerCenter = AllianceFlipUtil.apply(FieldConstants.Hub.centerHubOpening.toTranslation2d());
 

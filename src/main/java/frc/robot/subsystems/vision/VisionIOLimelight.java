@@ -36,7 +36,6 @@ public class VisionIOLimelight implements VisionIO {
     private final DoubleSubscriber latencySubscriber;
     private final DoubleSubscriber txSubscriber;
     private final DoubleSubscriber tySubscriber;
-    private final DoubleArraySubscriber megatag1Subscriber;
     private final DoubleArraySubscriber megatag2Subscriber;
 
     /**
@@ -53,7 +52,6 @@ public class VisionIOLimelight implements VisionIO {
         latencySubscriber = table.getDoubleTopic("tl").subscribe(0.0);
         txSubscriber = table.getDoubleTopic("tx").subscribe(0.0);
         tySubscriber = table.getDoubleTopic("ty").subscribe(0.0);
-        megatag1Subscriber = table.getDoubleArrayTopic("botpose_wpiblue").subscribe(new double[] {});
         megatag2Subscriber = table.getDoubleArrayTopic("botpose_orb_wpiblue").subscribe(new double[] {});
     }
 
@@ -73,30 +71,7 @@ public class VisionIOLimelight implements VisionIO {
         // Read new pose observations from NetworkTables
         Set<Integer> tagIds = new HashSet<>();
         List<PoseObservation> poseObservations = new LinkedList<>();
-        for (var rawSample : megatag1Subscriber.readQueue()) {
-            if (rawSample.value.length == 0) continue;
-            for (int i = 11; i < rawSample.value.length; i += 7) {
-                tagIds.add((int) rawSample.value[i]);
-            }
-            poseObservations.add(new PoseObservation(
-                    // Timestamp, based on server timestamp of publish and latency
-                    rawSample.timestamp * 1.0e-6 - rawSample.value[6] * 1.0e-3,
 
-                    // 3D pose estimate
-                    parsePose(rawSample.value),
-
-                    // Ambiguity, using only the first tag because ambiguity isn't applicable for multitag
-                    rawSample.value.length >= 18 ? rawSample.value[17] : 0.0,
-
-                    // Tag count
-                    (int) rawSample.value[7],
-
-                    // Average tag distance
-                    rawSample.value[9],
-
-                    // Observation type
-                    PoseObservationType.MEGATAG_1));
-        }
         for (var rawSample : megatag2Subscriber.readQueue()) {
             if (rawSample.value.length == 0) continue;
             for (int i = 11; i < rawSample.value.length; i += 7) {
