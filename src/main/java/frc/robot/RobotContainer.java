@@ -24,6 +24,9 @@ import frc.robot.commands.ShooterLEDCommand;
 import frc.robot.commands.SnowfallLEDCommand;
 import frc.robot.constants.Constants;
 import frc.robot.generated.TunerConstants;
+import frc.robot.subsystems.climber.Climber;
+import frc.robot.subsystems.climber.ClimberIO;
+import frc.robot.subsystems.climber.ClimberIOAlpha;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
 import frc.robot.subsystems.drive.GyroIOPigeon2;
@@ -39,6 +42,9 @@ import frc.robot.subsystems.intake.IntakeIOAlpha;
 import frc.robot.subsystems.intake.IntakeSubsystem;
 import frc.robot.subsystems.led.LED;
 import frc.robot.subsystems.led.LEDModes;
+import frc.robot.subsystems.linslide.LinSlideIOAlpha;
+import frc.robot.subsystems.linslide.LinSlideSubsystem;
+import frc.robot.subsystems.linslide.LinearSlideIO;
 import frc.robot.subsystems.shooter.ShooterIO;
 import frc.robot.subsystems.shooter.ShooterIOAlpha;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
@@ -46,6 +52,7 @@ import frc.robot.subsystems.vision.Vision;
 import frc.robot.subsystems.vision.VisionIO;
 import frc.robot.subsystems.vision.VisionIOLimelight;
 import frc.robot.subsystems.vision.VisionIOPhotonVisionSim;
+import frc.robot.util.sim.Mechanisms;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
@@ -58,8 +65,11 @@ public class RobotContainer {
     // Subsystems
     private final Drive drive;
     private final LED led;
+    private final LinSlideSubsystem linSlide;
+    private final Mechanisms mechanisms;
     private final IntakeSubsystem intake;
     private final Hopper hopper;
+    private final Climber climber;
     private final ShooterSubsystem shooter;
     private final Vision vision;
 
@@ -86,8 +96,10 @@ public class RobotContainer {
                         new ModuleIOTalonFX(TunerConstants.FrontRight),
                         new ModuleIOTalonFX(TunerConstants.BackLeft),
                         new ModuleIOTalonFX(TunerConstants.BackRight));
+                linSlide = new LinSlideSubsystem(new LinSlideIOAlpha());
                 intake = new IntakeSubsystem(new IntakeIOAlpha());
                 hopper = new Hopper(new HopperIOAlpha());
+                climber = new Climber(new ClimberIOAlpha());
                 shooter = new ShooterSubsystem(new ShooterIOAlpha());
 
                 vision = new Vision(
@@ -104,6 +116,7 @@ public class RobotContainer {
                         new ModuleIOSim(TunerConstants.FrontRight),
                         new ModuleIOSim(TunerConstants.BackLeft),
                         new ModuleIOSim(TunerConstants.BackRight));
+                linSlide = new LinSlideSubsystem(new LinSlideIOAlpha());
                 intake = new IntakeSubsystem(new IntakeIOAlpha());
                 hopper = new Hopper(new HopperIOAlpha());
                 vision = new Vision(
@@ -126,6 +139,7 @@ public class RobotContainer {
                                                 Units.inchesToMeters(15)),
                                         new Rotation3d(0, Math.toRadians(0), Math.toRadians(0))),
                                 drive::getPose));
+                climber = new Climber(new ClimberIOAlpha());
                 shooter = new ShooterSubsystem(new ShooterIOAlpha());
 
                 break;
@@ -134,8 +148,10 @@ public class RobotContainer {
                 // Replayed robot, disable IO implementations
                 drive = new Drive(
                         new GyroIO() {}, new ModuleIO() {}, new ModuleIO() {}, new ModuleIO() {}, new ModuleIO() {});
+                linSlide = new LinSlideSubsystem(new LinearSlideIO() {});
                 intake = new IntakeSubsystem(new IntakeIO() {});
                 hopper = new Hopper(new HopperIO() {});
+                climber = new Climber(new ClimberIO() {});
                 vision = new Vision(drive, new VisionIO() {}, new VisionIO() {});
                 shooter = new ShooterSubsystem((new ShooterIO() {}));
 
@@ -148,6 +164,9 @@ public class RobotContainer {
 
         // Set up auto routines
         autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
+
+        // Set up simulatable mechanisms
+        mechanisms = new Mechanisms();
 
         // Set up SysId routines
         autoChooser.addOption("Drive Wheel Radius Characterization", DriveCommands.wheelRadiusCharacterization(drive));
@@ -195,8 +214,10 @@ public class RobotContainer {
         controller
                 .y()
                 .whileTrue(AutoAimCommands.autoAim(
-                        drive, controller::getLeftX, controller::getLeftY, centerHubOpening.toTranslation2d()));
-
+                        drive,
+                        () -> -controller.getLeftY(),
+                        () -> -controller.getLeftX(),
+                        centerHubOpening.toTranslation2d()));
         controller.button(1).onTrue(led.runPattern(LEDModes.BLUE_ALLIANCE_ACTIVE));
         controller.button(2).onTrue(led.runPattern(LEDModes.RED_ALLIANCE_ACTIVE));
         controller.button(3).onTrue(led.runPattern(LEDModes.BLUE_TO_RED_TRANSITION));
@@ -204,6 +225,13 @@ public class RobotContainer {
         controller.button(5).onTrue(led.runPattern(LEDModes.RAINBOW));
         controller.button(6).onTrue(led.runPattern(LEDModes.LOCKED_GREEN));
         controller.button(7).onTrue(shooter.shoot(120).alongWith(shooterLEDCommand));
+    }
+
+    public void updateMechanisms() {
+        mechanisms.publishComponentPoses(climber.getCurrentPosition(), linSlide.getCurrentPosition(), true);
+        mechanisms.publishComponentPoses(climber.getTargetPosition(), linSlide.getCurrentPosition(), false);
+        mechanisms.updateClimberMechanism(climber.getCurrentPosition());
+        mechanisms.updateElevatorMech(linSlide.getCurrentPosition());
     }
 
     /**

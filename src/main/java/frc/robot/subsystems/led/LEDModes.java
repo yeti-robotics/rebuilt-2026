@@ -13,7 +13,9 @@ public enum LEDModes {
             LEDPattern.gradient(LEDPattern.GradientType.kContinuous, LEDConstants.YETI_BLUE, LEDConstants.VIHAAN_RED)),
     BLUE_ALLIANCE_ACTIVE(LEDPattern.solid(LEDConstants.YETI_BLUE)),
     RED_ALLIANCE_ACTIVE(LEDPattern.solid(LEDConstants.VIHAAN_RED)),
-    RAINBOW(LEDPattern.rainbow(255, 128).scrollAtAbsoluteSpeed(Units.MetersPerSecond.of(1), LEDConstants.LED_SPACING), true),
+    RAINBOW(
+            LEDPattern.rainbow(255, 128).scrollAtAbsoluteSpeed(Units.MetersPerSecond.of(1), LEDConstants.LED_SPACING),
+            true),
     TRANSITION_ACTIVE(LEDPattern.solid(Color.kPurple)),
     ENDGAME_ACTIVE(LEDPattern.solid(Color.kGreen)),
     LOCKED_GREEN(LEDPattern.solid(Color.kGreen).blink(Seconds.of(1)), true),
