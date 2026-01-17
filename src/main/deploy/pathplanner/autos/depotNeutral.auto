@@ -15,12 +15,6 @@
           "data": {
             "pathName": "depotShoot"
           }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": null
-          }
         }
       ]
     }
