@@ -18,7 +18,9 @@ public class ShooterSubsystem extends SubsystemBase {
         this.io = io;
     }
 
-    public Command shoot(double volts) {
-        return startEnd(() -> io.spinMotors(volts), () -> io.stopMotors());
+    public double getVelocity() { return inputs.topMotorRPM; }
+
+    public Command shoot(double velocity) {
+        return startEnd(() -> io.spinMotors(velocity), () -> io.stopMotors());
     }
 }

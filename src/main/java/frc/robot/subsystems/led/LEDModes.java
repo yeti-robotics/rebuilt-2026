@@ -4,6 +4,8 @@ import edu.wpi.first.units.Units;
 import edu.wpi.first.wpilibj.LEDPattern;
 import edu.wpi.first.wpilibj.util.Color;
 
+import static edu.wpi.first.units.Units.Seconds;
+
 public enum LEDModes {
     RED_TO_BLUE_TRANSITION(
             LEDPattern.gradient(LEDPattern.GradientType.kContinuous, LEDConstants.VIHAAN_RED, LEDConstants.YETI_BLUE)),
@@ -14,7 +16,7 @@ public enum LEDModes {
     RAINBOW(LEDPattern.rainbow(255, 128).scrollAtAbsoluteSpeed(Units.MetersPerSecond.of(1), LEDConstants.LED_SPACING)),
     TRANSITION_ACTIVE(LEDPattern.solid(Color.kPurple)),
     ENDGAME_ACTIVE(LEDPattern.solid(Color.kGreen)),
-    LOCKED_GREEN(LEDPattern.solid(Color.kGreen)),
+    LOCKED_GREEN(LEDPattern.solid(Color.kGreen).blink(Seconds.of(1))), // TODO: change to blinking green
     NOT_LOCKED_RED(LEDPattern.solid(Color.kRed));
 
     public final LEDPattern pattern;

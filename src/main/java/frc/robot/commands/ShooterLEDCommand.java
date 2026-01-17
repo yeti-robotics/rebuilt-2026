@@ -3,18 +3,22 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.led.LED;
 import frc.robot.subsystems.led.LEDModes;
+import frc.robot.subsystems.shooter.ShooterSubsystem;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 
 public class ShooterLEDCommand extends Command {
 
     private final LED leds;
+    private final ShooterSubsystem shooter;
     private final int[] green = {0, 255, 0};
     private final int[] white = {255, 255, 255};
     private ArrayList<int[]> colorQueue;
 
-    public ShooterLEDCommand(LED leds) {
+    public ShooterLEDCommand(LED leds, ShooterSubsystem shooter) {
         this.leds = leds;
+        this.shooter = shooter;
         addRequirements(leds);
     }
 
@@ -45,10 +49,11 @@ public class ShooterLEDCommand extends Command {
 
     @Override
     public void execute() {
-        //        if (ShooterSubsystem.atSetPoint
-        //                && Math.abs(Limelight.getDistance() - ShooterConstants.SHOOTER_HIGH_DIST)
-        //                <= ShooterConstants.SHOOTER_DIST_TOLERANCE) {
-        if (0 == 0) {
+        double tolerance = 6.0; // TODO: Calculate
+        double idealDistanceToHub = 82; // TODO: Calculate
+        if (shooter.getVelocity() == 120
+                && Math.abs(Limelight.getDistance() - idealDistanceToHub)
+                <= tolerance) {
             // wave effect
             for (int i = 0; i < leds.getBufferLength(); i++) {
                 leds.setRGB(
@@ -58,7 +63,7 @@ public class ShooterLEDCommand extends Command {
                         colorQueue.get(i)[2]);
             }
             colorQueue.add(0, colorQueue.remove(leds.getBufferLength() - 1));
-        } else if (1 == 0) { // Reference 2022 Aurora code for actual if statement bc i accidentally deleted it
+        } else if (shooter.getVelocity() == 120) {
             leds.runPattern(LEDModes.LOCKED_GREEN);
         } else {
             leds.runPattern(LEDModes.NOT_LOCKED_RED);
