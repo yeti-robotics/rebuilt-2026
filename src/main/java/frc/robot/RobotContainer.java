@@ -74,11 +74,11 @@ public class RobotContainer {
     private final LoggedDashboardChooser<Command> autoChooser;
 
     public void updateVisionSim() {
-        Pose3d rearCameraPose = new Pose3d(drive.getPose()).transformBy(VisionConstants.backCamTrans);
+        Pose3d backCameraPose = new Pose3d(drive.getPose()).transformBy(VisionConstants.backCamTrans);
 
         Pose3d frontCameraPose = new Pose3d(drive.getPose()).transformBy(VisionConstants.frontCamTrans);
 
-        Logger.recordOutput("Rear Cam Transform", rearCameraPose);
+        Logger.recordOutput("Rear Cam Transform", backCameraPose);
         Logger.recordOutput("Front Cam Transform", frontCameraPose);
     }
 
