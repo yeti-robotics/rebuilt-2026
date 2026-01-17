@@ -2,22 +2,20 @@ package frc.robot.subsystems.climber;
 
 import com.ctre.phoenix6.controls.MotionMagicTorqueCurrentFOC;
 import com.ctre.phoenix6.controls.NeutralOut;
-import com.ctre.phoenix6.hardware.CANrange;
 import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.units.measure.Angle;
-import edu.wpi.first.wpilibj.DigitalInput;
 import frc.robot.Robot;
 import frc.robot.constants.Constants;
 import frc.robot.util.sim.PhysicsSim;
 
 public class ClimberIOAlpha implements ClimberIO {
     private final TalonFX climberMotor;
-    private static CANrange climberSensor;
+    // private static CANrange climberSensor;
     private MotionMagicTorqueCurrentFOC magicRequest = new MotionMagicTorqueCurrentFOC(0);
 
     public ClimberIOAlpha() {
         climberMotor = new TalonFX(ClimberConfig.CLIMBER_MOTOR_ID, Constants.rioBus);
-        climberSensor = new CANrange(ClimberConfig.CLIMBER_SENSOR_ID, Constants.rioBus);
+        // climberSensor = new CANrange(ClimberConfig.CLIMBER_SENSOR_ID, Constants.rioBus);
         if (Robot.isSimulation()) {
             PhysicsSim.getInstance().addTalonFX(climberMotor);
         }
@@ -37,9 +35,9 @@ public class ClimberIOAlpha implements ClimberIO {
     public void updateInputs(ClimberIOInputs inputs) {
         inputs.position = climberMotor.getPosition().getValueAsDouble();
         // for a canrange
-        inputs.isAtBottom = climberSensor.getIsDetected().getValue();
+        // inputs.isAtBottom = climberSensor.getIsDetected().getValue();
         // for a limit switch
-        //inputs.isAtBottom = climberSensor.get();
+        // inputs.isAtBottom = climberSensor.get();
         inputs.targetPosition = climberMotor.getClosedLoopReference().getValueAsDouble();
     }
 

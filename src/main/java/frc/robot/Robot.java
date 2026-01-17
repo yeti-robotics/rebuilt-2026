@@ -88,7 +88,6 @@ public class Robot extends LoggedRobot {
         CommandScheduler.getInstance().run();
         robotContainer.updateMechanisms();
 
-
         // Return to non-RT thread priority (do not modify the first argument)
         // Threads.setCurrentThreadPriority(false, 10);
     }

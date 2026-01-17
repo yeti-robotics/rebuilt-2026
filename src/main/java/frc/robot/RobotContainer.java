@@ -22,7 +22,6 @@ import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.climber.Climber;
 import frc.robot.subsystems.climber.ClimberIO;
 import frc.robot.subsystems.climber.ClimberIOAlpha;
-import frc.robot.subsystems.climber.ClimberPosition;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
 import frc.robot.subsystems.drive.GyroIOPigeon2;
@@ -37,10 +36,10 @@ import frc.robot.subsystems.intake.IntakeIO;
 import frc.robot.subsystems.intake.IntakeIOAlpha;
 import frc.robot.subsystems.intake.IntakeSubsystem;
 import frc.robot.subsystems.led.LED;
-import frc.robot.util.sim.Mechanisms;
 import frc.robot.subsystems.shooter.ShooterIO;
 import frc.robot.subsystems.shooter.ShooterIOAlpha;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
+import frc.robot.util.sim.Mechanisms;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
@@ -165,16 +164,12 @@ public class RobotContainer {
                         .ignoringDisable(true));
 
         controller.leftTrigger().whileTrue(hopper.spinHopper(HopperConfigs.HOPPER_SPIN_VOLTAGE));
-
-
-
     }
 
     public void updateMechanisms() {
         mechanisms.publishComponentPoses(climber.getCurrentPosition(), true);
         mechanisms.publishComponentPoses(climber.getTargetPosition(), false);
         mechanisms.updateClimberMechanism(climber.getCurrentPosition());
-        controller.button(1).whileTrue(shooter.shoot(6));
     }
 
     /**

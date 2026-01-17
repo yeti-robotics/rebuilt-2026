@@ -15,5 +15,7 @@ public enum ClimberPosition {
         this.height = Units.Rotations.of(height);
     }
 
-    public Angle getHeight() {return height;}
+    public Angle getHeight() {
+        return height;
+    }
 }
