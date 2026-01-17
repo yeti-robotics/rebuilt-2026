@@ -7,7 +7,7 @@
         {
           "type": "wait",
           "data": {
-            "waitTime": 0
+            "waitTime": 2.0
           }
         },
         {
@@ -25,7 +25,7 @@
         {
           "type": "wait",
           "data": {
-            "waitTime": 0
+            "waitTime": 2.0
           }
         },
         {
@@ -43,13 +43,19 @@
         {
           "type": "wait",
           "data": {
-            "waitTime": 0
+            "waitTime": 2.0
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Shoot to Trench"
+            "pathName": "Shoot to Tower"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 4.0
           }
         }
       ]
