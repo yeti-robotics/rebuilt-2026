@@ -11,7 +11,6 @@ import static frc.robot.constants.FieldConstants.Hub.centerHubOpening;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.math.geometry.*;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -45,11 +44,9 @@ import frc.robot.subsystems.linslide.LinearSlideIO;
 import frc.robot.subsystems.shooter.ShooterIO;
 import frc.robot.subsystems.shooter.ShooterIOAlpha;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
-import frc.robot.subsystems.vision.Vision;
-import frc.robot.subsystems.vision.VisionIO;
-import frc.robot.subsystems.vision.VisionIOLimelight;
-import frc.robot.subsystems.vision.VisionIOPhotonVisionSim;
+import frc.robot.subsystems.vision.*;
 import frc.robot.util.sim.Mechanisms;
+import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
@@ -75,6 +72,25 @@ public class RobotContainer {
 
     // Dashboard inputs
     private final LoggedDashboardChooser<Command> autoChooser;
+
+    public void updateVisionSim() {
+        Pose3d rearCameraPose = new Pose3d(drive.getPose())
+                .transformBy(new Transform3d(
+                        VisionConstants.backCamTrans.getX(),
+                        VisionConstants.backCamTrans.getY(),
+                        VisionConstants.backCamTrans.getZ(),
+                        VisionConstants.backCamTrans.getRotation()));
+
+        Pose3d rightFrontCameraPose = new Pose3d(drive.getPose())
+                .transformBy(new Transform3d(
+                        VisionConstants.frontCamTrans.getX(),
+                        VisionConstants.frontCamTrans.getY(),
+                        VisionConstants.frontCamTrans.getZ(),
+                        VisionConstants.frontCamTrans.getRotation()));
+
+        Logger.recordOutput("Rear Cam Transform", rearCameraPose);
+        Logger.recordOutput("Front Cam Transform", rightFrontCameraPose);
+    }
 
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
     public RobotContainer() {
@@ -118,21 +134,11 @@ public class RobotContainer {
                         drive,
                         new VisionIOPhotonVisionSim(
                                 "Front Camera",
-                                new Transform3d(
-                                        new Translation3d(
-                                                Units.inchesToMeters(-3),
-                                                Units.inchesToMeters(0),
-                                                Units.inchesToMeters(15)),
-                                        new Rotation3d(0, Math.toRadians(0), Math.toRadians(180))),
+                                VisionConstants.frontCamTrans,
                                 drive::getPose),
                         new VisionIOPhotonVisionSim(
                                 "Back Camera",
-                                new Transform3d(
-                                        new Translation3d(
-                                                Units.inchesToMeters(3),
-                                                Units.inchesToMeters(0),
-                                                Units.inchesToMeters(15)),
-                                        new Rotation3d(0, Math.toRadians(0), Math.toRadians(0))),
+                                VisionConstants.backCamTrans,
                                 drive::getPose));
                 climber = new Climber(new ClimberIOAlpha());
                 shooter = new ShooterSubsystem(new ShooterIOAlpha());
