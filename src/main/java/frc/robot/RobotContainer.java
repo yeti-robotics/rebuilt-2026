@@ -8,8 +8,8 @@
 package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.*;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -33,6 +33,10 @@ import frc.robot.subsystems.intake.IntakeIO;
 import frc.robot.subsystems.intake.IntakeIOAlpha;
 import frc.robot.subsystems.intake.IntakeSubsystem;
 import frc.robot.subsystems.led.LED;
+import frc.robot.subsystems.vision.Vision;
+import frc.robot.subsystems.vision.VisionIO;
+import frc.robot.subsystems.vision.VisionIOLimelight;
+import frc.robot.subsystems.vision.VisionIOPhotonVisionSim;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
@@ -47,6 +51,7 @@ public class RobotContainer {
     private final LED led;
     private final IntakeSubsystem intake;
     private final Hopper hopper;
+    private final Vision vision;
 
     // Controller
     private final CommandXboxController controller = new CommandXboxController(0);
@@ -70,7 +75,10 @@ public class RobotContainer {
                 led = new LED();
                 intake = new IntakeSubsystem(new IntakeIOAlpha());
                 hopper = new Hopper(new HopperIOAlpha());
-
+                vision = new Vision(
+                        drive,
+                        new VisionIOLimelight("Front Camera", drive::getRotation),
+                        new VisionIOLimelight("Back Camera", drive::getRotation));
                 break;
 
             case SIM:
@@ -84,6 +92,26 @@ public class RobotContainer {
                 led = new LED();
                 intake = new IntakeSubsystem(new IntakeIOAlpha());
                 hopper = new Hopper(new HopperIOAlpha());
+                vision = new Vision(
+                        drive,
+                        new VisionIOPhotonVisionSim(
+                                "Front Camera",
+                                new Transform3d(
+                                        new Translation3d(
+                                                Units.inchesToMeters(-3),
+                                                Units.inchesToMeters(0),
+                                                Units.inchesToMeters(15)),
+                                        new Rotation3d(0, Math.toRadians(0), Math.toRadians(180))),
+                                drive::getPose),
+                        new VisionIOPhotonVisionSim(
+                                "Back Camera",
+                                new Transform3d(
+                                        new Translation3d(
+                                                Units.inchesToMeters(3),
+                                                Units.inchesToMeters(0),
+                                                Units.inchesToMeters(15)),
+                                        new Rotation3d(0, Math.toRadians(0), Math.toRadians(180))),
+                                drive::getPose));
 
                 break;
 
@@ -94,6 +122,7 @@ public class RobotContainer {
                 led = new LED();
                 intake = new IntakeSubsystem(new IntakeIO() {});
                 hopper = new Hopper(new HopperIO() {});
+                vision = new Vision(drive, new VisionIO() {}, new VisionIO() {});
 
                 break;
         }
