@@ -39,6 +39,9 @@ import frc.robot.subsystems.intake.IntakeIO;
 import frc.robot.subsystems.intake.IntakeIOAlpha;
 import frc.robot.subsystems.intake.IntakeSubsystem;
 import frc.robot.subsystems.led.LED;
+import frc.robot.subsystems.linslide.LinSlideIOAlpha;
+import frc.robot.subsystems.linslide.LinSlideSubsystem;
+import frc.robot.subsystems.linslide.LinearSlideIO;
 import frc.robot.subsystems.shooter.ShooterIO;
 import frc.robot.subsystems.shooter.ShooterIOAlpha;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
@@ -59,11 +62,11 @@ public class RobotContainer {
     // Subsystems
     private final Drive drive;
     private final LED led;
+    private final LinSlideSubsystem linSlide;
+    private final Mechanisms mechanisms;
     private final IntakeSubsystem intake;
     private final Hopper hopper;
     private final Climber climber;
-
-    final Mechanisms mechanisms;
     private final ShooterSubsystem shooter;
     private final Vision vision;
 
@@ -86,6 +89,7 @@ public class RobotContainer {
                         new ModuleIOTalonFX(TunerConstants.FrontRight),
                         new ModuleIOTalonFX(TunerConstants.BackLeft),
                         new ModuleIOTalonFX(TunerConstants.BackRight));
+                linSlide = new LinSlideSubsystem(new LinSlideIOAlpha());
                 led = new LED();
                 intake = new IntakeSubsystem(new IntakeIOAlpha());
                 hopper = new Hopper(new HopperIOAlpha());
@@ -106,6 +110,7 @@ public class RobotContainer {
                         new ModuleIOSim(TunerConstants.FrontRight),
                         new ModuleIOSim(TunerConstants.BackLeft),
                         new ModuleIOSim(TunerConstants.BackRight));
+                linSlide = new LinSlideSubsystem(new LinSlideIOAlpha());
                 led = new LED();
                 intake = new IntakeSubsystem(new IntakeIOAlpha());
                 hopper = new Hopper(new HopperIOAlpha());
@@ -138,6 +143,7 @@ public class RobotContainer {
                 // Replayed robot, disable IO implementations
                 drive = new Drive(
                         new GyroIO() {}, new ModuleIO() {}, new ModuleIO() {}, new ModuleIO() {}, new ModuleIO() {});
+                linSlide = new LinSlideSubsystem(new LinearSlideIO() {});
                 led = new LED();
                 intake = new IntakeSubsystem(new IntakeIO() {});
                 hopper = new Hopper(new HopperIO() {});
@@ -201,13 +207,17 @@ public class RobotContainer {
         controller
                 .y()
                 .whileTrue(AutoAimCommands.autoAim(
-                        drive, controller::getLeftX, controller::getLeftY, centerHubOpening.toTranslation2d()));
+                        drive,
+                        () -> -controller.getLeftY(),
+                        () -> -controller.getLeftX(),
+                        centerHubOpening.toTranslation2d()));
     }
 
     public void updateMechanisms() {
-        mechanisms.publishComponentPoses(climber.getCurrentPosition(), true);
-        mechanisms.publishComponentPoses(climber.getTargetPosition(), false);
+        mechanisms.publishComponentPoses(climber.getCurrentPosition(), linSlide.getCurrentPosition(), true);
+        mechanisms.publishComponentPoses(climber.getTargetPosition(), linSlide.getCurrentPosition(), false);
         mechanisms.updateClimberMechanism(climber.getCurrentPosition());
+        mechanisms.updateElevatorMech(linSlide.getCurrentPosition());
     }
 
     /**
