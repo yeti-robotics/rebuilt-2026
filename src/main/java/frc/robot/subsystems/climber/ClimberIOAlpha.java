@@ -13,6 +13,7 @@ import frc.robot.util.sim.PhysicsSim;
 public class ClimberIOAlpha implements ClimberIO {
     private final TalonFX climberMotor;
     private static CANrange climberSensor;
+    private MotionMagicTorqueCurrentFOC magicRequest = new MotionMagicTorqueCurrentFOC(0);
 
     public ClimberIOAlpha() {
         climberMotor = new TalonFX(ClimberConfig.CLIMBER_MOTOR_ID, Constants.rioBus);
@@ -44,7 +45,7 @@ public class ClimberIOAlpha implements ClimberIO {
 
     @Override
     public void setClimberPosition(Angle position) {
-        climberMotor.setControl(new MotionMagicTorqueCurrentFOC(position));
+        climberMotor.setControl(magicRequest.withPosition(position));
     }
 
     @Override

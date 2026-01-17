@@ -20,6 +20,7 @@ import frc.robot.commands.DriveCommands;
 import frc.robot.constants.Constants;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.climber.Climber;
+import frc.robot.subsystems.climber.ClimberIO;
 import frc.robot.subsystems.climber.ClimberIOAlpha;
 import frc.robot.subsystems.climber.ClimberPosition;
 import frc.robot.subsystems.drive.Drive;
@@ -95,7 +96,7 @@ public class RobotContainer {
                         new GyroIO() {}, new ModuleIO() {}, new ModuleIO() {}, new ModuleIO() {}, new ModuleIO() {});
                 led = new LED();
                 intake = new IntakeSubsystem(new IntakeIO() {});
-                climber = new Climber(new ClimberIOAlpha() {});
+                climber = new Climber(new ClimberIO() {});
 
                 break;
         }
