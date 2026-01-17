@@ -33,6 +33,9 @@ import frc.robot.subsystems.intake.IntakeIO;
 import frc.robot.subsystems.intake.IntakeIOAlpha;
 import frc.robot.subsystems.intake.IntakeSubsystem;
 import frc.robot.subsystems.led.LED;
+import frc.robot.subsystems.shooter.ShooterIO;
+import frc.robot.subsystems.shooter.ShooterIOAlpha;
+import frc.robot.subsystems.shooter.ShooterSubsystem;
 import frc.robot.subsystems.vision.Vision;
 import frc.robot.subsystems.vision.VisionIO;
 import frc.robot.subsystems.vision.VisionIOLimelight;
@@ -51,6 +54,7 @@ public class RobotContainer {
     private final LED led;
     private final IntakeSubsystem intake;
     private final Hopper hopper;
+    private final ShooterSubsystem shooter;
     private final Vision vision;
 
     // Controller
@@ -75,6 +79,8 @@ public class RobotContainer {
                 led = new LED();
                 intake = new IntakeSubsystem(new IntakeIOAlpha());
                 hopper = new Hopper(new HopperIOAlpha());
+                shooter = new ShooterSubsystem(new ShooterIOAlpha());
+
                 vision = new Vision(
                         drive,
                         new VisionIOLimelight("Front Camera", drive::getRotation),
@@ -112,6 +118,7 @@ public class RobotContainer {
                                                 Units.inchesToMeters(15)),
                                         new Rotation3d(0, Math.toRadians(0), Math.toRadians(180))),
                                 drive::getPose));
+                shooter = new ShooterSubsystem(new ShooterIOAlpha());
 
                 break;
 
@@ -123,6 +130,7 @@ public class RobotContainer {
                 intake = new IntakeSubsystem(new IntakeIO() {});
                 hopper = new Hopper(new HopperIO() {});
                 vision = new Vision(drive, new VisionIO() {}, new VisionIO() {});
+                shooter = new ShooterSubsystem((new ShooterIO() {}));
 
                 break;
         }
@@ -173,6 +181,7 @@ public class RobotContainer {
                         .ignoringDisable(true));
 
         controller.leftTrigger().whileTrue(hopper.spinHopper(HopperConfigs.HOPPER_SPIN_VOLTAGE));
+        controller.button(1).whileTrue(shooter.shoot(6));
     }
 
     /**
