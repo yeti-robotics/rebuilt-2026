@@ -9,9 +9,6 @@ package frc.robot;
 
 
 import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.auto.NamedCommands;
-import com.pathplanner.lib.util.PathPlannerLogging;
-import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.GenericHID;
@@ -60,15 +57,6 @@ public class RobotContainer {
 
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
     public RobotContainer() {
-//        NamedCommands.registerCommand("intake", Commands.sequence(
-//                intake.intakeCommand(0.55),
-//                linSlide.applyPower(0.2)
-//        ));
-//        NamedCommands.registerCommand("shoot", Commands.sequence(
-//                hopper.spinHopper(5),
-//                shooter.shooterCommand()
-//        ));
-
         switch (Constants.currentMode) {
             case REAL:
                 // Real robot, instantiate hardware IO implementations
