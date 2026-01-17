@@ -29,6 +29,10 @@ import frc.robot.subsystems.drive.GyroIOPigeon2;
 import frc.robot.subsystems.drive.ModuleIO;
 import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOTalonFX;
+import frc.robot.subsystems.hopper.Hopper;
+import frc.robot.subsystems.hopper.HopperConfigs;
+import frc.robot.subsystems.hopper.HopperIO;
+import frc.robot.subsystems.hopper.HopperIOAlpha;
 import frc.robot.subsystems.intake.IntakeIO;
 import frc.robot.subsystems.intake.IntakeIOAlpha;
 import frc.robot.subsystems.intake.IntakeSubsystem;
@@ -47,6 +51,7 @@ public class RobotContainer {
     private final Drive drive;
     private final LED led;
     private final IntakeSubsystem intake;
+    private final Hopper hopper;
     private final Climber climber;
 
     final Mechanisms mechanisms;
@@ -72,6 +77,7 @@ public class RobotContainer {
                         new ModuleIOTalonFX(TunerConstants.BackRight));
                 led = new LED();
                 intake = new IntakeSubsystem(new IntakeIOAlpha());
+                hopper = new Hopper(new HopperIOAlpha());
                 climber = new Climber(new ClimberIOAlpha());
 
                 break;
@@ -86,6 +92,7 @@ public class RobotContainer {
                         new ModuleIOSim(TunerConstants.BackRight));
                 led = new LED();
                 intake = new IntakeSubsystem(new IntakeIOAlpha());
+                hopper = new Hopper(new HopperIOAlpha());
                 climber = new Climber(new ClimberIOAlpha());
 
                 break;
@@ -96,6 +103,7 @@ public class RobotContainer {
                         new GyroIO() {}, new ModuleIO() {}, new ModuleIO() {}, new ModuleIO() {}, new ModuleIO() {});
                 led = new LED();
                 intake = new IntakeSubsystem(new IntakeIO() {});
+                hopper = new Hopper(new HopperIO() {});
                 climber = new Climber(new ClimberIO() {});
 
                 break;
@@ -149,14 +157,7 @@ public class RobotContainer {
                                 drive)
                         .ignoringDisable(true));
 
-        controller
-                .leftTrigger().onTrue(climber.moveToPosition(ClimberPosition.BOTTOM.getHeight()));
-        controller
-                .leftBumper().onTrue(climber.moveToPosition(ClimberPosition.L1.getHeight()));
-        controller
-                .rightTrigger().onTrue(climber.moveToPosition(ClimberPosition.L2.getHeight()));
-        controller
-                .rightBumper().onTrue(climber.moveToPosition(ClimberPosition.L3.getHeight()));
+        controller.leftTrigger().whileTrue(hopper.spinHopper(HopperConfigs.HOPPER_SPIN_VOLTAGE));
 
 
 
