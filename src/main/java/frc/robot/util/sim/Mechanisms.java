@@ -12,15 +12,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.util.Color8Bit;
 import org.littletonrobotics.junction.Logger;
-import edu.wpi.first.math.geometry.Pose3d;
-import edu.wpi.first.math.geometry.Rotation3d;
-import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
-import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj.util.Color;
-import edu.wpi.first.wpilibj.util.Color8Bit;
-import org.littletonrobotics.junction.Logger;
 
 @Logged
 public class Mechanisms {
@@ -37,7 +28,6 @@ public class Mechanisms {
     private final StructArrayPublisher<Pose3d> targetComponentPosePublisher = NetworkTableInstance.getDefault()
             .getStructArrayTopic("ComponentPoses/Target", Pose3d.struct)
             .publish();
-
 
     public Mechanisms() {
         climberMechanism = new Mechanism2d(Units.inchesToMeters(60), Units.inchesToMeters(100));
@@ -71,7 +61,7 @@ public class Mechanisms {
         SmartDashboard.putData("Mechanisms/Climber", climberMechanism);
     }
 
-    public void publishComponentPoses(double elevatorPos, boolean useRealPoses) {
+    public void publishComponentPoses(double climberPosition, double elevatorPos, boolean useRealPoses) {
         double elevatorStageHeight = Units.inchesToMeters(elevatorPos * 8.6);
 
         Logger.recordOutput(
@@ -80,9 +70,7 @@ public class Mechanisms {
                         Units.inchesToMeters(-8),
                         0.0,
                         Units.inchesToMeters(2.625) + elevatorStageHeight,
-                        Rotation3d.kZero)
-
-        );
+                        Rotation3d.kZero));
 
         Logger.recordOutput(
                 "ComponentPoses/" + (useRealPoses ? "Real" : "Target"),

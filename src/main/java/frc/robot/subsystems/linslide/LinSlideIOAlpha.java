@@ -17,7 +17,6 @@ public class LinSlideIOAlpha implements LinearSlideIO {
 
     private final MotionMagicTorqueCurrentFOC magicRequest = new MotionMagicTorqueCurrentFOC(0);
 
-
     public LinSlideIOAlpha() {
         linSlideMotor = new TalonFX(LIN_SLIDE_MOTOR_ID, rioBus);
         linSlideCANCoder = new CANcoder(LIN_SLIDE_CANCODER_ID, rioBus);

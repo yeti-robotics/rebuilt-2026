@@ -42,7 +42,6 @@ import frc.robot.subsystems.led.LED;
 import frc.robot.subsystems.linslide.LinSlideIOAlpha;
 import frc.robot.subsystems.linslide.LinSlideSubsystem;
 import frc.robot.subsystems.linslide.LinearSlideIO;
-import frc.robot.util.sim.Mechanisms;
 import frc.robot.subsystems.shooter.ShooterIO;
 import frc.robot.subsystems.shooter.ShooterIOAlpha;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
@@ -52,8 +51,6 @@ import frc.robot.subsystems.vision.VisionIOLimelight;
 import frc.robot.subsystems.vision.VisionIOPhotonVisionSim;
 import frc.robot.util.sim.Mechanisms;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
-
-import static frc.robot.subsystems.linslide.LinSlidePosition.DEPLOY;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -70,8 +67,6 @@ public class RobotContainer {
     private final IntakeSubsystem intake;
     private final Hopper hopper;
     private final Climber climber;
-
-    final Mechanisms mechanisms;
     private final ShooterSubsystem shooter;
     private final Vision vision;
 
@@ -212,17 +207,16 @@ public class RobotContainer {
         controller
                 .y()
                 .whileTrue(AutoAimCommands.autoAim(
-                        drive, () -> -controller.getLeftY(), () -> -controller.getLeftX(), centerHubOpening.toTranslation2d()));
+                        drive,
+                        () -> -controller.getLeftY(),
+                        () -> -controller.getLeftX(),
+                        centerHubOpening.toTranslation2d()));
     }
 
     public void updateMechanisms() {
-        mechanisms.publishComponentPoses(climber.getCurrentPosition(), true);
-        mechanisms.publishComponentPoses(climber.getTargetPosition(), false);
+        mechanisms.publishComponentPoses(climber.getCurrentPosition(), linSlide.getCurrentPosition(), true);
+        mechanisms.publishComponentPoses(climber.getTargetPosition(), linSlide.getCurrentPosition(), false);
         mechanisms.updateClimberMechanism(climber.getCurrentPosition());
-        controller.button(2).onTrue(linSlide.moveToPosition(DEPLOY.getPosition()));
-        controller.button(1).onTrue(linSlide.applyPower());
-        mechanisms.publishComponentPoses(linSlide.getCurrentPosition(), true);
-        mechanisms.publishComponentPoses(linSlide.getTargetPosition(), false);
         mechanisms.updateElevatorMech(linSlide.getCurrentPosition());
     }
 
