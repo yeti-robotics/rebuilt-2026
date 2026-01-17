@@ -36,6 +36,9 @@ import frc.robot.subsystems.intake.IntakeIOAlpha;
 import frc.robot.subsystems.intake.IntakeSubsystem;
 import frc.robot.subsystems.led.LED;
 import frc.robot.subsystems.led.LEDModes;
+import frc.robot.subsystems.shooter.ShooterIO;
+import frc.robot.subsystems.shooter.ShooterIOAlpha;
+import frc.robot.subsystems.shooter.ShooterSubsystem;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
@@ -50,6 +53,7 @@ public class RobotContainer {
     private final LED led;
     private final IntakeSubsystem intake;
     private final Hopper hopper;
+    private final ShooterSubsystem shooter;
 
     // Commands
     private final ShooterLEDCommand shooterLEDCommand;
@@ -76,6 +80,7 @@ public class RobotContainer {
                         new ModuleIOTalonFX(TunerConstants.BackRight));
                 intake = new IntakeSubsystem(new IntakeIOAlpha());
                 hopper = new Hopper(new HopperIOAlpha());
+                shooter = new ShooterSubsystem(new ShooterIOAlpha());
 
                 break;
 
@@ -89,6 +94,7 @@ public class RobotContainer {
                         new ModuleIOSim(TunerConstants.BackRight));
                 intake = new IntakeSubsystem(new IntakeIOAlpha());
                 hopper = new Hopper(new HopperIOAlpha());
+                shooter = new ShooterSubsystem(new ShooterIOAlpha());
 
                 break;
 
@@ -98,6 +104,7 @@ public class RobotContainer {
                         new GyroIO() {}, new ModuleIO() {}, new ModuleIO() {}, new ModuleIO() {}, new ModuleIO() {});
                 intake = new IntakeSubsystem(new IntakeIO() {});
                 hopper = new Hopper(new HopperIO() {});
+                shooter = new ShooterSubsystem((new ShooterIO() {}));
 
                 break;
         }
