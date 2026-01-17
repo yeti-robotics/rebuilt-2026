@@ -10,11 +10,11 @@ import frc.robot.Robot;
 import frc.robot.constants.Constants;
 import frc.robot.util.sim.PhysicsSim;
 
-public class ShooterIOTalonFXAlpha implements ShooterIO {
+public class ShooterIOAlpha implements ShooterIO {
     public TalonFX topMotor;
     public TalonFX bottomMotor;
 
-    public ShooterIOTalonFXAlpha() {
+    public ShooterIOAlpha() {
         topMotor = new TalonFX(ShooterConfigs.TOP_MOTOR_ID, Constants.rioBus);
         bottomMotor = new TalonFX(ShooterConfigs.BOTTOM_MOTOR_ID, Constants.rioBus);
         bottomMotor.setControl(new Follower(ShooterConfigs.TOP_MOTOR_ID, MotorAlignmentValue.Opposed));
@@ -37,7 +37,8 @@ public class ShooterIOTalonFXAlpha implements ShooterIO {
 
     @Override
     public void spinMotors(double volts) {
-        topMotor.setControl(new MotionMagicVelocityVoltage(volts));
+        MotionMagicVelocityVoltage mmcRequest = new MotionMagicVelocityVoltage(volts);
+        topMotor.setControl(mmcRequest.withVelocity(volts));
     }
 
     @Override
