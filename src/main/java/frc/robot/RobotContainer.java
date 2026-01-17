@@ -25,6 +25,9 @@ import frc.robot.subsystems.drive.GyroIOPigeon2;
 import frc.robot.subsystems.drive.ModuleIO;
 import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOTalonFX;
+import frc.robot.subsystems.intake.IntakeIO;
+import frc.robot.subsystems.intake.IntakeIOAlpha;
+import frc.robot.subsystems.intake.IntakeSubsystem;
 import frc.robot.subsystems.led.LED;
 import frc.robot.subsystems.linslide.LinSlideIOAlpha;
 import frc.robot.subsystems.linslide.LinSlideSubsystem;
@@ -45,6 +48,7 @@ public class RobotContainer {
     private final LED led;
     private final LinSlideSubsystem linSlide;
     private final Mechanisms mechanisms;
+    private final IntakeSubsystem intake;
 
     // Controller
     private final CommandXboxController controller = new CommandXboxController(0);
@@ -68,6 +72,7 @@ public class RobotContainer {
                 linSlide = new LinSlideSubsystem(new LinSlideIOAlpha());
                 led = new LED();
                 mechanisms = new Mechanisms();
+                intake = new IntakeSubsystem(new IntakeIOAlpha());
 
                 break;
 
@@ -82,6 +87,7 @@ public class RobotContainer {
                 linSlide = new LinSlideSubsystem(new LinSlideIOAlpha());
                 led = new LED();
                 mechanisms = new Mechanisms();
+                intake = new IntakeSubsystem(new IntakeIOAlpha());
 
                 break;
 
@@ -92,6 +98,7 @@ public class RobotContainer {
                 linSlide = new LinSlideSubsystem(new LinSlideIOAlpha());
                 led = new LED();
                 mechanisms = new Mechanisms();
+                intake = new IntakeSubsystem(new IntakeIO() {});
 
                 break;
         }
