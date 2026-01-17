@@ -20,6 +20,8 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.AutoAimCommands;
 import frc.robot.commands.DriveCommands;
+import frc.robot.commands.ShooterLEDCommand;
+import frc.robot.commands.SnowfallLEDCommand;
 import frc.robot.constants.Constants;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.climber.Climber;
@@ -39,6 +41,7 @@ import frc.robot.subsystems.intake.IntakeIO;
 import frc.robot.subsystems.intake.IntakeIOAlpha;
 import frc.robot.subsystems.intake.IntakeSubsystem;
 import frc.robot.subsystems.led.LED;
+import frc.robot.subsystems.led.LEDModes;
 import frc.robot.subsystems.linslide.LinSlideIOAlpha;
 import frc.robot.subsystems.linslide.LinSlideSubsystem;
 import frc.robot.subsystems.linslide.LinearSlideIO;
@@ -70,6 +73,10 @@ public class RobotContainer {
     private final ShooterSubsystem shooter;
     private final Vision vision;
 
+    // Commands
+    private final ShooterLEDCommand shooterLEDCommand;
+    private final SnowfallLEDCommand snowfallLEDCommand;
+
     // Controller
     private final CommandXboxController controller = new CommandXboxController(0);
 
@@ -90,7 +97,6 @@ public class RobotContainer {
                         new ModuleIOTalonFX(TunerConstants.BackLeft),
                         new ModuleIOTalonFX(TunerConstants.BackRight));
                 linSlide = new LinSlideSubsystem(new LinSlideIOAlpha());
-                led = new LED();
                 intake = new IntakeSubsystem(new IntakeIOAlpha());
                 hopper = new Hopper(new HopperIOAlpha());
                 climber = new Climber(new ClimberIOAlpha());
@@ -111,7 +117,6 @@ public class RobotContainer {
                         new ModuleIOSim(TunerConstants.BackLeft),
                         new ModuleIOSim(TunerConstants.BackRight));
                 linSlide = new LinSlideSubsystem(new LinSlideIOAlpha());
-                led = new LED();
                 intake = new IntakeSubsystem(new IntakeIOAlpha());
                 hopper = new Hopper(new HopperIOAlpha());
                 vision = new Vision(
@@ -144,7 +149,6 @@ public class RobotContainer {
                 drive = new Drive(
                         new GyroIO() {}, new ModuleIO() {}, new ModuleIO() {}, new ModuleIO() {}, new ModuleIO() {});
                 linSlide = new LinSlideSubsystem(new LinearSlideIO() {});
-                led = new LED();
                 intake = new IntakeSubsystem(new IntakeIO() {});
                 hopper = new Hopper(new HopperIO() {});
                 climber = new Climber(new ClimberIO() {});
@@ -153,6 +157,10 @@ public class RobotContainer {
 
                 break;
         }
+
+        led = new LED();
+        shooterLEDCommand = new ShooterLEDCommand(led, shooter);
+        snowfallLEDCommand = new SnowfallLEDCommand(led, 2);
 
         // Set up auto routines
         autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
@@ -203,7 +211,6 @@ public class RobotContainer {
                         .ignoringDisable(true));
 
         controller.leftTrigger().whileTrue(hopper.spinHopper(HopperConfigs.HOPPER_SPIN_VOLTAGE));
-        controller.button(1).whileTrue(shooter.shoot(6));
         controller
                 .y()
                 .whileTrue(AutoAimCommands.autoAim(
@@ -211,6 +218,13 @@ public class RobotContainer {
                         () -> -controller.getLeftY(),
                         () -> -controller.getLeftX(),
                         centerHubOpening.toTranslation2d()));
+        controller.button(1).onTrue(led.runPattern(LEDModes.BLUE_ALLIANCE_ACTIVE));
+        controller.button(2).onTrue(led.runPattern(LEDModes.RED_ALLIANCE_ACTIVE));
+        controller.button(3).onTrue(led.runPattern(LEDModes.BLUE_TO_RED_TRANSITION));
+        controller.button(4).onTrue(led.runPattern(LEDModes.RED_TO_BLUE_TRANSITION));
+        controller.button(5).onTrue(led.runPattern(LEDModes.RAINBOW));
+        controller.button(6).onTrue(led.runPattern(LEDModes.LOCKED_GREEN));
+        controller.button(7).onTrue(shooter.shoot(120).alongWith(shooterLEDCommand));
     }
 
     public void updateMechanisms() {

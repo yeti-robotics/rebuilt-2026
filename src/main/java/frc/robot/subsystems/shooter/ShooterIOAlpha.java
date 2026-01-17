@@ -37,8 +37,8 @@ public class ShooterIOAlpha implements ShooterIO {
     }
 
     @Override
-    public void spinMotors(double volts) {
-        topMotor.setControl(MOTION_MAGIC_REQUEST.withVelocity(volts));
+    public void spinMotors(double velocity) {
+        topMotor.setControl(MOTION_MAGIC_REQUEST.withVelocity(velocity));
     }
 
     @Override
