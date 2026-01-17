@@ -13,7 +13,8 @@ public class ClimberIOAlpha implements ClimberIO {
     private MotionMagicTorqueCurrentFOC magicRequest = new MotionMagicTorqueCurrentFOC(0);
 
     public ClimberIOAlpha() {
-        climberMotor = new TalonFX(ClimberConfig.CLIMBER_MOTOR_ID, Constants.rioBus);if (Robot.isSimulation()) {
+        climberMotor = new TalonFX(ClimberConfig.CLIMBER_MOTOR_ID, Constants.rioBus);
+        if (Robot.isSimulation()) {
             PhysicsSim.getInstance().addTalonFX(climberMotor);
         }
         climberMotor.getConfigurator().apply(ClimberConfig.primaryTalonFXConfigs);
