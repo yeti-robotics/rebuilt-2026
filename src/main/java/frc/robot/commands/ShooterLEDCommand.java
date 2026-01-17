@@ -1,9 +1,13 @@
 package frc.robot.commands;
 
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.led.LED;
 import frc.robot.subsystems.led.LEDModes;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -46,14 +50,36 @@ public class ShooterLEDCommand extends Command {
         }
     }
 
+    private double getDistance() {
+        NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
+        NetworkTableEntry ty = table.getEntry("ty");
+        double targetOffsetAngle_Vertical = ty.getDouble(0.0);
+
+        // how many degrees back is your limelight rotated from perfectly vertical?
+        double limelightMountAngleDegrees = 25.0;
+
+        // distance from the center of the Limelight lens to the floor
+        double limelightLensHeightInches = 20.0;
+
+        // distance from the target to the floor
+        double goalHeightInches = 60.0;
+
+        double angleToGoalDegrees = limelightMountAngleDegrees + targetOffsetAngle_Vertical;
+        double angleToGoalRadians = angleToGoalDegrees * (3.14159 / 180.0);
+
+        //calculate distance
+        double distanceFromLimelightToGoalInches = (goalHeightInches - limelightLensHeightInches) / Math.tan(angleToGoalRadians);
+
+        return distanceFromLimelightToGoalInches;
+    }
+
     @Override
     public void execute() {
         double tolerance = 6.0; // TODO: Calculate
         double idealDistanceToHub = 82; // TODO: Calculate
-        //        if (shooter.getVelocity() == 120
-        //                && Math.abs(Limelight.getDistance() - idealDistanceToHub)
-        //                <= tolerance) {
-        if (0 == 0) {
+        if (shooter.getVelocity() == 120
+                && Math.abs(getDistance() - idealDistanceToHub)
+                <= tolerance) {
             // wave effect
             for (int i = 0; i < leds.getBufferLength(); i++) {
                 leds.setRGB(
