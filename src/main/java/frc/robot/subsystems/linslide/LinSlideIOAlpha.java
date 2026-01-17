@@ -1,6 +1,6 @@
 package frc.robot.subsystems.linslide;
 
-import static frc.robot.constants.Constants.canBus;
+import static frc.robot.constants.Constants.rioBus;
 import static frc.robot.subsystems.linslide.LinSlideConfigsAlpha.*;
 
 import com.ctre.phoenix6.controls.DutyCycleOut;
@@ -12,37 +12,37 @@ import frc.robot.Robot;
 import frc.robot.util.sim.PhysicsSim;
 
 public class LinSlideIOAlpha implements LinearSlideIO {
-    public final TalonFX LinSlideMotor;
-    public final CANcoder LinSlideCANCoder;
+    public final TalonFX linSlideMotor;
+    public final CANcoder linSlideCANCoder;
 
     private final MotionMagicTorqueCurrentFOC magicRequest = new MotionMagicTorqueCurrentFOC(0);
 
 
     public LinSlideIOAlpha() {
-        LinSlideMotor = new TalonFX(LIN_SLIDE_MOTOR_ID, canBus);
-        LinSlideCANCoder = new CANcoder(LIN_SLIDE_CANCODER_ID, canBus);
+        linSlideMotor = new TalonFX(LIN_SLIDE_MOTOR_ID, rioBus);
+        linSlideCANCoder = new CANcoder(LIN_SLIDE_CANCODER_ID, rioBus);
         if (Robot.isSimulation()) {
-            PhysicsSim.getInstance().addTalonFX(LinSlideMotor);
+            PhysicsSim.getInstance().addTalonFX(linSlideMotor, linSlideCANCoder);
         }
-        LinSlideMotor.getConfigurator().apply(linSlideTalonFXConfigs);
-        LinSlideCANCoder.getConfigurator().apply(linSlideCANCoderConfigs);
+        linSlideMotor.getConfigurator().apply(linSlideTalonFXConfigs);
+        linSlideCANCoder.getConfigurator().apply(linSlideCANCoderConfigs);
     }
 
     @Override
     public void updateInputs(LinearSlideIO.LinSlideIOInputs inputs) {
-        inputs.positionRotation = LinSlideMotor.getPosition().getValueAsDouble();
-        inputs.targetPositionRotation = LinSlideMotor.getClosedLoopReference().getValueAsDouble();
+        inputs.positionRotation = linSlideMotor.getPosition().getValueAsDouble();
+        inputs.targetPositionRotation = linSlideMotor.getClosedLoopReference().getValueAsDouble();
         //      inputs.isDeployed = LinSlideCANCoder.getAbsolutePosition().isNear(DEPLOY, 0.1); // <-- Maybe
     }
 
     @Override
     public void moveToPosition(Angle position) {
         magicRequest.withPosition(position);
-        LinSlideMotor.setControl(magicRequest);
+        linSlideMotor.setControl(magicRequest);
     }
 
     @Override
     public void applyPower(double percent) {
-        LinSlideMotor.setControl(new DutyCycleOut(percent));
+        linSlideMotor.setControl(new DutyCycleOut(percent));
     }
 }
