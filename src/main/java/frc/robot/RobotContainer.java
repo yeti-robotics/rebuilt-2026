@@ -25,6 +25,17 @@ import frc.robot.subsystems.drive.GyroIOPigeon2;
 import frc.robot.subsystems.drive.ModuleIO;
 import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOTalonFX;
+import frc.robot.subsystems.hopper.Hopper;
+import frc.robot.subsystems.hopper.HopperConfigs;
+import frc.robot.subsystems.hopper.HopperIO;
+import frc.robot.subsystems.hopper.HopperIOAlpha;
+import frc.robot.subsystems.intake.IntakeIO;
+import frc.robot.subsystems.intake.IntakeIOAlpha;
+import frc.robot.subsystems.intake.IntakeSubsystem;
+import frc.robot.subsystems.led.LED;
+import frc.robot.subsystems.shooter.ShooterIO;
+import frc.robot.subsystems.shooter.ShooterIOAlpha;
+import frc.robot.subsystems.shooter.ShooterSubsystem;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
@@ -36,6 +47,10 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 public class RobotContainer {
     // Subsystems
     private final Drive drive;
+    private final LED led;
+    private final IntakeSubsystem intake;
+    private final Hopper hopper;
+    private final ShooterSubsystem shooter;
 
     // Controller
     private final CommandXboxController controller = new CommandXboxController(0);
@@ -56,24 +71,11 @@ public class RobotContainer {
                         new ModuleIOTalonFX(TunerConstants.FrontRight),
                         new ModuleIOTalonFX(TunerConstants.BackLeft),
                         new ModuleIOTalonFX(TunerConstants.BackRight));
+                led = new LED();
+                intake = new IntakeSubsystem(new IntakeIOAlpha());
+                hopper = new Hopper(new HopperIOAlpha());
+                shooter = new ShooterSubsystem(new ShooterIOAlpha());
 
-                // The ModuleIOTalonFXS implementation provides an example implementation for
-                // TalonFXS controller connected to a CANdi with a PWM encoder. The
-                // implementations
-                // of ModuleIOTalonFX, ModuleIOTalonFXS, and ModuleIOSpark (from the Spark
-                // swerve
-                // template) can be freely intermixed to support alternative hardware
-                // arrangements.
-                // Please see the AdvantageKit template documentation for more information:
-                // https://docs.advantagekit.org/getting-started/template-projects/talonfx-swerve-template#custom-module-implementations
-                //
-                // drive =
-                // new Drive(
-                // new GyroIOPigeon2(),
-                // new ModuleIOTalonFXS(TunerConstants.FrontLeft),
-                // new ModuleIOTalonFXS(TunerConstants.FrontRight),
-                // new ModuleIOTalonFXS(TunerConstants.BackLeft),
-                // new ModuleIOTalonFXS(TunerConstants.BackRight));
                 break;
 
             case SIM:
@@ -84,12 +86,22 @@ public class RobotContainer {
                         new ModuleIOSim(TunerConstants.FrontRight),
                         new ModuleIOSim(TunerConstants.BackLeft),
                         new ModuleIOSim(TunerConstants.BackRight));
+                led = new LED();
+                intake = new IntakeSubsystem(new IntakeIOAlpha());
+                hopper = new Hopper(new HopperIOAlpha());
+                shooter = new ShooterSubsystem(new ShooterIOAlpha());
+
                 break;
 
             default:
                 // Replayed robot, disable IO implementations
                 drive = new Drive(
                         new GyroIO() {}, new ModuleIO() {}, new ModuleIO() {}, new ModuleIO() {}, new ModuleIO() {});
+                led = new LED();
+                intake = new IntakeSubsystem(new IntakeIO() {});
+                hopper = new Hopper(new HopperIO() {});
+                shooter = new ShooterSubsystem((new ShooterIO() {}));
+
                 break;
         }
 
@@ -137,6 +149,9 @@ public class RobotContainer {
                                 () -> drive.setPose(new Pose2d(drive.getPose().getTranslation(), Rotation2d.kZero)),
                                 drive)
                         .ignoringDisable(true));
+
+        controller.leftTrigger().whileTrue(hopper.spinHopper(HopperConfigs.HOPPER_SPIN_VOLTAGE));
+        controller.button(1).whileTrue(shooter.shoot(6));
     }
 
     /**
