@@ -41,14 +41,9 @@ public class AutoAim extends Command {
 
     @Override
     public void execute() {
-        if (LimelightHelpers.getFiducialID(VisionConstants.camera0Name)
-                == currentTag) {
-            drivetrain.run(() -> poseAimRequest
-                    .withVelocityX(xVelSupplier.getAsDouble() * 1.5)
-                    .withVelocityY(yVelSupplier.getAsDouble() * 1.5));
-        } else {
-            end(true);
-        }
+        drivetrain.run(() -> poseAimRequest
+                .withVelocityX(xVelSupplier.getAsDouble() * 1.5)
+                .withVelocityY(yVelSupplier.getAsDouble() * 1.5));
     }
 
     @Override
