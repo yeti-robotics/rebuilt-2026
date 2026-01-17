@@ -1,6 +1,7 @@
 package frc.robot.commands;
 
 import static com.pathplanner.lib.auto.NamedCommands.registerCommands;
+import static edu.wpi.first.units.Units.Rotations;
 import static frc.robot.constants.FieldConstants.Hub.centerHubOpening;
 
 import com.pathplanner.lib.auto.NamedCommands;
@@ -12,6 +13,7 @@ import frc.robot.subsystems.hopper.Hopper;
 import frc.robot.subsystems.intake.IntakeSubsystem;
 import frc.robot.subsystems.linslide.LinSlideSubsystem;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
+import edu.wpi.first.units.measure.Angle;
 
 public class AutoNamedCommands {
     private final IntakeSubsystem intake;
@@ -44,7 +46,10 @@ public class AutoNamedCommands {
     }
 
     public void registerCommands() {
-        NamedCommands.registerCommand("GroundIntake", Commands.sequence(linSlide.applyPower(), intake.setRoller(0.0)));
+        NamedCommands.registerCommand("GroundIntake",
+                Commands.sequence(
+                        linSlide.applyPower(),
+                        intake.setRoller(0.0)));
         NamedCommands.registerCommand(
                 "AutoAlignShoot",
                 Commands.sequence(
@@ -55,5 +60,6 @@ public class AutoNamedCommands {
                                 centerHubOpening.toTranslation2d()),
                         hopper.spinHopper(0),
                         shooter.shoot(0)));
+        NamedCommands.registerCommand("Climb", climber.moveToPosition(Rotations.of(0.0)));
     }
 }
