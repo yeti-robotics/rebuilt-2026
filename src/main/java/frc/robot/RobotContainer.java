@@ -22,6 +22,9 @@ import frc.robot.commands.AutoAimCommands;
 import frc.robot.commands.DriveCommands;
 import frc.robot.constants.Constants;
 import frc.robot.generated.TunerConstants;
+import frc.robot.subsystems.climber.Climber;
+import frc.robot.subsystems.climber.ClimberIO;
+import frc.robot.subsystems.climber.ClimberIOAlpha;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
 import frc.robot.subsystems.drive.GyroIOPigeon2;
@@ -43,6 +46,7 @@ import frc.robot.subsystems.vision.Vision;
 import frc.robot.subsystems.vision.VisionIO;
 import frc.robot.subsystems.vision.VisionIOLimelight;
 import frc.robot.subsystems.vision.VisionIOPhotonVisionSim;
+import frc.robot.util.sim.Mechanisms;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
@@ -57,6 +61,9 @@ public class RobotContainer {
     private final LED led;
     private final IntakeSubsystem intake;
     private final Hopper hopper;
+    private final Climber climber;
+
+    final Mechanisms mechanisms;
     private final ShooterSubsystem shooter;
     private final Vision vision;
 
@@ -82,6 +89,7 @@ public class RobotContainer {
                 led = new LED();
                 intake = new IntakeSubsystem(new IntakeIOAlpha());
                 hopper = new Hopper(new HopperIOAlpha());
+                climber = new Climber(new ClimberIOAlpha());
                 shooter = new ShooterSubsystem(new ShooterIOAlpha());
 
                 vision = new Vision(
@@ -121,6 +129,7 @@ public class RobotContainer {
                                                 Units.inchesToMeters(15)),
                                         new Rotation3d(0, Math.toRadians(0), Math.toRadians(0))),
                                 drive::getPose));
+                climber = new Climber(new ClimberIOAlpha());
                 shooter = new ShooterSubsystem(new ShooterIOAlpha());
 
                 break;
@@ -132,6 +141,7 @@ public class RobotContainer {
                 led = new LED();
                 intake = new IntakeSubsystem(new IntakeIO() {});
                 hopper = new Hopper(new HopperIO() {});
+                climber = new Climber(new ClimberIO() {});
                 vision = new Vision(drive, new VisionIO() {}, new VisionIO() {});
                 shooter = new ShooterSubsystem((new ShooterIO() {}));
 
@@ -140,6 +150,9 @@ public class RobotContainer {
 
         // Set up auto routines
         autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
+
+        // Set up simulatable mechanisms
+        mechanisms = new Mechanisms();
 
         // Set up SysId routines
         autoChooser.addOption("Drive Wheel Radius Characterization", DriveCommands.wheelRadiusCharacterization(drive));
@@ -189,6 +202,12 @@ public class RobotContainer {
                 .y()
                 .whileTrue(AutoAimCommands.autoAim(
                         drive, controller::getLeftX, controller::getLeftY, centerHubOpening.toTranslation2d()));
+    }
+
+    public void updateMechanisms() {
+        mechanisms.publishComponentPoses(climber.getCurrentPosition(), true);
+        mechanisms.publishComponentPoses(climber.getTargetPosition(), false);
+        mechanisms.updateClimberMechanism(climber.getCurrentPosition());
     }
 
     /**
