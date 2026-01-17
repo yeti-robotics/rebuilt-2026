@@ -7,15 +7,18 @@
 
 package frc.robot;
 
+import static frc.robot.constants.FieldConstants.Hub.centerHubOpening;
+
 import com.pathplanner.lib.auto.AutoBuilder;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.*;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import frc.robot.commands.AutoAimCommands;
 import frc.robot.commands.DriveCommands;
 import frc.robot.constants.Constants;
 import frc.robot.generated.TunerConstants;
@@ -39,6 +42,10 @@ import frc.robot.subsystems.led.LED;
 import frc.robot.subsystems.shooter.ShooterIO;
 import frc.robot.subsystems.shooter.ShooterIOAlpha;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
+import frc.robot.subsystems.vision.Vision;
+import frc.robot.subsystems.vision.VisionIO;
+import frc.robot.subsystems.vision.VisionIOLimelight;
+import frc.robot.subsystems.vision.VisionIOPhotonVisionSim;
 import frc.robot.util.sim.Mechanisms;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
@@ -58,6 +65,7 @@ public class RobotContainer {
 
     final Mechanisms mechanisms;
     private final ShooterSubsystem shooter;
+    private final Vision vision;
 
     // Controller
     private final CommandXboxController controller = new CommandXboxController(0);
@@ -84,6 +92,10 @@ public class RobotContainer {
                 climber = new Climber(new ClimberIOAlpha());
                 shooter = new ShooterSubsystem(new ShooterIOAlpha());
 
+                vision = new Vision(
+                        drive,
+                        new VisionIOLimelight("Front Camera", drive::getRotation),
+                        new VisionIOLimelight("Back Camera", drive::getRotation));
                 break;
 
             case SIM:
@@ -97,6 +109,26 @@ public class RobotContainer {
                 led = new LED();
                 intake = new IntakeSubsystem(new IntakeIOAlpha());
                 hopper = new Hopper(new HopperIOAlpha());
+                vision = new Vision(
+                        drive,
+                        new VisionIOPhotonVisionSim(
+                                "Front Camera",
+                                new Transform3d(
+                                        new Translation3d(
+                                                Units.inchesToMeters(-3),
+                                                Units.inchesToMeters(0),
+                                                Units.inchesToMeters(15)),
+                                        new Rotation3d(0, Math.toRadians(0), Math.toRadians(180))),
+                                drive::getPose),
+                        new VisionIOPhotonVisionSim(
+                                "Back Camera",
+                                new Transform3d(
+                                        new Translation3d(
+                                                Units.inchesToMeters(3),
+                                                Units.inchesToMeters(0),
+                                                Units.inchesToMeters(15)),
+                                        new Rotation3d(0, Math.toRadians(0), Math.toRadians(0))),
+                                drive::getPose));
                 climber = new Climber(new ClimberIOAlpha());
                 shooter = new ShooterSubsystem(new ShooterIOAlpha());
 
@@ -110,6 +142,7 @@ public class RobotContainer {
                 intake = new IntakeSubsystem(new IntakeIO() {});
                 hopper = new Hopper(new HopperIO() {});
                 climber = new Climber(new ClimberIO() {});
+                vision = new Vision(drive, new VisionIO() {}, new VisionIO() {});
                 shooter = new ShooterSubsystem((new ShooterIO() {}));
 
                 break;
@@ -157,13 +190,18 @@ public class RobotContainer {
 
         // Reset gyro to 0° when B button is pressed
         controller
-                .b()
+                .start()
                 .onTrue(Commands.runOnce(
                                 () -> drive.setPose(new Pose2d(drive.getPose().getTranslation(), Rotation2d.kZero)),
                                 drive)
                         .ignoringDisable(true));
 
         controller.leftTrigger().whileTrue(hopper.spinHopper(HopperConfigs.HOPPER_SPIN_VOLTAGE));
+        controller.button(1).whileTrue(shooter.shoot(6));
+        controller
+                .y()
+                .whileTrue(AutoAimCommands.autoAim(
+                        drive, controller::getLeftX, controller::getLeftY, centerHubOpening.toTranslation2d()));
     }
 
     public void updateMechanisms() {
