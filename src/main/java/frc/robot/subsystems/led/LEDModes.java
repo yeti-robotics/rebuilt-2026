@@ -16,7 +16,7 @@ public enum LEDModes {
     RAINBOW(LEDPattern.rainbow(255, 128).scrollAtAbsoluteSpeed(Units.MetersPerSecond.of(1), LEDConstants.LED_SPACING)),
     TRANSITION_ACTIVE(LEDPattern.solid(Color.kPurple)),
     ENDGAME_ACTIVE(LEDPattern.solid(Color.kGreen)),
-    LOCKED_GREEN(LEDPattern.solid(Color.kGreen).blink(Seconds.of(1))), // TODO: change to blinking green
+    LOCKED_GREEN(LEDPattern.solid(Color.kGreen).blink(Seconds.of(1))),
     NOT_LOCKED_RED(LEDPattern.solid(Color.kRed));
 
     public final LEDPattern pattern;
