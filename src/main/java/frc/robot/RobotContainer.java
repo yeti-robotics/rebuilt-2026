@@ -41,6 +41,7 @@ import frc.robot.subsystems.intake.IntakeSubsystem;
 import frc.robot.subsystems.led.LED;
 import frc.robot.subsystems.linslide.LinSlideIOAlpha;
 import frc.robot.subsystems.linslide.LinSlideSubsystem;
+import frc.robot.subsystems.linslide.LinearSlideIO;
 import frc.robot.util.sim.Mechanisms;
 import frc.robot.subsystems.shooter.ShooterIO;
 import frc.robot.subsystems.shooter.ShooterIOAlpha;
@@ -147,7 +148,7 @@ public class RobotContainer {
                 // Replayed robot, disable IO implementations
                 drive = new Drive(
                         new GyroIO() {}, new ModuleIO() {}, new ModuleIO() {}, new ModuleIO() {}, new ModuleIO() {});
-                linSlide = new LinSlideSubsystem(new LinSlideIOAlpha());
+                linSlide = new LinSlideSubsystem(new LinearSlideIO() {});
                 led = new LED();
                 intake = new IntakeSubsystem(new IntakeIO() {});
                 hopper = new Hopper(new HopperIO() {});
