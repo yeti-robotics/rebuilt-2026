@@ -26,7 +26,12 @@ import frc.robot.subsystems.drive.ModuleIO;
 import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOTalonFX;
 import frc.robot.subsystems.led.LED;
+import frc.robot.subsystems.linslide.LinSlideIOAlpha;
+import frc.robot.subsystems.linslide.LinSlideSubsystem;
+import frc.robot.util.sim.Mechanisms;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
+
+import static frc.robot.subsystems.linslide.LinSlidePosition.DEPLOY;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -38,6 +43,8 @@ public class RobotContainer {
     // Subsystems
     private final Drive drive;
     private final LED led;
+    private final LinSlideSubsystem linSlide;
+    private final Mechanisms mechanisms;
 
     // Controller
     private final CommandXboxController controller = new CommandXboxController(0);
@@ -58,7 +65,9 @@ public class RobotContainer {
                         new ModuleIOTalonFX(TunerConstants.FrontRight),
                         new ModuleIOTalonFX(TunerConstants.BackLeft),
                         new ModuleIOTalonFX(TunerConstants.BackRight));
+                linSlide = new LinSlideSubsystem(new LinSlideIOAlpha());
                 led = new LED();
+                mechanisms = new Mechanisms();
 
                 break;
 
@@ -70,7 +79,9 @@ public class RobotContainer {
                         new ModuleIOSim(TunerConstants.FrontRight),
                         new ModuleIOSim(TunerConstants.BackLeft),
                         new ModuleIOSim(TunerConstants.BackRight));
+                linSlide = new LinSlideSubsystem(new LinSlideIOAlpha());
                 led = new LED();
+                mechanisms = new Mechanisms();
 
                 break;
 
@@ -78,7 +89,9 @@ public class RobotContainer {
                 // Replayed robot, disable IO implementations
                 drive = new Drive(
                         new GyroIO() {}, new ModuleIO() {}, new ModuleIO() {}, new ModuleIO() {}, new ModuleIO() {});
+                linSlide = new LinSlideSubsystem(new LinSlideIOAlpha());
                 led = new LED();
+                mechanisms = new Mechanisms();
 
                 break;
         }
@@ -127,6 +140,14 @@ public class RobotContainer {
                                 () -> drive.setPose(new Pose2d(drive.getPose().getTranslation(), Rotation2d.kZero)),
                                 drive)
                         .ignoringDisable(true));
+        controller.button(2).onTrue(linSlide.moveToPosition(DEPLOY.getPosition()));
+        controller.button(1).onTrue(linSlide.applyPower());
+    }
+
+    public void updateMechanisms() {
+        mechanisms.publishComponentPoses(linSlide.getCurrentPosition(), true);
+        mechanisms.publishComponentPoses(linSlide.getTargetPosition(), false);
+        mechanisms.updateElevatorMech(linSlide.getCurrentPosition());
     }
 
     /**

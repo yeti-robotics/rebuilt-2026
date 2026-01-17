@@ -2,8 +2,8 @@ package frc.robot.subsystems.linslide;
 
 import static frc.robot.constants.Constants.canBus;
 import static frc.robot.subsystems.linslide.LinSlideConfigsAlpha.*;
-import static frc.robot.subsystems.linslide.LinSlidePosition.DEPLOY;
 
+import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.MotionMagicTorqueCurrentFOC;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -16,6 +16,7 @@ public class LinSlideIOAlpha implements LinearSlideIO {
     public final CANcoder LinSlideCANCoder;
 
     private final MotionMagicTorqueCurrentFOC magicRequest = new MotionMagicTorqueCurrentFOC(0);
+
 
     public LinSlideIOAlpha() {
         LinSlideMotor = new TalonFX(LIN_SLIDE_MOTOR_ID, canBus);
@@ -31,12 +32,17 @@ public class LinSlideIOAlpha implements LinearSlideIO {
     public void updateInputs(LinearSlideIO.LinSlideIOInputs inputs) {
         inputs.positionRotation = LinSlideMotor.getPosition().getValueAsDouble();
         inputs.targetPositionRotation = LinSlideMotor.getClosedLoopReference().getValueAsDouble();
-//      inputs.isDeployed = LinSlideCANCoder.getAbsolutePosition().isNear(DEPLOY, 0.1); // <-- Maybe
+        //      inputs.isDeployed = LinSlideCANCoder.getAbsolutePosition().isNear(DEPLOY, 0.1); // <-- Maybe
     }
 
     @Override
     public void moveToPosition(Angle position) {
         magicRequest.withPosition(position);
         LinSlideMotor.setControl(magicRequest);
+    }
+
+    @Override
+    public void applyPower(double percent) {
+        LinSlideMotor.setControl(new DutyCycleOut(percent));
     }
 }

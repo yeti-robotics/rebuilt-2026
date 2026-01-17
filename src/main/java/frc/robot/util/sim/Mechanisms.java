@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.util.Color8Bit;
+import org.littletonrobotics.junction.Logger;
 
 @Logged
 public class Mechanisms {
@@ -43,9 +44,14 @@ public class Mechanisms {
     public void publishComponentPoses(double elevatorPos, boolean useRealPoses) {
         double elevatorStageHeight = Units.inchesToMeters(elevatorPos * 8.6);
 
-        (useRealPoses ? realComponentPosePublisher : targetComponentPosePublisher).set(new Pose3d[] {
-            new Pose3d(
-                    Units.inchesToMeters(-8), 0.0, Units.inchesToMeters(2.625) + elevatorStageHeight, Rotation3d.kZero),
-        });
+        Logger.recordOutput(
+                "ComponentPoses/" + (useRealPoses ? "Real" : "Target"),
+                new Pose3d(
+                        Units.inchesToMeters(-8),
+                        0.0,
+                        Units.inchesToMeters(2.625) + elevatorStageHeight,
+                        Rotation3d.kZero)
+
+        );
     }
 }

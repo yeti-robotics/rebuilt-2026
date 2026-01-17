@@ -23,6 +23,10 @@ public class LinSlideSubsystem extends SubsystemBase {
         return runOnce(() -> io.moveToPosition(position));
     }
 
+    public Command applyPower() {
+        return runOnce(() -> io.applyPower(0.2));
+    }
+
     public double getCurrentPosition() {
         return inputs.positionRotation;
     }
@@ -31,5 +35,7 @@ public class LinSlideSubsystem extends SubsystemBase {
         return inputs.targetPositionRotation;
     }
 
-    public boolean isDeployed(){return inputs.isDeployed;}
+    public boolean isDeployed() {
+        return inputs.isDeployed;
+    }
 }

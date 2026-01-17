@@ -14,4 +14,6 @@ public interface LinearSlideIO {
     public default void updateInputs(LinSlideIOInputs inputs) {}
 
     public default void moveToPosition(Angle position) {}
+
+    public default void applyPower(double percent) {}
 }
