@@ -26,6 +26,7 @@ import frc.robot.subsystems.drive.ModuleIO;
 import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOTalonFX;
 import frc.robot.subsystems.hopper.Hopper;
+import frc.robot.subsystems.hopper.HopperConfigs;
 import frc.robot.subsystems.hopper.HopperIO;
 import frc.robot.subsystems.hopper.HopperIOAlpha;
 import frc.robot.subsystems.intake.IntakeIO;
@@ -142,7 +143,7 @@ public class RobotContainer {
                                 drive)
                         .ignoringDisable(true));
 
-        controller.leftTrigger().whileTrue(hopper.spinHopper(Constants.hopperSpinVoltage));
+        controller.leftTrigger().whileTrue(hopper.spinHopper(HopperConfigs.hopperSpinVoltage));
     }
 
     /**
