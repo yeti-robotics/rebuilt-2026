@@ -38,6 +38,9 @@ import frc.robot.subsystems.intake.IntakeIOAlpha;
 import frc.robot.subsystems.intake.IntakeSubsystem;
 import frc.robot.subsystems.led.LED;
 import frc.robot.util.sim.Mechanisms;
+import frc.robot.subsystems.shooter.ShooterIO;
+import frc.robot.subsystems.shooter.ShooterIOAlpha;
+import frc.robot.subsystems.shooter.ShooterSubsystem;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
@@ -55,6 +58,7 @@ public class RobotContainer {
     private final Climber climber;
 
     final Mechanisms mechanisms;
+    private final ShooterSubsystem shooter;
 
     // Controller
     private final CommandXboxController controller = new CommandXboxController(0);
@@ -79,6 +83,7 @@ public class RobotContainer {
                 intake = new IntakeSubsystem(new IntakeIOAlpha());
                 hopper = new Hopper(new HopperIOAlpha());
                 climber = new Climber(new ClimberIOAlpha());
+                shooter = new ShooterSubsystem(new ShooterIOAlpha());
 
                 break;
 
@@ -94,6 +99,7 @@ public class RobotContainer {
                 intake = new IntakeSubsystem(new IntakeIOAlpha());
                 hopper = new Hopper(new HopperIOAlpha());
                 climber = new Climber(new ClimberIOAlpha());
+                shooter = new ShooterSubsystem(new ShooterIOAlpha());
 
                 break;
 
@@ -105,6 +111,7 @@ public class RobotContainer {
                 intake = new IntakeSubsystem(new IntakeIO() {});
                 hopper = new Hopper(new HopperIO() {});
                 climber = new Climber(new ClimberIO() {});
+                shooter = new ShooterSubsystem((new ShooterIO() {}));
 
                 break;
         }
@@ -167,6 +174,7 @@ public class RobotContainer {
         mechanisms.publishComponentPoses(climber.getCurrentPosition(), true);
         mechanisms.publishComponentPoses(climber.getTargetPosition(), false);
         mechanisms.updateClimberMechanism(climber.getCurrentPosition());
+        controller.button(1).whileTrue(shooter.shoot(6));
     }
 
     /**
