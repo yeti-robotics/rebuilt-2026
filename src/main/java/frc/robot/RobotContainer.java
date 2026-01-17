@@ -35,6 +35,7 @@ import frc.robot.subsystems.intake.IntakeIO;
 import frc.robot.subsystems.intake.IntakeIOAlpha;
 import frc.robot.subsystems.intake.IntakeSubsystem;
 import frc.robot.subsystems.led.LED;
+import frc.robot.subsystems.led.LEDModes;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
