@@ -15,12 +15,15 @@ public class AutoAimCommands {
     private static final PIDController headingController = new PIDController(5, 0, 0);
 
     private static double calculateAngularVelocity(Pose2d currentPose, Translation2d target) {
+        headingController.enableContinuousInput(-Math.PI, Math.PI);
         if (target == null) {
             return 0; // TODO: make target nonnull
         }
 
         Rotation2d currentHeading = currentPose.getRotation();
-        Rotation2d desiredHeading = target.minus(currentPose.getTranslation()).getAngle().rotateBy(Rotation2d.k180deg); // Remove this .rotateBy() if needed for real bot
+        Rotation2d desiredHeading = target.minus(currentPose.getTranslation())
+                .getAngle()
+                .rotateBy(Rotation2d.k180deg); // Remove this .rotateBy() if needed for real bot
 
         return headingController.calculate(currentHeading.getRadians(), desiredHeading.getRadians());
     }

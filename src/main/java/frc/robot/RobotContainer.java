@@ -185,7 +185,8 @@ public class RobotContainer {
 
         controller.leftTrigger().whileTrue(hopper.spinHopper(HopperConfigs.HOPPER_SPIN_VOLTAGE));
         controller.button(1).whileTrue(shooter.shoot(6));
-        controller.y()
+        controller
+                .y()
                 .whileTrue(AutoAimCommands.autoAim(
                         drive, controller::getLeftX, controller::getLeftY, centerHubOpening.toTranslation2d()));
     }
