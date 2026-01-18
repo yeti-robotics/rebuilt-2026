@@ -25,6 +25,7 @@ import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.climber.Climber;
 import frc.robot.subsystems.climber.ClimberIO;
 import frc.robot.subsystems.climber.ClimberIOAlpha;
+import frc.robot.subsystems.climber.ClimberPosition;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
 import frc.robot.subsystems.drive.GyroIOPigeon2;
@@ -35,10 +36,12 @@ import frc.robot.subsystems.hopper.Hopper;
 import frc.robot.subsystems.hopper.HopperConfigs;
 import frc.robot.subsystems.hopper.HopperIO;
 import frc.robot.subsystems.hopper.HopperIOAlpha;
+import frc.robot.subsystems.intake.IntakeConfigs;
 import frc.robot.subsystems.intake.IntakeIO;
 import frc.robot.subsystems.intake.IntakeIOAlpha;
 import frc.robot.subsystems.intake.IntakeSubsystem;
 import frc.robot.subsystems.led.LED;
+import frc.robot.subsystems.linslide.LinSlideConfigsAlpha;
 import frc.robot.subsystems.linslide.LinSlideIOAlpha;
 import frc.robot.subsystems.linslide.LinSlideSubsystem;
 import frc.robot.subsystems.linslide.LinearSlideIO;
@@ -184,6 +187,42 @@ public class RobotContainer {
         // Default command, normal field-relative drive
         drive.setDefaultCommand(DriveCommands.joystickDrive(
                 drive, () -> -controller.getLeftY(), () -> -controller.getLeftX(), () -> -controller.getRightX()));
+
+        //Climber
+        controller.y().onTrue(climber.moveToPosition(ClimberPosition.L1.getHeight()));
+        controller.a().onTrue(climber.moveToPosition(ClimberPosition.BOTTOM.getHeight()));
+
+        //Intake
+        controller.rightBumper().whileTrue(intake.setRoller(IntakeConfigs.INTAKE_ROLL_IN_VOLTAGE));
+        controller.x().whileTrue(intake.setRoller(IntakeConfigs.INTAKE_ROLL_OUT_VOLTAGE));
+
+        //Linear Slide - When isDeployed is true, it stows and when isDeployed is false, it deploys
+        controller
+                .leftBumper()
+                .onTrue(Commands.either(
+                        linSlide.moveToPosition(LinSlideConfigsAlpha.LINSLIDE_STOWED_POSITION),
+                        linSlide.moveToPosition(LinSlideConfigsAlpha.LINSLIDE_DEPLOYED_POSITION),
+                        linSlide::isDeployed));
+
+        //Shooter + Auto Align
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
         // Lock to 0° when A button is held
         controller
