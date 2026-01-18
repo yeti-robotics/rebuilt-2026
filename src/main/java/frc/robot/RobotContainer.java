@@ -212,12 +212,14 @@ public class RobotContainer {
                         linSlide.moveToPosition(LinSlideConfigsAlpha.LINSLIDE_DEPLOYED_POSITION),
                         linSlide::isDeployed));
 
-        //Shooter + Auto Align
+        //Auto Align
         controller.leftTrigger().whileTrue(AutoAimCommands.autoAim(
                 drive,
                 () -> -controller.getLeftY(),
                 () -> -controller.getLeftX(),
-                centerHubOpening.toTranslation2d()).alongWith());
+                centerHubOpening.toTranslation2d()));
+
+        //Shooter + Hopper
         controller
                 .rightTrigger()
                 .whileTrue(shooter.shoot(ShooterConfigs.SHOOTING_VOLTAGE)
