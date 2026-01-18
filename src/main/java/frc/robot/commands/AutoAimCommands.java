@@ -10,7 +10,6 @@ import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.vision.Vision;
 import frc.robot.util.AllianceFlipUtil;
 import java.util.Optional;
-import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
 public class AutoAimCommands {
@@ -51,9 +50,8 @@ public class AutoAimCommands {
                             double joystickAngle = Math.atan2(ySpeed, xSpeed);
                             double joystickMagnitude = Math.hypot(xSpeed, ySpeed);
 
-                            Rotation2d tangentDirection = targetAngle.plus(Rotation2d.fromRadians(
-                                Math.signum(Math.sin(joystickAngle)) * Math.PI/2
-                            ));
+                            Rotation2d tangentDirection = targetAngle.plus(
+                                    Rotation2d.fromRadians(Math.signum(Math.sin(joystickAngle)) * Math.PI / 2));
 
                             double tangentX = joystickMagnitude * tangentDirection.getCos();
                             double tangentY = joystickMagnitude * tangentDirection.getSin();
@@ -66,9 +64,7 @@ public class AutoAimCommands {
                             double fieldY = tangentY + centripetalY;
 
                             double rotationSpeed = headingController.calculate(
-                                currentRotation.getRadians(),
-                                targetAngle.getRadians() + Math.PI
-                            );
+                                    currentRotation.getRadians(), targetAngle.getRadians() + Math.PI);
 
                             double robotVx = fieldX * currentRotation.getCos() + fieldY * currentRotation.getSin();
                             double robotVy = -fieldX * currentRotation.getSin() + fieldY * currentRotation.getCos();
@@ -79,13 +75,12 @@ public class AutoAimCommands {
                     }
 
                     double angularVelo = headingController.calculate(
-                        currentRotation.getRadians(),
-                        modifiedTarget.minus(currentPosition).getAngle().getRadians() + Math.PI
-                    );
+                            currentRotation.getRadians(),
+                            modifiedTarget.minus(currentPosition).getAngle().getRadians() + Math.PI);
 
                     drive.runVelocity(ChassisSpeeds.fromFieldRelativeSpeeds(
-                        xVelSupplier.getAsDouble() * 1.5,
-                        yVelSupplier.getAsDouble() * 1.5,
+                            xVelSupplier.getAsDouble() * 1.5,
+                            yVelSupplier.getAsDouble() * 1.5,
                             angularVelo,
                             currentRotation));
                 },

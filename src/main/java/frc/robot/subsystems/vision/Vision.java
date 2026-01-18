@@ -29,7 +29,6 @@ import frc.robot.subsystems.vision.VisionIO.PoseObservationType;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
-
 import org.littletonrobotics.junction.Logger;
 
 public class Vision extends SubsystemBase {
