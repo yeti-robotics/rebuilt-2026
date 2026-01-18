@@ -32,19 +32,13 @@ import frc.robot.subsystems.drive.ModuleIO;
 import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOTalonFX;
 import frc.robot.subsystems.hopper.Hopper;
-import frc.robot.subsystems.hopper.HopperConfigs;
 import frc.robot.subsystems.hopper.HopperIO;
 import frc.robot.subsystems.hopper.HopperIOAlpha;
-import frc.robot.subsystems.intake.IntakeConfigs;
 import frc.robot.subsystems.intake.IntakeIO;
 import frc.robot.subsystems.intake.IntakeIOAlpha;
 import frc.robot.subsystems.intake.IntakeSubsystem;
 import frc.robot.subsystems.led.LED;
-import frc.robot.subsystems.linslide.LinSlideConfigsAlpha;
-import frc.robot.subsystems.linslide.LinSlideIOAlpha;
-import frc.robot.subsystems.linslide.LinSlideSubsystem;
-import frc.robot.subsystems.linslide.LinearSlideIO;
-import frc.robot.subsystems.shooter.ShooterConfigs;
+import frc.robot.subsystems.linslide.*;
 import frc.robot.subsystems.shooter.ShooterIO;
 import frc.robot.subsystems.shooter.ShooterIOAlpha;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
@@ -187,45 +181,34 @@ public class RobotContainer {
                                 drive)
                         .ignoringDisable(true));
 
-        // Lock to 0° when D-Pad up button is held
-        controller
-                .povUp()
-                .whileTrue(DriveCommands.joystickDriveAtAngle(
-                        drive, () -> -controller.getLeftY(), () -> -controller.getLeftX(), () -> Rotation2d.kZero));
-
-        // Switch to X pattern when D-Pad down is pressed
-        controller.povDown().onTrue(Commands.runOnce(drive::stopWithX, drive));
-
         // Climber
         controller.y().onTrue(climber.moveToPosition(ClimberPosition.L1.getHeight()));
         controller.a().onTrue(climber.moveToPosition(ClimberPosition.BOTTOM.getHeight()));
 
         // Intake
-        controller.rightBumper().whileTrue(intake.setRoller(IntakeConfigs.INTAKE_ROLL_IN_VOLTAGE));
-        controller.x().whileTrue(intake.setRoller(IntakeConfigs.INTAKE_ROLL_OUT_VOLTAGE));
+        controller.rightBumper().whileTrue(intake.rollIn());
+        controller.x().whileTrue(intake.rollOut());
 
         // Linear Slide - When isDeployed is true, it stows and when isDeployed is false, it deploys
         controller
                 .leftBumper()
                 .onTrue(Commands.either(
-                        linSlide.moveToPosition(LinSlideConfigsAlpha.LINSLIDE_STOWED_POSITION),
-                        linSlide.moveToPosition(LinSlideConfigsAlpha.LINSLIDE_DEPLOYED_POSITION),
+                        linSlide.moveToPosition(LinSlidePosition.STOW.getPosition()),
+                        linSlide.moveToPosition(LinSlidePosition.DEPLOY.getPosition()),
                         linSlide::isDeployed));
 
-        // Auto Align
+        // Auto Align + FlyWheels
         controller
                 .leftTrigger()
                 .whileTrue(AutoAimCommands.autoAim(
-                        drive,
-                        () -> -controller.getLeftY(),
-                        () -> -controller.getLeftX(),
-                        centerHubOpening.toTranslation2d()));
+                                drive,
+                                () -> -controller.getLeftY(),
+                                () -> -controller.getLeftX(),
+                                centerHubOpening.toTranslation2d())
+                        .alongWith(shooter.shoot(100)));
 
-        // Shooter + Hopper
-        controller
-                .rightTrigger()
-                .whileTrue(shooter.shoot(ShooterConfigs.SHOOTING_VOLTAGE)
-                        .alongWith(hopper.spinHopper(HopperConfigs.HOPPER_SPIN_VOLTAGE)));
+        // Hopper
+        controller.rightTrigger().whileTrue(hopper.spinHopper(80));
     }
 
     public void updateMechanisms() {

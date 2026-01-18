@@ -9,8 +9,6 @@ public class ShooterConfigs {
     static final int TOP_MOTOR_ID = 5;
     static final int BOTTOM_MOTOR_ID = 6;
 
-    public static final int SHOOTING_VOLTAGE = 100;
-
     public static final Slot0Configs SLOT_0_CONFIGS =
             new Slot0Configs().withKP(0).withKI(0).withKD(0).withKA(0).withKV(0).withKS(0);
 
