@@ -196,15 +196,15 @@ public class RobotContainer {
         // Switch to X pattern when D-Pad down is pressed
         controller.povDown().onTrue(Commands.runOnce(drive::stopWithX, drive));
 
-        //Climber
+        // Climber
         controller.y().onTrue(climber.moveToPosition(ClimberPosition.L1.getHeight()));
         controller.a().onTrue(climber.moveToPosition(ClimberPosition.BOTTOM.getHeight()));
 
-        //Intake
+        // Intake
         controller.rightBumper().whileTrue(intake.setRoller(IntakeConfigs.INTAKE_ROLL_IN_VOLTAGE));
         controller.x().whileTrue(intake.setRoller(IntakeConfigs.INTAKE_ROLL_OUT_VOLTAGE));
 
-        //Linear Slide - When isDeployed is true, it stows and when isDeployed is false, it deploys
+        // Linear Slide - When isDeployed is true, it stows and when isDeployed is false, it deploys
         controller
                 .leftBumper()
                 .onTrue(Commands.either(
@@ -212,18 +212,20 @@ public class RobotContainer {
                         linSlide.moveToPosition(LinSlideConfigsAlpha.LINSLIDE_DEPLOYED_POSITION),
                         linSlide::isDeployed));
 
-        //Auto Align
-        controller.leftTrigger().whileTrue(AutoAimCommands.autoAim(
-                drive,
-                () -> -controller.getLeftY(),
-                () -> -controller.getLeftX(),
-                centerHubOpening.toTranslation2d()));
+        // Auto Align
+        controller
+                .leftTrigger()
+                .whileTrue(AutoAimCommands.autoAim(
+                        drive,
+                        () -> -controller.getLeftY(),
+                        () -> -controller.getLeftX(),
+                        centerHubOpening.toTranslation2d()));
 
-        //Shooter + Hopper
+        // Shooter + Hopper
         controller
                 .rightTrigger()
                 .whileTrue(shooter.shoot(ShooterConfigs.SHOOTING_VOLTAGE)
-                                .alongWith(hopper.spinHopper(HopperConfigs.HOPPER_SPIN_VOLTAGE)));
+                        .alongWith(hopper.spinHopper(HopperConfigs.HOPPER_SPIN_VOLTAGE)));
     }
 
     public void updateMechanisms() {

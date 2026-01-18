@@ -5,6 +5,7 @@ import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
+import edu.wpi.first.units.Units;
 import edu.wpi.first.units.measure.Angle;
 import frc.robot.Robot;
 
@@ -13,9 +14,8 @@ public class LinSlideConfigsAlpha {
     static final int LIN_SLIDE_CANCODER_ID = 61;
     static final double GEAR_RATIO = 3;
 
-    public static final Angle LINSLIDE_STOWED_POSITION = 0;
-    public static final Angle LINSLIDE_DEPLOYED_POSITION = 0;
-
+    public static final Angle LINSLIDE_STOWED_POSITION = Units.Rotations.of(0);
+    public static final Angle LINSLIDE_DEPLOYED_POSITION = Units.Rotations.of(0);
 
     private static final Slot0Configs SLOT_0_CONFIGS = Robot.isReal()
             ? new Slot0Configs()
