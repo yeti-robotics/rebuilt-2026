@@ -45,6 +45,7 @@ import frc.robot.subsystems.linslide.LinSlideConfigsAlpha;
 import frc.robot.subsystems.linslide.LinSlideIOAlpha;
 import frc.robot.subsystems.linslide.LinSlideSubsystem;
 import frc.robot.subsystems.linslide.LinearSlideIO;
+import frc.robot.subsystems.shooter.ShooterConfigs;
 import frc.robot.subsystems.shooter.ShooterIO;
 import frc.robot.subsystems.shooter.ShooterIOAlpha;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
@@ -188,6 +189,14 @@ public class RobotContainer {
         drive.setDefaultCommand(DriveCommands.joystickDrive(
                 drive, () -> -controller.getLeftY(), () -> -controller.getLeftX(), () -> -controller.getRightX()));
 
+        // Reset gyro to 0° when the start button is pressed
+        controller
+                .start()
+                .onTrue(Commands.runOnce(
+                                () -> drive.setPose(new Pose2d(drive.getPose().getTranslation(), Rotation2d.kZero)),
+                                drive)
+                        .ignoringDisable(true));
+
         //Climber
         controller.y().onTrue(climber.moveToPosition(ClimberPosition.L1.getHeight()));
         controller.a().onTrue(climber.moveToPosition(ClimberPosition.BOTTOM.getHeight()));
@@ -205,6 +214,17 @@ public class RobotContainer {
                         linSlide::isDeployed));
 
         //Shooter + Auto Align
+        controller.leftTrigger().whileTrue(AutoAimCommands.autoAim(
+                drive,
+                () -> -controller.getLeftY(),
+                () -> -controller.getLeftX(),
+                centerHubOpening.toTranslation2d()).alongWith());
+        controller
+                .rightTrigger()
+                .whileTrue(shooter.shoot(ShooterConfigs.SHOOTING_VOLTAGE)
+                                .alongWith(hopper.spinHopper(HopperConfigs.HOPPER_SPIN_VOLTAGE)));
+
+
 
 
 
@@ -233,13 +253,7 @@ public class RobotContainer {
         // Switch to X pattern when X button is pressed
         controller.x().onTrue(Commands.runOnce(drive::stopWithX, drive));
 
-        // Reset gyro to 0° when B button is pressed
-        controller
-                .start()
-                .onTrue(Commands.runOnce(
-                                () -> drive.setPose(new Pose2d(drive.getPose().getTranslation(), Rotation2d.kZero)),
-                                drive)
-                        .ignoringDisable(true));
+
 
         controller.leftTrigger().whileTrue(hopper.spinHopper(HopperConfigs.HOPPER_SPIN_VOLTAGE));
         controller.button(1).whileTrue(shooter.shoot(6));
