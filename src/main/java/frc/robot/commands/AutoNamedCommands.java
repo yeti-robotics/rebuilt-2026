@@ -13,7 +13,6 @@ import frc.robot.subsystems.hopper.Hopper;
 import frc.robot.subsystems.intake.IntakeSubsystem;
 import frc.robot.subsystems.linslide.LinSlideSubsystem;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
-import edu.wpi.first.units.measure.Angle;
 
 public class AutoNamedCommands {
     private final IntakeSubsystem intake;
@@ -21,7 +20,6 @@ public class AutoNamedCommands {
     private final ShooterSubsystem shooter;
     private final Climber climber;
     private final LinSlideSubsystem linSlide;
-    private final AutoAimCommands autoAim;
     private final Drive drive;
     private final CommandXboxController controller;
 
@@ -39,20 +37,14 @@ public class AutoNamedCommands {
         this.shooter = shooter;
         this.climber = climber;
         this.linSlide = linSlide;
-        this.autoAim = autoAim;
         this.drive = drive;
         this.controller = controller;
         registerCommands();
     }
 
     public void registerCommands() {
-        NamedCommands.registerCommand("GroundIntake",
-                Commands.sequence(
-                        linSlide.applyPower(),
-                        intake.setRoller(0.0)));
-        NamedCommands.registerCommand(
-                "AutoAlignShoot",
-                Commands.sequence(
+        NamedCommands.registerCommand("GroundIntake", Commands.sequence(linSlide.applyPower(), intake.setRoller(0.0)));
+        NamedCommands.registerCommand("AutoAlignShoot", Commands.sequence(
                         AutoAimCommands.autoAim(
                                 drive,
                                 () -> -controller.getLeftY(),
