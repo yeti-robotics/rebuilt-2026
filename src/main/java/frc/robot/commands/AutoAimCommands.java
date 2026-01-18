@@ -7,42 +7,99 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.drive.Drive;
+import frc.robot.subsystems.vision.Vision;
 import frc.robot.util.AllianceFlipUtil;
+import java.util.Optional;
+import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
 public class AutoAimCommands {
-    // TODO: tune
+    private static final double MIN_MOVEMENT_THRESHOLD = 0.15; // Joystick deadband
+    private static final double CENTRIPETAL_GAIN = 2.0; // Adjust for orbit tightness
+
+    // Tune these PID values as needed
     private static final PIDController headingController = new PIDController(5, 0, 0);
+    private static final PIDController distanceController = new PIDController(2.0, 0, 0.1);
 
-    private static double calculateAngularVelocity(Pose2d currentPose, Translation2d target) {
-        headingController.enableContinuousInput(-Math.PI, Math.PI);
-        if (target == null) {
-            return 0; // TODO: make target nonnull
-        }
+    public static Command autoAimWithOrbit(
+            Drive drive,
+            Vision vision,
+            int cameraIndex,
+            DoubleSupplier xVelSupplier,
+            DoubleSupplier yVelSupplier,
+            Translation2d target) {
 
-        Rotation2d currentHeading = currentPose.getRotation();
-        Rotation2d desiredHeading = target.minus(currentPose.getTranslation())
-                .getAngle()
-                .rotateBy(Rotation2d.k180deg); // Remove this .rotateBy() if needed for real bot
-
-        return headingController.calculate(currentHeading.getRadians(), desiredHeading.getRadians());
-    }
-
-    public static Command autoAim(
-            Drive drive, DoubleSupplier xVelSupplier, DoubleSupplier yVelSupplier, Translation2d target) {
         Translation2d modifiedTarget = AllianceFlipUtil.apply(target);
+        headingController.enableContinuousInput(-Math.PI, Math.PI);
+        distanceController.enableContinuousInput(-Math.PI, Math.PI);
 
         return drive.runEnd(
                 () -> {
                     Pose2d currentPose = drive.getPose();
+                    Translation2d currentPosition = currentPose.getTranslation();
+                    Rotation2d currentRotation = drive.getRotation();
 
-                    double angularVelo = calculateAngularVelocity(currentPose, modifiedTarget);
+                    // Get target angle from vision if available
+                    Optional<Rotation2d> visionAngle = vision.getTargetAngle(cameraIndex);
+                    if (visionAngle.isPresent()) {
+                        // Orbit mode - use vision target
+                        Translation2d toTarget = modifiedTarget.minus(currentPosition);
+                        double currentDistance = toTarget.getNorm();
+                        Rotation2d targetAngle = new Rotation2d(toTarget.getX(), toTarget.getY());
+
+                        // Get joystick inputs
+                        double xSpeed = xVelSupplier.getAsDouble();
+                        double ySpeed = yVelSupplier.getAsDouble();
+                        double tangentSpeed = Math.hypot(xSpeed, ySpeed);
+
+                        // Only apply orbit behavior if joystick is being moved
+                        if (tangentSpeed > MIN_MOVEMENT_THRESHOLD) {
+                            // Calculate joystick angle relative to robot
+                            double joystickAngle = Math.atan2(ySpeed, xSpeed);
+                            double joystickMagnitude = Math.hypot(xSpeed, ySpeed);
+
+                            // Calculate tangent direction based on joystick angle
+                            Rotation2d tangentDirection = targetAngle.plus(Rotation2d.fromRadians(
+                                    Math.signum(Math.sin(joystickAngle)) * Math.PI/2  // +90 or -90 degrees based on joystick Y
+                            ));
+
+                            // Scale by joystick magnitude
+                            double tangentX = joystickMagnitude * tangentDirection.getCos();
+                            double tangentY = joystickMagnitude * tangentDirection.getSin();
+
+                            // Add centripetal force to maintain distance
+                            double distanceError = currentDistance - toTarget.getNorm();
+                            double centripetalX = -distanceError * targetAngle.getCos() * CENTRIPETAL_GAIN;
+                            double centripetalY = -distanceError * targetAngle.getSin() * CENTRIPETAL_GAIN;
+
+                            // Combine movements
+                            double fieldX = tangentX + centripetalX;
+                            double fieldY = tangentY + centripetalY;
+
+                            // Calculate rotation to face the target
+                            double rotationSpeed = headingController.calculate(
+                                    currentRotation.getRadians(),
+                                    targetAngle.getRadians() + Math.PI); // Face towards target
+
+                            // Convert to robot-relative speeds
+                            double robotVx = fieldX * currentRotation.getCos() + fieldY * currentRotation.getSin();
+                            double robotVy = -fieldX * currentRotation.getSin() + fieldY * currentRotation.getCos();
+
+                            drive.runVelocity(new ChassisSpeeds(robotVx, robotVy, rotationSpeed));
+                            return;
+                        }
+                    }
+
+                    // Default to regular auto-aim if not in orbit mode or no vision target
+                    double angularVelo = headingController.calculate(
+                            currentRotation.getRadians(),
+                            modifiedTarget.minus(currentPosition).getAngle().getRadians() + Math.PI);
 
                     drive.runVelocity(ChassisSpeeds.fromFieldRelativeSpeeds(
                             xVelSupplier.getAsDouble() * 1.5,
                             yVelSupplier.getAsDouble() * 1.5,
                             angularVelo,
-                            drive.getRotation()));
+                            currentRotation));
                 },
                 drive::stop);
     }

@@ -28,6 +28,8 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.vision.VisionIO.PoseObservationType;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
+
 import org.littletonrobotics.junction.Logger;
 
 public class Vision extends SubsystemBase {
@@ -170,6 +172,13 @@ public class Vision extends SubsystemBase {
         Logger.recordOutput(
                 "Vision/Summary/RobotPosesRejected",
                 allRobotPosesRejected.toArray(new Pose3d[allRobotPosesRejected.size()]));
+    }
+
+    public Optional<Rotation2d> getTargetAngle(int cameraIndex) {
+        if (inputs[cameraIndex].latestTargetObservation != null) {
+            return Optional.of(inputs[cameraIndex].latestTargetObservation.tx());
+        }
+        return Optional.empty();
     }
 
     @FunctionalInterface

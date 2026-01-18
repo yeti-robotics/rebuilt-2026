@@ -196,8 +196,10 @@ public class RobotContainer {
         controller.button(1).whileTrue(shooter.shoot(6));
         controller
                 .y()
-                .whileTrue(AutoAimCommands.autoAim(
+                .whileTrue(AutoAimCommands.autoAimWithOrbit(
                         drive,
+                        vision,
+                        1,
                         () -> -controller.getLeftY(),
                         () -> -controller.getLeftX(),
                         centerHubOpening.toTranslation2d()));
