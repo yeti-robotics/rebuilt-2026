@@ -197,6 +197,15 @@ public class RobotContainer {
                                 drive)
                         .ignoringDisable(true));
 
+        // Lock to 0° when D-Pad up button is held
+        controller
+                .povUp()
+                .whileTrue(DriveCommands.joystickDriveAtAngle(
+                        drive, () -> -controller.getLeftY(), () -> -controller.getLeftX(), () -> Rotation2d.kZero));
+
+        // Switch to X pattern when D-Pad down is pressed
+        controller.povDown().onTrue(Commands.runOnce(drive::stopWithX, drive));
+
         //Climber
         controller.y().onTrue(climber.moveToPosition(ClimberPosition.L1.getHeight()));
         controller.a().onTrue(climber.moveToPosition(ClimberPosition.BOTTOM.getHeight()));
@@ -223,47 +232,6 @@ public class RobotContainer {
                 .rightTrigger()
                 .whileTrue(shooter.shoot(ShooterConfigs.SHOOTING_VOLTAGE)
                                 .alongWith(hopper.spinHopper(HopperConfigs.HOPPER_SPIN_VOLTAGE)));
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        // Lock to 0° when A button is held
-        controller
-                .a()
-                .whileTrue(DriveCommands.joystickDriveAtAngle(
-                        drive, () -> -controller.getLeftY(), () -> -controller.getLeftX(), () -> Rotation2d.kZero));
-
-        // Switch to X pattern when X button is pressed
-        controller.x().onTrue(Commands.runOnce(drive::stopWithX, drive));
-
-
-
-        controller.leftTrigger().whileTrue(hopper.spinHopper(HopperConfigs.HOPPER_SPIN_VOLTAGE));
-        controller.button(1).whileTrue(shooter.shoot(6));
-        controller
-                .y()
-                .whileTrue(AutoAimCommands.autoAim(
-                        drive,
-                        () -> -controller.getLeftY(),
-                        () -> -controller.getLeftX(),
-                        centerHubOpening.toTranslation2d()));
     }
 
     public void updateMechanisms() {

@@ -4,7 +4,7 @@ import com.ctre.phoenix6.configs.*;
 import com.ctre.phoenix6.signals.GravityTypeValue;
 
 public class HopperConfigs {
-    static final int ROLLER_ID = 500;
+    static final int ROLLER_ID = 50;
 
     public static final int HOPPER_SPIN_VOLTAGE = 80;
 
