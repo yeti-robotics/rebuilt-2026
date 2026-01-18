@@ -14,10 +14,8 @@ import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
 public class AutoAimCommands {
-    private static final double MIN_MOVEMENT_THRESHOLD = 0.15; // Joystick deadband
-    private static final double CENTRIPETAL_GAIN = 2.0; // Adjust for orbit tightness
-
-    // Tune these PID values as needed
+    private static final double MIN_MOVEMENT_THRESHOLD = 0.15;
+    private static final double CENTRIPETAL_GAIN = 2.0;
     private static final PIDController headingController = new PIDController(5, 0, 0);
     private static final PIDController distanceController = new PIDController(2.0, 0, 0.1);
 
@@ -39,49 +37,39 @@ public class AutoAimCommands {
                     Translation2d currentPosition = currentPose.getTranslation();
                     Rotation2d currentRotation = drive.getRotation();
 
-                    // Get target angle from vision if available
                     Optional<Rotation2d> visionAngle = vision.getTargetAngle(cameraIndex);
                     if (visionAngle.isPresent()) {
-                        // Orbit mode - use vision target
                         Translation2d toTarget = modifiedTarget.minus(currentPosition);
                         double currentDistance = toTarget.getNorm();
                         Rotation2d targetAngle = new Rotation2d(toTarget.getX(), toTarget.getY());
 
-                        // Get joystick inputs
                         double xSpeed = xVelSupplier.getAsDouble();
                         double ySpeed = yVelSupplier.getAsDouble();
                         double tangentSpeed = Math.hypot(xSpeed, ySpeed);
 
-                        // Only apply orbit behavior if joystick is being moved
                         if (tangentSpeed > MIN_MOVEMENT_THRESHOLD) {
-                            // Calculate joystick angle relative to robot
                             double joystickAngle = Math.atan2(ySpeed, xSpeed);
                             double joystickMagnitude = Math.hypot(xSpeed, ySpeed);
 
-                            // Calculate tangent direction based on joystick angle
                             Rotation2d tangentDirection = targetAngle.plus(Rotation2d.fromRadians(
-                                    Math.signum(Math.sin(joystickAngle)) * Math.PI/2  // +90 or -90 degrees based on joystick Y
+                                Math.signum(Math.sin(joystickAngle)) * Math.PI/2
                             ));
 
-                            // Scale by joystick magnitude
                             double tangentX = joystickMagnitude * tangentDirection.getCos();
                             double tangentY = joystickMagnitude * tangentDirection.getSin();
 
-                            // Add centripetal force to maintain distance
                             double distanceError = currentDistance - toTarget.getNorm();
                             double centripetalX = -distanceError * targetAngle.getCos() * CENTRIPETAL_GAIN;
                             double centripetalY = -distanceError * targetAngle.getSin() * CENTRIPETAL_GAIN;
 
-                            // Combine movements
                             double fieldX = tangentX + centripetalX;
                             double fieldY = tangentY + centripetalY;
 
-                            // Calculate rotation to face the target
                             double rotationSpeed = headingController.calculate(
-                                    currentRotation.getRadians(),
-                                    targetAngle.getRadians() + Math.PI); // Face towards target
+                                currentRotation.getRadians(),
+                                targetAngle.getRadians() + Math.PI
+                            );
 
-                            // Convert to robot-relative speeds
                             double robotVx = fieldX * currentRotation.getCos() + fieldY * currentRotation.getSin();
                             double robotVy = -fieldX * currentRotation.getSin() + fieldY * currentRotation.getCos();
 
@@ -90,14 +78,14 @@ public class AutoAimCommands {
                         }
                     }
 
-                    // Default to regular auto-aim if not in orbit mode or no vision target
                     double angularVelo = headingController.calculate(
-                            currentRotation.getRadians(),
-                            modifiedTarget.minus(currentPosition).getAngle().getRadians() + Math.PI);
+                        currentRotation.getRadians(),
+                        modifiedTarget.minus(currentPosition).getAngle().getRadians() + Math.PI
+                    );
 
                     drive.runVelocity(ChassisSpeeds.fromFieldRelativeSpeeds(
-                            xVelSupplier.getAsDouble() * 1.5,
-                            yVelSupplier.getAsDouble() * 1.5,
+                        xVelSupplier.getAsDouble() * 1.5,
+                        yVelSupplier.getAsDouble() * 1.5,
                             angularVelo,
                             currentRotation));
                 },
