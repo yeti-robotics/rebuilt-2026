@@ -15,7 +15,7 @@ import java.util.function.DoubleSupplier;
 public class AutoAimCommands {
     private static final double MIN_MOVEMENT_THRESHOLD = 0.15;
     private static final double CENTRIPETAL_GAIN = 2.0;
-    private static final PIDController headingController = new PIDController(5, 0, 0);
+    private static final PIDController headingController = new PIDController(2, 0, 0);
     private static final PIDController distanceController = new PIDController(2.0, 0, 0.1);
 
     public static Command autoAimWithOrbit(
@@ -32,6 +32,7 @@ public class AutoAimCommands {
 
         return drive.runEnd(
                 () -> {
+                    System.out.println("Cmd1");
                     Pose2d currentPose = drive.getPose();
                     Translation2d currentPosition = currentPose.getTranslation();
                     Rotation2d currentRotation = drive.getRotation();
@@ -87,6 +88,64 @@ public class AutoAimCommands {
                             yVelSupplier.getAsDouble() * 1.5,
                             angularVelo,
                             currentRotation));
+                },
+                drive::stop);
+    }
+
+    public static Command autoAimWithOrbitModified(
+            Drive drive,
+            Vision vision,
+            int cameraIndex,
+            DoubleSupplier xVelSupplier,
+            DoubleSupplier yVelSupplier,
+            Translation2d target) {
+
+        Translation2d modifiedTarget = AllianceFlipUtil.apply(target);
+        headingController.enableContinuousInput(-Math.PI, Math.PI);
+
+        return drive.runEnd(
+                () -> {
+                    System.out.println("Cmd2");
+                    Pose2d currentPose = drive.getPose();
+                    Translation2d currentPosition = currentPose.getTranslation();
+                    Rotation2d currentRotation = currentPose.getRotation();
+
+                    Translation2d hubDistance = modifiedTarget.minus(currentPosition);
+
+
+//
+//                    double theta = hubDistance.getAngle().getRadians();
+//
+//                    System.out.println(hubDistance.getAngle().getDegrees());
+//
+//                    theta += Math.PI; // b/c we want robot back to be facing
+
+
+
+                    double rawXVelo = xVelSupplier.getAsDouble(); // because field relativity
+                    double rawYVelo = yVelSupplier.getAsDouble();
+
+                    Rotation2d targetHeading = hubDistance.getAngle().plus(Rotation2d.kPi);
+                    Translation2d fieldRel = new Translation2d(rawXVelo, rawYVelo).rotateBy(targetHeading);
+
+//                    double thetaCos = Math.cos(theta);
+//                    double thetaSin = Math.sin(theta);
+//
+//                    // Rotation Matrix
+//                    double xVeloRotated = rawXVelo * thetaCos - rawYVelo * thetaSin;
+//                    double yVeloRotated = rawXVelo * thetaCos + rawYVelo * thetaCos;
+
+                    double angularVelo = headingController.calculate(
+                            currentRotation.getRadians(),
+                            targetHeading.getRadians());
+
+                    ChassisSpeeds currentReference = ChassisSpeeds.fromFieldRelativeSpeeds(
+                            fieldRel.getX(),
+                            fieldRel.getY(),
+                            angularVelo,
+                            currentRotation);
+
+                    drive.runVelocity(currentReference);
                 },
                 drive::stop);
     }
