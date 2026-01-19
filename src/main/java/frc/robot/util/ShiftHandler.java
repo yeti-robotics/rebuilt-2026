@@ -7,13 +7,23 @@ import frc.robot.subsystems.led.LEDModes;
 /** Utility class to handle the alliance shift logic */
 public class ShiftHandler extends SubsystemBase {
     public enum ShiftType {
-        TRANSITION_SHIFT,
-        RED_SHIFT,
-        BLUE_SHIFT,
-        ENDGAME_SHIFT;
+        TRANSITION_SHIFT("Transition"),
+        RED_SHIFT("Red"),
+        BLUE_SHIFT("Blue"),
+        ENDGAME_SHIFT("Endgame");
 
         private ShiftType invert() {
             return this == RED_SHIFT ? BLUE_SHIFT : RED_SHIFT;
+        }
+
+        public String getShiftString() {
+            return shiftString;
+        }
+
+        public final String shiftString;
+
+        ShiftType(String shiftString) {
+            this.shiftString = shiftString;
         }
     }
 
