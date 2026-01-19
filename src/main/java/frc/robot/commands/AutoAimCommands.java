@@ -64,7 +64,7 @@ public class AutoAimCommands {
                             double fieldY = tangentY + centripetalY;
 
                             double rotationSpeed = headingController.calculate(
-                                    currentRotation.getRadians(), targetAngle.getRadians() + Math.PI);
+                                    currentRotation.getRadians(), targetAngle.getRadians() + Math.PI); // remove pi if needed to rotate the robot the right direction
 
                             double robotVx = fieldX * currentRotation.getCos() + fieldY * currentRotation.getSin();
                             double robotVy = -fieldX * currentRotation.getSin() + fieldY * currentRotation.getCos();
