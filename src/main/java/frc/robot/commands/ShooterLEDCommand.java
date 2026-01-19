@@ -7,7 +7,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.led.LED;
 import frc.robot.subsystems.led.LEDModes;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -67,8 +66,9 @@ public class ShooterLEDCommand extends Command {
         double angleToGoalDegrees = limelightMountAngleDegrees + targetOffsetAngle_Vertical;
         double angleToGoalRadians = angleToGoalDegrees * (3.14159 / 180.0);
 
-        //calculate distance
-        double distanceFromLimelightToGoalInches = (goalHeightInches - limelightLensHeightInches) / Math.tan(angleToGoalRadians);
+        // calculate distance
+        double distanceFromLimelightToGoalInches =
+                (goalHeightInches - limelightLensHeightInches) / Math.tan(angleToGoalRadians);
 
         return distanceFromLimelightToGoalInches;
     }
@@ -77,9 +77,7 @@ public class ShooterLEDCommand extends Command {
     public void execute() {
         double tolerance = 6.0; // TODO: Calculate
         double idealDistanceToHub = 82; // TODO: Calculate
-        if (shooter.getVelocity() == 120
-                && Math.abs(getDistance() - idealDistanceToHub)
-                <= tolerance) {
+        if (shooter.getVelocity() == 120 && Math.abs(getDistance() - idealDistanceToHub) <= tolerance) {
             // wave effect
             for (int i = 0; i < leds.getBufferLength(); i++) {
                 leds.setRGB(
