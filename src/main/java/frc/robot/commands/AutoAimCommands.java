@@ -42,7 +42,7 @@ public class AutoAimCommands {
                         double currentDistance = toTarget.getNorm();
                         Rotation2d targetAngle = new Rotation2d(toTarget.getX(), toTarget.getY());
 
-                        double xSpeed = xVelSupplier.getAsDouble();
+                        double xSpeed = -xVelSupplier.getAsDouble();
                         double ySpeed = yVelSupplier.getAsDouble();
                         double tangentSpeed = Math.hypot(xSpeed, ySpeed);
 
@@ -50,21 +50,25 @@ public class AutoAimCommands {
                             double joystickAngle = Math.atan2(ySpeed, xSpeed);
                             double joystickMagnitude = Math.hypot(xSpeed, ySpeed);
 
-                            Rotation2d tangentDirection = targetAngle.plus(
-                                    Rotation2d.fromRadians(Math.signum(Math.sin(joystickAngle)) * Math.PI / 2));
+                            // Calculate orbital and radial movement components
+                            double tangentComponent = Math.sin(joystickAngle) * joystickMagnitude;
+                            Rotation2d tangentDirection = targetAngle.plus(Rotation2d.fromRadians(Math.PI / 2));
 
-                            double tangentX = joystickMagnitude * tangentDirection.getCos();
-                            double tangentY = joystickMagnitude * tangentDirection.getSin();
+                            double radialComponent = Math.cos(joystickAngle) * joystickMagnitude;
+                            Rotation2d radialDirection = targetAngle;
 
-                            double distanceError = currentDistance - toTarget.getNorm();
-                            double centripetalX = -distanceError * targetAngle.getCos() * CENTRIPETAL_GAIN;
-                            double centripetalY = -distanceError * targetAngle.getSin() * CENTRIPETAL_GAIN;
+                            double tangentX = tangentDirection.getCos() * tangentComponent;
+                            double tangentY = tangentDirection.getSin() * tangentComponent;
+                            double radialX = -radialDirection.getCos() * radialComponent;
+                            double radialY = -radialDirection.getSin() * radialComponent;
 
-                            double fieldX = tangentX + centripetalX;
-                            double fieldY = tangentY + centripetalY;
+                            double fieldX = tangentX + radialX;
+                            double fieldY = tangentY + radialY;
 
                             double rotationSpeed = headingController.calculate(
-                                    currentRotation.getRadians(), targetAngle.getRadians() + Math.PI); // remove pi if needed to rotate the robot the right direction
+                                    currentRotation.getRadians(),
+                                    targetAngle.getRadians()
+                                            + Math.PI); // remove pi if needed to rotate the robot the right direction
 
                             double robotVx = fieldX * currentRotation.getCos() + fieldY * currentRotation.getSin();
                             double robotVy = -fieldX * currentRotation.getSin() + fieldY * currentRotation.getCos();
