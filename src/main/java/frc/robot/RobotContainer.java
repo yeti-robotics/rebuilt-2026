@@ -183,7 +183,7 @@ public class RobotContainer {
 
         // Climber
         controller.y().onTrue(climber.moveToPosition(ClimberPosition.L1.getHeight()));
-        controller.a().onTrue(climber.moveToPosition(ClimberPosition.BOTTOM.getHeight()));
+        controller.b().onTrue(climber.moveToPosition(ClimberPosition.BOTTOM.getHeight()));
 
         // Intake
         controller.rightBumper().whileTrue(intake.rollIn());
