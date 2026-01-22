@@ -12,7 +12,9 @@ public interface IndexerIO {
 
     public default void updateInputs(IndexerIOInputs inputs) {}
 
-    public default void spinIndexer(double vel) {}
+    public default void spinIndexer(double volts) {}
 
-    public default boolean getIsDetected() { return false; }
+    public default boolean getIsDetected() {
+        return false;
+    }
 }

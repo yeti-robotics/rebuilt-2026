@@ -1,13 +1,13 @@
 package frc.robot.subsystems.indexer;
 
+import static frc.robot.subsystems.indexer.IndexerConfigs.*;
+
 import com.ctre.phoenix6.controls.MotionMagicVelocityVoltage;
 import com.ctre.phoenix6.hardware.CANrange;
 import com.ctre.phoenix6.hardware.TalonFX;
 import frc.robot.Robot;
 import frc.robot.constants.Constants;
 import frc.robot.util.sim.PhysicsSim;
-import frc.robot.subsystems.indexer.IndexerIO.*;
-import static frc.robot.subsystems.indexer.IndexerConfigs.*;
 
 public class IndexerIOAlpha implements IndexerIO {
     public final TalonFX indexerMotor;
@@ -31,8 +31,8 @@ public class IndexerIOAlpha implements IndexerIO {
     }
 
     @Override
-    public void spinIndexer(double vel) {
-        indexerMotor.setControl(velocityVoltageRequest.withVelocity(vel));
+    public void spinIndexer(double volts) {
+        indexerMotor.setControl(velocityVoltageRequest.withVelocity(volts));
     }
 
     @Override
