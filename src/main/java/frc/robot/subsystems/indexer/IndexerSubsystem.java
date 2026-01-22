@@ -16,7 +16,14 @@ public class IndexerSubsystem extends SubsystemBase {
 
     public IndexerSubsystem(IndexerIO io) { this.io = io; }
 
+    public boolean sensorGetIsDetected() { return inputs.isDetected; }
+
     public Command index(double vel) {
+        return runEnd(() -> io.spinIndexer(vel), () -> io.spinIndexer(0)).withTimeout(0.5)
+                .andThen(runEnd(() -> io.spinIndexer(vel), () -> io.spinIndexer(0)).unless(this::sensorGetIsDetected));
+    }
+
+    public Command runMotors(double vel) {
         return runEnd(() -> io.spinIndexer(vel), () -> io.spinIndexer(0));
     }
 }
