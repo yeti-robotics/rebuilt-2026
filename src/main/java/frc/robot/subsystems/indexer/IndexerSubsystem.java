@@ -27,6 +27,6 @@ public class IndexerSubsystem extends SubsystemBase {
     }
 
     public Command index(double volts) {
-        return runMotors(volts).withTimeout(0.5).andThen(runMotorsUntilDetected(volts));
+        return runMotors(volts).onlyIf(() -> inputs.isDetected);
     }
 }
