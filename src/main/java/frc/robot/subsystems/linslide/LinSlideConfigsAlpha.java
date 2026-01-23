@@ -22,9 +22,7 @@ public class LinSlideConfigsAlpha {
                     .withKA(1)
                     .withKS(1)
                     .withGravityType(GravityTypeValue.Elevator_Static)
-            : new Slot0Configs();
-    private static final Slot1Configs SLOT_1_CONFIGS = Robot.isSimulation()
-            ? new Slot1Configs()
+            : new Slot0Configs()
             .withKP(124)
             .withKI(0)
             .withKD(64)
@@ -32,8 +30,7 @@ public class LinSlideConfigsAlpha {
             .withKV(0)
             .withKA(0)
             .withKS(0.2)
-            .withGravityType(GravityTypeValue.Elevator_Static)
-            : new Slot1Configs();
+            .withGravityType(GravityTypeValue.Elevator_Static);
 
     static final TalonFXConfiguration linSlideTalonFXConfigs = new TalonFXConfiguration()
             .withSlot0(SLOT_0_CONFIGS)

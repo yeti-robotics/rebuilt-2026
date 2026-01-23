@@ -9,6 +9,7 @@ package frc.robot;
 
 import static frc.robot.constants.FieldConstants.Hub.centerHubOpening;
 import static frc.robot.subsystems.linslide.LinSlidePosition.DEPLOY;
+import static frc.robot.subsystems.linslide.LinSlidePosition.STOW;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.math.geometry.*;
@@ -204,7 +205,7 @@ public class RobotContainer {
                         centerHubOpening.toTranslation2d()));
 
         controller.button(2).onTrue(linSlide.moveToPosition(DEPLOY.getPosition()));
-        controller.button(3).onTrue(linSlide.applyPower());
+        controller.button(3).onTrue(linSlide.moveToPosition(STOW.getPosition()));
     }
 
     public void updateMechanisms() {
