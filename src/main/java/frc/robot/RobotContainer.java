@@ -193,15 +193,12 @@ public class RobotContainer {
                         .ignoringDisable(true));
 
         controller.leftTrigger().whileTrue(hopper.spinHopper(HopperConfigs.HOPPER_SPIN_VOLTAGE));
-        //controller.button(1).whileTrue(shooter.shoot(6));
+        // controller.button(1).whileTrue(shooter.shoot(6));
 
         controller
                 .button(2)
                 .whileTrue(AutoAimCommands.autoAimWithOrbit(
-                        drive,
-                        controller::getLeftY,
-                        controller::getLeftX,
-                        centerHubOpening.toTranslation2d()));
+                        drive, controller::getLeftY, controller::getLeftX, centerHubOpening.toTranslation2d()));
     }
 
     public void updateMechanisms() {
