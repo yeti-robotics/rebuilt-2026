@@ -17,7 +17,7 @@ public class IndexerIOAlpha implements IndexerIO {
 
     public IndexerIOAlpha() {
         indexerMotor = new TalonFX(INDEXER_MOTOR_ID, Constants.rioBus);
-        indexerSensor = new CANrange(INDEXER_SENSOR_ID, Constants.rioBus);
+        indexerSensor = new CANrange(INDEXER_CANRANGE_ID, Constants.rioBus);
 
         if (Robot.isSimulation()) {
             PhysicsSim.getInstance().addTalonFX(indexerMotor);
@@ -33,10 +33,5 @@ public class IndexerIOAlpha implements IndexerIO {
     @Override
     public void spinIndexer(double volts) {
         indexerMotor.setControl(velocityVoltageRequest.withVelocity(volts));
-    }
-
-    @Override
-    public boolean getIsDetected() {
-        return indexerSensor.getIsDetected().getValue();
     }
 }

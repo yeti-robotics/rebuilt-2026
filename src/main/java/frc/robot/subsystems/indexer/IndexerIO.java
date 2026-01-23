@@ -13,8 +13,4 @@ public interface IndexerIO {
     public default void updateInputs(IndexerIOInputs inputs) {}
 
     public default void spinIndexer(double volts) {}
-
-    public default boolean getIsDetected() {
-        return false;
-    }
 }
