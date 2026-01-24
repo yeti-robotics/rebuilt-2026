@@ -13,25 +13,23 @@ import frc.robot.util.sim.PhysicsSim;
 
 public class LinSlideIOAlpha implements LinSlideIO {
     public final TalonFX linSlideMotor;
-    public final CANcoder linSlideCANCoder;
 
     private final MotionMagicTorqueCurrentFOC magicRequest = new MotionMagicTorqueCurrentFOC(0);
 
     public LinSlideIOAlpha() {
         linSlideMotor = new TalonFX(LIN_SLIDE_MOTOR_ID, rioBus);
-        linSlideCANCoder = new CANcoder(LIN_SLIDE_CANCODER_ID, rioBus);
         if (Robot.isSimulation()) {
-            PhysicsSim.getInstance().addTalonFX(linSlideMotor, linSlideCANCoder);
+            PhysicsSim.getInstance().addTalonFX(linSlideMotor);
         }
         linSlideMotor.getConfigurator().apply(linSlideTalonFXConfigs);
-        linSlideCANCoder.getConfigurator().apply(linSlideCANCoderConfigs);
+
+        zeroPosition();
     }
 
     @Override
     public void updateInputs(LinSlideIO.LinSlideIOInputs inputs) {
         inputs.positionRotation = linSlideMotor.getPosition().getValueAsDouble();
         inputs.targetPositionRotation = linSlideMotor.getClosedLoopReference().getValueAsDouble();
-        //      inputs.isDeployed = LinSlideCANCoder.getAbsolutePosition().isNear(DEPLOY, 0.1); // <-- Maybe
     }
 
     @Override

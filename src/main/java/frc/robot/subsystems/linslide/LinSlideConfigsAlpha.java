@@ -9,7 +9,6 @@ import frc.robot.Robot;
 
 public class LinSlideConfigsAlpha {
     static final int LIN_SLIDE_MOTOR_ID = 60;
-    static final int LIN_SLIDE_CANCODER_ID = 61;
     static final double GEAR_RATIO = 3;
 
     private static final Slot0Configs SLOT_0_CONFIGS = Robot.isReal()
@@ -42,11 +41,4 @@ public class LinSlideConfigsAlpha {
             .withMotorOutput(new MotorOutputConfigs()
                     .withInverted(InvertedValue.CounterClockwise_Positive)
                     .withNeutralMode(NeutralModeValue.Brake));
-
-    static final CANcoderConfiguration linSlideCANCoderConfigs = new CANcoderConfiguration()
-            .withMagnetSensor(
-                    new MagnetSensorConfigs()
-                            .withSensorDirection(SensorDirectionValue.Clockwise_Positive)
-                            .withMagnetOffset(0.67) // placeholder value
-                    );
 }
