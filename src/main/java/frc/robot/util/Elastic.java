@@ -152,8 +152,7 @@ public final class Elastic {
          * @param description the descriptive text of the notification
          * @param displayTimeMillis the display time in milliseconds
          */
-        public Notification(
-                NotificationLevel level, String title, String description, int displayTimeMillis) {
+        public Notification(NotificationLevel level, String title, String description, int displayTimeMillis) {
             this(level, title, description, displayTimeMillis, 350, -1);
         }
 
@@ -167,8 +166,7 @@ public final class Elastic {
          * @param width the width of the notification display area
          * @param height the height of the notification display area, inferred if below zero
          */
-        public Notification(
-                NotificationLevel level, String title, String description, double width, double height) {
+        public Notification(NotificationLevel level, String title, String description, double width, double height) {
             this(level, title, description, 3000, width, height);
         }
 
