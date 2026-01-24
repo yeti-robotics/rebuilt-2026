@@ -71,6 +71,7 @@ public class RobotContainer {
     private final ShooterSubsystem shooter;
     private final IndexerSubsystem indexer;
     private final Vision vision;
+    private final
 
     // Controller
     private final CommandXboxController controller = new CommandXboxController(0);
