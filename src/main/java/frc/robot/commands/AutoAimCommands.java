@@ -13,6 +13,8 @@ import java.util.function.DoubleSupplier;
 public class AutoAimCommands {
     public static final PIDController headingController = new PIDController(5, 0, 0);
 
+    private static final double SPEED_MULTIPLIER = 1.5;
+
     static {
         headingController.enableContinuousInput(-Math.PI, Math.PI);
     }
@@ -29,8 +31,8 @@ public class AutoAimCommands {
 
                     Translation2d hubDistance = modifiedTarget.minus(currentPosition);
 
-                    double rawXVelo = xVelSupplier.getAsDouble();
-                    double rawYVelo = yVelSupplier.getAsDouble();
+                    double rawXVelo = xVelSupplier.getAsDouble() * SPEED_MULTIPLIER;
+                    double rawYVelo = yVelSupplier.getAsDouble() * SPEED_MULTIPLIER;
 
                     Rotation2d targetHeading =
                             hubDistance.getAngle().plus(Rotation2d.kPi); // remove if needed for real robot
@@ -43,6 +45,38 @@ public class AutoAimCommands {
                             fieldRel.getX(), fieldRel.getY(), angularVelo, currentRotation);
 
                     drive.runVelocity(currentReference);
+                },
+                drive::stop);
+    }
+
+    private static double calculateAngularVelocity(Pose2d currentPose, Translation2d target) {
+        if (target == null) {
+            return 0;
+        }
+
+        Rotation2d currentHeading = currentPose.getRotation();
+        Rotation2d desiredHeading = target.minus(currentPose.getTranslation())
+                .getAngle()
+                .rotateBy(Rotation2d.k180deg); // Remove this .rotateBy() if needed for real bot
+
+        return headingController.calculate(currentHeading.getRadians(), desiredHeading.getRadians());
+    }
+
+    public static Command autoAim(
+            Drive drive, DoubleSupplier xVelSupplier, DoubleSupplier yVelSupplier, Translation2d target) {
+        Translation2d modifiedTarget = AllianceFlipUtil.apply(target);
+
+        return drive.runEnd(
+                () -> {
+                    Pose2d currentPose = drive.getPose();
+
+                    double angularVelo = calculateAngularVelocity(currentPose, modifiedTarget);
+
+                    drive.runVelocity(ChassisSpeeds.fromFieldRelativeSpeeds(
+                            xVelSupplier.getAsDouble() * 1.5,
+                            yVelSupplier.getAsDouble() * 1.5,
+                            angularVelo,
+                            drive.getRotation()));
                 },
                 drive::stop);
     }
