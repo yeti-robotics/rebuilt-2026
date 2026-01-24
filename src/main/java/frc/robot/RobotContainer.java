@@ -7,26 +7,20 @@
 
 package frc.robot;
 
-import static frc.robot.constants.FieldConstants.Hub.centerHubOpening;
-
 import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.math.geometry.*;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-import frc.robot.commands.AutoAimCommands;
 import frc.robot.commands.DriveCommands;
-import frc.robot.commands.ShooterLEDCommand;
 import frc.robot.commands.SnowfallLEDCommand;
 import frc.robot.constants.Constants;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.climber.Climber;
 import frc.robot.subsystems.climber.ClimberIO;
 import frc.robot.subsystems.climber.ClimberIOAlpha;
-import frc.robot.subsystems.climber.ClimberPosition;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
 import frc.robot.subsystems.drive.GyroIOPigeon2;
@@ -46,7 +40,6 @@ import frc.robot.subsystems.led.LED;
 import frc.robot.subsystems.led.LEDModes;
 import frc.robot.subsystems.linslide.LinSlideIO;
 import frc.robot.subsystems.linslide.LinSlideIOAlpha;
-import frc.robot.subsystems.linslide.LinSlidePosition;
 import frc.robot.subsystems.linslide.LinSlideSubsystem;
 import frc.robot.subsystems.shooter.ShooterIO;
 import frc.robot.subsystems.shooter.ShooterIOAlpha;
@@ -76,7 +69,6 @@ public class RobotContainer {
     private final Vision vision;
 
     // Commands
-    private final ShooterLEDCommand shooterLEDCommand;
     private final SnowfallLEDCommand snowfallLEDCommand;
 
     // Controller
@@ -156,8 +148,7 @@ public class RobotContainer {
                 break;
         }
 
-        led = new LED();
-        shooterLEDCommand = new ShooterLEDCommand(led, shooter);
+        led = new LED(shooter, vision);
         snowfallLEDCommand = new SnowfallLEDCommand(led, 2);
 
         // Set up auto routines
@@ -190,35 +181,34 @@ public class RobotContainer {
         drive.setDefaultCommand(DriveCommands.joystickDrive(
                 drive, () -> -controller.getLeftY(), () -> -controller.getLeftX(), () -> -controller.getRightX()));
 
-        controller
-                .start()
-                .onTrue(Commands.runOnce(
-                                () -> drive.setPose(new Pose2d(drive.getPose().getTranslation(), Rotation2d.kZero)),
-                                drive)
-                        .ignoringDisable(true));
-
-        controller.y().onTrue(climber.moveToPosition(ClimberPosition.L1.getHeight()));
-        controller.b().onTrue(climber.moveToPosition(ClimberPosition.BOTTOM.getHeight()));
-
-        controller.rightBumper().whileTrue(intake.rollIn());
-        controller.x().whileTrue(intake.rollOut());
-
-        controller
-                .leftBumper()
-                .onTrue(Commands.either(
-                        linSlide.moveToPosition(LinSlidePosition.STOW.getPosition()),
-                        linSlide.moveToPosition(LinSlidePosition.DEPLOY.getPosition()),
-                        linSlide::isDeployed));
-
-        controller
-                .leftTrigger()
-                .whileTrue(AutoAimCommands.autoAim(
-                                drive,
-                                controller::getLeftY,
-                                controller::getLeftX,
-                                centerHubOpening.toTranslation2d())
-                        .alongWith(shooter.shoot(100).alongWith(shooterLEDCommand))
-                        .alongWith(indexer.index(3)));
+        //        controller
+        //                .start()
+        //                .onTrue(Commands.runOnce(
+        //                                () -> drive.setPose(new Pose2d(drive.getPose().getTranslation(),
+        // Rotation2d.kZero)),
+        //                                drive)
+        //                        .ignoringDisable(true));
+        //
+        //        controller.y().onTrue(climber.moveToPosition(ClimberPosition.L1.getHeight()));
+        //        controller.b().onTrue(climber.moveToPosition(ClimberPosition.BOTTOM.getHeight()));
+        //
+        //        controller.rightBumper().whileTrue(intake.rollIn());
+        //        controller.x().whileTrue(intake.rollOut());
+        //
+        //        controller
+        //                .leftBumper()
+        //                .onTrue(Commands.either(
+        //                        linSlide.moveToPosition(LinSlidePosition.STOW.getPosition()),
+        //                        linSlide.moveToPosition(LinSlidePosition.DEPLOY.getPosition()),
+        //                        linSlide::isDeployed));
+        //
+        //        controller
+        //                .leftTrigger()
+        //                .whileTrue(AutoAimCommands.autoAim(
+        //                                drive, controller::getLeftY, controller::getLeftX,
+        // centerHubOpening.toTranslation2d())
+        //                        .alongWith(shooter.shoot(100).alongWith(shooterLEDCommand))
+        //                        .alongWith(indexer.index(3)));
 
         controller.button(1).onTrue(led.runPattern(LEDModes.BLUE_ALLIANCE_ACTIVE));
         controller.button(2).onTrue(led.runPattern(LEDModes.RED_ALLIANCE_ACTIVE));
@@ -226,8 +216,8 @@ public class RobotContainer {
         controller.button(4).onTrue(led.runPattern(LEDModes.RED_TO_BLUE_TRANSITION));
         controller.button(5).onTrue(led.runPattern(LEDModes.RAINBOW));
         controller.button(6).onTrue(led.runPattern(LEDModes.LOCKED_GREEN));
-        controller.button(7).onTrue(shooterLEDCommand);
-        controller.rightTrigger().whileTrue(hopper.spinHopper(80));
+        controller.button(7).whileTrue(shooter.shoot(120));
+        //        controller.rightTrigger().whileTrue(hopper.spinHopper(80));
     }
 
     public void updateMechanisms() {

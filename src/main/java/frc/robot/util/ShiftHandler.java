@@ -3,6 +3,7 @@ package frc.robot.util;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.led.LEDModes;
+import org.littletonrobotics.junction.Logger;
 
 /** Utility class to handle the alliance shift logic */
 public class ShiftHandler extends SubsystemBase {
@@ -51,6 +52,8 @@ public class ShiftHandler extends SubsystemBase {
                             teleopDataRead = true;
                             break;
                         default:
+                            Logger.recordOutput("Shift", "NOT FOUND");
+                            firstShift = ShiftType.TRANSITION_SHIFT;
                             break;
                     }
                 }
@@ -65,10 +68,6 @@ public class ShiftHandler extends SubsystemBase {
                 currentShift = blockTime % 2 == 0 ? firstShift : firstShift.invert();
             }
         }
-    }
-
-    public ShiftType getFirstShift() {
-        return firstShift;
     }
 
     public ShiftType getCurrentShift() {
