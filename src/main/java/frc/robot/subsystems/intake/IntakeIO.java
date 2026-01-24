@@ -12,4 +12,7 @@ public interface IntakeIO {
     public default void updateInputs(IntakeIOInputs inputs) {}
 
     public default void setIntakeMotor(double volts) {}
+
+    public default void setRunning(boolean runIntake) {}
+
 }

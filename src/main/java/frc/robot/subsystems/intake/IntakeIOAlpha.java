@@ -15,10 +15,6 @@ public class IntakeIOAlpha implements IntakeIO {
 
     public IntakeIOAlpha() {
         intakeMotor = new TalonFX(IntakeConfigs.INTAKE_MOTOR_ID, Constants.rioBus);
-        if (Robot.isSimulation()) {
-            PhysicsSim.getInstance().addTalonFX(intakeMotor);
-        }
-
         intakeMotor.getConfigurator().apply(INTAKE_TALONFX_CONFIGS);
     }
 
