@@ -18,7 +18,8 @@ public class HoodIOBeta implements HoodIO {
             PhysicsSim.getInstance().addTalonFX(hoodMotor, hoodCANcoder);
         }
 
-        hoodMotor.getConfigurator().apply(HoodConfigs.HOOD_TALONFX_CONFIGS);
+        hoodMotor.getConfigurator().apply(HoodConfigs.HOOD_MOTOR_CONFIGS);
+        hoodCANcoder.getConfigurator().apply(HoodConfigs.HOOD_CANCODER_CONFIGS);
     }
 
     @Override
