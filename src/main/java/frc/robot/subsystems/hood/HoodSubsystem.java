@@ -11,14 +11,13 @@ public class HoodSubsystem extends SubsystemBase {
     private HoodIO io;
     private HoodIOInputsAutoLogged inputs = new HoodIOInputsAutoLogged();
 
+    @Override
     public HoodSubsystem(HoodIO io) {
         this.io = io;
     }
-
-    @Override
     public void periodic(HoodIO io) {
         io.updateInputs(inputs);
-        Logger.processInputs("Hood", hoodInputs);
+        Logger.processInputs("Hood", inputs);
     }
 
     public double getHoodPosition() {
