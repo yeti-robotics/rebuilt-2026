@@ -23,14 +23,14 @@ public class LinSlideConfigsAlpha {
                     .withKS(1)
                     .withGravityType(GravityTypeValue.Elevator_Static)
             : new Slot0Configs()
-            .withKP(124)
-            .withKI(0)
-            .withKD(64)
-            .withKG(0)
-            .withKV(0)
-            .withKA(0)
-            .withKS(0.2)
-            .withGravityType(GravityTypeValue.Elevator_Static);
+                    .withKP(124)
+                    .withKI(0)
+                    .withKD(64)
+                    .withKG(0)
+                    .withKV(0)
+                    .withKA(0)
+                    .withKS(0.2)
+                    .withGravityType(GravityTypeValue.Elevator_Static);
 
     static final TalonFXConfiguration linSlideTalonFXConfigs = new TalonFXConfiguration()
             .withSlot0(SLOT_0_CONFIGS)

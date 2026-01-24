@@ -15,7 +15,7 @@ public interface LinSlideIO {
 
     public default void moveToPosition(Angle position) {}
 
-    public default void zeroPosition(){}
+    public default void zeroPosition() {}
 
     public default void applyPower(double percent) {}
 }
