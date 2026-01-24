@@ -5,7 +5,7 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.signals.InvertedValue;
 
 public class IntakeConfigs {
-    static final int INTAKE_MOTOR_ID = 33;
+    static final int INTAKE_MOTOR_ID = 12;
 
     public static final int INTAKE_ROLL_IN_VOLTAGE = 0;
     public static final int INTAKE_ROLL_OUT_VOLTAGE = 0;

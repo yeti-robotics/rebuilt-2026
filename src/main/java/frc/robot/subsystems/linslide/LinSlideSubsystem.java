@@ -23,8 +23,8 @@ public class LinSlideSubsystem extends SubsystemBase {
         return runOnce(() -> io.moveToPosition(position));
     }
 
-    public Command applyPower() {
-        return runOnce(() -> io.applyPower(0.2));
+    public Command applyPower(double power) {
+        return runOnce(() -> io.applyPower(power));
     }
 
     public double getCurrentPosition() {
