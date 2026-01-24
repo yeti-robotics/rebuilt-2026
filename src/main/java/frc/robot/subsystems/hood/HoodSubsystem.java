@@ -1,21 +1,18 @@
 package frc.robot.subsystems.hood;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.subsystems.intake.IntakeIO;
-
-import java.util.logging.Logger;
-
-import static edu.wpi.first.hal.simulation.PWMDataJNI.setPosition;
+import org.littletonrobotics.junction.Logger;
 
 public class HoodSubsystem extends SubsystemBase {
     private HoodIO io;
     private HoodIOInputsAutoLogged inputs = new HoodIOInputsAutoLogged();
 
-    @Override
     public HoodSubsystem(HoodIO io) {
         this.io = io;
     }
-    public void periodic(HoodIO io) {
+
+    @Override
+    public void periodic() {
         io.updateInputs(inputs);
         Logger.processInputs("Hood", inputs);
     }
@@ -29,8 +26,6 @@ public class HoodSubsystem extends SubsystemBase {
     }
 
     public void moveToPosition(double position) {
-       moveToPosition(position);
+        moveToPosition(position);
     }
-
-
 }

@@ -9,9 +9,7 @@ public interface HoodIO {
         public double hoodVelocity = 0.0;
     }
 
-    default void updateInputs(HoodIOInputs inputs) {
-    }
+    default void updateInputs(HoodIOInputs inputs) {}
 
-    default void moveToPosition(double position) {
-    }
+    default void moveToPosition(double position) {}
 }
