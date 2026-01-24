@@ -17,6 +17,8 @@ public class HoodIOBeta implements HoodIO {
         if (Robot.isSimulation()) {
             PhysicsSim.getInstance().addTalonFX(hoodMotor, hoodCANcoder);
         }
+
+        hoodMotor.getConfigurator().apply(HoodConfigs.HOOD_TALONFX_CONFIGS);
     }
 
     @Override
