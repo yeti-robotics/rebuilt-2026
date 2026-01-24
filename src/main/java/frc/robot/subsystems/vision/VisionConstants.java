@@ -51,4 +51,11 @@ public class VisionConstants {
     // Multipliers to apply for MegaTag 2 observations
     public static double linearStdDevMegatag2Factor = 0.5; // More stable than full 3D solve
     public static double angularStdDevMegatag2Factor = Double.POSITIVE_INFINITY; // No rotation data available
+
+    public static Transform3d frontCamTrans = new Transform3d(
+            new Translation3d(Units.inchesToMeters(-13), Units.inchesToMeters(0), Units.inchesToMeters(9)),
+            new Rotation3d(0, Math.toRadians(-15), Math.toRadians(180)));
+    public static Transform3d backCamTrans = new Transform3d(
+            new Translation3d(Units.inchesToMeters(3), Units.inchesToMeters(-15), Units.inchesToMeters(15)),
+            new Rotation3d(0, Math.toRadians(0), Math.toRadians(270)));
 }

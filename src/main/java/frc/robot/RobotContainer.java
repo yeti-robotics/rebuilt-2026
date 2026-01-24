@@ -8,10 +8,11 @@
 package frc.robot;
 
 import static frc.robot.constants.FieldConstants.Hub.centerHubOpening;
+import static frc.robot.subsystems.linslide.LinSlidePosition.DEPLOY;
+import static frc.robot.subsystems.linslide.LinSlidePosition.STOW;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.math.geometry.*;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -35,21 +36,22 @@ import frc.robot.subsystems.hopper.Hopper;
 import frc.robot.subsystems.hopper.HopperConfigs;
 import frc.robot.subsystems.hopper.HopperIO;
 import frc.robot.subsystems.hopper.HopperIOAlpha;
+import frc.robot.subsystems.indexer.IndexerIO;
+import frc.robot.subsystems.indexer.IndexerIOAlpha;
+import frc.robot.subsystems.indexer.IndexerSubsystem;
 import frc.robot.subsystems.intake.IntakeIO;
 import frc.robot.subsystems.intake.IntakeIOAlpha;
 import frc.robot.subsystems.intake.IntakeSubsystem;
 import frc.robot.subsystems.led.LED;
 import frc.robot.subsystems.linslide.LinSlideIOAlpha;
 import frc.robot.subsystems.linslide.LinSlideSubsystem;
-import frc.robot.subsystems.linslide.LinearSlideIO;
+import frc.robot.subsystems.linslide.LinSlideIO;
 import frc.robot.subsystems.shooter.ShooterIO;
 import frc.robot.subsystems.shooter.ShooterIOAlpha;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
-import frc.robot.subsystems.vision.Vision;
-import frc.robot.subsystems.vision.VisionIO;
-import frc.robot.subsystems.vision.VisionIOLimelight;
-import frc.robot.subsystems.vision.VisionIOPhotonVisionSim;
+import frc.robot.subsystems.vision.*;
 import frc.robot.util.sim.Mechanisms;
+import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
@@ -68,6 +70,7 @@ public class RobotContainer {
     private final Hopper hopper;
     private final Climber climber;
     private final ShooterSubsystem shooter;
+    private final IndexerSubsystem indexer;
     private final Vision vision;
 
     // Controller
@@ -75,6 +78,15 @@ public class RobotContainer {
 
     // Dashboard inputs
     private final LoggedDashboardChooser<Command> autoChooser;
+
+    public void updateVisionSim() {
+        Pose3d backCameraPose = new Pose3d(drive.getPose()).transformBy(VisionConstants.backCamTrans);
+
+        Pose3d frontCameraPose = new Pose3d(drive.getPose()).transformBy(VisionConstants.frontCamTrans);
+
+        Logger.recordOutput("Back Cam Transform", backCameraPose);
+        Logger.recordOutput("Front Cam Transform", frontCameraPose);
+    }
 
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
     public RobotContainer() {
@@ -95,6 +107,7 @@ public class RobotContainer {
                 hopper = new Hopper(new HopperIOAlpha());
                 climber = new Climber(new ClimberIOAlpha());
                 shooter = new ShooterSubsystem(new ShooterIOAlpha());
+                indexer = new IndexerSubsystem(new IndexerIOAlpha());
 
                 vision = new Vision(
                         drive,
@@ -116,26 +129,11 @@ public class RobotContainer {
                 hopper = new Hopper(new HopperIOAlpha());
                 vision = new Vision(
                         drive,
-                        new VisionIOPhotonVisionSim(
-                                "Front Camera",
-                                new Transform3d(
-                                        new Translation3d(
-                                                Units.inchesToMeters(-3),
-                                                Units.inchesToMeters(0),
-                                                Units.inchesToMeters(15)),
-                                        new Rotation3d(0, Math.toRadians(0), Math.toRadians(180))),
-                                drive::getPose),
-                        new VisionIOPhotonVisionSim(
-                                "Back Camera",
-                                new Transform3d(
-                                        new Translation3d(
-                                                Units.inchesToMeters(3),
-                                                Units.inchesToMeters(0),
-                                                Units.inchesToMeters(15)),
-                                        new Rotation3d(0, Math.toRadians(0), Math.toRadians(0))),
-                                drive::getPose));
+                        new VisionIOPhotonVisionSim("Front Camera", VisionConstants.frontCamTrans, drive::getPose),
+                        new VisionIOPhotonVisionSim("Back Camera", VisionConstants.backCamTrans, drive::getPose));
                 climber = new Climber(new ClimberIOAlpha());
                 shooter = new ShooterSubsystem(new ShooterIOAlpha());
+                indexer = new IndexerSubsystem(new IndexerIOAlpha());
 
                 break;
 
@@ -143,12 +141,13 @@ public class RobotContainer {
                 // Replayed robot, disable IO implementations
                 drive = new Drive(
                         new GyroIO() {}, new ModuleIO() {}, new ModuleIO() {}, new ModuleIO() {}, new ModuleIO() {});
-                linSlide = new LinSlideSubsystem(new LinearSlideIO() {});
+                linSlide = new LinSlideSubsystem(new LinSlideIO() {});
                 led = new LED();
                 intake = new IntakeSubsystem(new IntakeIO() {});
                 hopper = new Hopper(new HopperIO() {});
                 climber = new Climber(new ClimberIO() {});
                 vision = new Vision(drive, new VisionIO() {}, new VisionIO() {});
+                indexer = new IndexerSubsystem(new IndexerIO() {});
                 shooter = new ShooterSubsystem((new ShooterIO() {}));
 
                 break;
@@ -203,7 +202,7 @@ public class RobotContainer {
                         .ignoringDisable(true));
 
         controller.leftTrigger().whileTrue(hopper.spinHopper(HopperConfigs.HOPPER_SPIN_VOLTAGE));
-        controller.button(1).whileTrue(shooter.shoot(6));
+        controller.button(1).whileTrue(shooter.shoot(6).alongWith(indexer.index(3)));
         controller
                 .y()
                 .whileTrue(AutoAimCommands.autoAim(
@@ -211,13 +210,16 @@ public class RobotContainer {
                         () -> -controller.getLeftY(),
                         () -> -controller.getLeftX(),
                         centerHubOpening.toTranslation2d()));
+
+        controller.button(2).onTrue(linSlide.moveToPosition(DEPLOY.getPosition()));
+        controller.button(3).onTrue(linSlide.moveToPosition(STOW.getPosition()));
     }
 
     public void updateMechanisms() {
         mechanisms.publishComponentPoses(climber.getCurrentPosition(), linSlide.getCurrentPosition(), true);
         mechanisms.publishComponentPoses(climber.getTargetPosition(), linSlide.getCurrentPosition(), false);
         mechanisms.updateClimberMechanism(climber.getCurrentPosition());
-        mechanisms.updateElevatorMech(linSlide.getCurrentPosition());
+        mechanisms.updateLinSlideMech(linSlide.getCurrentPosition());
     }
 
     /**
