@@ -11,7 +11,7 @@ import edu.wpi.first.units.measure.Angle;
 import frc.robot.Robot;
 import frc.robot.util.sim.PhysicsSim;
 
-public class LinSlideIOAlpha implements LinearSlideIO {
+public class LinSlideIOAlpha implements LinSlideIO {
     public final TalonFX linSlideMotor;
     public final CANcoder linSlideCANCoder;
 
@@ -28,7 +28,7 @@ public class LinSlideIOAlpha implements LinearSlideIO {
     }
 
     @Override
-    public void updateInputs(LinearSlideIO.LinSlideIOInputs inputs) {
+    public void updateInputs(LinSlideIO.LinSlideIOInputs inputs) {
         inputs.positionRotation = linSlideMotor.getPosition().getValueAsDouble();
         inputs.targetPositionRotation = linSlideMotor.getClosedLoopReference().getValueAsDouble();
         //      inputs.isDeployed = LinSlideCANCoder.getAbsolutePosition().isNear(DEPLOY, 0.1); // <-- Maybe
@@ -36,8 +36,7 @@ public class LinSlideIOAlpha implements LinearSlideIO {
 
     @Override
     public void moveToPosition(Angle position) {
-        magicRequest.withPosition(position);
-        linSlideMotor.setControl(magicRequest);
+        linSlideMotor.setControl(magicRequest.withPosition(position));
     }
 
     @Override

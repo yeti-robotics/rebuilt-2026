@@ -8,6 +8,8 @@
 package frc.robot;
 
 import static frc.robot.constants.FieldConstants.Hub.centerHubOpening;
+import static frc.robot.subsystems.linslide.LinSlidePosition.DEPLOY;
+import static frc.robot.subsystems.linslide.LinSlidePosition.STOW;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.math.geometry.*;
@@ -40,7 +42,7 @@ import frc.robot.subsystems.intake.IntakeSubsystem;
 import frc.robot.subsystems.led.LED;
 import frc.robot.subsystems.linslide.LinSlideIOAlpha;
 import frc.robot.subsystems.linslide.LinSlideSubsystem;
-import frc.robot.subsystems.linslide.LinearSlideIO;
+import frc.robot.subsystems.linslide.LinSlideIO;
 import frc.robot.subsystems.shooter.ShooterIO;
 import frc.robot.subsystems.shooter.ShooterIOAlpha;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
@@ -133,7 +135,7 @@ public class RobotContainer {
                 // Replayed robot, disable IO implementations
                 drive = new Drive(
                         new GyroIO() {}, new ModuleIO() {}, new ModuleIO() {}, new ModuleIO() {}, new ModuleIO() {});
-                linSlide = new LinSlideSubsystem(new LinearSlideIO() {});
+                linSlide = new LinSlideSubsystem(new LinSlideIO() {});
                 led = new LED();
                 intake = new IntakeSubsystem(new IntakeIO() {});
                 hopper = new Hopper(new HopperIO() {});
@@ -201,13 +203,16 @@ public class RobotContainer {
                         () -> -controller.getLeftY(),
                         () -> -controller.getLeftX(),
                         centerHubOpening.toTranslation2d()));
+
+        controller.button(2).onTrue(linSlide.moveToPosition(DEPLOY.getPosition()));
+        controller.button(3).onTrue(linSlide.moveToPosition(STOW.getPosition()));
     }
 
     public void updateMechanisms() {
         mechanisms.publishComponentPoses(climber.getCurrentPosition(), linSlide.getCurrentPosition(), true);
         mechanisms.publishComponentPoses(climber.getTargetPosition(), linSlide.getCurrentPosition(), false);
         mechanisms.updateClimberMechanism(climber.getCurrentPosition());
-        mechanisms.updateElevatorMech(linSlide.getCurrentPosition());
+        mechanisms.updateLinSlideMech(linSlide.getCurrentPosition());
     }
 
     /**
