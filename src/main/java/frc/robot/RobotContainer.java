@@ -206,8 +206,8 @@ public class RobotContainer {
                 .leftTrigger()
                 .whileTrue(AutoAimCommands.autoAim(
                                 drive,
-                                () -> -controller.getLeftY(),
-                                () -> -controller.getLeftX(),
+                                controller::getLeftY,
+                                controller::getLeftX,
                                 centerHubOpening.toTranslation2d())
                         .alongWith(shooter.shoot(100))
                         .alongWith(indexer.index(3)));

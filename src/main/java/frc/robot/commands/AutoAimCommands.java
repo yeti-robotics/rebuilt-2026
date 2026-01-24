@@ -11,13 +11,47 @@ import frc.robot.util.AllianceFlipUtil;
 import java.util.function.DoubleSupplier;
 
 public class AutoAimCommands {
-    // TODO: tune
-    private static final PIDController headingController = new PIDController(5, 0, 0);
+    public static final PIDController headingController = new PIDController(5, 0, 0);
+
+    private static final double SPEED_MULTIPLIER = 1.5;
+
+    static {
+        headingController.enableContinuousInput(-Math.PI, Math.PI);
+    }
+
+    public static Command autoAimWithOrbit(
+            Drive drive, DoubleSupplier xVelSupplier, DoubleSupplier yVelSupplier, Translation2d target) {
+        Translation2d modifiedTarget = AllianceFlipUtil.apply(target);
+
+        return drive.runEnd(
+                () -> {
+                    Pose2d currentPose = drive.getPose();
+                    Translation2d currentPosition = currentPose.getTranslation();
+                    Rotation2d currentRotation = currentPose.getRotation();
+
+                    Translation2d hubDistance = modifiedTarget.minus(currentPosition);
+
+                    double rawXVelo = xVelSupplier.getAsDouble() * SPEED_MULTIPLIER;
+                    double rawYVelo = yVelSupplier.getAsDouble() * SPEED_MULTIPLIER;
+
+                    Rotation2d targetHeading =
+                            hubDistance.getAngle().plus(Rotation2d.kPi); // remove if needed for real robot
+                    Translation2d fieldRel = new Translation2d(rawXVelo, rawYVelo).rotateBy(targetHeading);
+
+                    double angularVelo =
+                            headingController.calculate(currentRotation.getRadians(), targetHeading.getRadians());
+
+                    ChassisSpeeds currentReference = ChassisSpeeds.fromFieldRelativeSpeeds(
+                            fieldRel.getX(), fieldRel.getY(), angularVelo, currentRotation);
+
+                    drive.runVelocity(currentReference);
+                },
+                drive::stop);
+    }
 
     private static double calculateAngularVelocity(Pose2d currentPose, Translation2d target) {
-        headingController.enableContinuousInput(-Math.PI, Math.PI);
         if (target == null) {
-            return 0; // TODO: make target nonnull
+            return 0;
         }
 
         Rotation2d currentHeading = currentPose.getRotation();
@@ -39,8 +73,8 @@ public class AutoAimCommands {
                     double angularVelo = calculateAngularVelocity(currentPose, modifiedTarget);
 
                     drive.runVelocity(ChassisSpeeds.fromFieldRelativeSpeeds(
-                            xVelSupplier.getAsDouble() * 1.5,
-                            yVelSupplier.getAsDouble() * 1.5,
+                            -xVelSupplier.getAsDouble() * SPEED_MULTIPLIER,
+                            -yVelSupplier.getAsDouble() * SPEED_MULTIPLIER,
                             angularVelo,
                             drive.getRotation()));
                 },
