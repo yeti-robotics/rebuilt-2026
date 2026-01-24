@@ -16,9 +16,9 @@ public class ShooterIOAlpha implements ShooterIO {
     private final MotionMagicVelocityVoltage MOTION_MAGIC_REQUEST = new MotionMagicVelocityVoltage(0);
 
     public ShooterIOAlpha() {
-        topMotor = new TalonFX(ShooterConfigs.TOP_MOTOR_ID, Constants.rioBus);
-        bottomMotor = new TalonFX(ShooterConfigs.BOTTOM_MOTOR_ID, Constants.rioBus);
-        bottomMotor.setControl(new Follower(ShooterConfigs.TOP_MOTOR_ID, MotorAlignmentValue.Opposed));
+        topMotor = new TalonFX(ShooterConfigs.RIGHT_SHOOTER_ID, Constants.rioBus);
+        bottomMotor = new TalonFX(ShooterConfigs.LEFT_SHOOTER_ID, Constants.rioBus);
+        bottomMotor.setControl(new Follower(ShooterConfigs.RIGHT_SHOOTER_ID, MotorAlignmentValue.Opposed));
         topMotor.getConfigurator().apply(TOP_MOTOR_CONFIGS);
         bottomMotor.getConfigurator().apply(BOTTOM_MOTOR_CONFIGS);
 
