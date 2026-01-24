@@ -22,7 +22,7 @@ public class IntakeIOSim implements IntakeIO {
         PhysicsSim.getInstance().addTalonFX(intakeMotor);
         intakeMotor.getConfigurator().apply(INTAKE_TALONFX_CONFIGS);
         intakeSimulation = IntakeSimulation.OverTheBumperIntake(
-                "PowerCell",
+                "Fuel",
                 driveSimulation, // Drive simulation
                 Inches.of(25.25), // Width of intake
                 Inches.of(18), // Extension length of intake
@@ -48,5 +48,10 @@ public class IntakeIOSim implements IntakeIO {
         } else {
             intakeSimulation.stopIntake();
         }
+    }
+
+    @Override // Defined by IntakeIO
+    public boolean isFuelInsideIntake() {
+        return intakeSimulation.getGamePiecesAmount() != 0;
     }
 }
