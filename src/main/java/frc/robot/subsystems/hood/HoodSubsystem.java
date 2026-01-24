@@ -25,7 +25,5 @@ public class HoodSubsystem extends SubsystemBase {
         return inputs.hoodVelocity;
     }
 
-    public void moveToPosition(double position) {
-        moveToPosition(position);
-    }
+    public void moveToPosition(double position) { io.moveToPosition(position);}
 }
