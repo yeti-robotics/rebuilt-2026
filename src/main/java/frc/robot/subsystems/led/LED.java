@@ -4,7 +4,6 @@ import edu.wpi.first.wpilibj.*;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.util.ShiftHandler;
-import org.littletonrobotics.junction.Logger;
 
 public class LED extends SubsystemBase {
     private final AddressableLED ledStrip;
