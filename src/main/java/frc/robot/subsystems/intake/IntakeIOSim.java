@@ -51,7 +51,7 @@ public class IntakeIOSim implements IntakeIO {
     }
 
     @Override // Defined by IntakeIO
-    public void isFuelInsideIntake(boolean isFuelInsideIntake) {
+    public boolean isFuelInsideIntake(boolean isFuelInsideIntake) {
         return intakeSimulation.getGamePiecesAmount() != 0;
     }
 }
