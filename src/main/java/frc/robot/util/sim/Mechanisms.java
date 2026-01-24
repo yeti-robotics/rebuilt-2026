@@ -18,9 +18,9 @@ public class Mechanisms {
     public Mechanism2d climberMechanism;
     private final MechanismLigament2d liftLigament;
 
-    private final MechanismLigament2d liftLigament2;
+    private final MechanismLigament2d slideLigament;
 
-    public Mechanism2d elevatorMech;
+    public Mechanism2d linSlideMech;
 
     private final StructArrayPublisher<Pose3d> realComponentPosePublisher = NetworkTableInstance.getDefault()
             .getStructArrayTopic("ComponentPoses/Real", Pose3d.struct)
@@ -42,18 +42,18 @@ public class Mechanisms {
                 .getRoot("startPoint", Units.inchesToMeters(30), Units.inchesToMeters(4))
                 .append(new MechanismLigament2d("bottom", Units.feetToMeters(3), 0, 6, new Color8Bit(Color.kGreen)));
 
-        elevatorMech = new Mechanism2d(Units.inchesToMeters(60), Units.inchesToMeters(100));
-        liftLigament2 = elevatorMech
+        linSlideMech = new Mechanism2d(Units.inchesToMeters(60), Units.inchesToMeters(100));
+        slideLigament = linSlideMech
                 .getRoot("startPoint", Units.inchesToMeters(30), Units.inchesToMeters(4))
                 .append(new MechanismLigament2d("lift", Units.feetToMeters(3), 90, 6, new Color8Bit(Color.kRed)));
-        elevatorMech
+        linSlideMech
                 .getRoot("startPoint", Units.inchesToMeters(30), Units.inchesToMeters(4))
                 .append(new MechanismLigament2d("bottom", Units.feetToMeters(3), 0, 6, new Color8Bit(Color.kGreen)));
     }
 
-    public void updateElevatorMech(double elevatorPos) {
-        liftLigament.setLength(Units.inchesToMeters((elevatorPos * 6) + 1));
-        SmartDashboard.putData("Mechanisms/CoralManipulator", elevatorMech);
+    public void updateLinSlideMech(double elevatorPos) {
+        slideLigament.setLength(Units.inchesToMeters((elevatorPos * 6) + 1));
+        SmartDashboard.putData("Mechanisms/CoralManipulator", linSlideMech);
     }
 
     public void updateClimberMechanism(double climberPosition) {
