@@ -169,11 +169,9 @@ public class RobotContainer {
      * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
      */
     private void configureButtonBindings() {
-        // Default command, normal field-relative drive
         drive.setDefaultCommand(DriveCommands.joystickDrive(
                 drive, () -> -controller.getLeftY(), () -> -controller.getLeftX(), () -> -controller.getRightX()));
 
-        // Reset gyro to 0° when the start button is pressed
         controller
                 .start()
                 .onTrue(Commands.runOnce(
@@ -181,15 +179,12 @@ public class RobotContainer {
                                 drive)
                         .ignoringDisable(true));
 
-        // Climber
         controller.y().onTrue(climber.moveToPosition(ClimberPosition.L1.getHeight()));
         controller.b().onTrue(climber.moveToPosition(ClimberPosition.BOTTOM.getHeight()));
 
-        // Intake
         controller.rightBumper().whileTrue(intake.rollIn());
         controller.x().whileTrue(intake.rollOut());
 
-        // Linear Slide - When isDeployed is true, it stows and when isDeployed is false, it deploys
         controller
                 .leftBumper()
                 .onTrue(Commands.either(
@@ -197,7 +192,6 @@ public class RobotContainer {
                         linSlide.moveToPosition(LinSlidePosition.DEPLOY.getPosition()),
                         linSlide::isDeployed));
 
-        // Auto Align + FlyWheels
         controller
                 .leftTrigger()
                 .whileTrue(AutoAimCommands.autoAim(
@@ -207,7 +201,6 @@ public class RobotContainer {
                                 centerHubOpening.toTranslation2d())
                         .alongWith(shooter.shoot(100)));
 
-        // Hopper
         controller.rightTrigger().whileTrue(hopper.spinHopper(80));
     }
 
