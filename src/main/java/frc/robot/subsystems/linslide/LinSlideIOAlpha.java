@@ -5,7 +5,6 @@ import static frc.robot.subsystems.linslide.LinSlideConfigsAlpha.*;
 
 import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.MotionMagicTorqueCurrentFOC;
-import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.units.measure.Angle;
 import frc.robot.Robot;
@@ -35,6 +34,11 @@ public class LinSlideIOAlpha implements LinSlideIO {
     @Override
     public void moveToPosition(Angle position) {
         linSlideMotor.setControl(magicRequest.withPosition(position));
+    }
+
+    @Override
+    public void zeroPosition() {
+        linSlideMotor.setPosition(0);
     }
 
     @Override
