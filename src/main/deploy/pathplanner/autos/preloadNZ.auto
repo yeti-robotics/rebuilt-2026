@@ -1,0 +1,31 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "preloadLeft"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "neutralZoneLeft"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "neutralZoneShootLeft"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": "left",
+  "choreoAuto": false
+}
