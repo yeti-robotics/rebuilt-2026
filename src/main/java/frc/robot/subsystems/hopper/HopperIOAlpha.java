@@ -7,23 +7,23 @@ import frc.robot.constants.Constants;
 import frc.robot.util.sim.PhysicsSim;
 
 public class HopperIOAlpha implements HopperIO {
-    public final TalonFX hopperRoller;
+    private final TalonFX hopperMotor;
 
     public HopperIOAlpha() {
-        hopperRoller = new TalonFX(HopperConfigs.ROLLER_ID, Constants.rioBus);
-        hopperRoller.getConfigurator().apply(HopperConfigs.TalonFXConfigs);
+        hopperMotor = new TalonFX(HopperConfigs.HOPPER_MOTOR_ID, Constants.rioBus);
+        hopperMotor.getConfigurator().apply(HopperConfigs.TalonFXConfigs);
         if (Robot.isSimulation()) {
-            PhysicsSim.getInstance().addTalonFX(hopperRoller);
+            PhysicsSim.getInstance().addTalonFX(hopperMotor);
         }
     }
 
     @Override
     public void updateInputs(HopperIOInputs inputs) {
-        inputs.rollerSpeed = hopperRoller.getVelocity().getValueAsDouble();
+        inputs.rollerSpeed = hopperMotor.getVelocity().getValueAsDouble();
     }
 
     @Override
     public void spinHopperRoller(double volts) {
-        hopperRoller.setControl(new MotionMagicVelocityVoltage(volts));
+        hopperMotor.setControl(new MotionMagicVelocityVoltage(volts));
     }
 }

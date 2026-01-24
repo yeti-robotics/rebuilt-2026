@@ -17,4 +17,6 @@ public interface ShooterIO {
     public default void spinMotors(double volts) {}
 
     public default void stopMotors() {}
+
+    public default void shootFuel(){}
 }

@@ -1,0 +1,82 @@
+package frc.robot.subsystems.shooter;
+
+import com.ctre.phoenix6.controls.MotionMagicVelocityVoltage;
+import com.ctre.phoenix6.controls.VoltageOut;
+import com.ctre.phoenix6.hardware.TalonFX;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import frc.robot.constants.Constants;
+import frc.robot.subsystems.hopper.HopperConfigs;
+import frc.robot.util.sim.PhysicsSim;
+import org.ironmaple.simulation.SimulatedArena;
+import org.ironmaple.simulation.seasonspecific.rebuilt2026.RebuiltFuelOnFly;
+import org.littletonrobotics.junction.Logger;
+
+import java.util.function.Supplier;
+
+import static edu.wpi.first.units.Units.*;
+
+public class ShooterIOSim implements ShooterIO {
+    private final TalonFX topMotor;
+    private final TalonFX bottomMotor;
+    private final MotionMagicVelocityVoltage MOTION_MAGIC_REQUEST = new MotionMagicVelocityVoltage(0);
+    private RebuiltFuelOnFly flyingFuel;
+    private final Supplier<Pose2d> robotSimulationWorldPose;
+    private final Supplier<ChassisSpeeds> chassisSpeedsFieldRelative;
+
+    public ShooterIOSim(Supplier<Pose2d> robotSimulationWorldPose, Supplier<ChassisSpeeds> chassisSpeedsFieldRelative){
+            topMotor = new TalonFX(ShooterConfigs.TOP_MOTOR_ID, Constants.rioBus);
+            bottomMotor = new TalonFX(ShooterConfigs.BOTTOM_MOTOR_ID, Constants.rioBus);
+            topMotor.getConfigurator().apply(ShooterConfigs.TOP_MOTOR_CONFIGS);
+            bottomMotor.getConfigurator().apply(ShooterConfigs.BOTTOM_MOTOR_CONFIGS);
+            this.robotSimulationWorldPose = robotSimulationWorldPose;
+            this.chassisSpeedsFieldRelative = chassisSpeedsFieldRelative;
+            PhysicsSim.getInstance().addTalonFX(topMotor);
+            PhysicsSim.getInstance().addTalonFX(bottomMotor);
+    }
+
+    @Override
+    public void updateInputs(ShooterIOInputs inputs){
+        inputs.topMotorVoltage = topMotor.getMotorVoltage().getValueAsDouble();
+        inputs.topMotorRPM = topMotor.getVelocity().getValueAsDouble();
+        inputs.bottomMotorVoltage = topMotor.getMotorVoltage().getValueAsDouble();
+        inputs.bottomMotorRPM = bottomMotor.getVelocity().getValueAsDouble();
+    }
+
+    @Override
+    public void spinMotors(double volts){
+        topMotor.setControl(MOTION_MAGIC_REQUEST.withVelocity(volts));
+    }
+
+    @Override
+    public void stopMotors() {
+        topMotor.setVoltage(0);
+    }
+
+    @Override
+    public void shootFuel(){
+        flyingFuel = new RebuiltFuelOnFly(
+                robotSimulationWorldPose.get().getTranslation(),
+                new Translation2d(0.5,0) , // placeholder value
+                chassisSpeedsFieldRelative.get(),
+                robotSimulationWorldPose.get().getRotation().rotateBy(Rotation2d.k180deg),
+                Meters.of(0.45), // placeholder value
+                MetersPerSecond.of(16), // placeholder value
+                Degrees.of(45) // placeholder value
+        );
+
+        flyingFuel.withProjectileTrajectoryDisplayCallBack( // Successful trajectory
+                poses -> Logger.recordOutput("ShooterSim/SuccessfulShotTrajectory", poses.toArray(Pose3d[]::new)),
+                // Missed trajectory
+                poses -> Logger.recordOutput("ShooterSim/MissedShotTrajectory", poses.toArray(Pose3d[]::new)));
+        flyingFuel.enableBecomesGamePieceOnFieldAfterTouchGround();
+
+        // Adding the gamepiece to the arena
+        SimulatedArena.getInstance().addGamePieceProjectile(flyingFuel);
+        Logger.recordOutput("ShooterSim/LastShotLaunched", true);
+    }
+
+}

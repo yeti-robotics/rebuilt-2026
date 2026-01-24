@@ -15,6 +15,9 @@ public interface IntakeIO {
 
     public default void setRunning(boolean runIntake) {}
 
-    public default boolean isFuelInsideIntake(boolean isFuelInsideIntake) {}
+    public default boolean isFuelInsideIntake(boolean isFuelInsideIntake) {
+        return false;
+    }
 
+    public default void handoffFuel(){}
 }
