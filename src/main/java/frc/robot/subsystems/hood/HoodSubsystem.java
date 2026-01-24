@@ -1,5 +1,6 @@
 package frc.robot.subsystems.hood;
 
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.littletonrobotics.junction.Logger;
 
@@ -25,7 +26,9 @@ public class HoodSubsystem extends SubsystemBase {
         return inputs.hoodVelocity;
     }
 
-    public void moveToPosition(double position) {
-        moveToPosition(position);
+    private void moveToPosition(double position) { io.moveToPosition(position);}
+
+    public Command moveHoodToPosition(double position) {
+        return runOnce(() -> moveToPosition(position));
     }
 }
