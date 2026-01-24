@@ -7,7 +7,7 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import frc.robot.Robot;
 
 public class LinSlideConfigsAlpha {
-    static final int LIN_SLIDE_MOTOR_ID = 60;
+    static final int LIN_SLIDE_MOTOR_ID = 21;
     static final double GEAR_RATIO = 3;
 
     private static final Slot0Configs SLOT_0_CONFIGS = Robot.isReal()
