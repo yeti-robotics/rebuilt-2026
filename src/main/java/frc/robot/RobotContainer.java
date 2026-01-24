@@ -34,6 +34,9 @@ import frc.robot.subsystems.drive.ModuleIOTalonFX;
 import frc.robot.subsystems.hopper.Hopper;
 import frc.robot.subsystems.hopper.HopperIO;
 import frc.robot.subsystems.hopper.HopperIOAlpha;
+import frc.robot.subsystems.indexer.IndexerIO;
+import frc.robot.subsystems.indexer.IndexerIOAlpha;
+import frc.robot.subsystems.indexer.IndexerSubsystem;
 import frc.robot.subsystems.intake.IntakeIO;
 import frc.robot.subsystems.intake.IntakeIOAlpha;
 import frc.robot.subsystems.intake.IntakeSubsystem;
@@ -65,6 +68,7 @@ public class RobotContainer {
     private final Hopper hopper;
     private final Climber climber;
     private final ShooterSubsystem shooter;
+    private final IndexerSubsystem indexer;
     private final Vision vision;
 
     // Controller
@@ -101,6 +105,7 @@ public class RobotContainer {
                 hopper = new Hopper(new HopperIOAlpha());
                 climber = new Climber(new ClimberIOAlpha());
                 shooter = new ShooterSubsystem(new ShooterIOAlpha());
+                indexer = new IndexerSubsystem(new IndexerIOAlpha());
 
                 vision = new Vision(
                         drive,
@@ -126,6 +131,7 @@ public class RobotContainer {
                         new VisionIOPhotonVisionSim("Back Camera", VisionConstants.backCamTrans, drive::getPose));
                 climber = new Climber(new ClimberIOAlpha());
                 shooter = new ShooterSubsystem(new ShooterIOAlpha());
+                indexer = new IndexerSubsystem(new IndexerIOAlpha());
 
                 break;
 
@@ -139,6 +145,7 @@ public class RobotContainer {
                 hopper = new Hopper(new HopperIO() {});
                 climber = new Climber(new ClimberIO() {});
                 vision = new Vision(drive, new VisionIO() {}, new VisionIO() {});
+                indexer = new IndexerSubsystem(new IndexerIO() {});
                 shooter = new ShooterSubsystem((new ShooterIO() {}));
 
                 break;
@@ -201,7 +208,7 @@ public class RobotContainer {
                                 () -> -controller.getLeftY(),
                                 () -> -controller.getLeftX(),
                                 centerHubOpening.toTranslation2d())
-                        .alongWith(shooter.shoot(100)));
+                        .alongWith(shooter.shoot(100)).alongWith(indexer.index(3)));
 
         controller.rightTrigger().whileTrue(hopper.spinHopper(80));
     }
