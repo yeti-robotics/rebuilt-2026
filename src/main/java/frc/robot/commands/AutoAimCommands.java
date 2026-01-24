@@ -73,8 +73,8 @@ public class AutoAimCommands {
                     double angularVelo = calculateAngularVelocity(currentPose, modifiedTarget);
 
                     drive.runVelocity(ChassisSpeeds.fromFieldRelativeSpeeds(
-                            xVelSupplier.getAsDouble() * 1.5,
-                            yVelSupplier.getAsDouble() * 1.5,
+                            -xVelSupplier.getAsDouble() * SPEED_MULTIPLIER,
+                            -yVelSupplier.getAsDouble() * SPEED_MULTIPLIER,
                             angularVelo,
                             drive.getRotation()));
                 },

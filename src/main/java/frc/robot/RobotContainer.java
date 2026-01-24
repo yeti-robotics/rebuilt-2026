@@ -203,12 +203,11 @@ public class RobotContainer {
                         linSlide::isDeployed));
 
         controller
-//                .leftTrigger()
-                .button(1)
+                .leftTrigger()
                 .whileTrue(AutoAimCommands.autoAim(
                                 drive,
-                                () -> -controller.getLeftY(),
-                                () -> -controller.getLeftX(),
+                                controller::getLeftY,
+                                controller::getLeftX,
                                 centerHubOpening.toTranslation2d())
                         .alongWith(shooter.shoot(100))
                         .alongWith(indexer.index(3)));
