@@ -206,8 +206,8 @@ public class RobotContainer {
                 .leftTrigger()
                 .whileTrue(AutoAimCommands.autoAim(
                                 drive,
-                                () -> -controller.getLeftY(),
-                                () -> -controller.getLeftX(),
+                                controller::getLeftY,
+                                controller::getLeftX,
                                 centerHubOpening.toTranslation2d())
                         .alongWith(shooter.shoot(100))
                         .alongWith(indexer.index(3)));
@@ -217,7 +217,7 @@ public class RobotContainer {
 
     public void updateMechanisms() {
         mechanisms.publishComponentPoses(climber.getCurrentPosition(), linSlide.getCurrentPosition(), true);
-        mechanisms.publishComponentPoses(climber.getTargetPosition(), linSlide.getCurrentPosition(), false);
+        mechanisms.publishComponentPoses(climber.getTargetPosition(), linSlide.getTargetPosition(), false);
         mechanisms.updateClimberMechanism(climber.getCurrentPosition());
         mechanisms.updateLinSlideMech(linSlide.getCurrentPosition());
     }
