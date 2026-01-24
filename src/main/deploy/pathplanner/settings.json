@@ -4,6 +4,7 @@
   "holonomicMode": true,
   "pathFolders": [],
   "autoFolders": [
+    "neutral",
     "depot",
     "outpost"
   ],
@@ -14,7 +15,6 @@
   "defaultNominalVoltage": 12.0,
   "robotMass": 52.163,
   "robotMOI": 6.883,
-  "robotWheelbase": 0.546,
   "robotTrackwidth": 0.546,
   "driveWheelRadius": 0.048,
   "driveGearing": 5.143,
