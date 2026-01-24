@@ -8,8 +8,6 @@
 package frc.robot;
 
 import static frc.robot.constants.FieldConstants.Hub.centerHubOpening;
-import static frc.robot.subsystems.linslide.LinSlidePosition.DEPLOY;
-import static frc.robot.subsystems.linslide.LinSlidePosition.STOW;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.math.geometry.*;
@@ -26,6 +24,7 @@ import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.climber.Climber;
 import frc.robot.subsystems.climber.ClimberIO;
 import frc.robot.subsystems.climber.ClimberIOAlpha;
+import frc.robot.subsystems.climber.ClimberPosition;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
 import frc.robot.subsystems.drive.GyroIOPigeon2;
@@ -33,7 +32,6 @@ import frc.robot.subsystems.drive.ModuleIO;
 import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOTalonFX;
 import frc.robot.subsystems.hopper.Hopper;
-import frc.robot.subsystems.hopper.HopperConfigs;
 import frc.robot.subsystems.hopper.HopperIO;
 import frc.robot.subsystems.hopper.HopperIOAlpha;
 import frc.robot.subsystems.indexer.IndexerIO;
@@ -43,9 +41,10 @@ import frc.robot.subsystems.intake.IntakeIO;
 import frc.robot.subsystems.intake.IntakeIOAlpha;
 import frc.robot.subsystems.intake.IntakeSubsystem;
 import frc.robot.subsystems.led.LED;
-import frc.robot.subsystems.linslide.LinSlideIOAlpha;
-import frc.robot.subsystems.linslide.LinSlideSubsystem;
 import frc.robot.subsystems.linslide.LinSlideIO;
+import frc.robot.subsystems.linslide.LinSlideIOAlpha;
+import frc.robot.subsystems.linslide.LinSlidePosition;
+import frc.robot.subsystems.linslide.LinSlideSubsystem;
 import frc.robot.subsystems.shooter.ShooterIO;
 import frc.robot.subsystems.shooter.ShooterIOAlpha;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
@@ -180,20 +179,9 @@ public class RobotContainer {
      * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
      */
     private void configureButtonBindings() {
-        // Default command, normal field-relative drive
         drive.setDefaultCommand(DriveCommands.joystickDrive(
                 drive, () -> -controller.getLeftY(), () -> -controller.getLeftX(), () -> -controller.getRightX()));
 
-        // Lock to 0° when A button is held
-        controller
-                .a()
-                .whileTrue(DriveCommands.joystickDriveAtAngle(
-                        drive, () -> -controller.getLeftY(), () -> -controller.getLeftX(), () -> Rotation2d.kZero));
-
-        // Switch to X pattern when X button is pressed
-        controller.x().onTrue(Commands.runOnce(drive::stopWithX, drive));
-
-        // Reset gyro to 0° when B button is pressed
         controller
                 .start()
                 .onTrue(Commands.runOnce(
@@ -201,18 +189,30 @@ public class RobotContainer {
                                 drive)
                         .ignoringDisable(true));
 
-        controller.leftTrigger().whileTrue(hopper.spinHopper(HopperConfigs.HOPPER_SPIN_VOLTAGE));
-        controller.button(1).whileTrue(shooter.shoot(6).alongWith(indexer.index(3)));
-        controller
-                .y()
-                .whileTrue(AutoAimCommands.autoAim(
-                        drive,
-                        () -> -controller.getLeftY(),
-                        () -> -controller.getLeftX(),
-                        centerHubOpening.toTranslation2d()));
+        controller.y().onTrue(climber.moveToPosition(ClimberPosition.L1.getHeight()));
+        controller.b().onTrue(climber.moveToPosition(ClimberPosition.BOTTOM.getHeight()));
 
-        controller.button(2).onTrue(linSlide.moveToPosition(DEPLOY.getPosition()));
-        controller.button(3).onTrue(linSlide.moveToPosition(STOW.getPosition()));
+        controller.rightBumper().whileTrue(intake.rollIn());
+        controller.x().whileTrue(intake.rollOut());
+
+        controller
+                .leftBumper()
+                .onTrue(Commands.either(
+                        linSlide.moveToPosition(LinSlidePosition.STOW.getPosition()),
+                        linSlide.moveToPosition(LinSlidePosition.DEPLOY.getPosition()),
+                        linSlide::isDeployed));
+
+        controller
+                .leftTrigger()
+                .whileTrue(AutoAimCommands.autoAim(
+                                drive,
+                                () -> -controller.getLeftY(),
+                                () -> -controller.getLeftX(),
+                                centerHubOpening.toTranslation2d())
+                        .alongWith(shooter.shoot(100))
+                        .alongWith(indexer.index(3)));
+
+        controller.rightTrigger().whileTrue(hopper.spinHopper(80));
     }
 
     public void updateMechanisms() {
