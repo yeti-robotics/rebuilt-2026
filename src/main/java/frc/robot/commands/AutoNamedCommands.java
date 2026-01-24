@@ -11,6 +11,7 @@ import frc.robot.subsystems.climber.Climber;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.hopper.Hopper;
 import frc.robot.subsystems.intake.IntakeSubsystem;
+import frc.robot.subsystems.linslide.LinSlidePosition;
 import frc.robot.subsystems.linslide.LinSlideSubsystem;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
 
@@ -43,8 +44,14 @@ public class AutoNamedCommands {
     }
 
     public void registerCommands() {
-        NamedCommands.registerCommand("GroundIntake", Commands.sequence(linSlide.applyPower(), intake.setRoller(0.0)));
-        NamedCommands.registerCommand("AutoAlignShoot", Commands.sequence(
+        NamedCommands.registerCommand(
+                "GroundIntakeOut",
+                Commands.sequence(linSlide.moveToPosition(LinSlidePosition.DEPLOY.getPosition()), intake.rollIn()));
+        NamedCommands.registerCommand(
+                "GroundIntakeIn", Commands.sequence(linSlide.moveToPosition(LinSlidePosition.STOW.getPosition())));
+        NamedCommands.registerCommand(
+                "AutoAlignShoot",
+                Commands.sequence(
                         AutoAimCommands.autoAim(
                                 drive,
                                 () -> -controller.getLeftY(),
