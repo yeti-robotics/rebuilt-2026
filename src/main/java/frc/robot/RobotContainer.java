@@ -208,7 +208,8 @@ public class RobotContainer {
                                 () -> -controller.getLeftY(),
                                 () -> -controller.getLeftX(),
                                 centerHubOpening.toTranslation2d())
-                        .alongWith(shooter.shoot(100)).alongWith(indexer.index(3)));
+                        .alongWith(shooter.shoot(100))
+                        .alongWith(indexer.index(3)));
 
         controller.rightTrigger().whileTrue(hopper.spinHopper(80));
     }
