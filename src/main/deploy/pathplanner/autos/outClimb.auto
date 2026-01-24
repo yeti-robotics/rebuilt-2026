@@ -38,6 +38,6 @@
     }
   },
   "resetOdom": true,
-  "folder": "outpost",
+  "folder": "right",
   "choreoAuto": false
 }
