@@ -1,6 +1,6 @@
 plugins {
     id "java"
-    id "edu.wpi.first.GradleRIO" version "2026.1.1"
+    id "edu.wpi.first.GradleRIO" version "2026.2.1"
     id "idea"
     id 'com.diffplug.spotless' version '6.25.0'
     id "com.peterabeles.gversion" version "1.10"
@@ -175,6 +175,14 @@ idea {
         downloadSources = true
         // Exclude the .vscode directory from indexing and search
         excludeDirs+=file(".vscode" )
+    }
+}
+
+sourceSets {
+    main {
+        java {
+            srcDir "${buildDir.absolutePath}/generated/sources/annotationProcessor/java/main"
+        }
     }
 }
 

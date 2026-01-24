@@ -7,18 +7,25 @@
 
 package frc.robot;
 
+import static frc.robot.constants.FieldConstants.Hub.centerHubOpening;
+import static frc.robot.subsystems.linslide.LinSlidePosition.DEPLOY;
+import static frc.robot.subsystems.linslide.LinSlidePosition.STOW;
+
 import com.pathplanner.lib.auto.AutoBuilder;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.*;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import frc.robot.commands.AutoAimCommands;
 import frc.robot.commands.DriveCommands;
 import frc.robot.constants.Constants;
 import frc.robot.generated.TunerConstants;
+import frc.robot.subsystems.climber.Climber;
+import frc.robot.subsystems.climber.ClimberIO;
+import frc.robot.subsystems.climber.ClimberIOAlpha;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIO;
 import frc.robot.subsystems.drive.GyroIOPigeon2;
@@ -29,13 +36,22 @@ import frc.robot.subsystems.hopper.Hopper;
 import frc.robot.subsystems.hopper.HopperConfigs;
 import frc.robot.subsystems.hopper.HopperIO;
 import frc.robot.subsystems.hopper.HopperIOAlpha;
+import frc.robot.subsystems.indexer.IndexerIO;
+import frc.robot.subsystems.indexer.IndexerIOAlpha;
+import frc.robot.subsystems.indexer.IndexerSubsystem;
 import frc.robot.subsystems.intake.IntakeIO;
 import frc.robot.subsystems.intake.IntakeIOAlpha;
 import frc.robot.subsystems.intake.IntakeSubsystem;
 import frc.robot.subsystems.led.LED;
+import frc.robot.subsystems.linslide.LinSlideIOAlpha;
+import frc.robot.subsystems.linslide.LinSlideSubsystem;
+import frc.robot.subsystems.linslide.LinSlideIO;
 import frc.robot.subsystems.shooter.ShooterIO;
 import frc.robot.subsystems.shooter.ShooterIOAlpha;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
+import frc.robot.subsystems.vision.*;
+import frc.robot.util.sim.Mechanisms;
+import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
@@ -48,15 +64,29 @@ public class RobotContainer {
     // Subsystems
     private final Drive drive;
     private final LED led;
+    private final LinSlideSubsystem linSlide;
+    private final Mechanisms mechanisms;
     private final IntakeSubsystem intake;
     private final Hopper hopper;
+    private final Climber climber;
     private final ShooterSubsystem shooter;
+    private final IndexerSubsystem indexer;
+    private final Vision vision;
 
     // Controller
     private final CommandXboxController controller = new CommandXboxController(0);
 
     // Dashboard inputs
     private final LoggedDashboardChooser<Command> autoChooser;
+
+    public void updateVisionSim() {
+        Pose3d backCameraPose = new Pose3d(drive.getPose()).transformBy(VisionConstants.backCamTrans);
+
+        Pose3d frontCameraPose = new Pose3d(drive.getPose()).transformBy(VisionConstants.frontCamTrans);
+
+        Logger.recordOutput("Back Cam Transform", backCameraPose);
+        Logger.recordOutput("Front Cam Transform", frontCameraPose);
+    }
 
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
     public RobotContainer() {
@@ -71,11 +101,18 @@ public class RobotContainer {
                         new ModuleIOTalonFX(TunerConstants.FrontRight),
                         new ModuleIOTalonFX(TunerConstants.BackLeft),
                         new ModuleIOTalonFX(TunerConstants.BackRight));
+                linSlide = new LinSlideSubsystem(new LinSlideIOAlpha());
                 led = new LED();
                 intake = new IntakeSubsystem(new IntakeIOAlpha());
                 hopper = new Hopper(new HopperIOAlpha());
+                climber = new Climber(new ClimberIOAlpha());
                 shooter = new ShooterSubsystem(new ShooterIOAlpha());
+                indexer = new IndexerSubsystem(new IndexerIOAlpha());
 
+                vision = new Vision(
+                        drive,
+                        new VisionIOLimelight("Front Camera", drive::getRotation),
+                        new VisionIOLimelight("Back Camera", drive::getRotation));
                 break;
 
             case SIM:
@@ -86,10 +123,17 @@ public class RobotContainer {
                         new ModuleIOSim(TunerConstants.FrontRight),
                         new ModuleIOSim(TunerConstants.BackLeft),
                         new ModuleIOSim(TunerConstants.BackRight));
+                linSlide = new LinSlideSubsystem(new LinSlideIOAlpha());
                 led = new LED();
                 intake = new IntakeSubsystem(new IntakeIOAlpha());
                 hopper = new Hopper(new HopperIOAlpha());
+                vision = new Vision(
+                        drive,
+                        new VisionIOPhotonVisionSim("Front Camera", VisionConstants.frontCamTrans, drive::getPose),
+                        new VisionIOPhotonVisionSim("Back Camera", VisionConstants.backCamTrans, drive::getPose));
+                climber = new Climber(new ClimberIOAlpha());
                 shooter = new ShooterSubsystem(new ShooterIOAlpha());
+                indexer = new IndexerSubsystem(new IndexerIOAlpha());
 
                 break;
 
@@ -97,9 +141,13 @@ public class RobotContainer {
                 // Replayed robot, disable IO implementations
                 drive = new Drive(
                         new GyroIO() {}, new ModuleIO() {}, new ModuleIO() {}, new ModuleIO() {}, new ModuleIO() {});
+                linSlide = new LinSlideSubsystem(new LinSlideIO() {});
                 led = new LED();
                 intake = new IntakeSubsystem(new IntakeIO() {});
                 hopper = new Hopper(new HopperIO() {});
+                climber = new Climber(new ClimberIO() {});
+                vision = new Vision(drive, new VisionIO() {}, new VisionIO() {});
+                indexer = new IndexerSubsystem(new IndexerIO() {});
                 shooter = new ShooterSubsystem((new ShooterIO() {}));
 
                 break;
@@ -107,6 +155,9 @@ public class RobotContainer {
 
         // Set up auto routines
         autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
+
+        // Set up simulatable mechanisms
+        mechanisms = new Mechanisms();
 
         // Set up SysId routines
         autoChooser.addOption("Drive Wheel Radius Characterization", DriveCommands.wheelRadiusCharacterization(drive));
@@ -144,14 +195,31 @@ public class RobotContainer {
 
         // Reset gyro to 0° when B button is pressed
         controller
-                .b()
+                .start()
                 .onTrue(Commands.runOnce(
                                 () -> drive.setPose(new Pose2d(drive.getPose().getTranslation(), Rotation2d.kZero)),
                                 drive)
                         .ignoringDisable(true));
 
         controller.leftTrigger().whileTrue(hopper.spinHopper(HopperConfigs.HOPPER_SPIN_VOLTAGE));
-        controller.button(1).whileTrue(shooter.shoot(6));
+        controller.button(1).whileTrue(shooter.shoot(6).alongWith(indexer.index(3)));
+        controller
+                .y()
+                .whileTrue(AutoAimCommands.autoAim(
+                        drive,
+                        () -> -controller.getLeftY(),
+                        () -> -controller.getLeftX(),
+                        centerHubOpening.toTranslation2d()));
+
+        controller.button(2).onTrue(linSlide.moveToPosition(DEPLOY.getPosition()));
+        controller.button(3).onTrue(linSlide.moveToPosition(STOW.getPosition()));
+    }
+
+    public void updateMechanisms() {
+        mechanisms.publishComponentPoses(climber.getCurrentPosition(), linSlide.getCurrentPosition(), true);
+        mechanisms.publishComponentPoses(climber.getTargetPosition(), linSlide.getCurrentPosition(), false);
+        mechanisms.updateClimberMechanism(climber.getCurrentPosition());
+        mechanisms.updateLinSlideMech(linSlide.getCurrentPosition());
     }
 
     /**
