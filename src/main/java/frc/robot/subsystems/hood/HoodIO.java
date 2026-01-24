@@ -12,6 +12,6 @@ public interface HoodIO {
     default void updateInputs(HoodIOInputs inputs) {
     }
 
-    default void setPosition(double position) {
+    default void moveToPosition(double position) {
     }
 }
