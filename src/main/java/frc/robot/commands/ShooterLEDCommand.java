@@ -17,6 +17,7 @@ public class ShooterLEDCommand extends Command {
     private final int[] green = {0, 255, 0};
     private final int[] red = {255, 0, 0};
     private ArrayList<int[]> colorQueue;
+    private final double TEMP_PATTERN_DURATION_MS = 5000;
 
     public ShooterLEDCommand(LED leds, ShooterSubsystem shooter) {
         this.leds = leds;
@@ -87,11 +88,16 @@ public class ShooterLEDCommand extends Command {
                         colorQueue.get(i)[2]);
             }
             colorQueue.add(0, colorQueue.remove(leds.getBufferLength() - 1));
+            leds.sendData();
         } else if (shooter.getVelocity() == 120) {
-            leds.runPattern(LEDModes.LOCKED_GREEN);
+            leds.setTemporaryPattern(LEDModes.LOCKED_GREEN, TEMP_PATTERN_DURATION_MS);
         } else {
-            leds.runPattern(LEDModes.NOT_LOCKED_RED);
+            leds.setTemporaryPattern(LEDModes.NOT_LOCKED_RED, TEMP_PATTERN_DURATION_MS);
         }
-        leds.sendData();
+    }
+
+    @Override
+    public void end(boolean interrupted) {
+        leds.clearTemporaryPattern();
     }
 }
