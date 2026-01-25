@@ -17,8 +17,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-import frc.robot.commands.AutoAimCommands;
-import frc.robot.commands.DriveCommands;
 import frc.robot.constants.Constants;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.climber.Climber;
@@ -77,12 +75,12 @@ public class RobotContainer {
     private final LoggedDashboardChooser<Command> autoChooser;
 
     public void updateVisionSim() {
-        Pose3d backCameraPose = new Pose3d(drive.getPose()).transformBy(VisionConstants.backCamTrans);
+        //        Pose3d backCameraPose = new Pose3d(drive.get).transformBy(VisionConstants.backCamTrans);
+        //
+        //        Pose3d frontCameraPose = new Pose3d(drive.getPose()).transformBy(VisionConstants.frontCamTrans);
 
-        Pose3d frontCameraPose = new Pose3d(drive.getPose()).transformBy(VisionConstants.frontCamTrans);
-
-        Logger.recordOutput("Back Cam Transform", backCameraPose);
-        Logger.recordOutput("Front Cam Transform", frontCameraPose);
+        //        Logger.recordOutput("Back Cam Transform", backCameraPose);
+        //        Logger.recordOutput("Front Cam Transform", frontCameraPose);
     }
 
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -92,12 +90,7 @@ public class RobotContainer {
                 // Real robot, instantiate hardware IO implementations
                 // ModuleIOTalonFX is intended for modules with TalonFX drive, TalonFX turn, and
                 // a CANcoder
-                drive = new Drive(
-                        new GyroIOPigeon2(),
-                        new ModuleIOTalonFX(TunerConstants.FrontLeft),
-                        new ModuleIOTalonFX(TunerConstants.FrontRight),
-                        new ModuleIOTalonFX(TunerConstants.BackLeft),
-                        new ModuleIOTalonFX(TunerConstants.BackRight));
+                drive = TunerConstants.createDrivetrain();
                 linSlide = new LinSlideSubsystem(new LinSlideIOAlpha());
                 led = new LED();
                 intake = new IntakeSubsystem(new IntakeIOAlpha());
@@ -106,10 +99,7 @@ public class RobotContainer {
                 shooter = new ShooterSubsystem(new ShooterIOAlpha());
                 indexer = new IndexerSubsystem(new IndexerIOAlpha());
 
-                vision = new Vision(
-                        drive,
-                        new VisionIOLimelight("Front Camera", drive::getRotation),
-                        new VisionIOLimelight("Back Camera", drive::getRotation));
+                vision = null;
                 break;
 
             case SIM:
@@ -130,10 +120,7 @@ public class RobotContainer {
                 led = new LED();
                 intake = new IntakeSubsystem(new IntakeIOAlpha());
                 hopper = new Hopper(new HopperIOAlpha());
-                vision = new Vision(
-                        drive,
-                        new VisionIOPhotonVisionSim("Front Camera", VisionConstants.frontCamTrans, drive::getPose),
-                        new VisionIOPhotonVisionSim("Back Camera", VisionConstants.backCamTrans, drive::getPose));
+                vision = null;
                 climber = new Climber(new ClimberIOAlpha());
                 shooter = new ShooterSubsystem(new ShooterIOAlpha());
                 indexer = new IndexerSubsystem(new IndexerIOAlpha());
@@ -142,14 +129,13 @@ public class RobotContainer {
 
             default:
                 // Replayed robot, disable IO implementations
-                drive = new Drive(
-                        new GyroIO() {}, new ModuleIO() {}, new ModuleIO() {}, new ModuleIO() {}, new ModuleIO() {});
+                drive = TunerConstants.createDrivetrain();
                 linSlide = new LinSlideSubsystem(new LinSlideIO() {});
                 led = new LED();
                 intake = new IntakeSubsystem(new IntakeIO() {});
                 hopper = new Hopper(new HopperIO() {});
                 climber = new Climber(new ClimberIO() {});
-                vision = new Vision(drive, new VisionIO() {}, new VisionIO() {});
+                vision = null;
                 indexer = new IndexerSubsystem(new IndexerIO() {});
                 shooter = new ShooterSubsystem((new ShooterIO() {}));
 
@@ -163,8 +149,10 @@ public class RobotContainer {
         mechanisms = new Mechanisms();
 
         // Set up SysId routines
-        autoChooser.addOption("Drive Wheel Radius Characterization", DriveCommands.wheelRadiusCharacterization(drive));
-        autoChooser.addOption("Drive Simple FF Characterization", DriveCommands.feedforwardCharacterization(drive));
+        //        autoChooser.addOption("Drive Wheel Radius Characterization",
+        // DriveCommands.wheelRadiusCharacterization(drive));
+        //        autoChooser.addOption("Drive Simple FF Characterization",
+        // DriveCommands.feedforwardCharacterization(drive));
         autoChooser.addOption(
                 "Drive SysId (Quasistatic Forward)", drive.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
         autoChooser.addOption(
@@ -173,7 +161,11 @@ public class RobotContainer {
         autoChooser.addOption("Drive SysId (Dynamic Reverse)", drive.sysIdDynamic(SysIdRoutine.Direction.kReverse));
 
         // Configure the button bindings
-        configureButtonBindings();
+        if (Robot.isReal()) {
+            configureRealBindings();
+        } else if (Robot.isSimulation()) {
+            configureSimBindings();
+        }
     }
 
     /**
@@ -182,46 +174,82 @@ public class RobotContainer {
      * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then passing it to a {@link
      * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
      */
-    private void configureButtonBindings() {
-        drive.setDefaultCommand(DriveCommands.joystickDrive(
-                drive, () -> -controller.getLeftY(), () -> -controller.getLeftX(), () -> -controller.getRightX()));
-
-        controller
-                .start()
-                .onTrue(Commands.runOnce(
-                                () -> drive.setPose(new Pose2d(drive.getPose().getTranslation(), Rotation2d.kZero)),
-                                drive)
-                        .ignoringDisable(true));
+    private void configureRealBindings() {
+        drive.setDefaultCommand(drive.applyRequest(() -> new SwerveRequest.FieldCentric()
+                .withVelocityX(-controller.getLeftY() * TunerConstants.kSpeedAt12Volts.magnitude())
+                .withVelocityY(-controller.getLeftX() * TunerConstants.kSpeedAt12Volts.magnitude())
+                .withRotationalRate(-controller.getRightX() * TunerConstants.MaFxAngularRate)));
+        controller.start().onTrue(Commands.runOnce(() -> drive.seedFieldCentric(), drive));
 
         controller.y().onTrue(climber.moveToPosition(ClimberPosition.L1.getHeight()));
-        controller.b().onTrue(climber.moveToPosition(ClimberPosition.BOTTOM.getHeight()));
+        // controller.b().onTrue(climber.moveToPosition(ClimberPosition.BOTTOM.getHeight()));
 
         controller.rightBumper().whileTrue(intake.rollIn());
-        controller.x().whileTrue(intake.rollOut());
-        final Runnable resetGyro = Constants.currentMode == Constants.Mode.SIM
-                ? () -> drive.setPose(
-                        driveSimulation
-                                .getSimulatedDriveTrainPose()) // reset odometry to actual robot pose during simulation
-                : () -> drive.setPose(new Pose2d(drive.getPose().getTranslation(), new Rotation2d()));
+        controller.x().whileTrue(linSlide.applyPower(0.2)).onFalse(linSlide.applyPower(0));
+        controller.b().whileTrue(linSlide.applyPower(-0.2)).onFalse(linSlide.applyPower(0));
+
+        controller.leftBumper().whileTrue(intake.rollOut());
+        //                .onTrue(Commands.either(
+        //                        linSlide.moveToPosition(LinSlidePosition.STOW.getPosition()),
+        //                        linSlide.moveToPosition(LinSlidePosition.DEPLOY.getPosition()),
+        //                        linSlide::isDeployed));
+
+        //        controller
+        //                .leftTrigger()
+        //                .whileTrue(AutoAimCommands.autoAim(
+        //                                drive, controller::getLeftY, controller::getLeftX,
+        // centerHubOpening.toTranslation2d())
+        //                        .alongWith(shooter.shoot(100))
+        //                        .alongWith(indexer.index(3)));
+
+        controller.rightTrigger().whileTrue(hopper.spinHopper(80));
+    }
+
+    private void configureSimBindings() {
+        //        drive.setDefaultCommand(
+        //                drive.applyRequest(
+        //                        () ->
+        //                                drive.withVelocityX(
+        //                                                -controller.getLeftY()
+        //                                                        * TunerConstants.kSpeedAt12Volts
+        //                                                        .magnitude())
+        //                                        .withVelocityY(
+        //                                                -controller.getLeftX()
+        //                                                        * TunerConstants.kSpeedAt12Volts
+        //                                                        .magnitude())
+        //                                        .withRotationalRate(
+        //                                                -controller.getRightX()
+        //                                                        * TunerConstants.MaFxAngularRate)));
+        //        controller
+        //                .button(0)
+        //                .onTrue(Commands.runOnce(
+        //                                () -> drive.setPose(new Pose2d(drive.getPose().getTranslation(),
+        // Rotation2d.kZero)),
+        //                                drive)
+        //                        .ignoringDisable(true));
+
+        controller.button(1).onTrue(climber.moveToPosition(ClimberPosition.L1.getHeight()));
+        controller.button(2).onTrue(climber.moveToPosition(ClimberPosition.BOTTOM.getHeight()));
+
+        controller.button(3).whileTrue(intake.rollIn());
+        controller.button(4).whileTrue(intake.rollOut());
 
         controller
-                .leftBumper()
+                .button(5)
                 .onTrue(Commands.either(
                         linSlide.moveToPosition(LinSlidePosition.STOW.getPosition()),
                         linSlide.moveToPosition(LinSlidePosition.DEPLOY.getPosition()),
                         linSlide::isDeployed));
 
-        controller
-                .leftTrigger()
-                .whileTrue(AutoAimCommands.autoAim(
-                                drive,
-                                () -> -controller.getLeftY(),
-                                () -> -controller.getLeftX(),
-                                centerHubOpening.toTranslation2d())
-                        .alongWith(shooter.shoot(100))
-                        .alongWith(indexer.index(3)));
+        //        controller
+        //                .button(6)
+        //                .whileTrue(AutoAimCommands.autoAim(
+        //                                drive, controller::getLeftY, controller::getLeftX,
+        // centerHubOpening.toTranslation2d())
+        //                        .alongWith(shooter.shoot(100))
+        //                        .alongWith(indexer.index(3)));
 
-        controller.rightTrigger().whileTrue(hopper.spinHopper(80));
+        controller.button(7).whileTrue(hopper.spinHopper(80));
     }
 
     public void updateMechanisms() {
