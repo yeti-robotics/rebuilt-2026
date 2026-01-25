@@ -22,7 +22,7 @@ public class HoodConfigs {
             .withKV(0)
             .withKA(0)
             .withKS(0)
-            .withGravityType(GravityTypeValue.Elevator_Static)
+            .withGravityType(GravityTypeValue.Arm_Cosine)
             : new Slot0Configs()
             .withKP(0)
             .withKI(0)
@@ -31,7 +31,7 @@ public class HoodConfigs {
             .withKV(0)
             .withKA(0)
             .withKS(0)
-            .withGravityType(GravityTypeValue.Elevator_Static);
+            .withGravityType(GravityTypeValue.Arm_Cosine);
 
     static final TalonFXConfiguration HOOD_MOTOR_CONFIGS = new TalonFXConfiguration()
             .withSlot0(SLOT_0_CONFIGS)
