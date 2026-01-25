@@ -4,7 +4,7 @@ import com.ctre.phoenix6.configs.*;
 import com.ctre.phoenix6.signals.GravityTypeValue;
 
 public class HopperConfigs {
-    static final int ROLLER_ID = 50;
+    static final int ROLLER_ID = 60;
 
     public static final Slot0Configs SLOT_0_CONFIGS = new Slot0Configs()
             .withKP(0)

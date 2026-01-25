@@ -175,7 +175,11 @@ public class RobotContainer {
         autoChooser.addOption("Drive SysId (Dynamic Reverse)", drive.sysIdDynamic(SysIdRoutine.Direction.kReverse));
 
         // Configure the button bindings
-        configureButtonBindings();
+        if (Robot.isReal()) {
+            configureRealBindings();
+        } else if (Robot.isSimulation()) {
+            configureSimBindings();
+        }
     }
 
     /**
@@ -184,7 +188,7 @@ public class RobotContainer {
      * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then passing it to a {@link
      * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
      */
-    private void configureButtonBindings() {
+    private void configureRealBindings() {
         drive.setDefaultCommand(DriveCommands.joystickDrive(
                 drive, () -> -controller.getLeftY(), () -> -controller.getLeftX(), () -> -controller.getRightX()));
 
@@ -216,6 +220,40 @@ public class RobotContainer {
                         .alongWith(indexer.index(3)));
 
         controller.rightTrigger().whileTrue(hopper.spinHopper(80));
+    }
+
+    private void configureSimBindings() {
+        drive.setDefaultCommand(DriveCommands.joystickDrive(
+                drive, () -> -controller.getLeftY(), () -> -controller.getLeftX(), () -> -controller.getRightX()));
+
+        controller
+                .button(0)
+                .onTrue(Commands.runOnce(
+                                () -> drive.setPose(new Pose2d(drive.getPose().getTranslation(), Rotation2d.kZero)),
+                                drive)
+                        .ignoringDisable(true));
+
+        controller.button(1).onTrue(climber.moveToPosition(ClimberPosition.L1.getHeight()));
+        controller.button(2).onTrue(climber.moveToPosition(ClimberPosition.BOTTOM.getHeight()));
+
+        controller.button(3).whileTrue(intake.rollIn());
+        controller.button(4).whileTrue(intake.rollOut());
+
+        controller
+                .button(5)
+                .onTrue(Commands.either(
+                        linSlide.moveToPosition(LinSlidePosition.STOW.getPosition()),
+                        linSlide.moveToPosition(LinSlidePosition.DEPLOY.getPosition()),
+                        linSlide::isDeployed));
+
+        controller
+                .button(6)
+                .whileTrue(AutoAimCommands.autoAim(
+                                drive, controller::getLeftY, controller::getLeftX, centerHubOpening.toTranslation2d())
+                        .alongWith(shooter.shoot(100))
+                        .alongWith(indexer.index(3)));
+
+        controller.button(7).whileTrue(hopper.spinHopper(80));
     }
 
     public void updateMechanisms() {
