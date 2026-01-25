@@ -25,12 +25,7 @@ import frc.robot.subsystems.climber.Climber;
 import frc.robot.subsystems.climber.ClimberIO;
 import frc.robot.subsystems.climber.ClimberIOAlpha;
 import frc.robot.subsystems.climber.ClimberPosition;
-import frc.robot.subsystems.drive.Drive;
-import frc.robot.subsystems.drive.GyroIO;
-import frc.robot.subsystems.drive.GyroIOPigeon2;
-import frc.robot.subsystems.drive.ModuleIO;
-import frc.robot.subsystems.drive.ModuleIOSim;
-import frc.robot.subsystems.drive.ModuleIOTalonFX;
+import frc.robot.subsystems.drive.*;
 import frc.robot.subsystems.hopper.Hopper;
 import frc.robot.subsystems.hopper.HopperIO;
 import frc.robot.subsystems.hopper.HopperIOAlpha;
@@ -39,6 +34,7 @@ import frc.robot.subsystems.indexer.IndexerIOAlpha;
 import frc.robot.subsystems.indexer.IndexerSubsystem;
 import frc.robot.subsystems.intake.IntakeIO;
 import frc.robot.subsystems.intake.IntakeIOAlpha;
+import frc.robot.subsystems.intake.IntakeIOSim;
 import frc.robot.subsystems.intake.IntakeSubsystem;
 import frc.robot.subsystems.led.LED;
 import frc.robot.subsystems.linslide.LinSlideIO;
@@ -47,6 +43,7 @@ import frc.robot.subsystems.linslide.LinSlidePosition;
 import frc.robot.subsystems.linslide.LinSlideSubsystem;
 import frc.robot.subsystems.shooter.ShooterIO;
 import frc.robot.subsystems.shooter.ShooterIOAlpha;
+import frc.robot.subsystems.shooter.ShooterIOSim;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
 import frc.robot.subsystems.vision.*;
 import frc.robot.util.sim.Mechanisms;
@@ -71,6 +68,7 @@ public class RobotContainer {
     private final Hopper hopper;
     private final Climber climber;
     private final ShooterSubsystem shooter;
+    private ShooterIOSim shooterSim;
     private final IndexerSubsystem indexer;
     private final Vision vision;
 
@@ -133,14 +131,15 @@ public class RobotContainer {
                                 TunerConstants.BackRight, driveSimulation.getModules()[3]));
                 linSlide = new LinSlideSubsystem(new LinSlideIOAlpha());
                 led = new LED();
-                intake = new IntakeSubsystem(new IntakeIOAlpha());
+                shooterSim = new ShooterIOSim(drive::getPose, drive::getChassisSpeeds);
+                intake = new IntakeSubsystem(new IntakeIOSim(driveSimulation, shooterSim));
                 hopper = new Hopper(new HopperIOAlpha());
                 vision = new Vision(
                         drive,
                         new VisionIOPhotonVisionSim("Front Camera", VisionConstants.frontCamTrans, drive::getPose),
                         new VisionIOPhotonVisionSim("Back Camera", VisionConstants.backCamTrans, drive::getPose));
                 climber = new Climber(new ClimberIOAlpha());
-                shooter = new ShooterSubsystem(new ShooterIOAlpha());
+                shooter = new ShooterSubsystem(shooterSim);
                 indexer = new IndexerSubsystem(new IndexerIOAlpha());
 
                 break;
@@ -194,13 +193,6 @@ public class RobotContainer {
     private void configureRealBindings() {
         drive.setDefaultCommand(DriveCommands.joystickDrive(
                 drive, () -> -controller.getLeftY(), () -> -controller.getLeftX(), () -> -controller.getRightX()));
-
-        controller
-                .start()
-                .onTrue(Commands.runOnce(
-                                () -> drive.setPose(new Pose2d(drive.getPose().getTranslation(), Rotation2d.kZero)),
-                                drive)
-                        .ignoringDisable(true));
 
         controller.y().onTrue(climber.moveToPosition(ClimberPosition.L1.getHeight()));
         controller.b().onTrue(climber.moveToPosition(ClimberPosition.BOTTOM.getHeight()));
@@ -285,6 +277,7 @@ public class RobotContainer {
     public void updateSimulation() {
         if (Constants.currentMode != Constants.Mode.SIM) return;
 
+        updateVisionSim();
         SimulatedArena.getInstance().simulationPeriodic();
         Logger.recordOutput("FieldSimulation/RobotPosition", driveSimulation.getSimulatedDriveTrainPose());
         Logger.recordOutput("FieldSimulation/Fuel", SimulatedArena.getInstance().getGamePiecesArrayByType("Fuel"));
