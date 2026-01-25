@@ -258,6 +258,14 @@ public class RobotContainer {
         mechanisms.updateLinSlideMech(linSlide.getCurrentPosition());
     }
 
+    public void resetGyro() {
+        if (Constants.currentMode == Constants.Mode.SIM && driveSimulation != null) {
+            drive.setPose(driveSimulation.getSimulatedDriveTrainPose());
+        } else {
+            drive.setPose(new Pose2d(drive.getPose().getTranslation(), new Rotation2d()));
+        }
+    }
+
     /**
      * Use this to pass the autonomous command to the main {@link Robot} class.
      *

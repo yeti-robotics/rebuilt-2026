@@ -92,6 +92,12 @@ public class Robot extends LoggedRobot {
         // Threads.setCurrentThreadPriority(false, 10);
     }
 
+    /** This function is called once when the robot is first started up. */
+    @Override
+    public void robotInit() {
+        robotContainer.resetGyro();
+    }
+
     /** This function is called once when the robot is disabled. */
     @Override
     public void disabledInit() {
