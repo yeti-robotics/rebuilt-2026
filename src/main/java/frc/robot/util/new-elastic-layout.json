@@ -131,7 +131,7 @@
               "robot_width": 0.85,
               "robot_length": 0.85,
               "show_other_objects": true,
-              "show_trajectories": true,
+              "show_trajectories": false,
               "field_rotation": -90.0,
               "robot_color": 4294198070,
               "trajectory_color": 4294967295,
@@ -183,6 +183,32 @@
               "true_icon": "None",
               "false_icon": "None"
             }
+          },
+          {
+            "title": "Back Camera",
+            "x": 384.0,
+            "y": 0.0,
+            "width": 384.0,
+            "height": 512.0,
+            "type": "Camera Stream",
+            "properties": {
+              "topic": "/CameraPublisher/Back Camera-processed",
+              "period": 0.06,
+              "rotation_turns": 0
+            }
+          },
+          {
+            "title": "Front Camera",
+            "x": 0.0,
+            "y": 0.0,
+            "width": 384.0,
+            "height": 512.0,
+            "type": "Camera Stream",
+            "properties": {
+              "topic": "/CameraPublisher/Front Camera-processed",
+              "period": 0.06,
+              "rotation_turns": 0
+            }
           }
         ]
       }
@@ -196,7 +222,7 @@
             "title": "Battery Voltage",
             "x": 384.0,
             "y": 512.0,
-            "width": 896.0,
+            "width": 640.0,
             "height": 256.0,
             "type": "Voltage View",
             "properties": {
@@ -212,9 +238,9 @@
           },
           {
             "title": "Battery Good",
-            "x": 1024.0,
-            "y": 0.0,
-            "width": 256.0,
+            "x": 1152.0,
+            "y": 256.0,
+            "width": 128.0,
             "height": 256.0,
             "type": "Boolean Box",
             "properties": {
@@ -229,7 +255,7 @@
           },
           {
             "title": "Match Time",
-            "x": 640.0,
+            "x": 768.0,
             "y": 256.0,
             "width": 384.0,
             "height": 256.0,
@@ -245,9 +271,9 @@
           },
           {
             "title": "Linear Slide Deployed",
-            "x": 640.0,
+            "x": 768.0,
             "y": 0.0,
-            "width": 384.0,
+            "width": 256.0,
             "height": 256.0,
             "type": "Boolean Box",
             "properties": {
@@ -296,7 +322,7 @@
           {
             "title": "Radio Connected",
             "x": 1024.0,
-            "y": 256.0,
+            "y": 512.0,
             "width": 256.0,
             "height": 256.0,
             "type": "Boolean Box",
@@ -308,6 +334,45 @@
               "false_color": 4294198070,
               "true_icon": "None",
               "false_icon": "None"
+            }
+          },
+          {
+            "title": "Current Shift",
+            "x": 1024.0,
+            "y": 0.0,
+            "width": 256.0,
+            "height": 256.0,
+            "type": "Large Text Display",
+            "properties": {
+              "topic": "/AdvantageKit/RealOutputs/Current Shift",
+              "period": 0.06,
+              "data_type": "string"
+            }
+          },
+          {
+            "title": "Back Camera",
+            "x": 384.0,
+            "y": 0.0,
+            "width": 384.0,
+            "height": 512.0,
+            "type": "Camera Stream",
+            "properties": {
+              "topic": "/CameraPublisher/Back Camera-processed",
+              "period": 0.06,
+              "rotation_turns": 0
+            }
+          },
+          {
+            "title": "Front Camera",
+            "x": 0.0,
+            "y": 0.0,
+            "width": 384.0,
+            "height": 512.0,
+            "type": "Camera Stream",
+            "properties": {
+              "topic": "/CameraPublisher/Front Camera-processed",
+              "period": 0.06,
+              "rotation_turns": 0
             }
           }
         ]
