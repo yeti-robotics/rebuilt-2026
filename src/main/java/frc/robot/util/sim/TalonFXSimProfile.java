@@ -6,7 +6,6 @@ import com.ctre.phoenix6.sim.CANcoderSimState;
 import com.ctre.phoenix6.sim.TalonFXSimState;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.system.plant.LinearSystemId;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 
 /** Holds information about a simulated TalonFX. */
@@ -50,7 +49,7 @@ class TalonFXSimProfile extends PhysicsSim.SimProfile {
 
         /// SET SIM PHYSICS INPUTS
         final double position_rot = motorSim.getAngularPositionRotations();
-        final double velocity_rps = Units.radiansToRotations(motorSim.getAngularVelocityRPM());
+        final double velocity_rps = motorSim.getAngularVelocityRPM() / 60;
 
         if (cancoderSimState != null) {
             cancoderSimState.setRawPosition(position_rot);
