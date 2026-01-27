@@ -31,6 +31,9 @@ import frc.robot.subsystems.drive.GyroIOPigeon2;
 import frc.robot.subsystems.drive.ModuleIO;
 import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOTalonFX;
+import frc.robot.subsystems.hood.HoodIO;
+import frc.robot.subsystems.hood.HoodIOBeta;
+import frc.robot.subsystems.hood.HoodSubsystem;
 import frc.robot.subsystems.hopper.Hopper;
 import frc.robot.subsystems.hopper.HopperIO;
 import frc.robot.subsystems.hopper.HopperIOAlpha;
@@ -71,6 +74,7 @@ public class RobotContainer {
     private final ShooterSubsystem shooter;
     private final IndexerSubsystem indexer;
     private final Vision vision;
+    private final HoodSubsystem hood;
 
     // Controller
     private final CommandXboxController controller = new CommandXboxController(0);
@@ -107,6 +111,7 @@ public class RobotContainer {
                 climber = new Climber(new ClimberIOAlpha());
                 shooter = new ShooterSubsystem(new ShooterIOAlpha());
                 indexer = new IndexerSubsystem(new IndexerIOAlpha());
+                hood = new HoodSubsystem(new HoodIOBeta());
 
                 vision = new Vision(
                         drive,
@@ -133,6 +138,7 @@ public class RobotContainer {
                 climber = new Climber(new ClimberIOAlpha());
                 shooter = new ShooterSubsystem(new ShooterIOAlpha());
                 indexer = new IndexerSubsystem(new IndexerIOAlpha());
+                hood = new HoodSubsystem(new HoodIOBeta());
 
                 break;
 
@@ -148,6 +154,7 @@ public class RobotContainer {
                 vision = new Vision(drive, new VisionIO() {}, new VisionIO() {});
                 indexer = new IndexerSubsystem(new IndexerIO() {});
                 shooter = new ShooterSubsystem((new ShooterIO() {}));
+                hood = new HoodSubsystem(new HoodIO() {});
 
                 break;
         }
