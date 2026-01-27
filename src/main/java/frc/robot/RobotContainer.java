@@ -261,12 +261,12 @@ public class RobotContainer {
         //                        .alongWith(indexer.index(3)));
         //
         //        controller.button(7).whileTrue(hopper.spinHopper(80));
-        controller.button(1).onTrue(led.runPattern(LEDModes.BLUE_ALLIANCE_ACTIVE));
-        controller.button(2).onTrue(led.runPattern(LEDModes.RED_ALLIANCE_ACTIVE));
-        controller.button(3).onTrue(led.runPattern(LEDModes.BLUE_TO_RED_TRANSITION));
-        controller.button(4).onTrue(led.runPattern(LEDModes.RED_TO_BLUE_TRANSITION));
-        controller.button(5).onTrue(led.runPattern(LEDModes.RAINBOW));
-        controller.button(6).onTrue(led.runPattern(LEDModes.LOCKED_GREEN));
+        controller.button(1).whileTrue(led.runPattern(LEDModes.BLUE_ALLIANCE_ACTIVE));
+        controller.button(2).whileTrue(led.runPattern(LEDModes.RED_ALLIANCE_ACTIVE));
+        controller.button(3).whileTrue(led.runPattern(LEDModes.BLUE_TO_RED_TRANSITION));
+        controller.button(4).whileTrue(led.runPattern(LEDModes.RED_TO_BLUE_TRANSITION));
+        controller.button(5).whileTrue(led.runPattern(LEDModes.RAINBOW));
+        controller.button(6).whileTrue(led.runPattern(LEDModes.LOCKED_GREEN));
         controller.button(7).whileTrue(led.waveCommand());
     }
 

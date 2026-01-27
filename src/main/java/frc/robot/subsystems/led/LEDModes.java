@@ -9,9 +9,11 @@ import edu.wpi.first.wpilibj.util.Color;
 
 public enum LEDModes {
     RED_TO_BLUE_TRANSITION(
-            LEDPattern.gradient(LEDPattern.GradientType.kContinuous, LEDConstants.VIHAAN_RED, LEDConstants.YETI_BLUE)),
+            LEDPattern.gradient(LEDPattern.GradientType.kContinuous, LEDConstants.VIHAAN_RED, LEDConstants.YETI_BLUE),
+            true),
     BLUE_TO_RED_TRANSITION(
-            LEDPattern.gradient(LEDPattern.GradientType.kContinuous, LEDConstants.YETI_BLUE, LEDConstants.VIHAAN_RED)),
+            LEDPattern.gradient(LEDPattern.GradientType.kContinuous, LEDConstants.YETI_BLUE, LEDConstants.VIHAAN_RED),
+            true),
     BLUE_ALLIANCE_ACTIVE(LEDPattern.solid(LEDConstants.YETI_BLUE)),
     RED_ALLIANCE_ACTIVE(LEDPattern.solid(LEDConstants.VIHAAN_RED)),
     RAINBOW(
@@ -19,7 +21,7 @@ public enum LEDModes {
             true),
     TRANSITION_ACTIVE(LEDPattern.solid(Color.kPurple)),
     ENDGAME_ACTIVE(LEDPattern.solid(Color.kGreen)),
-    LOCKED_GREEN(LEDPattern.solid(Color.kGreen).blink(Seconds.of(1)), true),
+    LOCKED_GREEN(LEDPattern.solid(Color.kGreen).blink(Seconds.of(0.25)), true),
     BLINKING_ORANGE(LEDPattern.solid(Color.kOrange).synchronizedBlink(RobotController::getRSLState), true),
     NOT_LOCKED_RED(LEDPattern.solid(Color.kRed));
 

@@ -83,7 +83,6 @@ public class LED extends SubsystemBase {
                 if (previousLEDMode != null && !previousLEDMode.isAnimation) {
                     applyPattern(previousLEDMode);
                 } else {
-                    isTimedAnimation = false;
                     currentLEDMode = null;
                 }
                 return;
@@ -121,18 +120,21 @@ public class LED extends SubsystemBase {
                 isTimedAnimation = true;
                 currentLEDMode = null;
             }
+
             wave();
         });
     }
 
     public Command runPattern(LEDModes pattern) {
-        return runOnce(() -> {
-                    if (pattern.isAnimation) {
+        return run(() -> {
+                    if (!isTimedAnimation || currentLEDMode != pattern) {
                         previousLEDMode = currentLEDMode;
                         animationStartTime = Timer.getFPGATimestamp();
                         isTimedAnimation = true;
+                        currentLEDMode = pattern;
                     }
-                    applyPattern(pattern);
+
+                    updateCurrentPattern();
                 })
                 .ignoringDisable(true);
     }
