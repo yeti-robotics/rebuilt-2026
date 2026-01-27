@@ -7,15 +7,18 @@
 
 package frc.robot;
 
+import static edu.wpi.first.wpilibj2.command.Commands.runOnce;
 import static frc.robot.constants.FieldConstants.Hub.centerHubOpening;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.math.geometry.*;
+import edu.wpi.first.units.Units;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.AutoAimCommands;
 import frc.robot.commands.DriveCommands;
@@ -42,6 +45,7 @@ import frc.robot.subsystems.intake.IntakeIO;
 import frc.robot.subsystems.intake.IntakeIOAlpha;
 import frc.robot.subsystems.intake.IntakeSubsystem;
 import frc.robot.subsystems.led.LED;
+import frc.robot.subsystems.led.LEDConstants;
 import frc.robot.subsystems.led.LEDModes;
 import frc.robot.subsystems.linslide.LinSlideIO;
 import frc.robot.subsystems.linslide.LinSlideIOAlpha;
@@ -154,7 +158,7 @@ public class RobotContainer {
                 break;
         }
 
-        led = new LED(shooter, vision);
+        led = new LED();
         snowfallLEDCommand = new SnowfallLEDCommand(led, 2);
 
         // Set up auto routines
@@ -179,6 +183,8 @@ public class RobotContainer {
         } else if (Robot.isSimulation()) {
             configureSimBindings();
         }
+
+        configureTriggers();
     }
 
     /**
@@ -193,7 +199,7 @@ public class RobotContainer {
 
         controller
                 .start()
-                .onTrue(Commands.runOnce(
+                .onTrue(runOnce(
                                 () -> drive.setPose(new Pose2d(drive.getPose().getTranslation(), Rotation2d.kZero)),
                                 drive)
                         .ignoringDisable(true));
@@ -268,7 +274,7 @@ public class RobotContainer {
         controller.button(4).onTrue(led.runPattern(LEDModes.RED_TO_BLUE_TRANSITION));
         controller.button(5).onTrue(led.runPattern(LEDModes.RAINBOW));
         controller.button(6).onTrue(led.runPattern(LEDModes.LOCKED_GREEN));
-        controller.button(7).whileTrue(shooter.shoot(120));
+        controller.button(7).whileTrue(led.waveCommand());
     }
 
     public void updateMechanisms() {
@@ -276,6 +282,17 @@ public class RobotContainer {
         mechanisms.publishComponentPoses(climber.getTargetPosition(), linSlide.getTargetPosition(), false);
         mechanisms.updateClimberMechanism(climber.getCurrentPosition());
         mechanisms.updateLinSlideMech(linSlide.getCurrentPosition());
+    }
+
+    public void configureTriggers() {
+        new Trigger(() -> shooter.getVelocity().isNear(Units.RotationsPerSecond.of(120), 0.1))
+                .and(() -> Math.abs(vision.getDistance() - LEDConstants.IDEAL_DISTANCE_TO_HUB) > LEDConstants.TOLERANCE)
+                .whileTrue(led.runPattern(LEDModes.LOCKED_GREEN));
+
+        new Trigger(() -> shooter.getVelocity().isNear(Units.RotationsPerSecond.of(120), 0.1))
+                .and(() ->
+                        Math.abs(vision.getDistance() - LEDConstants.IDEAL_DISTANCE_TO_HUB) <= LEDConstants.TOLERANCE)
+                .whileTrue(led.waveCommand());
     }
 
     /**

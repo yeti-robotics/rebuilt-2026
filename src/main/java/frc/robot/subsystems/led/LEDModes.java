@@ -4,6 +4,7 @@ import static edu.wpi.first.units.Units.Seconds;
 
 import edu.wpi.first.units.Units;
 import edu.wpi.first.wpilibj.LEDPattern;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.util.Color;
 
 public enum LEDModes {
@@ -19,6 +20,7 @@ public enum LEDModes {
     TRANSITION_ACTIVE(LEDPattern.solid(Color.kPurple)),
     ENDGAME_ACTIVE(LEDPattern.solid(Color.kGreen)),
     LOCKED_GREEN(LEDPattern.solid(Color.kGreen).blink(Seconds.of(1)), true),
+    BLINKING_ORANGE(LEDPattern.solid(Color.kOrange).synchronizedBlink(RobotController::getRSLState), true),
     NOT_LOCKED_RED(LEDPattern.solid(Color.kRed));
 
     public final LEDPattern pattern;
