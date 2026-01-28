@@ -29,6 +29,7 @@ public class LinSlideIOAlpha implements LinSlideIO {
     public void updateInputs(LinSlideIO.LinSlideIOInputs inputs) {
         inputs.positionRotation = linSlideMotor.getPosition().getValueAsDouble();
         inputs.targetPositionRotation = linSlideMotor.getClosedLoopReference().getValueAsDouble();
+        inputs.isDeployed = linSlideMotor.getPosition().getValueAsDouble() > 0;
     }
 
     @Override
