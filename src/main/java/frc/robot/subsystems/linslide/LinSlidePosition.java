@@ -1,19 +1,16 @@
 package frc.robot.subsystems.linslide;
 
-import edu.wpi.first.units.Units;
-import edu.wpi.first.units.measure.Angle;
-
 public enum LinSlidePosition {
     STOW(0.0),
-    DEPLOY(0.75);
+    DEPLOY(3.29);
 
-    private final Angle position;
+    private final double position;
 
     LinSlidePosition(double position) {
-        this.position = Units.Rotations.of(position);
+        this.position = position;
     }
 
-    public Angle getPosition() {
+    public double getPosition() {
         return position;
     }
 }
