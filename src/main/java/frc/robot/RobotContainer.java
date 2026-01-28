@@ -46,7 +46,6 @@ import frc.robot.subsystems.intake.IntakeSubsystem;
 import frc.robot.subsystems.led.LED;
 import frc.robot.subsystems.linslide.LinSlideIO;
 import frc.robot.subsystems.linslide.LinSlideIOAlpha;
-import frc.robot.subsystems.linslide.LinSlidePosition;
 import frc.robot.subsystems.linslide.LinSlideSubsystem;
 import frc.robot.subsystems.shooter.ShooterIO;
 import frc.robot.subsystems.shooter.ShooterIOAlpha;
@@ -209,8 +208,8 @@ public class RobotContainer {
         controller
                 .leftBumper()
                 .onTrue(Commands.either(
-                        linSlide.moveToPosition(LinSlidePosition.STOW.getPosition()),
-                        linSlide.moveToPosition(LinSlidePosition.DEPLOY.getPosition()),
+                        linSlide.moveToPosition(-0.2, false),
+                        linSlide.moveToPosition(0.2, true),
                         linSlide::isDeployed));
 
         controller
@@ -243,8 +242,8 @@ public class RobotContainer {
         controller
                 .button(5)
                 .onTrue(Commands.either(
-                        linSlide.moveToPosition(LinSlidePosition.STOW.getPosition()),
-                        linSlide.moveToPosition(LinSlidePosition.DEPLOY.getPosition()),
+                        linSlide.moveToPosition(-0.2, false),
+                        linSlide.moveToPosition(0.2, true),
                         linSlide::isDeployed));
 
         controller

@@ -1,6 +1,5 @@
 package frc.robot.subsystems.linslide;
 
-import edu.wpi.first.units.measure.Angle;
 import org.littletonrobotics.junction.AutoLog;
 
 public interface LinSlideIO {
@@ -9,11 +8,12 @@ public interface LinSlideIO {
         public double positionRotation = 0.0;
         public double targetPositionRotation = 0.0;
         public boolean isDeployed = false;
+        public boolean isStowed = true;
     }
 
     public default void updateInputs(LinSlideIOInputs inputs) {}
 
-    public default void moveToPosition(Angle position) {}
+    public default void moveToPosition(double dutySpeed) {}
 
     public default void zeroPosition() {}
 
