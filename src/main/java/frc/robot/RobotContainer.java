@@ -7,7 +7,6 @@
 
 package frc.robot;
 
-import static edu.wpi.first.wpilibj2.command.Commands.runOnce;
 import static frc.robot.constants.FieldConstants.Hub.centerHubOpening;
 
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -52,7 +51,6 @@ import frc.robot.subsystems.led.LEDConstants;
 import frc.robot.subsystems.led.LEDModes;
 import frc.robot.subsystems.linslide.LinSlideIO;
 import frc.robot.subsystems.linslide.LinSlideIOAlpha;
-import frc.robot.subsystems.linslide.LinSlidePosition;
 import frc.robot.subsystems.linslide.LinSlideSubsystem;
 import frc.robot.subsystems.shooter.ShooterIO;
 import frc.robot.subsystems.shooter.ShooterIOAlpha;
@@ -206,7 +204,7 @@ public class RobotContainer {
 
         controller
                 .start()
-                .onTrue(runOnce(
+                .onTrue(Commands.runOnce(
                                 () -> drive.setPose(new Pose2d(drive.getPose().getTranslation(), Rotation2d.kZero)),
                                 drive)
                         .ignoringDisable(true));
@@ -220,8 +218,8 @@ public class RobotContainer {
         controller
                 .leftBumper()
                 .onTrue(Commands.either(
-                        linSlide.moveToPosition(LinSlidePosition.STOW.getPosition()),
-                        linSlide.moveToPosition(LinSlidePosition.DEPLOY.getPosition()),
+                        linSlide.moveToPosition(-0.2, false),
+                        linSlide.moveToPosition(0.2, true),
                         linSlide::isDeployed));
 
         controller
@@ -255,8 +253,8 @@ public class RobotContainer {
         //        controller
         //                .button(5)
         //                .onTrue(Commands.either(
-        //                        linSlide.moveToPosition(LinSlidePosition.STOW.getPosition()),
-        //                        linSlide.moveToPosition(LinSlidePosition.DEPLOY.getPosition()),
+        //                        linSlide.moveToPosition(-0.2, false),
+        //                        linSlide.moveToPosition(0.2, true),
         //                        linSlide::isDeployed));
         //
         //        controller
