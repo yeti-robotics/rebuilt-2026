@@ -2,6 +2,7 @@ package frc.robot.subsystems.indexer;
 
 import static frc.robot.subsystems.indexer.IndexerConfigs.*;
 
+import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.MotionMagicVelocityVoltage;
 import com.ctre.phoenix6.hardware.CANrange;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -14,6 +15,7 @@ public class IndexerIOAlpha implements IndexerIO {
     public final CANrange indexerSensor;
 
     public final MotionMagicVelocityVoltage velocityVoltageRequest = new MotionMagicVelocityVoltage(0);
+    public final DutyCycleOut dutyRequest = new DutyCycleOut(0);
 
     public IndexerIOAlpha() {
         indexerMotor = new TalonFX(INDEXER_MOTOR_ID, Constants.rioBus);
@@ -33,5 +35,10 @@ public class IndexerIOAlpha implements IndexerIO {
     @Override
     public void spinIndexer(double volts) {
         indexerMotor.setControl(velocityVoltageRequest.withVelocity(volts));
+    }
+
+    @Override
+    public void applyPower(double percent){
+        indexerMotor.setControl(dutyRequest.withOutput(percent));
     }
 }
