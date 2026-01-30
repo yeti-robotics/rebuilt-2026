@@ -8,6 +8,7 @@
 package frc.robot;
 
 import static frc.robot.constants.FieldConstants.Hub.centerHubOpening;
+import static frc.robot.subsystems.hopper.HopperConfigs.TEST_HOPPER_SPEED;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.math.geometry.*;
@@ -256,6 +257,8 @@ public class RobotContainer {
                         .alongWith(indexer.index(3)));
 
         controller.button(7).whileTrue(hopper.spinHopper(80));
+
+        gigaStation.button(1).whileTrue(hopper.testSpinHopper(TEST_HOPPER_SPEED));
     }
 
     public void updateMechanisms() {
