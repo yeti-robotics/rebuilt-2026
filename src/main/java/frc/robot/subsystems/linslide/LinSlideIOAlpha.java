@@ -44,4 +44,3 @@ public class LinSlideIOAlpha implements LinSlideIO {
         linSlideMotor.setControl(dutyRequest.withOutput(percent));
     }
 }
-

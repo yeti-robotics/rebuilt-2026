@@ -8,6 +8,7 @@
 package frc.robot;
 
 import static frc.robot.constants.FieldConstants.Hub.centerHubOpening;
+import static frc.robot.subsystems.shooter.ShooterConfigs.TEST_SHOOTER_SPEED;
 import static frc.robot.subsystems.hopper.HopperConfigs.TEST_HOPPER_SPEED;
 
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -48,6 +49,7 @@ import frc.robot.subsystems.led.LED;
 import frc.robot.subsystems.linslide.LinSlideIO;
 import frc.robot.subsystems.linslide.LinSlideIOAlpha;
 import frc.robot.subsystems.linslide.LinSlideSubsystem;
+import frc.robot.subsystems.shooter.ShooterConfigs;
 import frc.robot.subsystems.shooter.ShooterIO;
 import frc.robot.subsystems.shooter.ShooterIOAlpha;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
@@ -223,6 +225,9 @@ public class RobotContainer {
                         .alongWith(indexer.index(3)));
 
         controller.rightTrigger().whileTrue(hopper.spinHopper(80));
+
+        gigaStation.button(1).whileTrue(hopper.testSpinHopper(TEST_HOPPER_SPEED));
+        gigaStation.button(2).whileTrue(shooter.applyPower(TEST_SHOOTER_SPEED));
     }
 
     private void configureSimBindings() {
@@ -257,8 +262,6 @@ public class RobotContainer {
                         .alongWith(indexer.index(3)));
 
         controller.button(7).whileTrue(hopper.spinHopper(80));
-
-        gigaStation.button(1).whileTrue(hopper.testSpinHopper(TEST_HOPPER_SPEED));
     }
 
     public void updateMechanisms() {
