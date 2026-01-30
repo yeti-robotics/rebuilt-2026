@@ -9,6 +9,7 @@ package frc.robot;
 
 import static frc.robot.constants.FieldConstants.Hub.centerHubOpening;
 
+import com.ctre.phoenix6.swerve.SwerveModule;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.math.geometry.*;
@@ -75,6 +76,11 @@ public class RobotContainer {
 
     // Dashboard inputs
     private final LoggedDashboardChooser<Command> autoChooser;
+
+    private final SwerveRequest.FieldCentric driveRequest = new SwerveRequest.FieldCentric()
+            .withDeadband(TunerConstants.MAX_VELOCITY_METERS_PER_SECOND * 0.1)
+            .withRotationalDeadband(TunerConstants.MaFxAngularRate * 0.1)
+            .withDriveRequestType(SwerveModule.DriveRequestType.OpenLoopVoltage);
 
     public void updateVisionSim() {
         Pose3d backCameraPose = new Pose3d(drive.getState().Pose).transformBy(VisionConstants.backCamTrans);
@@ -178,7 +184,7 @@ public class RobotContainer {
      * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
      */
     private void configureRealBindings() {
-        drive.setDefaultCommand(drive.applyRequest(() -> new SwerveRequest.FieldCentric()
+        drive.setDefaultCommand(drive.applyRequest(() -> driveRequest
                 .withVelocityX(-controller.getLeftY() * TunerConstants.kSpeedAt12Volts.magnitude())
                 .withVelocityY(-controller.getLeftX() * TunerConstants.kSpeedAt12Volts.magnitude())
                 .withRotationalRate(-controller.getRightX() * TunerConstants.MaFxAngularRate)));
@@ -209,7 +215,7 @@ public class RobotContainer {
     }
 
     private void configureSimBindings() {
-        drive.setDefaultCommand(drive.applyRequest(() -> new SwerveRequest.FieldCentric()
+        drive.setDefaultCommand(drive.applyRequest(() -> driveRequest
                 .withVelocityX(-controller.getLeftY() * TunerConstants.kSpeedAt12Volts.magnitude())
                 .withVelocityY(-controller.getLeftX() * TunerConstants.kSpeedAt12Volts.magnitude())
                 .withRotationalRate(-controller.getRightX() * TunerConstants.MaFxAngularRate)));
