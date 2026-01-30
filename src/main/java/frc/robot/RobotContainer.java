@@ -191,9 +191,9 @@ public class RobotContainer {
     private void configureRealBindings() {
         drive.setDefaultCommand(DriveCommands.joystickDrive(
                 drive,
-                () -> -controller.getLeftY() * TunerConstants.kSpeedAt12Volts.magnitude(),
-                () -> -controller.getLeftX() * TunerConstants.kSpeedAt12Volts.magnitude(),
-                () -> -controller.getRightX() * TunerConstants.MaFxAngularRate));
+                () -> -controller.getLeftY(),
+                () -> -controller.getLeftX(),
+                () -> -controller.getRightX()));
 
         controller
                 .start()
