@@ -9,6 +9,7 @@ package frc.robot;
 
 import static frc.robot.constants.FieldConstants.Hub.centerHubOpening;
 import static frc.robot.subsystems.shooter.ShooterConfigs.TEST_SHOOTER_SPEED;
+import static frc.robot.subsystems.hopper.HopperConfigs.TEST_HOPPER_SPEED;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.math.geometry.*;
@@ -225,6 +226,7 @@ public class RobotContainer {
 
         controller.rightTrigger().whileTrue(hopper.spinHopper(80));
 
+        gigaStation.button(1).whileTrue(hopper.testSpinHopper(TEST_HOPPER_SPEED));
         gigaStation.button(2).whileTrue(shooter.applyPower(TEST_SHOOTER_SPEED));
     }
 

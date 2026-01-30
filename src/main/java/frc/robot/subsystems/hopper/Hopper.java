@@ -22,4 +22,6 @@ public class Hopper extends SubsystemBase {
     public Command spinHopper(double volts) {
         return run(() -> io.spinHopperRoller(volts));
     }
+
+    public Command testSpinHopper(double power){return run(() -> io.testSpinHopperRoller(power));}
 }
