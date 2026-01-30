@@ -190,10 +190,7 @@ public class RobotContainer {
      */
     private void configureRealBindings() {
         drive.setDefaultCommand(DriveCommands.joystickDrive(
-                drive,
-                () -> -controller.getLeftY(),
-                () -> -controller.getLeftX(),
-                () -> -controller.getRightX()));
+                drive, () -> -controller.getLeftY(), () -> -controller.getLeftX(), () -> -controller.getRightX()));
 
         controller
                 .start()
@@ -211,8 +208,8 @@ public class RobotContainer {
         controller
                 .leftBumper()
                 .onTrue(Commands.either(
-                        linSlide.moveToPosition(-0.2, false),
-                        linSlide.moveToPosition(0.2, true),
+                        linSlide.moveToPosition(-0.5, false),
+                        linSlide.moveToPosition(0.5, true),
                         linSlide::isDeployed));
 
         controller
