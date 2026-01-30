@@ -23,6 +23,9 @@ import frc.robot.subsystems.climber.ClimberIO;
 import frc.robot.subsystems.climber.ClimberIOAlpha;
 import frc.robot.subsystems.climber.ClimberPosition;
 import frc.robot.subsystems.drive.*;
+import frc.robot.subsystems.hood.HoodIO;
+import frc.robot.subsystems.hood.HoodIOBeta;
+import frc.robot.subsystems.hood.HoodSubsystem;
 import frc.robot.subsystems.hopper.Hopper;
 import frc.robot.subsystems.hopper.HopperIO;
 import frc.robot.subsystems.hopper.HopperIOAlpha;
@@ -35,7 +38,6 @@ import frc.robot.subsystems.intake.IntakeSubsystem;
 import frc.robot.subsystems.led.LED;
 import frc.robot.subsystems.linslide.LinSlideIO;
 import frc.robot.subsystems.linslide.LinSlideIOAlpha;
-import frc.robot.subsystems.linslide.LinSlidePosition;
 import frc.robot.subsystems.linslide.LinSlideSubsystem;
 import frc.robot.subsystems.shooter.ShooterIO;
 import frc.robot.subsystems.shooter.ShooterIOAlpha;
@@ -62,6 +64,7 @@ public class RobotContainer {
     private final ShooterSubsystem shooter;
     private final IndexerSubsystem indexer;
     private final Vision vision;
+    private final HoodSubsystem hood;
 
     // Controller
     private final CommandXboxController controller = new CommandXboxController(0);
@@ -93,6 +96,7 @@ public class RobotContainer {
                 climber = new Climber(new ClimberIOAlpha());
                 shooter = new ShooterSubsystem(new ShooterIOAlpha());
                 indexer = new IndexerSubsystem(new IndexerIOAlpha());
+                hood = new HoodSubsystem(new HoodIOBeta());
 
                 vision = null;
                 break;
@@ -108,6 +112,7 @@ public class RobotContainer {
                 climber = new Climber(new ClimberIOAlpha());
                 shooter = new ShooterSubsystem(new ShooterIOAlpha());
                 indexer = new IndexerSubsystem(new IndexerIOAlpha());
+                hood = new HoodSubsystem(new HoodIOBeta());
 
                 break;
 
@@ -122,6 +127,7 @@ public class RobotContainer {
                 vision = null;
                 indexer = new IndexerSubsystem(new IndexerIO() {});
                 shooter = new ShooterSubsystem((new ShooterIO() {}));
+                hood = new HoodSubsystem(new HoodIO() {});
 
                 break;
         }
@@ -172,11 +178,12 @@ public class RobotContainer {
         controller.x().whileTrue(linSlide.applyPower(0.2)).onFalse(linSlide.applyPower(0));
         controller.b().whileTrue(linSlide.applyPower(-0.2)).onFalse(linSlide.applyPower(0));
 
-        controller.leftBumper().whileTrue(intake.rollOut());
-        //                .onTrue(Commands.either(
-        //                        linSlide.moveToPosition(LinSlidePosition.STOW.getPosition()),
-        //                        linSlide.moveToPosition(LinSlidePosition.DEPLOY.getPosition()),
-        //                        linSlide::isDeployed));
+        controller
+                .leftBumper()
+                .onTrue(Commands.either(
+                        linSlide.moveToPosition(-0.2, false),
+                        linSlide.moveToPosition(0.2, true),
+                        linSlide::isDeployed));
 
         //        controller
         //                .leftTrigger()
@@ -221,8 +228,8 @@ public class RobotContainer {
         controller
                 .button(5)
                 .onTrue(Commands.either(
-                        linSlide.moveToPosition(LinSlidePosition.STOW.getPosition()),
-                        linSlide.moveToPosition(LinSlidePosition.DEPLOY.getPosition()),
+                        linSlide.moveToPosition(-0.2, false),
+                        linSlide.moveToPosition(0.2, true),
                         linSlide::isDeployed));
 
         //        controller
