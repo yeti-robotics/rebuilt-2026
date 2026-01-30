@@ -36,6 +36,7 @@ import frc.robot.subsystems.vision.Vision;
 import java.io.IOException;
 import java.util.function.Supplier;
 import org.json.simple.parser.ParseException;
+import org.littletonrobotics.junction.Logger;
 
 /**
  * Class that extends the Phoenix 6 SwerveDrivetrain class and implements Subsystem so it can easily
@@ -285,6 +286,7 @@ public class CommandSwerveDrivetrain extends TunerConstants.TunerSwerveDrivetrai
                 m_hasAppliedOperatorPerspective = true;
             });
         }
+        Logger.recordOutput("Chassis Speeds", getChassisSpeeds());
     }
 
     private void startSimThread() {
