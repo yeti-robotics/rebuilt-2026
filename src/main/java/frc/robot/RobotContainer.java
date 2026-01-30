@@ -236,6 +236,7 @@ public class RobotContainer {
                         .alongWith(indexer.index(3)));
 
         controller.button(7).whileTrue(hopper.spinHopper(80));
+        controller.button(9).whileTrue(AutoAimCommands.autoAimWithOrbit(drive, controller::getLeftY, controller::getLeftX, centerHubOpening.toTranslation2d()));
     }
 
     public void updateMechanisms() {

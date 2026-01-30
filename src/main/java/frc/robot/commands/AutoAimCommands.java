@@ -18,7 +18,7 @@ import static frc.robot.constants.FieldConstants.Hub.centerHubOpening;
 public class AutoAimCommands {
     public static final PIDController headingController = new PIDController(5, 0, 0);
 
-    private static final double SPEED_MULTIPLIER = 1.5;
+    private static final double SPEED_MULTIPLIER = 3;
 
     static {
         headingController.enableContinuousInput(-Math.PI, Math.PI);
@@ -39,8 +39,8 @@ public class AutoAimCommands {
 
                     Translation2d hubDistance = modifiedTarget.minus(currentPosition);
 
-                    double rawXVelo = xVelSupplier.getAsDouble() * SPEED_MULTIPLIER;
-                    double rawYVelo = yVelSupplier.getAsDouble() * SPEED_MULTIPLIER;
+                    double rawXVelo = -xVelSupplier.getAsDouble() * SPEED_MULTIPLIER;
+                    double rawYVelo = -yVelSupplier.getAsDouble() * SPEED_MULTIPLIER;
 
                     Rotation2d targetHeading =
                             hubDistance.getAngle().plus(Rotation2d.kPi); // remove if needed for real robot
@@ -49,8 +49,16 @@ public class AutoAimCommands {
                     double angularVelo =
                             headingController.calculate(currentRotation.getRadians(), targetHeading.getRadians());
 
+                    SwerveRequest.FieldCentric request = new SwerveRequest.FieldCentric()
+                            .withVelocityX(rawXVelo)
+                            .withVelocityY(rawYVelo)
+                            .withRotationalRate(angularVelo)
+                            .withDriveRequestType(SwerveModule.DriveRequestType.Velocity);
+
                     drive.run(() -> ChassisSpeeds.fromFieldRelativeSpeeds(
                             fieldRel.getX(), fieldRel.getY(), angularVelo, currentRotation));
+
+                    drive.setControl(request);
                 },
                 SwerveRequest.Idle::new);
     }
@@ -96,7 +104,7 @@ public class AutoAimCommands {
                                                     .withTargetDirection(calcDesiredHeading(drive.getState().Pose, modifiedTarget))
                             .withDriveRequestType(SwerveModule.DriveRequestType.Velocity);
 
-                    drive.applyRequest(() -> request);
+                    drive.setControl(request);
                 },
                 SwerveRequest.Idle::new);
     }
