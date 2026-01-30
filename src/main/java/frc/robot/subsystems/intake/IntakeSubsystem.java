@@ -23,10 +23,10 @@ public class IntakeSubsystem extends SubsystemBase {
     }
 
     public Command rollIn() {
-        return setRoller(2);
+        return setRoller(-0.5);
     }
 
     public Command rollOut() {
-        return setRoller(-2);
+        return setRoller(0.5);
     }
 }

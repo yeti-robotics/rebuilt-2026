@@ -31,6 +31,9 @@ import frc.robot.subsystems.drive.GyroIOPigeon2;
 import frc.robot.subsystems.drive.ModuleIO;
 import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOTalonFX;
+import frc.robot.subsystems.hood.HoodIO;
+import frc.robot.subsystems.hood.HoodIOBeta;
+import frc.robot.subsystems.hood.HoodSubsystem;
 import frc.robot.subsystems.hopper.Hopper;
 import frc.robot.subsystems.hopper.HopperIO;
 import frc.robot.subsystems.hopper.HopperIOAlpha;
@@ -43,12 +46,12 @@ import frc.robot.subsystems.intake.IntakeSubsystem;
 import frc.robot.subsystems.led.LED;
 import frc.robot.subsystems.linslide.LinSlideIO;
 import frc.robot.subsystems.linslide.LinSlideIOAlpha;
-import frc.robot.subsystems.linslide.LinSlidePosition;
 import frc.robot.subsystems.linslide.LinSlideSubsystem;
 import frc.robot.subsystems.shooter.ShooterIO;
 import frc.robot.subsystems.shooter.ShooterIOAlpha;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
 import frc.robot.subsystems.vision.*;
+import frc.robot.util.CommandGigaStation;
 import frc.robot.util.sim.Mechanisms;
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
@@ -71,9 +74,11 @@ public class RobotContainer {
     private final ShooterSubsystem shooter;
     private final IndexerSubsystem indexer;
     private final Vision vision;
+    private final HoodSubsystem hood;
 
     // Controller
-    private final CommandXboxController controller = new CommandXboxController(0);
+    private final CommandXboxController controller = new CommandXboxController(Constants.PRIMARY_CONTROLLER_PORT);
+    private final CommandGigaStation gigaStation = new CommandGigaStation(Constants.GIGA_PORT);
 
     // Dashboard inputs
     private final LoggedDashboardChooser<Command> autoChooser;
@@ -107,6 +112,7 @@ public class RobotContainer {
                 climber = new Climber(new ClimberIOAlpha());
                 shooter = new ShooterSubsystem(new ShooterIOAlpha());
                 indexer = new IndexerSubsystem(new IndexerIOAlpha());
+                hood = new HoodSubsystem(new HoodIOBeta());
 
                 vision = new Vision(
                         drive,
@@ -133,6 +139,7 @@ public class RobotContainer {
                 climber = new Climber(new ClimberIOAlpha());
                 shooter = new ShooterSubsystem(new ShooterIOAlpha());
                 indexer = new IndexerSubsystem(new IndexerIOAlpha());
+                hood = new HoodSubsystem(new HoodIOBeta());
 
                 break;
 
@@ -148,6 +155,7 @@ public class RobotContainer {
                 vision = new Vision(drive, new VisionIO() {}, new VisionIO() {});
                 indexer = new IndexerSubsystem(new IndexerIO() {});
                 shooter = new ShooterSubsystem((new ShooterIO() {}));
+                hood = new HoodSubsystem(new HoodIO() {});
 
                 break;
         }
@@ -169,7 +177,11 @@ public class RobotContainer {
         autoChooser.addOption("Drive SysId (Dynamic Reverse)", drive.sysIdDynamic(SysIdRoutine.Direction.kReverse));
 
         // Configure the button bindings
-        configureButtonBindings();
+        if (Robot.isReal()) {
+            configureRealBindings();
+        } else if (Robot.isSimulation()) {
+            configureSimBindings();
+        }
     }
 
     /**
@@ -178,7 +190,7 @@ public class RobotContainer {
      * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then passing it to a {@link
      * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
      */
-    private void configureButtonBindings() {
+    private void configureRealBindings() {
         drive.setDefaultCommand(DriveCommands.joystickDrive(
                 drive, () -> -controller.getLeftY(), () -> -controller.getLeftX(), () -> -controller.getRightX()));
 
@@ -198,21 +210,52 @@ public class RobotContainer {
         controller
                 .leftBumper()
                 .onTrue(Commands.either(
-                        linSlide.moveToPosition(LinSlidePosition.STOW.getPosition()),
-                        linSlide.moveToPosition(LinSlidePosition.DEPLOY.getPosition()),
+                        linSlide.moveToPosition(-0.2, false),
+                        linSlide.moveToPosition(0.2, true),
                         linSlide::isDeployed));
 
         controller
                 .leftTrigger()
                 .whileTrue(AutoAimCommands.autoAim(
-                                drive,
-                                controller::getLeftY,
-                                controller::getLeftX,
-                                centerHubOpening.toTranslation2d())
+                                drive, controller::getLeftY, controller::getLeftX, centerHubOpening.toTranslation2d())
                         .alongWith(shooter.shoot(100))
                         .alongWith(indexer.index(3)));
 
         controller.rightTrigger().whileTrue(hopper.spinHopper(80));
+    }
+
+    private void configureSimBindings() {
+        drive.setDefaultCommand(DriveCommands.joystickDrive(
+                drive, () -> -controller.getLeftY(), () -> -controller.getLeftX(), () -> -controller.getRightX()));
+
+        controller
+                .button(0)
+                .onTrue(Commands.runOnce(
+                                () -> drive.setPose(new Pose2d(drive.getPose().getTranslation(), Rotation2d.kZero)),
+                                drive)
+                        .ignoringDisable(true));
+
+        controller.button(1).onTrue(climber.moveToPosition(ClimberPosition.L1.getHeight()));
+        controller.button(2).onTrue(climber.moveToPosition(ClimberPosition.BOTTOM.getHeight()));
+
+        controller.button(3).whileTrue(intake.rollIn());
+        controller.button(4).whileTrue(intake.rollOut());
+
+        controller
+                .button(5)
+                .onTrue(Commands.either(
+                        linSlide.moveToPosition(-0.2, false),
+                        linSlide.moveToPosition(0.2, true),
+                        linSlide::isDeployed));
+
+        controller
+                .button(6)
+                .whileTrue(AutoAimCommands.autoAim(
+                                drive, controller::getLeftY, controller::getLeftX, centerHubOpening.toTranslation2d())
+                        .alongWith(shooter.shoot(100))
+                        .alongWith(indexer.index(3)));
+
+        controller.button(7).whileTrue(hopper.spinHopper(80));
     }
 
     public void updateMechanisms() {
