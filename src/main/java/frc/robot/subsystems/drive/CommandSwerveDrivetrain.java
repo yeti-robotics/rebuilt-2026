@@ -289,7 +289,8 @@ public class CommandSwerveDrivetrain extends TunerConstants.TunerSwerveDrivetrai
         Logger.recordOutput("Drive/ChassisSpeeds", getChassisSpeeds());
         Logger.recordOutput("Drive/Gyro/Connected", getPigeon2().isConnected());
         Logger.recordOutput("Drive/Gyro/YawPosition", getState().Pose.getRotation());
-        Logger.recordOutput("Drive/Gyro/YawVelocityRadPerSec",
+        Logger.recordOutput(
+                "Drive/Gyro/YawVelocityRadPerSec",
                 getPigeon2().getAngularVelocityZWorld().getValueAsDouble());
         Logger.recordOutput("Odometry/Robot", getState().Pose);
         Logger.recordOutput("Drive/OdometryPeriod", getState().OdometryPeriod);
@@ -300,26 +301,37 @@ public class CommandSwerveDrivetrain extends TunerConstants.TunerSwerveDrivetrai
             var module = getModule(i);
             String moduleKey = "Drive/Module" + i;
 
-            Logger.recordOutput(moduleKey + "/DrivePositionRad",
+            Logger.recordOutput(
+                    moduleKey + "/DrivePositionRad",
                     module.getDriveMotor().getPosition().getValueAsDouble() * 2 * Math.PI);
-            Logger.recordOutput(moduleKey + "/DriveVelocityRadPerSec",
+            Logger.recordOutput(
+                    moduleKey + "/DriveVelocityRadPerSec",
                     module.getDriveMotor().getVelocity().getValueAsDouble() * 2 * Math.PI);
-            Logger.recordOutput(moduleKey + "/DriveAppliedVolts",
+            Logger.recordOutput(
+                    moduleKey + "/DriveAppliedVolts",
                     module.getDriveMotor().getMotorVoltage().getValueAsDouble());
-            Logger.recordOutput(moduleKey + "/DriveCurrentAmps",
+            Logger.recordOutput(
+                    moduleKey + "/DriveCurrentAmps",
                     module.getDriveMotor().getStatorCurrent().getValueAsDouble());
 
-            Logger.recordOutput(moduleKey + "/TurnPosition",
-                    Rotation2d.fromRotations(module.getSteerMotor().getPosition().getValueAsDouble()));
-            Logger.recordOutput(moduleKey + "/TurnVelocityRadPerSec",
+            Logger.recordOutput(
+                    moduleKey + "/TurnPosition",
+                    Rotation2d.fromRotations(
+                            module.getSteerMotor().getPosition().getValueAsDouble()));
+            Logger.recordOutput(
+                    moduleKey + "/TurnVelocityRadPerSec",
                     module.getSteerMotor().getVelocity().getValueAsDouble() * 2 * Math.PI);
-            Logger.recordOutput(moduleKey + "/TurnAppliedVolts",
+            Logger.recordOutput(
+                    moduleKey + "/TurnAppliedVolts",
                     module.getSteerMotor().getMotorVoltage().getValueAsDouble());
-            Logger.recordOutput(moduleKey + "/TurnCurrentAmps",
+            Logger.recordOutput(
+                    moduleKey + "/TurnCurrentAmps",
                     module.getSteerMotor().getStatorCurrent().getValueAsDouble());
 
-            Logger.recordOutput(moduleKey + "/TurnAbsolutePosition",
-                    Rotation2d.fromRotations(module.getEncoder().getAbsolutePosition().getValueAsDouble()));
+            Logger.recordOutput(
+                    moduleKey + "/TurnAbsolutePosition",
+                    Rotation2d.fromRotations(
+                            module.getEncoder().getAbsolutePosition().getValueAsDouble()));
         }
 
         Logger.recordOutput("Drive/SuccessfulDaqs", getState().SuccessfulDaqs);

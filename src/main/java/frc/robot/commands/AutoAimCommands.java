@@ -6,14 +6,10 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.constants.FieldConstants;
 import frc.robot.subsystems.drive.CommandSwerveDrivetrain;
 import frc.robot.util.AllianceFlipUtil;
 import java.util.function.DoubleSupplier;
-
-import static frc.robot.constants.FieldConstants.Hub.centerHubOpening;
 
 public class AutoAimCommands {
     public static final PIDController headingController = new PIDController(5, 0, 0);
@@ -56,8 +52,8 @@ public class AutoAimCommands {
                             .withDriveRequestType(SwerveModule.DriveRequestType.Velocity);
 
                     // AKit Drive Command
-//                    drive.run(() -> ChassisSpeeds.fromFieldRelativeSpeeds(
-//                            fieldRel.getX(), fieldRel.getY(), angularVelo, currentRotation));
+                    //                    drive.run(() -> ChassisSpeeds.fromFieldRelativeSpeeds(
+                    //                            fieldRel.getX(), fieldRel.getY(), angularVelo, currentRotation));
 
                     drive.setControl(request);
                 },
@@ -100,9 +96,9 @@ public class AutoAimCommands {
                 () -> {
                     SwerveRequest.FieldCentricFacingAngle request = new SwerveRequest.FieldCentricFacingAngle()
                             .withHeadingPID(5, 0, 0)
-                                    .withVelocityX(-xVelSupplier.getAsDouble() * SPEED_MULTIPLIER)
-                                            .withVelocityY(-yVelSupplier.getAsDouble() * SPEED_MULTIPLIER)
-                                                    .withTargetDirection(calcDesiredHeading(drive.getState().Pose, modifiedTarget))
+                            .withVelocityX(-xVelSupplier.getAsDouble() * SPEED_MULTIPLIER)
+                            .withVelocityY(-yVelSupplier.getAsDouble() * SPEED_MULTIPLIER)
+                            .withTargetDirection(calcDesiredHeading(drive.getState().Pose, modifiedTarget))
                             .withDriveRequestType(SwerveModule.DriveRequestType.Velocity);
 
                     drive.setControl(request);
