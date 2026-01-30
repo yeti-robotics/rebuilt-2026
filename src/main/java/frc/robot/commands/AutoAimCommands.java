@@ -39,8 +39,8 @@ public class AutoAimCommands {
 
                     Translation2d hubDistance = modifiedTarget.minus(currentPosition);
 
-                    double rawXVelo = -xVelSupplier.getAsDouble() * SPEED_MULTIPLIER;
-                    double rawYVelo = -yVelSupplier.getAsDouble() * SPEED_MULTIPLIER;
+                    double rawXVelo = xVelSupplier.getAsDouble() * SPEED_MULTIPLIER;
+                    double rawYVelo = yVelSupplier.getAsDouble() * SPEED_MULTIPLIER;
 
                     Rotation2d targetHeading =
                             hubDistance.getAngle().plus(Rotation2d.kPi); // remove if needed for real robot
@@ -50,13 +50,14 @@ public class AutoAimCommands {
                             headingController.calculate(currentRotation.getRadians(), targetHeading.getRadians());
 
                     SwerveRequest.FieldCentric request = new SwerveRequest.FieldCentric()
-                            .withVelocityX(rawXVelo)
-                            .withVelocityY(rawYVelo)
+                            .withVelocityX(fieldRel.getX())
+                            .withVelocityY(fieldRel.getY())
                             .withRotationalRate(angularVelo)
                             .withDriveRequestType(SwerveModule.DriveRequestType.Velocity);
 
-                    drive.run(() -> ChassisSpeeds.fromFieldRelativeSpeeds(
-                            fieldRel.getX(), fieldRel.getY(), angularVelo, currentRotation));
+                    // AKit Drive Command
+//                    drive.run(() -> ChassisSpeeds.fromFieldRelativeSpeeds(
+//                            fieldRel.getX(), fieldRel.getY(), angularVelo, currentRotation));
 
                     drive.setControl(request);
                 },
