@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj.RobotBase;
  */
 public final class Constants {
     public static final int PRIMARY_CONTROLLER_PORT = 0;
+    public static final int GIGA_PORT = 2;
 
     public static final Mode simMode = Mode.SIM;
     public static final Mode currentMode = RobotBase.isReal() ? Mode.REAL : simMode;

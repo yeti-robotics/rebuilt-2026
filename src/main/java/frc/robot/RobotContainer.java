@@ -47,6 +47,7 @@ import frc.robot.subsystems.shooter.ShooterIO;
 import frc.robot.subsystems.shooter.ShooterIOAlpha;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
 import frc.robot.subsystems.vision.*;
+import frc.robot.util.CommandGigaStation;
 import frc.robot.util.sim.Mechanisms;
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
@@ -72,7 +73,8 @@ public class RobotContainer {
     private final HoodSubsystem hood;
 
     // Controller
-    private final CommandXboxController controller = new CommandXboxController(0);
+    private final CommandXboxController controller = new CommandXboxController(Constants.PRIMARY_CONTROLLER_PORT);
+    private final CommandGigaStation gigaStation = new CommandGigaStation(Constants.GIGA_PORT);
 
     // Dashboard inputs
     private final LoggedDashboardChooser<Command> autoChooser;
