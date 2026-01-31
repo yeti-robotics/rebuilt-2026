@@ -29,4 +29,20 @@ public class IntakeSubsystem extends SubsystemBase {
     public Command rollOut() {
         return setRoller(0.5);
     }
+
+    public Command setRollerSim(double power) {
+        return runOnce(() -> io.setRunning(true))
+                .andThen(runEnd(
+                        () -> {
+                            io.setIntakeMotor(power);
+                        },
+                        () -> {
+                            io.setIntakeMotor(0);
+                        }))
+                .andThen(() -> io.setRunning(false));
+    }
+
+    public Command handoffFuel() {
+        return runOnce(io::handoffFuel);
+    }
 }

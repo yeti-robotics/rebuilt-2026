@@ -4,23 +4,21 @@ import static edu.wpi.first.units.Units.*;
 
 import com.ctre.phoenix6.controls.MotionMagicVelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Pose3d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.geometry.*;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import frc.robot.constants.Constants;
 import frc.robot.util.sim.PhysicsSim;
 import java.util.function.Supplier;
 import org.ironmaple.simulation.SimulatedArena;
 import org.ironmaple.simulation.seasonspecific.rebuilt2026.RebuiltFuelOnFly;
+import org.ironmaple.utils.FieldMirroringUtils;
 import org.littletonrobotics.junction.Logger;
 
 public class ShooterIOSim implements ShooterIO {
     private final TalonFX topMotor;
     private final TalonFX bottomMotor;
     private final MotionMagicVelocityVoltage MOTION_MAGIC_REQUEST = new MotionMagicVelocityVoltage(0);
-    private RebuiltFuelOnFly flyingFuel;
+    public RebuiltFuelOnFly flyingFuel;
     private final Supplier<Pose2d> robotSimulationWorldPose;
     private final Supplier<ChassisSpeeds> chassisSpeedsFieldRelative;
 
@@ -64,6 +62,15 @@ public class ShooterIOSim implements ShooterIO {
                 MetersPerSecond.of(16), // placeholder value
                 Degrees.of(45) // placeholder value
                 );
+
+        SimulatedArena.getInstance().addGamePieceProjectile(flyingFuel);
+
+        flyingFuel
+                .withTargetPosition(() ->
+                        FieldMirroringUtils.toCurrentAllianceTranslation(new Translation3d(4.625594, 4.034536, 1.8288)))
+                .withTargetTolerance(new Translation3d(0.5, 1.2, 0.3))
+                .withHitTargetCallBack(() -> System.out.println("Score: +1 point"))
+                .enableBecomesGamePieceOnFieldAfterTouchGround();
 
         flyingFuel.withProjectileTrajectoryDisplayCallBack( // Successful trajectory
                 poses -> Logger.recordOutput("ShooterSim/SuccessfulShotTrajectory", poses.toArray(Pose3d[]::new)),
