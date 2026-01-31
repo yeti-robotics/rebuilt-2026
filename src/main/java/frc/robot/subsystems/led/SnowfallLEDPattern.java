@@ -8,15 +8,15 @@ public class SnowfallLEDPattern implements LEDPattern {
     long waitTime;
     long startTime;
     int stage;
-    boolean isConfigured = false;
 
     public SnowfallLEDPattern() {
-        waitTime = 5;
+        waitTime = 50;
         startTime = System.currentTimeMillis();
         stage = 0;
     }
 
-    private void configureSnowfall(LEDReader reader, LEDWriter writer) {
+    @Override
+    public void applyTo(LEDReader reader, LEDWriter writer) {
         for (int i = 0; i < reader.getLength(); i++) {
             if (i % 4 == stage) {
                 writer.setRGB(i, 255, 255, 255);
@@ -24,22 +24,7 @@ public class SnowfallLEDPattern implements LEDPattern {
             }
             writer.setRGB(i, 20, 120, 255);
         }
-    }
-
-    @Override
-    public void applyTo(LEDReader reader, LEDWriter writer) {
-        if (!isConfigured) {
-            configureSnowfall(reader, writer);
-            isConfigured = true;
-        }
         if (System.currentTimeMillis() - startTime >= waitTime) {
-            for (int i = 0; i < reader.getLength(); i++) {
-                if (i % 4 == stage) {
-                    writer.setRGB(i, 255, 255, 255);
-                    continue;
-                }
-                writer.setRGB(i, 20, 120, 255);
-            }
             stage = stage + 1 > 3 ? 0 : stage + 1;
             startTime = System.currentTimeMillis();
         }
