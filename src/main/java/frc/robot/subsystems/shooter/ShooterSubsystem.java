@@ -1,7 +1,10 @@
 package frc.robot.subsystems.shooter;
 
+import edu.wpi.first.math.interpolation.InterpolatingTreeMap;
+import edu.wpi.first.math.interpolation.InverseInterpolator;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.util.ShooterStateData;
 import org.littletonrobotics.junction.Logger;
 
 public class ShooterSubsystem extends SubsystemBase {
@@ -20,5 +23,13 @@ public class ShooterSubsystem extends SubsystemBase {
 
     public Command shoot(double volts) {
         return startEnd(() -> io.spinMotors(volts), () -> io.stopMotors());
+    }
+
+    public static InterpolatingTreeMap<Double, ShooterStateData> SHOOTER_MAP() {
+        InterpolatingTreeMap<Double, ShooterStateData> map = new InterpolatingTreeMap<>(InverseInterpolator.forDouble(), ShooterStateData.interpolator);
+
+        map.put(0.0, new ShooterStateData(0,0, 0));
+
+        return map;
     }
 }
