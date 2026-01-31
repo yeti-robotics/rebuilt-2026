@@ -40,6 +40,7 @@ import frc.robot.subsystems.intake.IntakeIO;
 import frc.robot.subsystems.intake.IntakeIOAlpha;
 import frc.robot.subsystems.intake.IntakeSubsystem;
 import frc.robot.subsystems.led.LED;
+import frc.robot.subsystems.linslide.LinSlideConfigsAlpha;
 import frc.robot.subsystems.linslide.LinSlideIO;
 import frc.robot.subsystems.linslide.LinSlideIOAlpha;
 import frc.robot.subsystems.linslide.LinSlideSubsystem;
@@ -186,8 +187,10 @@ public class RobotContainer {
         controller.start().onTrue(Commands.runOnce(drive::seedFieldCentric, drive));
 
         controller.y().onTrue(climber.moveToPosition(ClimberPosition.L1.getHeight()));
+        controller.a().onTrue(climber.moveToPosition(ClimberPosition.BOTTOM.getHeight()));
 
         controller.rightBumper().whileTrue(intake.rollIn());
+
         controller.x().whileTrue(linSlide.applyPower(0.2)).onFalse(linSlide.applyPower(0));
         controller.b().whileTrue(linSlide.applyPower(-0.2)).onFalse(linSlide.applyPower(0));
 
@@ -202,10 +205,13 @@ public class RobotContainer {
                 .leftTrigger()
                 .whileTrue(AutoAimCommands.autoAim(
                                 drive, controller::getLeftY, controller::getLeftX, centerHubOpening.toTranslation2d())
-                        .alongWith(shooter.shoot(100))
-                        .alongWith(indexer.index(3)));
+                        .alongWith(shooter.shoot(100)));
 
-        controller.rightTrigger().whileTrue(hopper.spinHopper(80));
+        controller.rightTrigger()
+                .whileTrue(hopper.spinHopper(80)
+                        .alongWith(indexer.index(3)
+                        .alongWith(linSlide.applyPower(0.1).withTimeout(0.05)
+                                .andThen(linSlide.applyPower(-0.2).withTimeout(0.05))).repeatedly()));
     }
 
     private void configureSimBindings() {
