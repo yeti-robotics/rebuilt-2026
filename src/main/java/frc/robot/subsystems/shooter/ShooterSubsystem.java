@@ -23,6 +23,6 @@ public class ShooterSubsystem extends SubsystemBase {
     }
 
     public Command applyPower(double power) {
-        return runOnce(() -> io.applyPower(power));
+        return runEnd(() -> io.applyPower(power), () -> io.applyPower(0));
     }
 }
