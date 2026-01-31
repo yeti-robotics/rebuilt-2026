@@ -164,7 +164,6 @@ public class RobotContainer {
         }
     }
 
-
     public void updateVisionSim() {
         Pose3d sideCameraPose = new Pose3d(drive.getState().Pose).transformBy(VisionConstants.sideCamTrans);
         Pose3d frontCameraPose = new Pose3d(drive.getState().Pose).transformBy(VisionConstants.frontCamTrans);
@@ -189,8 +188,7 @@ public class RobotContainer {
 
         controller.x().whileTrue(intake.rollOut());
 
-        controller
-                .rightBumper().onTrue(linSlide.moveToPosition(-0.2,false));
+        controller.rightBumper().onTrue(linSlide.moveToPosition(-0.2, false));
 
         controller
                 .leftTrigger()
@@ -200,13 +198,15 @@ public class RobotContainer {
 
         controller
                 .leftBumper()
-                        .whileTrue(AutoAimCommands.autoAimWithOrbit(drive, controller::getLeftY, controller::getLeftX, centerHubOpening.toTranslation2d()));
+                .whileTrue(AutoAimCommands.autoAimWithOrbit(
+                        drive, controller::getLeftY, controller::getLeftX, centerHubOpening.toTranslation2d()));
 
         controller.rightTrigger().and(controller.leftTrigger()).whileTrue(indexer.index(3));
 
-        controller.rightTrigger().and(controller.leftTrigger().negate())
-                .whileTrue(linSlide.moveToPosition(0.2, true)
-                        .alongWith(intake.rollIn()));
+        controller
+                .rightTrigger()
+                .and(controller.leftTrigger().negate())
+                .whileTrue(linSlide.moveToPosition(0.2, true).alongWith(intake.rollIn()));
     }
 
     private void configureSimBindings() {
