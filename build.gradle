@@ -231,3 +231,4 @@ spotless {
 
 tasks.build.dependsOn('spotlessApply')
 tasks.deploy.dependsOn('spotlessApply')
+tasks.simulateJava.dependsOn('spotlessApply')

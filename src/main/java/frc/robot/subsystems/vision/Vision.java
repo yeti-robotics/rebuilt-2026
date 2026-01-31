@@ -176,4 +176,14 @@ public class Vision extends SubsystemBase {
     public interface VisionConsumer {
         void accept(Pose2d visionRobotPoseMeters, double timestampSeconds, Matrix<N3, N1> visionMeasurementStdDevs);
     }
+
+    public double getDistance() {
+        double minDistance = Double.POSITIVE_INFINITY;
+        for (var camera : inputs) {
+            if (camera.connected && camera.distanceToTag > 0) {
+                minDistance = Math.min(minDistance, camera.distanceToTag);
+            }
+        }
+        return minDistance == Double.POSITIVE_INFINITY ? 0 : minDistance;
+    }
 }
