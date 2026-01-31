@@ -16,19 +16,18 @@ import com.ctre.phoenix6.swerve.SwerveModule;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.math.geometry.*;
+import edu.wpi.first.units.Units;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.AutoAimCommands;
 import frc.robot.constants.Constants;
 import frc.robot.generated.TunerConstants;
-import frc.robot.subsystems.climber.Climber;
-import frc.robot.subsystems.climber.ClimberIO;
-import frc.robot.subsystems.climber.ClimberIOAlpha;
-import frc.robot.subsystems.climber.ClimberPosition;
+import frc.robot.subsystems.climber.*;
 import frc.robot.subsystems.drive.*;
 import frc.robot.subsystems.hood.HoodIO;
 import frc.robot.subsystems.hood.HoodIOBeta;
@@ -44,6 +43,8 @@ import frc.robot.subsystems.intake.IntakeIOAlpha;
 import frc.robot.subsystems.intake.IntakeIOSim;
 import frc.robot.subsystems.intake.IntakeSubsystem;
 import frc.robot.subsystems.led.LED;
+import frc.robot.subsystems.led.LEDConstants;
+import frc.robot.subsystems.led.LEDModes;
 import frc.robot.subsystems.linslide.LinSlideIO;
 import frc.robot.subsystems.linslide.LinSlideIOAlpha;
 import frc.robot.subsystems.linslide.LinSlideSubsystem;
@@ -55,8 +56,6 @@ import frc.robot.subsystems.vision.*;
 import frc.robot.util.sim.Mechanisms;
 import org.ironmaple.simulation.SimulatedArena;
 import org.ironmaple.simulation.drivesims.SwerveDriveSimulation;
-import org.ironmaple.simulation.seasonspecific.rebuilt2026.Arena2026Rebuilt;
-import org.ironmaple.simulation.seasonspecific.rebuilt2026.RebuiltFuelOnField;
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
@@ -105,7 +104,6 @@ public class RobotContainer {
                 // a CANcoder
                 drive = TunerConstants.createDrivetrain();
                 linSlide = new LinSlideSubsystem(new LinSlideIOAlpha());
-                led = new LED();
                 intake = new IntakeSubsystem(new IntakeIOAlpha());
                 hopper = new Hopper(new HopperIOAlpha());
                 climber = new Climber(new ClimberIOAlpha());
@@ -120,15 +118,13 @@ public class RobotContainer {
                 break;
 
             case SIM:
-                SimulatedArena.overrideInstance(new Arena2026Rebuilt());
+                driveSimulation =
+                        new SwerveDriveSimulation(TunerConstants.mapleSimConfig, new Pose2d(3, 3, new Rotation2d()));
                 SimulatedArena.getInstance().addDriveTrainSimulation(driveSimulation);
-                SimulatedArena.getInstance().addGamePiece(new RebuiltFuelOnField(new Translation2d(3, 3)));
-                SimulatedArena.getInstance().addGamePiece(new RebuiltFuelOnField(new Translation2d(2, 2)));
-                SimulatedArena.getInstance().addGamePiece(new RebuiltFuelOnField(new Translation2d(4, 2)));
                 // Sim robot, instantiate physics sim IO implementations
                 drive = TunerConstants.createDrivetrain();
+                drive.resetPose(new Pose2d(3, 3, new Rotation2d()));
                 linSlide = new LinSlideSubsystem(new LinSlideIOAlpha());
-                led = new LED();
                 shooterSim = new ShooterIOSim(() -> drive.getState().Pose, drive::getChassisSpeeds);
                 intake = new IntakeSubsystem(new IntakeIOSim(driveSimulation, shooterSim));
                 hopper = new Hopper(new HopperIOAlpha());
@@ -149,7 +145,6 @@ public class RobotContainer {
                 // Replayed robot, disable IO implementations
                 drive = TunerConstants.createDrivetrain();
                 linSlide = new LinSlideSubsystem(new LinSlideIO() {});
-                led = new LED();
                 intake = new IntakeSubsystem(new IntakeIO() {});
                 hopper = new Hopper(new HopperIO() {});
                 climber = new Climber(new ClimberIO() {});
@@ -160,6 +155,8 @@ public class RobotContainer {
 
                 break;
         }
+
+        led = new LED();
 
         // Set up auto routines
         autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
@@ -180,7 +177,8 @@ public class RobotContainer {
         } else if (Robot.isSimulation()) {
             configureSimBindings();
         }
-        drive.resetPose(new Pose2d(3, 3, new Rotation2d()));
+
+        configureTriggers();
     }
 
     public void updateVisionSim() {
@@ -213,8 +211,6 @@ public class RobotContainer {
         controller.y().onTrue(climber.moveToPosition(ClimberPosition.L1.getHeight()));
 
         controller.rightBumper().whileTrue(intake.rollIn());
-        controller.x().whileTrue(linSlide.applyPower(0.2)).onFalse(linSlide.applyPower(0));
-        controller.b().whileTrue(linSlide.applyPower(-0.2)).onFalse(linSlide.applyPower(0));
 
         controller
                 .leftBumper()
@@ -263,33 +259,41 @@ public class RobotContainer {
                 .withVelocityX(-controller.getLeftY() * TunerConstants.kSpeedAt12Volts.magnitude())
                 .withVelocityY(-controller.getLeftX() * TunerConstants.kSpeedAt12Volts.magnitude())
                 .withRotationalRate(-controller.getRightX() * TunerConstants.MaFxAngularRate)));
-        controller.button(8).onTrue(Commands.runOnce(drive::seedFieldCentric));
-
-        controller.button(1).onTrue(climber.moveToPosition(ClimberPosition.L1.getHeight()));
-        controller.button(2).onTrue(climber.moveToPosition(ClimberPosition.BOTTOM.getHeight()));
-
-        controller.button(3).whileTrue(intake.rollIn());
-        controller.button(4).whileTrue(intake.rollOut());
-
-        controller
-                .button(5)
-                .onTrue(Commands.either(
-                        linSlide.moveToPosition(-0.2, false),
-                        linSlide.moveToPosition(0.2, true),
-                        linSlide::isDeployed));
-
-        controller
-                .button(6)
-                .whileTrue(AutoAimCommands.autoAim(
-                                drive, controller::getLeftY, controller::getLeftX, centerHubOpening.toTranslation2d())
-                        .alongWith(shooter.shoot(100))
-                        .alongWith(indexer.index(3)));
-
-        controller.button(7).whileTrue(hopper.spinHopper(80));
-        controller
-                .button(9)
-                .whileTrue(AutoAimCommands.autoAimWithOrbit(
-                        drive, controller::getLeftY, controller::getLeftX, centerHubOpening.toTranslation2d()));
+        //
+        //        controller.button(1).onTrue(climber.moveToPosition(ClimberPosition.L1.getHeight()));
+        //        controller.button(2).onTrue(climber.moveToPosition(ClimberPosition.BOTTOM.getHeight()));
+        //
+        //        controller.button(3).whileTrue(intake.rollIn());
+        //        controller.button(4).whileTrue(intake.rollOut());
+        //
+        //        controller
+        //                .button(5)
+        //                .onTrue(Commands.either(
+        //                        linSlide.moveToPosition(-0.2, false),
+        //                        linSlide.moveToPosition(0.2, true),
+        //                        linSlide::isDeployed));
+        //
+        //        controller
+        //                .button(6)
+        //                .whileTrue(AutoAimCommands.autoAim(
+        //                                drive, controller::getLeftY, controller::getLeftX,
+        // centerHubOpening.toTranslation2d())
+        //                        .alongWith(shooter.shoot(100))
+        //                        .alongWith(indexer.index(3)));
+        //
+        //        controller.button(7).whileTrue(hopper.spinHopper(80));
+        //        controller.button(8).onTrue(Commands.runOnce(drive::seedFieldCentric));
+        //        controller
+        //                .button(9)
+        //                .whileTrue(AutoAimCommands.autoAimWithOrbit(
+        //                        drive, controller::getLeftY, controller::getLeftX,
+        // centerHubOpening.toTranslation2d()));
+        controller.button(1).whileTrue(led.runPattern(LEDModes.BLUE_ALLIANCE_ACTIVE));
+        controller.button(2).whileTrue(led.runPattern(LEDModes.RED_ALLIANCE_ACTIVE));
+        controller.button(3).whileTrue(led.runPattern(LEDModes.RAINBOW));
+        controller.button(4).whileTrue(led.runPattern(LEDModes.LOCKED_GREEN));
+        controller.button(5).whileTrue(led.runPattern(LEDModes.WAVE));
+        controller.button(6).whileTrue(led.runPattern(LEDModes.SNOWFALL));
     }
 
     public void updateMechanisms() {
@@ -297,6 +301,20 @@ public class RobotContainer {
         mechanisms.publishComponentPoses(climber.getTargetPosition(), linSlide.getTargetPosition(), false);
         mechanisms.updateClimberMechanism(climber.getCurrentPosition());
         mechanisms.updateLinSlideMech(linSlide.getCurrentPosition());
+    }
+
+    public void configureTriggers() {
+        new Trigger(() -> shooter.getVelocity().isNear(Units.RotationsPerSecond.of(120), 0.1))
+                .and(() -> Math.abs(vision.getDistance() - LEDConstants.IDEAL_DISTANCE_TO_HUB) > LEDConstants.TOLERANCE)
+                .whileTrue(led.runPattern(LEDModes.LOCKED_GREEN));
+
+        new Trigger(() -> shooter.getVelocity().isNear(Units.RotationsPerSecond.of(120), 0.1))
+                .and(() ->
+                        Math.abs(vision.getDistance() - LEDConstants.IDEAL_DISTANCE_TO_HUB) <= LEDConstants.TOLERANCE)
+                .whileTrue(led.runPattern(LEDModes.WAVE));
+        new Trigger(() -> climber.getCurrentPosition()
+                        >= ClimberPosition.L1.getHeight().magnitude() - ClimberConfig.HEIGHT_TOLERANCE)
+                .whileTrue(led.runPattern(LEDModes.SNOWFALL));
     }
 
     /**

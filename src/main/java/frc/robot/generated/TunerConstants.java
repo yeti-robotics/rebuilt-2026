@@ -16,7 +16,6 @@ import com.pathplanner.lib.config.ModuleConfig;
 import com.pathplanner.lib.config.RobotConfig;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.system.plant.DCMotor;
@@ -54,7 +53,6 @@ public class TunerConstants {
     private static final double ROBOT_MOI = 6.883; // Placeholder value
     private static final double WHEEL_COF = 1.2; // Placeholder value
 
-
     public static Translation2d[] getModuleTranslations() {
         return new Translation2d[] {
             new Translation2d(TunerConstants.FrontLeft.LocationX, TunerConstants.FrontLeft.LocationY),
@@ -63,7 +61,6 @@ public class TunerConstants {
             new Translation2d(TunerConstants.BackRight.LocationX, TunerConstants.BackRight.LocationY)
         };
     }
-
 
     // The closed-loop output type to use for the steer motors;
     // This affects the PID/FF gains for the steer motors
