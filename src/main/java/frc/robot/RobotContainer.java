@@ -84,16 +84,6 @@ public class RobotContainer {
             .withRotationalDeadband(TunerConstants.MaFxAngularRate * 0.1)
             .withDriveRequestType(SwerveModule.DriveRequestType.OpenLoopVoltage);
 
-    public void updateVisionSim() {
-        Pose3d backCameraPose = new Pose3d(drive.getState().Pose).transformBy(VisionConstants.backCamTrans);
-        Pose3d frontCameraPose = new Pose3d(drive.getState().Pose).transformBy(VisionConstants.frontCamTrans);
-        Logger.recordOutput("Back Cam Transform", backCameraPose);
-        Logger.recordOutput("Front Cam Transform", frontCameraPose);
-
-        Pose2d drivePose = drive.getState().Pose;
-        Logger.recordOutput("Drive Pose", drivePose);
-    }
-
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
     public RobotContainer() {
         switch (Constants.currentMode) {
@@ -129,7 +119,7 @@ public class RobotContainer {
                         new VisionIOPhotonVisionSim(
                                 "Front Camera", VisionConstants.frontCamTrans, () -> drive.getState().Pose),
                         new VisionIOPhotonVisionSim(
-                                "Back Camera", VisionConstants.backCamTrans, () -> drive.getState().Pose));
+                                "Side Camera", VisionConstants.backCamTrans, () -> drive.getState().Pose));
                 climber = new Climber(new ClimberIOAlpha());
                 shooter = new ShooterSubsystem(new ShooterIOAlpha());
                 indexer = new IndexerSubsystem(new IndexerIOAlpha());
@@ -159,11 +149,6 @@ public class RobotContainer {
         // Set up simulatable mechanisms
         mechanisms = new Mechanisms();
 
-        // Set up SysId routines
-        //        autoChooser.addOption("Drive Wheel Radius Characterization",
-        //        DriveCommands.wheelRadiusCharacterization(drive));
-        //        autoChooser.addOption("Drive Simple FF Characterization",
-        //        DriveCommands.feedforwardCharacterization(drive));
         autoChooser.addOption(
                 "Drive SysId (Quasistatic Forward)", drive.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
         autoChooser.addOption(
@@ -177,6 +162,14 @@ public class RobotContainer {
         } else if (Robot.isSimulation()) {
             configureSimBindings();
         }
+    }
+
+
+    public void updateVisionSim() {
+        Pose3d sideCameraPose = new Pose3d(drive.getState().Pose).transformBy(VisionConstants.backCamTrans);
+        Pose3d frontCameraPose = new Pose3d(drive.getState().Pose).transformBy(VisionConstants.frontCamTrans);
+        Logger.recordOutput("Side Cam Transform", sideCameraPose);
+        Logger.recordOutput("Front Cam Transform", frontCameraPose);
     }
 
     /**
@@ -193,7 +186,6 @@ public class RobotContainer {
         controller.start().onTrue(Commands.runOnce(drive::seedFieldCentric, drive));
 
         controller.y().onTrue(climber.moveToPosition(ClimberPosition.L1.getHeight()));
-        // controller.b().onTrue(climber.moveToPosition(ClimberPosition.BOTTOM.getHeight()));
 
         controller.rightBumper().whileTrue(intake.rollIn());
         controller.x().whileTrue(linSlide.applyPower(0.2)).onFalse(linSlide.applyPower(0));
