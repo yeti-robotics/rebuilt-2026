@@ -2,6 +2,7 @@ package frc.robot.subsystems.shooter;
 
 import static frc.robot.subsystems.shooter.ShooterConfigs.*;
 
+import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.MotionMagicVelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -15,10 +16,12 @@ public class ShooterIOAlpha implements ShooterIO {
     public TalonFX bottomMotor;
     private final MotionMagicVelocityVoltage MOTION_MAGIC_REQUEST = new MotionMagicVelocityVoltage(0);
 
+    private final DutyCycleOut dutyRequest = new DutyCycleOut(0.0);
+
     public ShooterIOAlpha() {
-        topMotor = new TalonFX(ShooterConfigs.TOP_MOTOR_ID, Constants.rioBus);
-        bottomMotor = new TalonFX(ShooterConfigs.BOTTOM_MOTOR_ID, Constants.rioBus);
-        bottomMotor.setControl(new Follower(ShooterConfigs.BOTTOM_MOTOR_ID, MotorAlignmentValue.Opposed));
+        topMotor = new TalonFX(RIGHT_SHOOTER_ID, Constants.rioBus);
+        bottomMotor = new TalonFX(LEFT_SHOOTER_ID, Constants.rioBus);
+        bottomMotor.setControl(new Follower(RIGHT_SHOOTER_ID, MotorAlignmentValue.Opposed));
         topMotor.getConfigurator().apply(TOP_MOTOR_CONFIGS);
         bottomMotor.getConfigurator().apply(BOTTOM_MOTOR_CONFIGS);
 
@@ -44,5 +47,10 @@ public class ShooterIOAlpha implements ShooterIO {
     @Override
     public void stopMotors() {
         topMotor.setVoltage(0);
+    }
+
+    @Override
+    public void applyPower(double percent) {
+        topMotor.setControl(dutyRequest.withOutput(percent));
     }
 }

@@ -18,5 +18,7 @@ public interface ShooterIO {
 
     public default void stopMotors() {}
 
+    public default void applyPower(double percent) {}
+
     public default void shootFuel() {}
 }
