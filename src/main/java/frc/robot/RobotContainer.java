@@ -207,12 +207,7 @@ public class RobotContainer {
         controller.rightBumper().whileTrue(intake.rollIn());
         controller.x().whileTrue(intake.rollOut());
 
-        controller
-                .leftBumper()
-                .onTrue(Commands.either(
-                        linSlide.moveToPosition(-0.2, false),
-                        linSlide.moveToPosition(0.2, true),
-                        linSlide::isDeployed));
+        controller.leftBumper().whileTrue(linSlide.deployThenStow(0.2));
 
         controller
                 .leftTrigger()

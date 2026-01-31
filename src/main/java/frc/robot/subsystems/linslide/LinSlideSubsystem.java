@@ -23,6 +23,18 @@ public class LinSlideSubsystem extends SubsystemBase {
                 .until(() -> target ? inputs.isDeployed : inputs.isStowed);
     }
 
+    public Command deployThenStow(double power) {
+        return runEnd(() -> io.applyPower(power), () -> io.applyPower(0))
+                    .until(() -> inputs.isDeployed)
+                .andThen(runEnd(() -> io.applyPower(power), () -> io.applyPower(0))
+                    .until(() -> inputs.isStowed));
+    }
+
+    public Command stow(double power) {
+        return runEnd(() -> io.applyPower(power), () -> io.applyPower(0))
+                .until(() -> inputs.isStowed);
+    }
+
     public Command applyPower(double power) {
         return runOnce(() -> io.applyPower(power));
     }
