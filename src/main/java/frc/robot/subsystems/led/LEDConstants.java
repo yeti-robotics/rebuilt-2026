@@ -14,4 +14,5 @@ public final class LEDConstants {
     public static final double TOLERANCE = 6.0; // TODO: Calculate
     public static final double IDEAL_DISTANCE_TO_HUB = 82; // TODO: Calculate
     public static final double ANIMATION_TIMEOUT_SECONDS = 5.0;
+    public static final Color BRIGHT_GREEN = new Color(0, 255, 0);
 }
