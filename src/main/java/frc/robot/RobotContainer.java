@@ -71,6 +71,7 @@ public class RobotContainer {
     private final IndexerSubsystem indexer;
     private final Vision vision;
     private final HoodSubsystem hood;
+    private final AutoCommands autoCommands;
 
     // Controller
     private final CommandXboxController controller = new CommandXboxController(Constants.PRIMARY_CONTROLLER_PORT);
@@ -100,6 +101,7 @@ public class RobotContainer {
                 shooter = new ShooterSubsystem(new ShooterIOAlpha());
                 indexer = new IndexerSubsystem(new IndexerIOAlpha());
                 hood = new HoodSubsystem(new HoodIOBeta());
+                autoCommands = new AutoCommands(climber, drive, hood, hopper, indexer, intake, linSlide, shooter);
 
                 vision = new Vision(
                         drive,
@@ -125,6 +127,8 @@ public class RobotContainer {
                 indexer = new IndexerSubsystem(new IndexerIOAlpha());
                 hood = new HoodSubsystem(new HoodIOBeta());
 
+                autoCommands = new AutoCommands(climber, drive, hood, hopper, indexer, intake, linSlide, shooter);
+
                 break;
 
             default:
@@ -139,6 +143,8 @@ public class RobotContainer {
                 indexer = new IndexerSubsystem(new IndexerIO() {});
                 shooter = new ShooterSubsystem((new ShooterIO() {}));
                 hood = new HoodSubsystem(new HoodIO() {});
+
+                autoCommands = new AutoCommands(climber, drive, hood, hopper, indexer, intake, linSlide, shooter);
 
                 break;
         }
@@ -155,6 +161,7 @@ public class RobotContainer {
                 "Drive SysId (Quasistatic Reverse)", drive.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
         autoChooser.addOption("Drive SysId (Dynamic Forward)", drive.sysIdDynamic(SysIdRoutine.Direction.kForward));
         autoChooser.addOption("Drive SysId (Dynamic Reverse)", drive.sysIdDynamic(SysIdRoutine.Direction.kReverse));
+        autoChooser.addOption("One Cycle Neutral Tower Left", autoCommands.oneCycleNeutralTowerLeft());
 
         // Configure the button bindings
         if (Robot.isReal()) {
