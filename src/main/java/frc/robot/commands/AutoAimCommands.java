@@ -51,26 +51,9 @@ public class AutoAimCommands {
                             .withRotationalRate(angularVelo)
                             .withDriveRequestType(SwerveModule.DriveRequestType.Velocity);
 
-                    // AKit Drive Command
-                    //                    drive.run(() -> ChassisSpeeds.fromFieldRelativeSpeeds(
-                    //                            fieldRel.getX(), fieldRel.getY(), angularVelo, currentRotation));
-
                     drive.setControl(request);
                 },
                 SwerveRequest.Idle::new);
-    }
-
-    private static double calculateAngularVelocity(Pose2d currentPose, Translation2d target) {
-        if (target == null) {
-            return 0;
-        }
-
-        Rotation2d currentHeading = currentPose.getRotation();
-        Rotation2d desiredHeading = target.minus(currentPose.getTranslation())
-                .getAngle()
-                .rotateBy(Rotation2d.k180deg); // Remove this .rotateBy() if needed for real bot
-
-        return headingController.calculate(currentHeading.getRadians(), desiredHeading.getRadians());
     }
 
     private static Rotation2d calcDesiredHeading(Pose2d currentPose, Translation2d target) {
