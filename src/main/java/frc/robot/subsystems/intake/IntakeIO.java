@@ -19,5 +19,5 @@ public interface IntakeIO {
         return false;
     }
 
-    public default void handoffFuel(){}
+    public default void handoffFuel() {}
 }

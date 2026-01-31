@@ -4,9 +4,7 @@ import static frc.robot.subsystems.intake.IntakeConfigs.INTAKE_TALONFX_CONFIGS;
 
 import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.hardware.TalonFX;
-import frc.robot.Robot;
 import frc.robot.constants.Constants;
-import frc.robot.util.sim.PhysicsSim;
 
 public class IntakeIOAlpha implements IntakeIO {
     private final TalonFX intakeMotor;

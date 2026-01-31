@@ -7,6 +7,8 @@
 
 package frc.robot.util;
 
+import static edu.wpi.first.units.Units.*;
+
 import com.ctre.phoenix6.StatusCode;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.hardware.CANcoder;
@@ -20,13 +22,10 @@ import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.Voltage;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.Timer;
+import java.util.function.Supplier;
 import org.ironmaple.simulation.SimulatedArena;
 import org.ironmaple.simulation.motorsims.SimulatedBattery;
 import org.ironmaple.simulation.motorsims.SimulatedMotorController;
-
-import java.util.function.Supplier;
-
-import static edu.wpi.first.units.Units.*;
 
 public class PhoenixUtil {
     /** Attempts to run the command until no error is produced. */
@@ -93,6 +92,7 @@ public class PhoenixUtil {
 
         return odometryTimeStamps;
     }
+
     public static SwerveModuleConstants regulateModuleConstantForSimulation(
             SwerveModuleConstants<?, ?, ?> moduleConstants) {
         // Skip regulation if running on a real robot
