@@ -247,7 +247,6 @@ public class RobotContainer {
                 .withVelocityX(-controller.getLeftY() * TunerConstants.kSpeedAt12Volts.magnitude())
                 .withVelocityY(-controller.getLeftX() * TunerConstants.kSpeedAt12Volts.magnitude())
                 .withRotationalRate(-controller.getRightX() * TunerConstants.MaFxAngularRate)));
-        //        controller.button(8).onTrue(Commands.runOnce(drive::seedFieldCentric));
         //
         //        controller.button(1).onTrue(climber.moveToPosition(ClimberPosition.L1.getHeight()));
         //        controller.button(2).onTrue(climber.moveToPosition(ClimberPosition.BOTTOM.getHeight()));
@@ -271,6 +270,7 @@ public class RobotContainer {
         //                        .alongWith(indexer.index(3)));
         //
         //        controller.button(7).whileTrue(hopper.spinHopper(80));
+        //        controller.button(8).onTrue(Commands.runOnce(drive::seedFieldCentric));
         //        controller
         //                .button(9)
         //                .whileTrue(AutoAimCommands.autoAimWithOrbit(
