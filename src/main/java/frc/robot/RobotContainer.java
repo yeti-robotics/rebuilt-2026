@@ -174,6 +174,7 @@ public class RobotContainer {
         } else if (Robot.isSimulation()) {
             configureSimBindings();
         }
+        drive.resetPose(new Pose2d(3, 3, new Rotation2d()));
     }
 
 
