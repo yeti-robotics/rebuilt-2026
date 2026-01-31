@@ -13,8 +13,6 @@ public class LED extends SubsystemBase {
     private final AddressableLEDBufferView rightStrip;
     private LEDModes currentLEDMode;
     private final ShiftHandler shiftHandler;
-    private final LEDPattern wave;
-    private final LEDPattern snowfall;
     private LEDModes previousLEDMode;
     private double animationStartTime;
     private boolean isTimedAnimation;
@@ -28,8 +26,6 @@ public class LED extends SubsystemBase {
                 .reversed();
 
         shiftHandler = new ShiftHandler();
-        wave = new WaveLEDPattern();
-        snowfall = new SnowfallLEDPattern();
         ledStrip.setLength(ledBuffer.getLength());
         ledStrip.start();
         setDefaultCommand(allianceShifts());
@@ -94,14 +90,6 @@ public class LED extends SubsystemBase {
         currentLEDMode.pattern.applyTo(leftStrip);
         currentLEDMode.pattern.applyTo(rightStrip);
         sendData();
-    }
-
-    public int getBufferLength() {
-        return ledBuffer.getLength();
-    }
-
-    public void setRGB(int i, int r, int g, int b) {
-        ledBuffer.setRGB(i, r, g, b);
     }
 
     public void sendData() {
