@@ -30,7 +30,7 @@ public class HopperIOAlpha implements HopperIO {
     }
 
     @Override
-    public void testSpinHopperRoller(double percent){
+    public void applyPower(double percent) {
         hopperRoller.setControl(dutyCycleOut.withOutput(percent));
     }
 }

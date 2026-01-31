@@ -6,7 +6,7 @@ import com.ctre.phoenix6.signals.UpdateModeValue;
 public class IndexerConfigs {
     static final int INDEXER_MOTOR_ID = 32;
     static final int INDEXER_CANRANGE_ID = 25;
-    public static final int TEST_INDEXER_SPEED = 0.2;
+    public static final double TEST_INDEXER_SPEED = 0.2;
 
     static final MotionMagicConfigs MOTION_MAGIC_CONFIGS =
             new MotionMagicConfigs().withMotionMagicCruiseVelocity(4).withMotionMagicAcceleration(2);

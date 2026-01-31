@@ -38,6 +38,7 @@ public class HoodIOBeta implements HoodIO {
     }
 
     @Override
-    public void testSpinHopperRoller(double percent){
+    public void applyPower(double percent) {
         hoodMotor.setControl(dutyCycleOut.withOutput(percent));
-}}
+    }
+}

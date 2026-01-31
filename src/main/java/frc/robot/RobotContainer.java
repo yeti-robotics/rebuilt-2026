@@ -10,9 +10,9 @@ package frc.robot;
 import static frc.robot.constants.FieldConstants.Hub.centerHubOpening;
 import static frc.robot.subsystems.climber.ClimberConfig.TEST_CLIMBER_SPEED;
 import static frc.robot.subsystems.hood.HoodConfigs.TEST_HOOD_SPEED;
+import static frc.robot.subsystems.hopper.HopperConfigs.TEST_HOPPER_SPEED;
 import static frc.robot.subsystems.indexer.IndexerConfigs.TEST_INDEXER_SPEED;
 import static frc.robot.subsystems.shooter.ShooterConfigs.TEST_SHOOTER_SPEED;
-import static frc.robot.subsystems.hopper.HopperConfigs.TEST_HOPPER_SPEED;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.math.geometry.*;
@@ -233,7 +233,6 @@ public class RobotContainer {
         gigaStation.button(3).whileTrue(hood.applyPower(TEST_HOOD_SPEED));
         gigaStation.button(5).whileTrue(climber.applyPower(TEST_CLIMBER_SPEED));
         gigaStation.button(6).whileTrue(indexer.applyPower(TEST_INDEXER_SPEED));
-
     }
 
     private void configureSimBindings() {

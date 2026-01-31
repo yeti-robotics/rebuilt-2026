@@ -30,7 +30,7 @@ public class IndexerSubsystem extends SubsystemBase {
         return runMotors(volts).onlyIf(() -> inputs.isDetected);
     }
 
-    public Command applyPower(double power){
-        return runOnce(()-> io.applyPower(power));
+    public Command applyPower(double power) {
+        return runOnce(() -> io.applyPower(power));
     }
 }

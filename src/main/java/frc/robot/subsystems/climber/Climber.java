@@ -41,7 +41,7 @@ public class Climber extends SubsystemBase {
         return run(() -> io.setClimberPosition(position));
     }
 
-    public Command applyPower(double power){
-        return runOnce(()-> io.applyPower(power));
+    public Command applyPower(double power) {
+        return runOnce(() -> io.applyPower(power));
     }
 }

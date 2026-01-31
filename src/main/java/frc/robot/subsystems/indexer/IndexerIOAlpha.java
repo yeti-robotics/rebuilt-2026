@@ -38,7 +38,7 @@ public class IndexerIOAlpha implements IndexerIO {
     }
 
     @Override
-    public void applyPower(double percent){
+    public void applyPower(double percent) {
         indexerMotor.setControl(dutyRequest.withOutput(percent));
     }
 }

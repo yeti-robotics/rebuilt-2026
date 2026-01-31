@@ -19,5 +19,5 @@ public interface ClimberIO {
 
     public default void neutralizeClimber() {}
 
-    public default void applyPower(double percent){}
+    public default void applyPower(double percent) {}
 }

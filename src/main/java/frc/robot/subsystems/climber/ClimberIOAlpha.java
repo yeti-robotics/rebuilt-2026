@@ -44,7 +44,7 @@ public class ClimberIOAlpha implements ClimberIO {
     }
 
     @Override
-    public void applyPower(double percent){
+    public void applyPower(double percent) {
         climberMotor.setControl(dutyRequest.withOutput(percent));
     }
 }
