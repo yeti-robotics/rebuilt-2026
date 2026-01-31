@@ -164,7 +164,6 @@ public class RobotContainer {
         }
     }
 
-
     public void updateVisionSim() {
         Pose3d sideCameraPose = new Pose3d(drive.getState().Pose).transformBy(VisionConstants.sideCamTrans);
         Pose3d frontCameraPose = new Pose3d(drive.getState().Pose).transformBy(VisionConstants.frontCamTrans);
@@ -187,25 +186,27 @@ public class RobotContainer {
 
         controller.y().onTrue(climber.moveToPosition(ClimberPosition.L1.getHeight()));
 
-        controller.rightBumper().whileTrue(intake.rollIn());
-        controller.x().whileTrue(linSlide.applyPower(0.2)).onFalse(linSlide.applyPower(0));
-        controller.b().whileTrue(linSlide.applyPower(-0.2)).onFalse(linSlide.applyPower(0));
+        controller.x().whileTrue(intake.rollOut());
 
-        controller
-                .leftBumper()
-                .onTrue(Commands.either(
-                        linSlide.moveToPosition(-0.2, false),
-                        linSlide.moveToPosition(0.2, true),
-                        linSlide::isDeployed));
+        controller.rightBumper().onTrue(linSlide.moveToPosition(-0.2, false));
 
         controller
                 .leftTrigger()
                 .whileTrue(AutoAimCommands.autoAim(
                                 drive, controller::getLeftY, controller::getLeftX, centerHubOpening.toTranslation2d())
-                        .alongWith(shooter.shoot(100))
-                        .alongWith(indexer.index(3)));
+                        .alongWith(shooter.shoot(100)));
 
-        controller.rightTrigger().whileTrue(hopper.spinHopper(80));
+        controller
+                .leftBumper()
+                .whileTrue(AutoAimCommands.autoAimWithOrbit(
+                        drive, controller::getLeftY, controller::getLeftX, centerHubOpening.toTranslation2d()));
+
+        controller.rightTrigger().and(controller.leftTrigger()).whileTrue(indexer.index(3));
+
+        controller
+                .rightTrigger()
+                .and(controller.leftTrigger().negate())
+                .whileTrue(linSlide.moveToPosition(0.2, true).alongWith(intake.rollIn()));
     }
 
     private void configureSimBindings() {
