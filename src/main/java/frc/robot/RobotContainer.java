@@ -118,9 +118,12 @@ public class RobotContainer {
                 break;
 
             case SIM:
+                driveSimulation =
+                        new SwerveDriveSimulation(TunerConstants.mapleSimConfig, new Pose2d(3, 3, new Rotation2d()));
                 SimulatedArena.getInstance().addDriveTrainSimulation(driveSimulation);
                 // Sim robot, instantiate physics sim IO implementations
                 drive = TunerConstants.createDrivetrain();
+                drive.resetPose(new Pose2d(3, 3, new Rotation2d()));
                 linSlide = new LinSlideSubsystem(new LinSlideIOAlpha());
                 led = new LED();
                 shooterSim = new ShooterIOSim(() -> drive.getState().Pose, drive::getChassisSpeeds);
@@ -174,7 +177,6 @@ public class RobotContainer {
         } else if (Robot.isSimulation()) {
             configureSimBindings();
         }
-        drive.resetPose(new Pose2d(3, 3, new Rotation2d()));
     }
 
     public void updateVisionSim() {
