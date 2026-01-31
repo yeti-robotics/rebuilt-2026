@@ -3,44 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-<<<<<<<< HEAD:src/main/deploy/pathplanner/paths/start-outpost-right.path
-        "x": 3.568232502965599,
-        "y": 0.7695848161328582
-      },
-      "prevControl": null,
-      "nextControl": {
-        "x": 4.204882707516463,
-        "y": 0.7944826333608401
-========
         "x": 3.5,
         "y": 4.0
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.6546219686162624,
-        "y": 4.74015691868759
->>>>>>>> a2afa8c2831c1b0c80fdd262fefbeb1c8799b112:src/main/deploy/pathplanner/paths/init-depot-center.path
+        "x": 2.913395149786019,
+        "y": 5.34827389443652
       },
       "isLocked": false,
       "linkedName": "init-center"
     },
     {
       "anchor": {
-<<<<<<<< HEAD:src/main/deploy/pathplanner/paths/start-outpost-right.path
-        "x": 0.4050296559905108,
-        "y": 0.6619928825622776
-      },
-      "prevControl": {
-        "x": 0.10436549641849285,
-        "y": 0.6522407700836047
-========
         "x": 0.7,
         "y": 5.96
       },
       "prevControl": {
-        "x": 1.3736947218259623,
-        "y": 5.788188302425108
->>>>>>>> a2afa8c2831c1b0c80fdd262fefbeb1c8799b112:src/main/deploy/pathplanner/paths/init-depot-center.path
+        "x": 1.9559343794579167,
+        "y": 6.1245934379457925
       },
       "nextControl": null,
       "isLocked": false,

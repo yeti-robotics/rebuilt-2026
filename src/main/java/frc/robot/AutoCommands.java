@@ -96,26 +96,71 @@ public class AutoCommands {
     }
 
     public Command oneCycleNeutralLeftTowerCenter() {
-        Optional<PathPlannerPath> initNeutral = PathPlannerUtils.loadPathByName("init-neutral_L-center");
-        Optional<PathPlannerPath> neutralShoot = PathPlannerUtils.loadPathByName("neutral_L-shoot-center");
+        Optional<PathPlannerPath> initNeutralL = PathPlannerUtils.loadPathByName("init-neutral_L-center");
+        Optional<PathPlannerPath> neutralLShoot = PathPlannerUtils.loadPathByName("neutral_L-shoot-center");
         Optional<PathPlannerPath> shootTower = PathPlannerUtils.loadPathByName("shoot-tower_L-center");
 
         PathPlannerAuto auto;
 
-        var cmd = initNeutral.isEmpty() || neutralShoot.isEmpty() || shootTower.isEmpty()
+        var cmd = initNeutralL.isEmpty() || neutralLShoot.isEmpty() || shootTower.isEmpty()
                 ? Commands.none()
                 : Commands.sequence(
                         shoot().withTimeout(2),
-                        AutoBuilder.followPath(initNeutral.get())
+                        AutoBuilder.followPath(initNeutralL.get())
                                 .alongWith(Commands.waitSeconds(4))
                                 .andThen(intake().withTimeout(2)),
-                        AutoBuilder.followPath(neutralShoot.get()),
-                        shoot().withTimeout(2),
-                        Commands.waitSeconds(2).andThen(linSlide.moveToPosition(-0.4, false)),
+                        AutoBuilder.followPath(neutralLShoot.get()),
+                        shoot().withTimeout(2).alongWith(Commands.waitSeconds(2).andThen(linSlide.moveToPosition(-0.4, false))),
                         AutoBuilder.followPath(shootTower.get()));
         auto = new PathPlannerAuto(cmd);
         return auto;
     }
+
+    public Command oneCycleNeutralRightTowerCenter() {
+        Optional<PathPlannerPath> initNeutralR = PathPlannerUtils.loadPathByName("init-neutral_R-center");
+        Optional<PathPlannerPath> neutralRShoot = PathPlannerUtils.loadPathByName("neutral_R-shoot-center");
+        Optional<PathPlannerPath> shootTower = PathPlannerUtils.loadPathByName("shoot-tower_L-center");
+
+        PathPlannerAuto auto;
+
+        var cmd = initNeutralR.isEmpty() || neutralRShoot.isEmpty() || shootTower.isEmpty()
+                ? Commands.none()
+                : Commands.sequence(
+                        shoot().withTimeout(2),
+                        AutoBuilder.followPath(initNeutralR.get())
+                                .alongWith((Commands.waitSeconds(4))
+                                .andThen(intake().withTimeout(2))),
+                        AutoBuilder.followPath(neutralRShoot.get()),
+                        shoot().withTimeout(2).alongWith(Commands.waitSeconds(2).andThen(linSlide.moveToPosition(-0.4, false))),
+                        AutoBuilder.followPath(shootTower.get()));
+        auto = new PathPlannerAuto(cmd);
+        return auto;
+    }
+
+    public Command twoCycleDepotNeutraLeftCenter() {
+        Optional<PathPlannerPath> initDepot = PathPlannerUtils.loadPathByName("init-depot-center");
+        Optional<PathPlannerPath> depotShoot = PathPlannerUtils.loadPathByName("depot-shoot-center");
+        Optional<PathPlannerPath> shootNeutralL = PathPlannerUtils.loadPathByName("shoot-neutral_L-center");
+        Optional<PathPlannerPath> neutralLShoot = PathPlannerUtils.loadPathByName("neutral_L-shoot-center");
+
+        PathPlannerAuto auto;
+
+        var cmd = initDepot.isEmpty() || depotShoot.isEmpty() || shootNeutralL.isEmpty() || neutralLShoot.isEmpty()
+                ? Commands.none()
+                : Commands.sequence(
+                        AutoBuilder.followPath(initDepot.get())
+                                .alongWith((Commands.waitSeconds(1))
+                                .andThen(intake().withTimeout(2))),
+                        AutoBuilder.followPath(depotShoot.get()).alongWith(shoot().alongWith(linSlide.moveToPosition(-0.4, false))),
+                        AutoBuilder.followPath(shootNeutralL.get())
+                                .alongWith((Commands.waitSeconds(4))
+                                .andThen(intake().withTimeout(2))),
+                        AutoBuilder.followPath(neutralLShoot.get()),
+                        shoot().withTimeout(2).alongWith(Commands.waitSeconds(2).andThen(linSlide.moveToPosition(-0.4, false))));
+        auto = new PathPlannerAuto(cmd);
+        return auto;
+        }
+
 
     public Command oneCycleNeutralRightTowerRight() {
         Optional<PathPlannerPath> startNeutral = PathPlannerUtils.loadPathByName("start-neutral_R-right");
