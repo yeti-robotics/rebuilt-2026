@@ -34,5 +34,5 @@ public class HoodSubsystem extends SubsystemBase {
         return runOnce(() -> moveToPosition(position));
     }
 
-    public Command testMoveHoodToPosition(double power){return runOnce(() -> io.testSpinHopperRoller(power));}
+    public Command applyPower(double power){return runOnce(() -> io.testSpinHopperRoller(power));}
 }

@@ -13,5 +13,5 @@ public interface HoodIO {
 
     default void moveToPosition(double position) {}
 
-    default void testSpinHopperRoller(double percent) {}
+    default void applyPower(double percent) {}
 }

@@ -8,6 +8,9 @@
 package frc.robot;
 
 import static frc.robot.constants.FieldConstants.Hub.centerHubOpening;
+import static frc.robot.subsystems.climber.ClimberConfig.TEST_CLIMBER_SPEED;
+import static frc.robot.subsystems.hood.HoodConfigs.TEST_HOOD_SPEED;
+import static frc.robot.subsystems.indexer.IndexerConfigs.TEST_INDEXER_SPEED;
 import static frc.robot.subsystems.shooter.ShooterConfigs.TEST_SHOOTER_SPEED;
 import static frc.robot.subsystems.hopper.HopperConfigs.TEST_HOPPER_SPEED;
 
@@ -49,7 +52,6 @@ import frc.robot.subsystems.led.LED;
 import frc.robot.subsystems.linslide.LinSlideIO;
 import frc.robot.subsystems.linslide.LinSlideIOAlpha;
 import frc.robot.subsystems.linslide.LinSlideSubsystem;
-import frc.robot.subsystems.shooter.ShooterConfigs;
 import frc.robot.subsystems.shooter.ShooterIO;
 import frc.robot.subsystems.shooter.ShooterIOAlpha;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
@@ -226,8 +228,11 @@ public class RobotContainer {
 
         controller.rightTrigger().whileTrue(hopper.spinHopper(80));
 
-        gigaStation.button(1).whileTrue(hopper.testSpinHopper(TEST_HOPPER_SPEED));
+        gigaStation.button(1).whileTrue(hopper.applyPower(TEST_HOPPER_SPEED));
         gigaStation.button(2).whileTrue(shooter.applyPower(TEST_SHOOTER_SPEED));
+        gigaStation.button(3).whileTrue(hood.applyPower(TEST_HOOD_SPEED));
+        gigaStation.button(5).whileTrue(climber.applyPower(TEST_CLIMBER_SPEED));
+        gigaStation.button(6).whileTrue(indexer.applyPower(TEST_INDEXER_SPEED));
     }
 
     private void configureSimBindings() {

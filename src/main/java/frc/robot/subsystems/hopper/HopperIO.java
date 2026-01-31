@@ -12,5 +12,5 @@ public interface HopperIO {
 
     public default void spinHopperRoller(double volts) {}
 
-    public default void testSpinHopperRoller(double volts) {}
+    public default void applyPower(double volts) {}
 }
