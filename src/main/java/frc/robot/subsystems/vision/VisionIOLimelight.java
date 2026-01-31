@@ -17,10 +17,7 @@ import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.networktables.DoubleArrayPublisher;
-import edu.wpi.first.networktables.DoubleArraySubscriber;
-import edu.wpi.first.networktables.DoubleSubscriber;
-import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.networktables.*;
 import edu.wpi.first.wpilibj.RobotController;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -109,6 +106,8 @@ public class VisionIOLimelight implements VisionIO {
         for (int id : tagIds) {
             inputs.tagIds[i++] = id;
         }
+
+        inputs.distanceToTag = getDistance();
     }
 
     /** Parses the 3D pose from a Limelight botpose array. */
@@ -121,5 +120,29 @@ public class VisionIOLimelight implements VisionIO {
                         Units.degreesToRadians(rawLLArray[3]),
                         Units.degreesToRadians(rawLLArray[4]),
                         Units.degreesToRadians(rawLLArray[5])));
+    }
+
+    private double getDistance() {
+        NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
+        NetworkTableEntry ty = table.getEntry("ty");
+        double targetOffsetAngle_Vertical = ty.getDouble(0.0);
+
+        // how many degrees back is your limelight rotated from perfectly vertical?
+        double limelightMountAngleDegrees = 25.0;
+
+        // distance from the center of the Limelight lens to the floor
+        double limelightLensHeightInches = 20.0;
+
+        // distance from the target to the floor
+        double goalHeightInches = 60.0;
+
+        double angleToGoalDegrees = limelightMountAngleDegrees + targetOffsetAngle_Vertical;
+        double angleToGoalRadians = angleToGoalDegrees * (3.14159 / 180.0);
+
+        // calculate distance
+        double distanceFromLimelightToGoalInches =
+                (goalHeightInches - limelightLensHeightInches) / Math.tan(angleToGoalRadians);
+
+        return distanceFromLimelightToGoalInches;
     }
 }
