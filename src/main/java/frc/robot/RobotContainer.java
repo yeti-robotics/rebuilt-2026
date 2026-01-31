@@ -76,8 +76,8 @@ public class RobotContainer {
     private final HoodSubsystem hood;
 
     // Controller
-    private final CommandXboxController controller = new CommandXboxController(Constants.PRIMARY_CONTROLLER_PORT);
-    private final CommandXboxController controller2 = new CommandXboxController(Constants.GIGA_PORT);
+    private final CommandXboxController controller = new CommandXboxController(Constants.PRIMARY_CONTROLLER_PORT); //real
+    private final CommandXboxController controller2 = new CommandXboxController(Constants.GIGA_PORT); //testing
 
     // Dashboard inputs
     private final LoggedDashboardChooser<Command> autoChooser;
@@ -193,6 +193,29 @@ public class RobotContainer {
                 .withRotationalRate(-controller2.getRightX() * TunerConstants.MaFxAngularRate)));
         controller.start().onTrue(Commands.runOnce(drive::seedFieldCentric, drive));
         controller2.start().onTrue(Commands.runOnce(drive::seedFieldCentric, drive));
+
+        controller.y().onTrue(climber.moveToPosition(ClimberPosition.L1.getHeight()));
+
+        controller.rightBumper().whileTrue(intake.rollIn());
+
+        controller
+                .leftBumper()
+                .onTrue(Commands.either(
+                        linSlide.moveToPosition(-0.2, false),
+                        linSlide.moveToPosition(0.2, true),
+                        linSlide::isDeployed));
+
+        controller
+                .leftTrigger()
+                .whileTrue(AutoAimCommands.autoAim(
+                                drive, controller::getLeftY, controller::getLeftX, centerHubOpening.toTranslation2d())
+                        .alongWith(shooter.shoot(100))
+                        .alongWith(indexer.index(3)));
+
+        controller.rightTrigger().whileTrue(hopper.spinHopper(80));
+
+
+
 
         controller2.rightBumper().whileTrue(intake.rollIn());
 
