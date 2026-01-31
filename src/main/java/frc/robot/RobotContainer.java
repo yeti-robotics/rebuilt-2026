@@ -192,6 +192,7 @@ public class RobotContainer {
                 .withVelocityY(-controller2.getLeftX() * TunerConstants.kSpeedAt12Volts.magnitude())
                 .withRotationalRate(-controller2.getRightX() * TunerConstants.MaFxAngularRate)));
         controller.start().onTrue(Commands.runOnce(drive::seedFieldCentric, drive));
+        controller2.start().onTrue(Commands.runOnce(drive::seedFieldCentric, drive));
 
         controller2.rightBumper().whileTrue(intake.rollIn());
 
