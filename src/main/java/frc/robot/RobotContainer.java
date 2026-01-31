@@ -52,7 +52,6 @@ import frc.robot.subsystems.shooter.ShooterIOAlpha;
 import frc.robot.subsystems.shooter.ShooterIOSim;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
 import frc.robot.subsystems.vision.*;
-import frc.robot.util.CommandGigaStation;
 import frc.robot.util.sim.Mechanisms;
 import org.ironmaple.simulation.SimulatedArena;
 import org.ironmaple.simulation.drivesims.SwerveDriveSimulation;
@@ -82,8 +81,9 @@ public class RobotContainer {
     private final HoodSubsystem hood;
 
     // Controller
-    private final CommandXboxController controller = new CommandXboxController(Constants.PRIMARY_CONTROLLER_PORT); //real
-    private final CommandXboxController controller2 = new CommandXboxController(Constants.GIGA_PORT); //testing
+    private final CommandXboxController controller =
+            new CommandXboxController(Constants.PRIMARY_CONTROLLER_PORT); // real
+    private final CommandXboxController controller2 = new CommandXboxController(Constants.GIGA_PORT); // testing
     private SwerveDriveSimulation driveSimulation = null;
 
     // Dashboard inputs
@@ -123,7 +123,7 @@ public class RobotContainer {
                 drive = TunerConstants.createDrivetrain();
                 linSlide = new LinSlideSubsystem(new LinSlideIOAlpha());
                 led = new LED();
-                shooterSim = new ShooterIOSim(()->drive.getState().Pose, drive::getChassisSpeeds);
+                shooterSim = new ShooterIOSim(() -> drive.getState().Pose, drive::getChassisSpeeds);
                 intake = new IntakeSubsystem(new IntakeIOSim(driveSimulation, shooterSim));
                 hopper = new Hopper(new HopperIOAlpha());
                 vision = new Vision(
@@ -177,7 +177,6 @@ public class RobotContainer {
         drive.resetPose(new Pose2d(3, 3, new Rotation2d()));
     }
 
-
     public void updateVisionSim() {
         Pose3d sideCameraPose = new Pose3d(drive.getState().Pose).transformBy(VisionConstants.sideCamTrans);
         Pose3d frontCameraPose = new Pose3d(drive.getState().Pose).transformBy(VisionConstants.frontCamTrans);
@@ -226,9 +225,6 @@ public class RobotContainer {
                         .alongWith(indexer.index(3)));
 
         controller.rightTrigger().whileTrue(hopper.spinHopper(80));
-
-
-
 
         controller2.rightBumper().whileTrue(intake.rollIn());
 

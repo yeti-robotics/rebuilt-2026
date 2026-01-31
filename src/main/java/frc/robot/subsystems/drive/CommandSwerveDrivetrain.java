@@ -1,5 +1,7 @@
 package frc.robot.subsystems.drive;
 
+import static edu.wpi.first.units.Units.*;
+
 import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.hardware.CANcoder;
@@ -32,14 +34,11 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.vision.Vision;
+import frc.robot.util.sim.MapleSimSwerveDrivetrain;
 import java.io.IOException;
 import java.util.function.Supplier;
-
-import frc.robot.util.sim.MapleSimSwerveDrivetrain;
 import org.json.simple.parser.ParseException;
 import org.littletonrobotics.junction.Logger;
-
-import static edu.wpi.first.units.Units.*;
 
 /**
  * Class that extends the Phoenix 6 SwerveDrivetrain class and implements Subsystem so it can easily
@@ -196,7 +195,10 @@ public class CommandSwerveDrivetrain extends TunerConstants.TunerSwerveDrivetrai
             SwerveDrivetrainConstants drivetrainConstants,
             double odometryUpdateFrequency,
             SwerveModuleConstants<?, ?, ?>... modules) {
-        super(drivetrainConstants, odometryUpdateFrequency, MapleSimSwerveDrivetrain.regulateModuleConstantsForSimulation(modules));
+        super(
+                drivetrainConstants,
+                odometryUpdateFrequency,
+                MapleSimSwerveDrivetrain.regulateModuleConstantsForSimulation(modules));
         if (Utils.isSimulation()) {
             startSimThread();
         }
@@ -300,8 +302,8 @@ public class CommandSwerveDrivetrain extends TunerConstants.TunerSwerveDrivetrai
         Logger.recordOutput("SwerveStates/Measured", getState().ModuleStates);
         Logger.recordOutput("SwerveChassisSpeeds/Measured", getChassisSpeeds());
         if (mapleSimSwerveDrivetrain != null)
-            Logger.recordOutput("Drive/SimulationPose", mapleSimSwerveDrivetrain.mapleSimDrive.getSimulatedDriveTrainPose());
-
+            Logger.recordOutput(
+                    "Drive/SimulationPose", mapleSimSwerveDrivetrain.mapleSimDrive.getSimulatedDriveTrainPose());
 
         for (int i = 0; i < 4; i++) {
             var module = getModule(i);
@@ -353,12 +355,12 @@ public class CommandSwerveDrivetrain extends TunerConstants.TunerSwerveDrivetrai
 
         mapleSimSwerveDrivetrain = new MapleSimSwerveDrivetrain(
                 Seconds.of(kSimLoopPeriod),
-                Pounds.of(115), //placeholder value
+                Pounds.of(115), // placeholder value
                 Inches.of(32.5),
                 Inches.of(32.5),
                 DCMotor.getKrakenX60(1),
                 DCMotor.getFalcon500(1),
-                1.2, //placeholder value maybe
+                1.2, // placeholder value maybe
                 getModuleLocations(),
                 getPigeon2(),
                 getModules(),

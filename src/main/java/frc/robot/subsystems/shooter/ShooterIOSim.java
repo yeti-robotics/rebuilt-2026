@@ -25,8 +25,8 @@ public class ShooterIOSim implements ShooterIO {
     private final Supplier<ChassisSpeeds> chassisSpeedsFieldRelative;
 
     public ShooterIOSim(Supplier<Pose2d> robotSimulationWorldPose, Supplier<ChassisSpeeds> chassisSpeedsFieldRelative) {
-        topMotor = new TalonFX(ShooterConfigs.TOP_MOTOR_ID, Constants.rioBus);
-        bottomMotor = new TalonFX(ShooterConfigs.BOTTOM_MOTOR_ID, Constants.rioBus);
+        topMotor = new TalonFX(ShooterConfigs.RIGHT_SHOOTER_ID, Constants.rioBus);
+        bottomMotor = new TalonFX(ShooterConfigs.LEFT_SHOOTER_ID, Constants.rioBus);
         topMotor.getConfigurator().apply(ShooterConfigs.TOP_MOTOR_CONFIGS);
         bottomMotor.getConfigurator().apply(ShooterConfigs.BOTTOM_MOTOR_CONFIGS);
         this.robotSimulationWorldPose = robotSimulationWorldPose;

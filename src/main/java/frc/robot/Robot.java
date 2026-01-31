@@ -97,9 +97,7 @@ public class Robot extends LoggedRobot {
 
     /** This function is called once when the robot is first started up. */
     @Override
-    public void robotInit() {
-        robotContainer.resetGyro();
-    }
+    public void robotInit() {}
 
     /** This function is called once when the robot is disabled. */
     @Override
@@ -154,7 +152,6 @@ public class Robot extends LoggedRobot {
     }
 
     /** This function is called periodically during test mode. */
-
     @Override
     public void testPeriodic() {}
 
