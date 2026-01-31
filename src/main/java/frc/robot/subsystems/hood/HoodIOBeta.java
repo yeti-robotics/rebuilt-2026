@@ -1,5 +1,6 @@
 package frc.robot.subsystems.hood;
 
+import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -11,6 +12,7 @@ public class HoodIOBeta implements HoodIO {
     private final TalonFX hoodMotor;
     private final CANcoder hoodCANcoder;
     private final MotionMagicVoltage positionRequest = new MotionMagicVoltage(0.0);
+    private final DutyCycleOut dutyCycleOut = new DutyCycleOut(0);
 
     public HoodIOBeta() {
         hoodMotor = new TalonFX(HoodConfigs.HOOD_MOTOR_ID, Constants.rioBus);
@@ -33,5 +35,10 @@ public class HoodIOBeta implements HoodIO {
     @Override
     public void moveToPosition(double position) {
         hoodMotor.setControl(positionRequest.withPosition(position));
+    }
+
+    @Override
+    public void applyPower(double percent) {
+        hoodMotor.setControl(dutyCycleOut.withOutput(percent));
     }
 }
