@@ -77,7 +77,7 @@ public class RobotContainer {
 
     // Controller
     private final CommandXboxController controller = new CommandXboxController(Constants.PRIMARY_CONTROLLER_PORT);
-    private final CommandGigaStation gigaStation = new CommandGigaStation(Constants.GIGA_PORT);
+    private final CommandXboxController controller2 = new CommandXboxController(Constants.GIGA_PORT);
 
     // Dashboard inputs
     private final LoggedDashboardChooser<Command> autoChooser;
@@ -187,29 +187,33 @@ public class RobotContainer {
                 .withRotationalRate(-controller.getRightX() * TunerConstants.MaFxAngularRate)));
         controller.start().onTrue(Commands.runOnce(drive::seedFieldCentric, drive));
 
-        //        controller.y().onTrue(climber.moveToPosition(ClimberPosition.L1.getHeight()));
+        drive.setDefaultCommand(drive.applyRequest(() -> driveRequest
+                .withVelocityX(-controller2.getLeftY() * TunerConstants.kSpeedAt12Volts.magnitude())
+                .withVelocityY(-controller2.getLeftX() * TunerConstants.kSpeedAt12Volts.magnitude())
+                .withRotationalRate(-controller2.getRightX() * TunerConstants.MaFxAngularRate)));
+        controller.start().onTrue(Commands.runOnce(drive::seedFieldCentric, drive));
 
-        controller.rightBumper().whileTrue(intake.rollIn());
+        controller2.rightBumper().whileTrue(intake.rollIn());
 
-        controller.x().whileTrue(linSlide.applyPower(0.2)).onFalse(linSlide.applyPower(0));
-        controller.b().whileTrue(linSlide.applyPower(-0.2)).onFalse(linSlide.applyPower(0));
+        controller2.x().whileTrue(linSlide.applyPower(0.2)).onFalse(linSlide.applyPower(0));
+        controller2.b().whileTrue(linSlide.applyPower(-0.2)).onFalse(linSlide.applyPower(0));
 
-        controller
+        controller2
                 .leftBumper()
                 .whileTrue(intake.rollOut()
                         .alongWith(hopper.applyPower(-TEST_HOPPER_SPEED)
                                 .alongWith(indexer.applyPower(-TEST_INDEXER_SPEED))));
 
-        controller.leftTrigger().whileTrue(shooter.applyPower(-TEST_SHOOTER_SPEED));
+        controller2.leftTrigger().whileTrue(shooter.applyPower(-TEST_SHOOTER_SPEED));
 
-        controller
+        controller2
                 .a()
                 .whileTrue(hopper.applyPower(0.2)
                         .withTimeout(0.1)
                         .andThen(hopper.applyPower(-0.2).withTimeout(0.1))
                         .repeatedly());
 
-        controller
+        controller2
                 .rightTrigger()
                 .whileTrue(Commands.parallel(
                         hopper.applyPower(TEST_HOPPER_SPEED), indexer.applyPower(TEST_INDEXER_SPEED), intake.rollIn()));
