@@ -194,7 +194,10 @@ public class RobotContainer {
         controller.start().onTrue(Commands.runOnce(drive::seedFieldCentric, drive));
         controller2.start().onTrue(Commands.runOnce(drive::seedFieldCentric, drive));
 
+
+
         controller.y().onTrue(climber.moveToPosition(ClimberPosition.L1.getHeight()));
+        controller.a().onTrue(climber.moveToPosition(ClimberPosition.BOTTOM.getHeight()));
 
         controller.rightBumper().whileTrue(intake.rollIn());
 
@@ -209,10 +212,10 @@ public class RobotContainer {
                 .leftTrigger()
                 .whileTrue(AutoAimCommands.autoAim(
                                 drive, controller::getLeftY, controller::getLeftX, centerHubOpening.toTranslation2d())
-                        .alongWith(shooter.shoot(100))
-                        .alongWith(indexer.index(3)));
+                        .alongWith(shooter.shoot(100)));
 
-        controller.rightTrigger().whileTrue(hopper.spinHopper(80));
+        controller.rightTrigger().whileTrue(hopper.spinHopper(80)
+                .alongWith(intake.rollIn().alongWith(indexer.applyPower(0.3))));
 
 
 
@@ -221,6 +224,13 @@ public class RobotContainer {
 
         controller2.x().whileTrue(linSlide.applyPower(0.2)).onFalse(linSlide.applyPower(0));
         controller2.b().whileTrue(linSlide.applyPower(-0.2)).onFalse(linSlide.applyPower(0));
+
+        controller2.povLeft().whileTrue(hood.applyPower(0.1));
+        controller2.povRight().whileTrue(hood.applyPower(-0.1));
+
+        controller2.povUp().whileTrue(climber.applyPower(0.3));
+        controller2.povDown().whileTrue(climber.applyPower(0.3));
+
 
         controller2
                 .leftBumper()
