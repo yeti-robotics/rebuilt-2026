@@ -138,4 +138,26 @@ public class AutoCommands {
         auto = new PathPlannerAuto(cmd);
         return auto;
     }
+
+    public Command oneCycleOutpostTowerRight() {
+        Optional<PathPlannerPath> startOutpost = PathPlannerUtils.loadPathByName("start-outpost-right");
+        Optional<PathPlannerPath> outpostShoot = PathPlannerUtils.loadPathByName("outpost-shoot-right");
+        Optional<PathPlannerPath> shootTower = PathPlannerUtils.loadPathByName("shoot-tower-right");
+
+        PathPlannerAuto auto;
+
+        var cmd = startOutpost.isEmpty() || outpostShoot.isEmpty() || shootTower.isEmpty()
+                ?  Commands.none()
+                : Commands.sequence(
+                        shoot().withTimeout(2),
+                AutoBuilder.followPath(startOutpost.get())
+                        .alongWith(Commands.waitSeconds(4))
+                        .andThen(intake().withTimeout(2)),
+                AutoBuilder.followPath(outpostShoot.get()),
+                shoot().withTimeout(2),
+                Commands.waitSeconds(2).andThen(linSlide.moveToPosition(-0.4, false)),
+                AutoBuilder.followPath(shootTower.get()));
+            auto = new PathPlannerAuto(cmd);
+            return auto;
+    }
 }
