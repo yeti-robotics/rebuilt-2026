@@ -41,7 +41,7 @@
       },
       "nextControl": {
         "x": 2.7906927444232372,
-        "y": 1.0693304303788678
+        "y": 1.0693304303788675
       },
       "isLocked": false,
       "linkedName": null
@@ -60,7 +60,12 @@
       "linkedName": "shoot-center"
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 1.551083591331218,
+      "rotationDegrees": -89.80440769474235
+    }
+  ],
   "constraintZones": [],
   "pointTowardsZones": [],
   "eventMarkers": [],
