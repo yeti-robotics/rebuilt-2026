@@ -233,6 +233,7 @@ public class RobotContainer {
         gigaStation.button(3).whileTrue(hood.applyPower(TEST_HOOD_SPEED));
         gigaStation.button(5).whileTrue(climber.applyPower(TEST_CLIMBER_SPEED));
         gigaStation.button(6).whileTrue(indexer.applyPower(TEST_INDEXER_SPEED));
+
     }
 
     private void configureSimBindings() {
