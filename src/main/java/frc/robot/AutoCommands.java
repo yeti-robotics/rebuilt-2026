@@ -53,20 +53,6 @@ public class AutoCommands {
         return Commands.sequence(linSlide.moveToPosition(0.4, true), intake.rollIn());
     }
 
-    public Command oneCycleNeutralTowerLeft() {
-        Optional<PathPlannerPath> startNeutral = PathPlannerUtils.loadPathByName("start-neutral_L-left");
-        Optional<PathPlannerPath> neutralShoot = PathPlannerUtils.loadPathByName("neutral_L-shoot-left");
-        Optional<PathPlannerPath> shootTower = PathPlannerUtils.loadPathByName("shoot-tower-left");
-
-        PathPlannerAuto auto;
-
-        var cmd = startNeutral.isEmpty() || neutralShoot.isEmpty() || shootTower.isEmpty()
-                ? Commands.none()
-                : Commands.sequence(shoot(), AutoBuilder.followPath(startNeutral.get()), intake());
-
-        auto = new PathPlannerAuto(cmd);
-        return auto;
-    }
 
     public Command oneCycleNeutralLeftTowerCenter() {
         Optional<PathPlannerPath> initNeutral = PathPlannerUtils.loadPathByName("init-neutral_L-center");
