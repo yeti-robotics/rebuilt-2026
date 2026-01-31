@@ -3,8 +3,9 @@
   "robotLength": 0.9,
   "holonomicMode": true,
   "pathFolders": [
+    "Center paths",
     "Left Paths",
-    "Center paths"
+    "Right Paths"
   ],
   "autoFolders": [],
   "defaultMaxVel": 3.0,
