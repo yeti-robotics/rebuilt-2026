@@ -1,6 +1,5 @@
 package frc.robot.subsystems.linslide;
 
-import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.littletonrobotics.junction.Logger;
@@ -19,12 +18,17 @@ public class LinSlideSubsystem extends SubsystemBase {
         Logger.processInputs("LinSlide", inputs);
     }
 
-    public Command moveToPosition(Angle position) {
-        return runOnce(() -> io.moveToPosition(position));
+    public Command moveToPosition(double power, boolean target) {
+        return runEnd(() -> io.applyPower(power), () -> io.applyPower(0))
+                .until(() -> target ? inputs.isDeployed : inputs.isStowed);
     }
 
     public Command applyPower(double power) {
-        return runOnce(() -> io.applyPower(power));
+        return runEnd(() -> io.applyPower(power), () -> io.applyPower(0));
+    }
+
+    public Command zero() {
+        return runOnce(() -> io.zeroPosition());
     }
 
     public double getCurrentPosition() {

@@ -12,4 +12,6 @@ public interface HoodIO {
     default void updateInputs(HoodIOInputs inputs) {}
 
     default void moveToPosition(double position) {}
+
+    default void applyPower(double percent) {}
 }

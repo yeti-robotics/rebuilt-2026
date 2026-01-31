@@ -6,8 +6,9 @@ import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 
 public class ShooterConfigs {
-    static final int TOP_MOTOR_ID = 19;
-    static final int BOTTOM_MOTOR_ID = 0;
+    static final int RIGHT_SHOOTER_ID = 19;
+    static final int LEFT_SHOOTER_ID = 0;
+    public static final double TEST_SHOOTER_SPEED = 0.8;
 
     public static final Slot0Configs SLOT_0_CONFIGS =
             new Slot0Configs().withKP(0).withKI(0).withKD(0).withKA(0).withKV(0).withKS(0);
