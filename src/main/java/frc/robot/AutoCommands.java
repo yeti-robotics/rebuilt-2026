@@ -93,7 +93,7 @@ public class AutoCommands {
     public Command oneCycleNeutralLeftTowerCenter() {
         Optional<PathPlannerPath> initNeutral = PathPlannerUtils.loadPathByName("init-neutral_L-center");
         Optional<PathPlannerPath> neutralShoot = PathPlannerUtils.loadPathByName("neutral_L-shoot-center");
-        Optional<PathPlannerPath> shootTower = PathPlannerUtils.loadPathByName("shoot-tower_L");
+        Optional<PathPlannerPath> shootTower = PathPlannerUtils.loadPathByName("shoot-tower_L-center");
 
         PathPlannerAuto auto;
 
