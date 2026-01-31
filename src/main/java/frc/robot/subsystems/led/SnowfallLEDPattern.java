@@ -11,7 +11,7 @@ public class SnowfallLEDPattern implements LEDPattern {
     boolean isConfigured = false;
 
     public SnowfallLEDPattern() {
-        waitTime = 2;
+        waitTime = 5;
         startTime = System.currentTimeMillis();
         stage = 0;
     }
@@ -24,7 +24,6 @@ public class SnowfallLEDPattern implements LEDPattern {
             }
             writer.setRGB(i, 20, 120, 255);
         }
-        stage++;
     }
 
     @Override
