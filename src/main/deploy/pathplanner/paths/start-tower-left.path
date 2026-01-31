@@ -53,7 +53,7 @@
   "folder": "Left Paths",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -144.86580694308432
+    "rotation": -144.86580694308435
   },
   "useDefaultConstraints": true
 }
