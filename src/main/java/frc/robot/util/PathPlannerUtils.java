@@ -1,7 +1,6 @@
 package frc.robot.util;
 
 import com.pathplanner.lib.path.PathPlannerPath;
-
 import java.util.Optional;
 
 public class PathPlannerUtils {

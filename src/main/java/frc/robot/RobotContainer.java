@@ -164,7 +164,6 @@ public class RobotContainer {
         }
     }
 
-
     public void updateVisionSim() {
         Pose3d sideCameraPose = new Pose3d(drive.getState().Pose).transformBy(VisionConstants.sideCamTrans);
         Pose3d frontCameraPose = new Pose3d(drive.getState().Pose).transformBy(VisionConstants.frontCamTrans);
