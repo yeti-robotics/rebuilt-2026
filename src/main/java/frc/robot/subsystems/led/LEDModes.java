@@ -23,7 +23,9 @@ public enum LEDModes {
     ENDGAME_ACTIVE(LEDPattern.solid(Color.kGreen)),
     LOCKED_GREEN(LEDPattern.solid(Color.kGreen).blink(Seconds.of(0.25)), true),
     BLINKING_ORANGE(LEDPattern.solid(Color.kOrange).synchronizedBlink(RobotController::getRSLState), true),
-    NOT_LOCKED_RED(LEDPattern.solid(Color.kRed));
+    NOT_LOCKED_RED(LEDPattern.solid(Color.kRed)),
+    SNOWFALL(new SnowfallLEDPattern(), true),
+    WAVE(new WaveLEDPattern(), true);
 
     public final LEDPattern pattern;
     public final boolean isAnimation;

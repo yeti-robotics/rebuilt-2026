@@ -14,6 +14,7 @@ public class LED extends SubsystemBase {
     private LEDModes currentLEDMode;
     private final ShiftHandler shiftHandler;
     private final LEDPattern wave;
+    private final LEDPattern snowfall;
     private LEDModes previousLEDMode;
     private double animationStartTime;
     private boolean isTimedAnimation;
@@ -28,6 +29,7 @@ public class LED extends SubsystemBase {
 
         shiftHandler = new ShiftHandler();
         wave = new WaveLEDPattern();
+        snowfall = new SnowfallLEDPattern();
         ledStrip.setLength(ledBuffer.getLength());
         ledStrip.start();
         setDefaultCommand(allianceShifts());
@@ -94,12 +96,6 @@ public class LED extends SubsystemBase {
         sendData();
     }
 
-    private void wave() {
-        wave.applyTo(leftStrip);
-        wave.applyTo(rightStrip);
-        sendData();
-    }
-
     public int getBufferLength() {
         return ledBuffer.getLength();
     }
@@ -110,19 +106,6 @@ public class LED extends SubsystemBase {
 
     public void sendData() {
         ledStrip.setData(ledBuffer);
-    }
-
-    public Command waveCommand() {
-        return run(() -> {
-            if (!isTimedAnimation) {
-                previousLEDMode = currentLEDMode;
-                animationStartTime = Timer.getFPGATimestamp();
-                isTimedAnimation = true;
-                currentLEDMode = null;
-            }
-
-            wave();
-        });
     }
 
     public Command runPattern(LEDModes pattern) {

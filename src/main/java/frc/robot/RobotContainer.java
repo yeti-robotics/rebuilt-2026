@@ -22,13 +22,9 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.AutoAimCommands;
-import frc.robot.commands.SnowfallLEDCommand;
 import frc.robot.constants.Constants;
 import frc.robot.generated.TunerConstants;
-import frc.robot.subsystems.climber.Climber;
-import frc.robot.subsystems.climber.ClimberIO;
-import frc.robot.subsystems.climber.ClimberIOAlpha;
-import frc.robot.subsystems.climber.ClimberPosition;
+import frc.robot.subsystems.climber.*;
 import frc.robot.subsystems.drive.*;
 import frc.robot.subsystems.hood.HoodIO;
 import frc.robot.subsystems.hood.HoodIOBeta;
@@ -76,9 +72,6 @@ public class RobotContainer {
     private final IndexerSubsystem indexer;
     private final Vision vision;
     private final HoodSubsystem hood;
-
-    // Commands
-    private final SnowfallLEDCommand snowfallLEDCommand;
 
     // Controller
     private final CommandXboxController controller = new CommandXboxController(Constants.PRIMARY_CONTROLLER_PORT);
@@ -149,7 +142,6 @@ public class RobotContainer {
         }
 
         led = new LED();
-        snowfallLEDCommand = new SnowfallLEDCommand(led, 2);
 
         // Set up auto routines
         autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
@@ -257,7 +249,8 @@ public class RobotContainer {
         controller.button(4).whileTrue(led.runPattern(LEDModes.RED_TO_BLUE_TRANSITION));
         controller.button(5).whileTrue(led.runPattern(LEDModes.RAINBOW));
         controller.button(6).whileTrue(led.runPattern(LEDModes.LOCKED_GREEN));
-        controller.button(7).whileTrue(led.waveCommand());
+        controller.button(7).whileTrue(led.runPattern(LEDModes.WAVE));
+        controller.button(8).whileTrue(led.runPattern(LEDModes.SNOWFALL));
     }
 
     public void updateMechanisms() {
@@ -275,7 +268,10 @@ public class RobotContainer {
         new Trigger(() -> shooter.getVelocity().isNear(Units.RotationsPerSecond.of(120), 0.1))
                 .and(() ->
                         Math.abs(vision.getDistance() - LEDConstants.IDEAL_DISTANCE_TO_HUB) <= LEDConstants.TOLERANCE)
-                .whileTrue(led.waveCommand());
+                .whileTrue(led.runPattern(LEDModes.WAVE));
+        new Trigger(() -> climber.getCurrentPosition()
+                        >= ClimberPosition.L1.getHeight().magnitude() - ClimberConfig.HEIGHT_TOLERANCE)
+                .whileTrue(led.runPattern(LEDModes.SNOWFALL));
     }
 
     /**

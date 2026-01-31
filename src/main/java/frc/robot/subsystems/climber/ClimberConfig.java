@@ -10,6 +10,8 @@ public class ClimberConfig {
     static final int CLIMBER_MOTOR_ID = 9;
     static final int CLIMBER_SENSOR_ID = 101;
 
+    public static final double HEIGHT_TOLERANCE = 0.2;
+
     // get the proper gear ratio;
     static final double GEAR_RATIO = 0;
 
