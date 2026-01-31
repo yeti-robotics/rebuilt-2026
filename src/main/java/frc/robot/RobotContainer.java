@@ -162,26 +162,25 @@ public class RobotContainer {
         autoChooser.addOption("Drive SysId (Dynamic Forward)", drive.sysIdDynamic(SysIdRoutine.Direction.kForward));
         autoChooser.addOption("Drive SysId (Dynamic Reverse)", drive.sysIdDynamic(SysIdRoutine.Direction.kReverse));
 
-        //Left
+        // Left
         autoChooser.addOption("One Cycle Neutral Tower Left", autoCommands.oneCycleNeutralTowerLeft());
         autoChooser.addOption("One Cycle Depot Tower Left", autoCommands.oneCycleDepotTowerLeft());
         autoChooser.addOption("Two Cycle Neutral Depot Tower Left", autoCommands.twoCycleNeutralDepotTowerLeft());
         autoChooser.addOption("Two Cycle Depot Neutral Tower Left", autoCommands.twoCycleDepotNeutralTowerLeft());
         autoChooser.addOption("Two Cycle Neutral Neutral Tower Left", autoCommands.twoCycleNeutralTowerLeft());
 
-        //Center
+        // Center
         autoChooser.addOption("One Cycle Neutral Left Tower Center", autoCommands.oneCycleNeutralLeftTowerCenter());
         autoChooser.addOption("One Cycle Neutral Right Tower Center", autoCommands.oneCycleNeutralRightTowerCenter());
         autoChooser.addOption("Two Cycle Depot Neutral Right Center", autoCommands.twoCycleDepotNeutralRightCenter());
         autoChooser.addOption("Two Cycle Neutral Left Neutral Center", autoCommands.twoCycleNeutralNeutralLeftCenter());
-        autoChooser.addOption("Two Cycle Neutral Right Neutral Center", autoCommands.twoCycleNeutralNeutralRightCenter());
+        autoChooser.addOption(
+                "Two Cycle Neutral Right Neutral Center", autoCommands.twoCycleNeutralNeutralRightCenter());
         autoChooser.addOption("Two Cycle Depot Neutral Left Center", autoCommands.twoCycleDepotNeutralLeftCenter());
 
-        //Right
+        // Right
         autoChooser.addOption("One Cycle Neutral Right Tower Right", autoCommands.oneCycleNeutralRightTowerRight());
         autoChooser.addOption("One Cycle Outpost Tower Right", autoCommands.oneCycleOutpostTowerRight());
-
-
 
         // Configure the button bindings
         if (Robot.isReal()) {
