@@ -165,7 +165,6 @@ public class RobotContainer {
         autoChooser.addOption("One Cycle Neutral Left Tower Center", autoCommands.oneCycleNeutralLeftTowerCenter());
         autoChooser.addOption("One Cycle Neutral Right Tower Right", autoCommands.oneCycleNeutralRightTowerRight());
 
-
         // Configure the button bindings
         if (Robot.isReal()) {
             configureRealBindings();
