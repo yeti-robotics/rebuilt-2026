@@ -1,31 +1,35 @@
 package frc.robot.commands;
 
+import com.ctre.phoenix6.swerve.SwerveModule;
+import com.ctre.phoenix6.swerve.SwerveRequest;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.drive.Drive;
+import frc.robot.subsystems.drive.CommandSwerveDrivetrain;
 import frc.robot.util.AllianceFlipUtil;
 import java.util.function.DoubleSupplier;
 
 public class AutoAimCommands {
     public static final PIDController headingController = new PIDController(5, 0, 0);
 
-    private static final double SPEED_MULTIPLIER = 1.5;
+    private static final double SPEED_MULTIPLIER = 3;
 
     static {
         headingController.enableContinuousInput(-Math.PI, Math.PI);
     }
 
     public static Command autoAimWithOrbit(
-            Drive drive, DoubleSupplier xVelSupplier, DoubleSupplier yVelSupplier, Translation2d target) {
+            CommandSwerveDrivetrain drive,
+            DoubleSupplier xVelSupplier,
+            DoubleSupplier yVelSupplier,
+            Translation2d target) {
         Translation2d modifiedTarget = AllianceFlipUtil.apply(target);
 
         return drive.runEnd(
                 () -> {
-                    Pose2d currentPose = drive.getPose();
+                    Pose2d currentPose = drive.getState().Pose;
                     Translation2d currentPosition = currentPose.getTranslation();
                     Rotation2d currentRotation = currentPose.getRotation();
 
@@ -41,43 +45,47 @@ public class AutoAimCommands {
                     double angularVelo =
                             headingController.calculate(currentRotation.getRadians(), targetHeading.getRadians());
 
-                    ChassisSpeeds currentReference = ChassisSpeeds.fromFieldRelativeSpeeds(
-                            fieldRel.getX(), fieldRel.getY(), angularVelo, currentRotation);
+                    SwerveRequest.FieldCentric request = new SwerveRequest.FieldCentric()
+                            .withVelocityX(fieldRel.getX())
+                            .withVelocityY(fieldRel.getY())
+                            .withRotationalRate(angularVelo)
+                            .withDriveRequestType(SwerveModule.DriveRequestType.Velocity);
 
-                    drive.runVelocity(currentReference);
+                    drive.setControl(request);
                 },
-                drive::stop);
+                SwerveRequest.Idle::new);
     }
 
-    private static double calculateAngularVelocity(Pose2d currentPose, Translation2d target) {
+    private static Rotation2d calcDesiredHeading(Pose2d currentPose, Translation2d target) {
         if (target == null) {
-            return 0;
+            return Rotation2d.kZero;
         }
 
-        Rotation2d currentHeading = currentPose.getRotation();
         Rotation2d desiredHeading = target.minus(currentPose.getTranslation())
                 .getAngle()
                 .rotateBy(Rotation2d.k180deg); // Remove this .rotateBy() if needed for real bot
 
-        return headingController.calculate(currentHeading.getRadians(), desiredHeading.getRadians());
+        return desiredHeading;
     }
 
     public static Command autoAim(
-            Drive drive, DoubleSupplier xVelSupplier, DoubleSupplier yVelSupplier, Translation2d target) {
+            CommandSwerveDrivetrain drive,
+            DoubleSupplier xVelSupplier,
+            DoubleSupplier yVelSupplier,
+            Translation2d target) {
         Translation2d modifiedTarget = AllianceFlipUtil.apply(target);
 
         return drive.runEnd(
                 () -> {
-                    Pose2d currentPose = drive.getPose();
+                    SwerveRequest.FieldCentricFacingAngle request = new SwerveRequest.FieldCentricFacingAngle()
+                            .withHeadingPID(5, 0, 0)
+                            .withVelocityX(-xVelSupplier.getAsDouble() * SPEED_MULTIPLIER)
+                            .withVelocityY(-yVelSupplier.getAsDouble() * SPEED_MULTIPLIER)
+                            .withTargetDirection(calcDesiredHeading(drive.getState().Pose, modifiedTarget))
+                            .withDriveRequestType(SwerveModule.DriveRequestType.Velocity);
 
-                    double angularVelo = calculateAngularVelocity(currentPose, modifiedTarget);
-
-                    drive.runVelocity(ChassisSpeeds.fromFieldRelativeSpeeds(
-                            -xVelSupplier.getAsDouble() * SPEED_MULTIPLIER,
-                            -yVelSupplier.getAsDouble() * SPEED_MULTIPLIER,
-                            angularVelo,
-                            drive.getRotation()));
+                    drive.setControl(request);
                 },
-                drive::stop);
+                SwerveRequest.Idle::new);
     }
 }
