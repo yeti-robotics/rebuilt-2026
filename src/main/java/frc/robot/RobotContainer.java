@@ -119,7 +119,7 @@ public class RobotContainer {
                         new VisionIOPhotonVisionSim(
                                 "Front Camera", VisionConstants.frontCamTrans, () -> drive.getState().Pose),
                         new VisionIOPhotonVisionSim(
-                                "Side Camera", VisionConstants.backCamTrans, () -> drive.getState().Pose));
+                                "Side Camera", VisionConstants.sideCamTrans, () -> drive.getState().Pose));
                 climber = new Climber(new ClimberIOAlpha());
                 shooter = new ShooterSubsystem(new ShooterIOAlpha());
                 indexer = new IndexerSubsystem(new IndexerIOAlpha());
@@ -166,7 +166,7 @@ public class RobotContainer {
 
 
     public void updateVisionSim() {
-        Pose3d sideCameraPose = new Pose3d(drive.getState().Pose).transformBy(VisionConstants.backCamTrans);
+        Pose3d sideCameraPose = new Pose3d(drive.getState().Pose).transformBy(VisionConstants.sideCamTrans);
         Pose3d frontCameraPose = new Pose3d(drive.getState().Pose).transformBy(VisionConstants.frontCamTrans);
         Logger.recordOutput("Side Cam Transform", sideCameraPose);
         Logger.recordOutput("Front Cam Transform", frontCameraPose);
