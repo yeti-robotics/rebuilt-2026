@@ -51,7 +51,11 @@ public class AutoCommands {
 
     public Command shoot() {
         return Commands.sequence(
-                AutoAimCommands.autoAim(drivetrain, () -> 0, () -> 0, centerHubOpening.toTranslation2d())
+                AutoAimCommands.autoAim(
+                        drivetrain,
+                        () -> 0,
+                        () -> 0,
+                        centerHubOpening.toTranslation2d())
                         .withTimeout(1),
                 indexer.runMotors(0),
                 shooter.shoot(0),
@@ -79,12 +83,12 @@ public class AutoCommands {
                                 .alongWith(Commands.waitSeconds(4))
                                 .andThen(intake())
                                 .withTimeout(4),
-                        Commands.print("After driving to neutral zone"),
+                Commands.print("After driving to neutral zone"),
                         AutoBuilder.followPath(neutralShoot.get()).alongWith(linSlide.moveToPosition(-0.4, false)),
-                        Commands.print("Shooting after neutral"),
+                Commands.print("Shooting after neutral"),
                         shoot().withTimeout(2),
                         AutoBuilder.followPath(shootTower.get()),
-                        Commands.print("climbing"),
+                Commands.print("climbing"),
                         climber.moveToPosition(ClimberPosition.L1.getHeight()));
 
         auto = new PathPlannerAuto(cmd);
@@ -94,7 +98,7 @@ public class AutoCommands {
     public Command oneCycleNeutralLeftTowerCenter() {
         Optional<PathPlannerPath> initNeutral = PathPlannerUtils.loadPathByName("init-neutral_L-center");
         Optional<PathPlannerPath> neutralShoot = PathPlannerUtils.loadPathByName("neutral_L-shoot-center");
-        Optional<PathPlannerPath> shootTower = PathPlannerUtils.loadPathByName("shoot-tower_L");
+        Optional<PathPlannerPath> shootTower = PathPlannerUtils.loadPathByName("shoot-tower_L-center");
 
         PathPlannerAuto auto;
 
