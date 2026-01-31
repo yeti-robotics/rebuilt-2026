@@ -27,4 +27,8 @@ public class ShooterSubsystem extends SubsystemBase {
     public Command shoot(double velocity) {
         return startEnd(() -> io.spinMotors(velocity), () -> io.stopMotors());
     }
+
+    public Command applyPower(double power) {
+        return runEnd(() -> io.applyPower(power), () -> io.applyPower(0));
+    }
 }
