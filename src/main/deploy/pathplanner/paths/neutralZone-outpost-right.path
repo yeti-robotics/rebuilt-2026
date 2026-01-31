@@ -78,6 +78,18 @@
   ],
   "rotationTargets": [
     {
+      "waypointRelativePos": 0.5800604229607345,
+      "rotationDegrees": 89.90545774110126
+    },
+    {
+      "waypointRelativePos": 1.2205438066465655,
+      "rotationDegrees": 0.0
+    },
+    {
+      "waypointRelativePos": 1.9335347432024454,
+      "rotationDegrees": 0.0
+    },
+    {
       "waypointRelativePos": 2.9633967789165427,
       "rotationDegrees": 38.818794674592084
     }
@@ -101,7 +113,7 @@
   "folder": null,
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 91.13069095123801
+    "rotation": 89.90778106876367
   },
   "useDefaultConstraints": true
 }
