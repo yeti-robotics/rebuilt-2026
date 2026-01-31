@@ -7,11 +7,13 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.constants.Constants;
 import frc.robot.util.Elastic;
 import frc.robot.util.sim.PhysicsSim;
+import org.ironmaple.simulation.SimulatedArena;
 import org.littletonrobotics.junction.LogFileUtil;
 import org.littletonrobotics.junction.LoggedRobot;
 import org.littletonrobotics.junction.Logger;
@@ -152,6 +154,7 @@ public class Robot extends LoggedRobot {
     }
 
     /** This function is called periodically during test mode. */
+
     @Override
     public void testPeriodic() {}
 
@@ -166,5 +169,7 @@ public class Robot extends LoggedRobot {
     public void simulationPeriodic() {
         PhysicsSim.getInstance().run();
         robotContainer.updateSimulation();
+        Pose3d[] gamePieces = SimulatedArena.getInstance().getGamePiecesArrayByType("Fuel");
+        Logger.recordOutput("FieldSimulation/GamePieces", gamePieces);
     }
 }
