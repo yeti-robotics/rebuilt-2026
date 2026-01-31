@@ -51,7 +51,12 @@ public class AutoCommands {
 
     public Command shoot() {
         return Commands.sequence(
-                AutoAimCommands.autoAim(drivetrain, () -> 0, () -> 0, centerHubOpening.toTranslation2d()).withTimeout(1),
+                AutoAimCommands.autoAim(
+                        drivetrain,
+                        () -> 0,
+                        () -> 0,
+                        centerHubOpening.toTranslation2d())
+                        .withTimeout(1),
                 indexer.runMotors(0),
                 shooter.shoot(0),
                 hopper.spinHopper(0));

@@ -8,27 +8,32 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.9263338088445074,
-        "y": 4.067346647646221
+        "x": 2.978088445078458,
+        "y": 3.9767760342368046
       },
       "isLocked": false,
       "linkedName": "init-center"
     },
     {
       "anchor": {
-        "x": 1.5936519258202564,
-        "y": 4.235549215406562
+        "x": 1.5473013245033114,
+        "y": 4.013220198675495
       },
       "prevControl": {
-        "x": 2.175891583452211,
-        "y": 4.1191012838801715
+        "x": 2.0853209700427953,
+        "y": 4.054407988587732
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "tower_L"
+      "linkedName": "tower-left"
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.8018575851393116,
+      "rotationDegrees": 180.0
+    }
+  ],
   "constraintZones": [],
   "pointTowardsZones": [],
   "eventMarkers": [],
@@ -42,7 +47,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 180.0
+    "rotation": 179.32147498119969
   },
   "reversed": false,
   "folder": "Center paths",

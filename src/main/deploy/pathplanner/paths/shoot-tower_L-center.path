@@ -16,19 +16,24 @@
     },
     {
       "anchor": {
-        "x": 1.5936519258202564,
-        "y": 4.235549215406562
+        "x": 1.5473013245033114,
+        "y": 4.013220198675495
       },
       "prevControl": {
-        "x": 2.215215231788079,
-        "y": 4.238278145695364
+        "x": 2.168864630471134,
+        "y": 4.015949128964298
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "tower_L"
+      "linkedName": "tower-left"
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.8018575851393217,
+      "rotationDegrees": 180.0
+    }
+  ],
   "constraintZones": [],
   "pointTowardsZones": [],
   "eventMarkers": [],
@@ -42,7 +47,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 180.0
+    "rotation": 179.32147498119969
   },
   "reversed": false,
   "folder": "Center paths",
