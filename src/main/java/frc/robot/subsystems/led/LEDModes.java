@@ -8,12 +8,6 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.util.Color;
 
 public enum LEDModes {
-    RED_TO_BLUE_TRANSITION(
-            LEDPattern.gradient(LEDPattern.GradientType.kContinuous, LEDConstants.VIHAAN_RED, LEDConstants.YETI_BLUE),
-            true),
-    BLUE_TO_RED_TRANSITION(
-            LEDPattern.gradient(LEDPattern.GradientType.kContinuous, LEDConstants.YETI_BLUE, LEDConstants.VIHAAN_RED),
-            true),
     BLUE_ALLIANCE_ACTIVE(LEDPattern.solid(LEDConstants.YETI_BLUE)),
     RED_ALLIANCE_ACTIVE(LEDPattern.solid(LEDConstants.VIHAAN_RED)),
     RAINBOW(
@@ -25,7 +19,11 @@ public enum LEDModes {
     BLINKING_ORANGE(LEDPattern.solid(Color.kOrange).synchronizedBlink(RobotController::getRSLState), true),
     NOT_LOCKED_RED(LEDPattern.solid(Color.kRed)),
     SNOWFALL(new SnowfallLEDPattern(), true),
-    WAVE(new WaveLEDPattern(), true);
+    WAVE(new WaveLEDPattern(), true),
+    ALLIANCE_DEACTIVATION_WARNING(
+            LEDPattern.gradient(LEDPattern.GradientType.kContinuous, LEDConstants.VIHAAN_RED, LEDConstants.YETI_BLUE)
+                    .scrollAtAbsoluteSpeed(Units.MetersPerSecond.of(1), LEDConstants.LED_SPACING),
+            true);
 
     public final LEDPattern pattern;
     public final boolean isAnimation;

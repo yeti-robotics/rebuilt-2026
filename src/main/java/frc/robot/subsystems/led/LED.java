@@ -14,6 +14,7 @@ public class LED extends SubsystemBase {
     private LEDModes currentLEDMode;
     private final ShiftHandler shiftHandler;
     private LEDModes previousLEDMode;
+    private ShiftHandler.ShiftType previousShift;
     private double animationStartTime;
     private boolean isTimedAnimation;
 
@@ -40,13 +41,24 @@ public class LED extends SubsystemBase {
                     return;
                 }
             }
+
             ShiftHandler.ShiftType currentShift = shiftHandler.getCurrentShift();
             if (currentShift != null && currentShift != ShiftHandler.ShiftType.UNKNOWN) {
-                LEDModes computedLEDMode = mapShiftToLED(currentShift);
-                if (currentLEDMode != computedLEDMode) {
-                    applyPattern(computedLEDMode);
+                if (shouldShowDeactivationWarning()) {
+                    if (currentLEDMode != LEDModes.ALLIANCE_DEACTIVATION_WARNING) {
+                        applyPattern(LEDModes.ALLIANCE_DEACTIVATION_WARNING);
+                    }
+                } else {
+                    LEDModes computedLEDMode = mapShiftToLED(currentShift);
+                    if (currentLEDMode != computedLEDMode) {
+                        applyPattern(computedLEDMode);
+                    }
+                }
+                if (previousShift != currentShift) {
+                    previousShift = currentShift;
                 }
             }
+
             if (currentLEDMode != null && currentLEDMode.isAnimation) {
                 updateCurrentPattern();
             }
@@ -64,6 +76,21 @@ public class LED extends SubsystemBase {
             case ENDGAME_SHIFT -> LEDModes.ENDGAME_ACTIVE;
             case UNKNOWN -> LEDModes.BLINKING_ORANGE;
         };
+    }
+
+    private boolean shouldShowDeactivationWarning() {
+        if (DriverStation.isTeleopEnabled()) {
+            double matchTime = DriverStation.getMatchTime();
+
+            if (matchTime > 30 && matchTime < 130) {
+                int blockTime = (int) (130 - matchTime) / 25;
+                double timeInBlock = 130 - matchTime - (blockTime * 25);
+
+                return timeInBlock >= 22;
+            }
+        }
+
+        return false;
     }
 
     private void applyPattern(LEDModes mode) {

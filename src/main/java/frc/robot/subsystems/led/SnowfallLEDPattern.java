@@ -25,7 +25,7 @@ public class SnowfallLEDPattern implements LEDPattern {
             writer.setRGB(i, 20, 120, 255);
         }
         if (System.currentTimeMillis() - startTime >= waitTime) {
-            stage = stage + 1 > 3 ? 0 : stage + 1;
+            stage = (stage + 1) % 4;
             startTime = System.currentTimeMillis();
         }
     }
