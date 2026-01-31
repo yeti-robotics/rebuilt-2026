@@ -1,5 +1,7 @@
 package frc.robot.subsystems.shooter;
 
+import edu.wpi.first.units.Units;
+import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.littletonrobotics.junction.Logger;
@@ -18,8 +20,12 @@ public class ShooterSubsystem extends SubsystemBase {
         this.io = io;
     }
 
-    public Command shoot(double volts) {
-        return startEnd(() -> io.spinMotors(volts), () -> io.stopMotors());
+    public AngularVelocity getVelocity() {
+        return Units.RotationsPerSecond.of(inputs.topMotorRPM);
+    }
+
+    public Command shoot(double velocity) {
+        return startEnd(() -> io.spinMotors(velocity), () -> io.stopMotors());
     }
 
     public Command applyPower(double power) {
