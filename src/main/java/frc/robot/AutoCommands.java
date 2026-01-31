@@ -115,6 +115,102 @@ public class AutoCommands {
         return auto;
     }
 
+    public Command twoCycleNeutralDepotTowerLeft() {
+        Optional<PathPlannerPath> startNeutral = PathPlannerUtils.loadPathByName("start-neutral_L-left");
+        Optional<PathPlannerPath> neutralShoot = PathPlannerUtils.loadPathByName("neutral_L-shoot-left");
+        Optional<PathPlannerPath> startDepot = PathPlannerUtils.loadPathByName("start-depot-left");
+        Optional<PathPlannerPath> depotShoot = PathPlannerUtils.loadPathByName("depot-shoot-left");
+        Optional<PathPlannerPath> shootTower = PathPlannerUtils.loadPathByName("shoot-tower-left");
+
+        PathPlannerAuto auto;
+
+        var cmd = startDepot.isEmpty() || depotShoot.isEmpty() || shootTower.isEmpty() || startNeutral.isEmpty() || neutralShoot.isEmpty()
+                ? Commands.none().andThen(Commands.print("Command is Empty"))
+                : Commands.sequence(
+                Commands.print("Command is working"),
+                shoot().withTimeout(2),
+                AutoBuilder.followPath(startNeutral.get())
+                        .alongWith(Commands.waitSeconds(4))
+                        .andThen(intake())
+                        .withTimeout(4),
+                AutoBuilder.followPath(neutralShoot.get()).alongWith(linSlide.moveToPosition(-0.4, false)),
+                shoot().withTimeout(2),
+                AutoBuilder.followPath(startDepot.get())
+                        .alongWith(Commands.waitSeconds(1))
+                        .andThen(intake())
+                        .withTimeout(4),
+                AutoBuilder.followPath(depotShoot.get()).alongWith(linSlide.moveToPosition(-0.4, false)),
+                shoot().withTimeout(2),
+                AutoBuilder.followPath(shootTower.get()),
+                climber.moveToPosition(ClimberPosition.L1.getHeight()));
+
+        auto = new PathPlannerAuto(cmd);
+        return auto;
+    }
+
+    public Command twoCycleDepotNeutralTowerLeft() {
+        Optional<PathPlannerPath> startNeutral = PathPlannerUtils.loadPathByName("start-neutral_L-left");
+        Optional<PathPlannerPath> neutralShoot = PathPlannerUtils.loadPathByName("neutral_L-shoot-left");
+        Optional<PathPlannerPath> startDepot = PathPlannerUtils.loadPathByName("start-depot-left");
+        Optional<PathPlannerPath> depotShoot = PathPlannerUtils.loadPathByName("depot-shoot-left");
+        Optional<PathPlannerPath> shootTower = PathPlannerUtils.loadPathByName("shoot-tower-left");
+
+        PathPlannerAuto auto;
+
+        var cmd = startDepot.isEmpty() || depotShoot.isEmpty() || shootTower.isEmpty() || startNeutral.isEmpty() || neutralShoot.isEmpty()
+                ? Commands.none().andThen(Commands.print("Command is Empty"))
+                : Commands.sequence(
+                Commands.print("Command is working"),
+                shoot().withTimeout(2),
+                AutoBuilder.followPath(startDepot.get())
+                        .alongWith(Commands.waitSeconds(1))
+                        .andThen(intake())
+                        .withTimeout(4),
+                AutoBuilder.followPath(depotShoot.get()).alongWith(linSlide.moveToPosition(-0.4, false)),
+                shoot().withTimeout(2),
+                AutoBuilder.followPath(startNeutral.get())
+                        .alongWith(Commands.waitSeconds(4))
+                        .andThen(intake())
+                        .withTimeout(4),
+                AutoBuilder.followPath(neutralShoot.get()).alongWith(linSlide.moveToPosition(-0.4, false)),
+                shoot().withTimeout(2),
+                AutoBuilder.followPath(shootTower.get()),
+                climber.moveToPosition(ClimberPosition.L1.getHeight()));
+
+        auto = new PathPlannerAuto(cmd);
+        return auto;
+    }
+
+    public Command twoCycleNeutralTowerLeft() {
+        Optional<PathPlannerPath> startNeutral = PathPlannerUtils.loadPathByName("start-neutral_L-left");
+        Optional<PathPlannerPath> neutralShoot = PathPlannerUtils.loadPathByName("neutral_L-shoot-left");
+        Optional<PathPlannerPath> shootTower = PathPlannerUtils.loadPathByName("shoot-tower-left");
+
+        PathPlannerAuto auto;
+
+        var cmd = startNeutral.isEmpty() || neutralShoot.isEmpty() || shootTower.isEmpty()
+                ? Commands.none().andThen(Commands.print("Command is Empty"))
+                : Commands.sequence(
+                shoot().withTimeout(2),
+                AutoBuilder.followPath(startNeutral.get())
+                        .alongWith(Commands.waitSeconds(4))
+                        .andThen(intake())
+                        .withTimeout(4),
+                AutoBuilder.followPath(neutralShoot.get()).alongWith(linSlide.moveToPosition(-0.4, false)),
+                shoot().withTimeout(2),
+                AutoBuilder.followPath(startNeutral.get())
+                        .alongWith(Commands.waitSeconds(4))
+                        .andThen(intake())
+                        .withTimeout(4),
+                AutoBuilder.followPath(neutralShoot.get()).alongWith(linSlide.moveToPosition(-0.4, false)),
+                shoot().withTimeout(2),
+                AutoBuilder.followPath(shootTower.get()),
+                climber.moveToPosition(ClimberPosition.L1.getHeight()));
+
+        auto = new PathPlannerAuto(cmd);
+        return auto;
+    }
+
     public Command oneCycleNeutralLeftTowerCenter() {
         Optional<PathPlannerPath> initNeutral = PathPlannerUtils.loadPathByName("init-neutral_L-center");
         Optional<PathPlannerPath> neutralShoot = PathPlannerUtils.loadPathByName("neutral_L-shoot-center");
