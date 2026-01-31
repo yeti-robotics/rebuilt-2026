@@ -56,6 +56,8 @@ import frc.robot.subsystems.vision.*;
 import frc.robot.util.sim.Mechanisms;
 import org.ironmaple.simulation.SimulatedArena;
 import org.ironmaple.simulation.drivesims.SwerveDriveSimulation;
+import org.ironmaple.simulation.seasonspecific.rebuilt2026.Arena2026Rebuilt;
+import org.ironmaple.simulation.seasonspecific.rebuilt2026.RebuiltFuelOnField;
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
@@ -121,6 +123,7 @@ public class RobotContainer {
                 driveSimulation =
                         new SwerveDriveSimulation(TunerConstants.mapleSimConfig, new Pose2d(3, 3, new Rotation2d()));
                 SimulatedArena.getInstance().addDriveTrainSimulation(driveSimulation);
+                SimulatedArena.overrideInstance(new Arena2026Rebuilt());
                 // Sim robot, instantiate physics sim IO implementations
                 drive = TunerConstants.createDrivetrain();
                 drive.resetPose(new Pose2d(3, 3, new Rotation2d()));
