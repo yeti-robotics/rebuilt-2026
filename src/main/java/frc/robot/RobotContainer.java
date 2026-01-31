@@ -8,8 +8,6 @@
 package frc.robot;
 
 import static frc.robot.constants.FieldConstants.Hub.centerHubOpening;
-import static frc.robot.subsystems.climber.ClimberConfig.TEST_CLIMBER_SPEED;
-import static frc.robot.subsystems.hood.HoodConfigs.TEST_HOOD_SPEED;
 import static frc.robot.subsystems.hopper.HopperConfigs.TEST_HOPPER_SPEED;
 import static frc.robot.subsystems.indexer.IndexerConfigs.TEST_INDEXER_SPEED;
 import static frc.robot.subsystems.shooter.ShooterConfigs.TEST_SHOOTER_SPEED;
@@ -169,7 +167,6 @@ public class RobotContainer {
         }
     }
 
-
     public void updateVisionSim() {
         Pose3d sideCameraPose = new Pose3d(drive.getState().Pose).transformBy(VisionConstants.sideCamTrans);
         Pose3d frontCameraPose = new Pose3d(drive.getState().Pose).transformBy(VisionConstants.frontCamTrans);
@@ -190,33 +187,32 @@ public class RobotContainer {
                 .withRotationalRate(-controller.getRightX() * TunerConstants.MaFxAngularRate)));
         controller.start().onTrue(Commands.runOnce(drive::seedFieldCentric, drive));
 
-        controller.y().onTrue(climber.moveToPosition(ClimberPosition.L1.getHeight()));
+        //        controller.y().onTrue(climber.moveToPosition(ClimberPosition.L1.getHeight()));
 
         controller.rightBumper().whileTrue(intake.rollIn());
+
         controller.x().whileTrue(linSlide.applyPower(0.2)).onFalse(linSlide.applyPower(0));
         controller.b().whileTrue(linSlide.applyPower(-0.2)).onFalse(linSlide.applyPower(0));
 
         controller
                 .leftBumper()
-                .onTrue(Commands.either(
-                        linSlide.moveToPosition(-0.2, false),
-                        linSlide.moveToPosition(0.2, true),
-                        linSlide::isDeployed));
+                .whileTrue(intake.rollOut()
+                        .alongWith(hopper.applyPower(-TEST_HOPPER_SPEED)
+                                .alongWith(indexer.applyPower(-TEST_INDEXER_SPEED))));
+
+        controller.leftTrigger().whileTrue(shooter.applyPower(-TEST_SHOOTER_SPEED));
 
         controller
-                .leftTrigger()
-                .whileTrue(AutoAimCommands.autoAim(
-                                drive, controller::getLeftY, controller::getLeftX, centerHubOpening.toTranslation2d())
-                        .alongWith(shooter.shoot(100))
-                        .alongWith(indexer.index(3)));
+                .a()
+                .whileTrue(hopper.applyPower(0.2)
+                        .withTimeout(0.1)
+                        .andThen(hopper.applyPower(-0.2).withTimeout(0.1))
+                        .repeatedly());
 
-        controller.rightTrigger().whileTrue(hopper.spinHopper(80));
-
-        gigaStation.button(1).whileTrue(hopper.applyPower(TEST_HOPPER_SPEED));
-        gigaStation.button(2).whileTrue(shooter.applyPower(TEST_SHOOTER_SPEED));
-        gigaStation.button(3).whileTrue(hood.applyPower(TEST_HOOD_SPEED));
-        gigaStation.button(5).whileTrue(climber.applyPower(TEST_CLIMBER_SPEED));
-        gigaStation.button(6).whileTrue(indexer.applyPower(TEST_INDEXER_SPEED));
+        controller
+                .rightTrigger()
+                .whileTrue(Commands.parallel(
+                        hopper.applyPower(TEST_HOPPER_SPEED), indexer.applyPower(TEST_INDEXER_SPEED), intake.rollIn()));
     }
 
     private void configureSimBindings() {
