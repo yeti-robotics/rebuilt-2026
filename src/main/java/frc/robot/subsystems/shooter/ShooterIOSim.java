@@ -55,7 +55,7 @@ public class ShooterIOSim implements ShooterIO {
     public void shootFuel() {
         flyingFuel = new RebuiltFuelOnFly(
                 robotSimulationWorldPose.get().getTranslation(),
-                new Translation2d(0.5, 0), // placeholder value
+                new Translation2d(0.2, 0), // placeholder value
                 chassisSpeedsFieldRelative.get(),
                 robotSimulationWorldPose.get().getRotation().rotateBy(Rotation2d.k180deg),
                 Meters.of(0.45), // placeholder value

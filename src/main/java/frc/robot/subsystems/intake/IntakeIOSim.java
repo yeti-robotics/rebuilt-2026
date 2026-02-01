@@ -26,8 +26,8 @@ public class IntakeIOSim implements IntakeIO {
         this.intakeSimulation = IntakeSimulation.OverTheBumperIntake(
                 "Fuel",
                 driveTrain, // Drive simulation
-                Inches.of(32.5), // Width of intake (placeholder value)
-                Inches.of(12), // Extension length of intake (placeholder value)
+                Inches.of(33), // Width of intake (placeholder value)
+                Inches.of(33), // Extension length of intake (placeholder value)
                 IntakeSimulation.IntakeSide.FRONT, // Side intake is mounted on
                 44); // placeholder value
 
@@ -38,6 +38,9 @@ public class IntakeIOSim implements IntakeIO {
     public void updateInputs(IntakeIOInputs inputs) {
         inputs.rollerRPM = intakeMotor.getVelocity().getValueAsDouble();
         inputs.rollerVoltage = intakeMotor.getMotorVoltage().getValueAsDouble();
+
+        Logger.recordOutput("Intake run", intakeSimulation.isRunning());
+        Logger.recordOutput("Intake balls", intakeSimulation.getGamePiecesAmount());
     }
 
     @Override
@@ -52,8 +55,6 @@ public class IntakeIOSim implements IntakeIO {
         } else {
             intakeSimulation.stopIntake();
         }
-        Logger.recordOutput("Does intake work", runIntake);
-        Logger.recordOutput("Intake sim", intakeSimulation.getGamePiecesAmount());
     }
 
     @Override
