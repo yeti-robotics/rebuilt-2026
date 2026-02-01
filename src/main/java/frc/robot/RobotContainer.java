@@ -89,7 +89,6 @@ public class RobotContainer {
     private final CommandXboxController controller =
             new CommandXboxController(Constants.PRIMARY_CONTROLLER_PORT); // real
     private final CommandXboxController controller2 = new CommandXboxController(Constants.GIGA_PORT); // testing
-    private SwerveDriveSimulation driveSimulation = null;
 
     // Dashboard inputs
     private final LoggedDashboardChooser<Command> autoChooser;
@@ -123,19 +122,13 @@ public class RobotContainer {
                 break;
 
             case SIM:
-                driveSimulation =
-                        new SwerveDriveSimulation(TunerConstants.mapleSimConfig, new Pose2d(3, 3, new Rotation2d()));
-                SimulatedArena.getInstance().addDriveTrainSimulation(driveSimulation);
-                SimulatedArena.overrideInstance(new Arena2026Rebuilt());
-                SimulatedArena.getInstance().addGamePiece(new RebuiltFuelOnField(new Translation2d(2, 2)));
-                SimulatedArena.getInstance().addGamePiece(new RebuiltFuelOnField(new Translation2d(3, 3)));
-
                 // Sim robot, instantiate physics sim IO implementations
                 drive = TunerConstants.createDrivetrain();
                 drive.resetPose(new Pose2d(3, 3, new Rotation2d()));
                 linSlide = new LinSlideSubsystem(new LinSlideIOAlpha());
-                shooterSim = new ShooterIOSim(() -> drive.getState().Pose, drive::getChassisSpeeds);
-                intake = new IntakeSubsystem(new IntakeIOSim(driveSimulation, shooterSim));
+                shooterSim = new ShooterIOSim(
+                        drive.getSimulation()::getSimulatedDriveTrainPose, () -> drive.getState().Speeds);
+                intake = new IntakeSubsystem(new IntakeIOSim(drive.getSimulation(), shooterSim));
                 hopper = new Hopper(new HopperIOAlpha());
                 vision = new Vision(
                         drive,
@@ -338,7 +331,8 @@ public class RobotContainer {
         controller.button(3).whileTrue(led.runPattern(LEDModes.RAINBOW));
         controller.button(4).whileTrue(led.runPattern(LEDModes.LOCKED_GREEN));
         controller.button(5).whileTrue(led.runPattern(LEDModes.WAVE));
-        controller.button(6).whileTrue(led.runPattern(LEDModes.SNOWFALL));
+        //controller.button(6).whileTrue(led.runPattern(LEDModes.SNOWFALL));
+        controller.button(6).whileTrue(AutoAimCommands.autoAimWithOrbit(drive, () -> -controller.getLeftY(), () -> -controller.getLeftX(), centerHubOpening.toTranslation2d()));
 
         controller.button(7).whileTrue(intake.setRollerSim(3));
         controller.button(8).whileTrue(intake.handoffFuel());
@@ -377,7 +371,7 @@ public class RobotContainer {
     public void resetSimulationField() {
         if (Constants.currentMode != Constants.Mode.SIM) return;
 
-        driveSimulation.setSimulationWorldPose(new Pose2d(3, 3, new Rotation2d()));
+        drive.getSimulation().setSimulationWorldPose(new Pose2d(8, 3, new Rotation2d()));
         SimulatedArena.getInstance().resetFieldForAuto();
     }
 
@@ -385,8 +379,7 @@ public class RobotContainer {
         if (Constants.currentMode != Constants.Mode.SIM) return;
 
         updateVisionSim();
-        SimulatedArena.getInstance().simulationPeriodic();
-        Logger.recordOutput("FieldSimulation/RobotPosition", driveSimulation.getSimulatedDriveTrainPose());
+        Logger.recordOutput("FieldSimulation/RobotPosition", drive.getSimulation().getSimulatedDriveTrainPose());
         Logger.recordOutput("FieldSimulation/Fuel", SimulatedArena.getInstance().getGamePiecesArrayByType("Fuel"));
     }
 }
