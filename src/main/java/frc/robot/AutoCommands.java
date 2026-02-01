@@ -53,9 +53,8 @@ public class AutoCommands {
         return Commands.sequence(
                 AutoAimCommands.autoAim(drivetrain, () -> 0, () -> 0, centerHubOpening.toTranslation2d())
                         .withTimeout(1),
-                indexer.runMotors(0),
-                shooter.shoot(0),
-                hopper.spinHopper(0)).withTimeout(2);
+                shooter.shoot(0).withTimeout(0.2),
+                indexer.runMotors(0).alongWith(hopper.spinHopper(0)).withTimeout(2));
     }
 
     public Command intake() {
@@ -71,16 +70,16 @@ public class AutoCommands {
                         .alongWith(Commands.waitSeconds(2).andThen(linSlide.moveToPosition(-0.4, false))));
     }
 
-    public Command followPathAndIntake (Optional<PathPlannerPath> path, int waitTime) {
+    public Command followPathAndIntake(Optional<PathPlannerPath> path, int waitTime) {
         return AutoBuilder.followPath(path.get())
-                .alongWith(Commands.waitSeconds(waitTime))
-                .andThen(intake())
-                .withTimeout(3);
+                .alongWith(Commands.waitSeconds(waitTime)
+                .andThen(intake()
+                .withTimeout(3)));
     }
 
-    public Command followPathAndStowIntake (Optional<PathPlannerPath> path) {
-        return AutoBuilder.followPath(path.get()).alongWith(linSlide.moveToPosition(-0.4, false));
-
+    public Command followPathAndStowIntake(Optional<PathPlannerPath> path) {
+        return AutoBuilder.followPath(path.get())
+                .alongWith(linSlide.moveToPosition(-0.1, false));
     }
 
     public Command climbTower(Optional<PathPlannerPath> path) {
@@ -348,9 +347,7 @@ public class AutoCommands {
                 : Commands.sequence(
                         shoot().withTimeout(2),
                         followPathAndIntake(startNeutral, 4),
-                        AutoBuilder.followPath(neutralShoot.get()),
-                        shoot().withTimeout(2),
-                        Commands.waitSeconds(2).andThen(linSlide.moveToPosition(-0.4, false)),
+                        followPathAndStowIntake(neutralShoot).andThen(shoot()),
                         climbTower(shootTower));
         auto = new PathPlannerAuto(cmd);
         return auto;
@@ -367,12 +364,11 @@ public class AutoCommands {
                 ? Commands.none()
                 : Commands.sequence(
                         shoot().withTimeout(2),
-                AutoBuilder.followPath(startOutpost.get())
-                        .alongWith(Commands.waitSeconds(3)),
-                AutoBuilder.followPath(outpostShoot.get()),
-                shoot().withTimeout(2),
-                AutoBuilder.followPath(shootTower.get()),
-            climber.moveToPosition(ClimberPosition.L1.getHeight()));
+                        AutoBuilder.followPath(startOutpost.get()),
+                        (Commands.waitSeconds(3)),
+                        AutoBuilder.followPath(outpostShoot.get()),
+                        shoot().withTimeout(2),
+                        climbTower(shootTower));
             auto = new PathPlannerAuto(cmd);
             return auto;
     }
@@ -390,19 +386,13 @@ public class AutoCommands {
                 ? Commands.none()
                 : Commands.sequence(
                         shoot().withTimeout(2),
-                AutoBuilder.followPath(startOutpost.get()),
-                        shoot().withTimeout(2)
-                        .alongWith(Commands.waitSeconds(3)),
-                AutoBuilder.followPath(outpostShoot.get()),
-                shoot().withTimeout(2),
-                AutoBuilder.followPath(shootNeutral.get())
-                            .alongWith(Commands.waitSeconds(4))
-                            .andThen(intake().withTimeout(2)),
-                AutoBuilder.followPath(neutralShoot.get()),
-                shoot().withTimeout(2),
-                Commands.waitSeconds(2).andThen(intake()),
-                AutoBuilder.followPath(shootTower.get()),
-                climber.moveToPosition(ClimberPosition.L1.getHeight()));
+                        AutoBuilder.followPath(startOutpost.get()),
+                        (Commands.waitSeconds(3)),
+                        AutoBuilder.followPath(outpostShoot.get()),
+                        shoot().withTimeout(2),
+                        followPathAndIntake(shootNeutral, 4),
+                        followPathAndStowIntake(neutralShoot).andThen(shoot().withTimeout(2)),
+                        climbTower(shootTower));
         auto = new PathPlannerAuto(cmd);
         return auto;
     }
@@ -419,19 +409,14 @@ public class AutoCommands {
         var cmd = startNeutral.isEmpty() || neutralShoot.isEmpty() || shootOutpost.isEmpty() || outpostShoot.isEmpty() || shootTower.isEmpty()
                 ? Commands.none()
                 : Commands.sequence(
-                        shoot().withTimeout(2),
-                AutoBuilder.followPath(startNeutral.get())
-                        .alongWith(Commands.waitSeconds(4))
-                        .andThen(intake().withTimeout(2)),
-                AutoBuilder.followPath(neutralShoot.get()),
-                shoot().withTimeout(2),
-                Commands.waitSeconds(2).andThen(linSlide.moveToPosition(-0.4, false)),
-                AutoBuilder.followPath(shootOutpost.get()),
-                Commands.waitSeconds(2),
-                AutoBuilder.followPath(outpostShoot.get()),
-                shoot().withTimeout(2),
-                AutoBuilder.followPath(shootTower.get()),
-                climber.moveToPosition(ClimberPosition.L1.getHeight()));
+                            shoot().withTimeout(2),
+                            followPathAndIntake(startNeutral, 4),
+                            followPathAndStowIntake(neutralShoot).andThen(shoot().withTimeout(2)),
+                            AutoBuilder.followPath(shootOutpost.get()),
+                            Commands.waitSeconds(2),
+                            AutoBuilder.followPath(outpostShoot.get()),
+                            shoot().withTimeout(2),
+                            climbTower(shootTower));
         auto = new PathPlannerAuto(cmd);
         return auto;
     }
@@ -440,29 +425,19 @@ public class AutoCommands {
         Optional<PathPlannerPath> startNeutral = PathPlannerUtils.loadPathByName("start-neutral_R-right");
         Optional<PathPlannerPath> neutralShoot = PathPlannerUtils.loadPathByName("neutral_R-shoot-right");
         Optional<PathPlannerPath> shootNeutral = PathPlannerUtils.loadPathByName("shoot-neutral_R-right");
-        Optional<PathPlannerPath> neutralShoot2 = PathPlannerUtils.loadPathByName("neutral_R-shoot-right");
         Optional<PathPlannerPath> shootTower = PathPlannerUtils.loadPathByName("shoot-tower-right");
 
         PathPlannerAuto auto;
 
-        var cmd = startNeutral.isEmpty() || neutralShoot.isEmpty() || shootNeutral.isEmpty() || neutralShoot2.isEmpty() || shootTower.isEmpty()
+        var cmd = startNeutral.isEmpty() || neutralShoot.isEmpty() || shootNeutral.isEmpty() || shootTower.isEmpty()
                 ? Commands.none()
                 : Commands.sequence(
                 shoot().withTimeout(2),
-                AutoBuilder.followPath(startNeutral.get())
-                        .alongWith(Commands.waitSeconds(4))
-                        .andThen(intake().withTimeout(2)),
-                AutoBuilder.followPath(neutralShoot.get()),
-                shoot().withTimeout(2),
-                Commands.waitSeconds(2).andThen(linSlide.moveToPosition(-0.4, false)),
-                AutoBuilder.followPath(shootNeutral.get())
-                        .alongWith(Commands.waitSeconds(4))
-                        .andThen(intake().withTimeout(2)),
-                AutoBuilder.followPath(neutralShoot2.get()),
-                shoot().withTimeout(2),
-                Commands.waitSeconds(2).andThen(linSlide.moveToPosition(-0.4, false)),
-                AutoBuilder.followPath(shootTower.get()),
-                climber.moveToPosition(ClimberPosition.L1.getHeight()));
+                followPathAndIntake(startNeutral, 4),
+                followPathAndStowIntake(neutralShoot),
+                followPathAndIntake(shootNeutral, 4),
+                followPathAndStowIntake(neutralShoot).andThen(shoot().withTimeout(2)),
+                climbTower(shootTower));
         auto = new PathPlannerAuto(cmd);
         return auto;
     }
