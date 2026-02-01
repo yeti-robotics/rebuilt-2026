@@ -376,7 +376,7 @@ public class AutoCommands {
     public Command twoCycleOutpostNeutralTowerRight() {
         Optional<PathPlannerPath> startOutpost = PathPlannerUtils.loadPathByName("start-outpost-right");
         Optional<PathPlannerPath> outpostShoot = PathPlannerUtils.loadPathByName("outpost-shoot-right");
-        Optional<PathPlannerPath> shootNeutral = PathPlannerUtils.loadPathByName("shoot-neutral_R-right");
+        Optional<PathPlannerPath> shootNeutral = PathPlannerUtils.loadPathByName("outpost-neutralZone-right");
         Optional<PathPlannerPath> neutralShoot = PathPlannerUtils.loadPathByName("neutral_R-shoot-right");
         Optional<PathPlannerPath> shootTower = PathPlannerUtils.loadPathByName("shoot-tower-right");
 
@@ -424,7 +424,7 @@ public class AutoCommands {
     public Command twoCycleNeutralTowerRight() {
         Optional<PathPlannerPath> startNeutral = PathPlannerUtils.loadPathByName("start-neutral_R-right");
         Optional<PathPlannerPath> neutralShoot = PathPlannerUtils.loadPathByName("neutral_R-shoot-right");
-        Optional<PathPlannerPath> shootNeutral = PathPlannerUtils.loadPathByName("shoot-neutral_R-right");
+        Optional<PathPlannerPath> shootNeutral = PathPlannerUtils.loadPathByName("outpost-neutralZone-right");
         Optional<PathPlannerPath> shootTower = PathPlannerUtils.loadPathByName("shoot-tower-right");
 
         PathPlannerAuto auto;
