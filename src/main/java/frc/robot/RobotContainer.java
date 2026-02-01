@@ -53,6 +53,7 @@ import frc.robot.subsystems.shooter.ShooterIOAlpha;
 import frc.robot.subsystems.shooter.ShooterIOSim;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
 import frc.robot.subsystems.vision.*;
+import frc.robot.util.CommandGigaStation;
 import frc.robot.util.sim.Mechanisms;
 import org.ironmaple.simulation.SimulatedArena;
 import org.ironmaple.simulation.drivesims.SwerveDriveSimulation;
@@ -82,6 +83,7 @@ public class RobotContainer {
     private final IndexerSubsystem indexer;
     private final Vision vision;
     private final HoodSubsystem hood;
+    private final AutoCommands autoCommands;
 
     // Controller
     private final CommandXboxController controller =
@@ -112,6 +114,7 @@ public class RobotContainer {
                 shooter = new ShooterSubsystem(new ShooterIOAlpha());
                 indexer = new IndexerSubsystem(new IndexerIOAlpha());
                 hood = new HoodSubsystem(new HoodIOBeta());
+                autoCommands = new AutoCommands(climber, drive, hood, hopper, indexer, intake, linSlide, shooter);
 
                 vision = new Vision(
                         drive,
@@ -145,19 +148,32 @@ public class RobotContainer {
                 indexer = new IndexerSubsystem(new IndexerIOAlpha());
                 hood = new HoodSubsystem(new HoodIOBeta());
 
+                autoCommands = new AutoCommands(climber, drive, hood, hopper, indexer, intake, linSlide, shooter);
+
                 break;
 
             default:
                 // Replayed robot, disable IO implementations
                 drive = TunerConstants.createDrivetrain();
-                linSlide = new LinSlideSubsystem(new LinSlideIO() {});
-                intake = new IntakeSubsystem(new IntakeIO() {});
-                hopper = new Hopper(new HopperIO() {});
-                climber = new Climber(new ClimberIO() {});
-                vision = new Vision(drive, new VisionIO() {}, new VisionIO() {});
-                indexer = new IndexerSubsystem(new IndexerIO() {});
-                shooter = new ShooterSubsystem((new ShooterIO() {}));
-                hood = new HoodSubsystem(new HoodIO() {});
+                linSlide = new LinSlideSubsystem(new LinSlideIO() {
+                });
+                intake = new IntakeSubsystem(new IntakeIO() {
+                });
+                hopper = new Hopper(new HopperIO() {
+                });
+                climber = new Climber(new ClimberIO() {
+                });
+                vision = new Vision(drive, new VisionIO() {
+                }, new VisionIO() {
+                });
+                indexer = new IndexerSubsystem(new IndexerIO() {
+                });
+                shooter = new ShooterSubsystem((new ShooterIO() {
+                }));
+                hood = new HoodSubsystem(new HoodIO() {
+                });
+
+                autoCommands = new AutoCommands(climber, drive, hood, hopper, indexer, intake, linSlide, shooter);
 
                 break;
         }
@@ -176,6 +192,29 @@ public class RobotContainer {
                 "Drive SysId (Quasistatic Reverse)", drive.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
         autoChooser.addOption("Drive SysId (Dynamic Forward)", drive.sysIdDynamic(SysIdRoutine.Direction.kForward));
         autoChooser.addOption("Drive SysId (Dynamic Reverse)", drive.sysIdDynamic(SysIdRoutine.Direction.kReverse));
+
+        // Left
+        autoChooser.addOption("One Cycle Neutral Tower Left", autoCommands.oneCycleNeutralTowerLeft());
+        autoChooser.addOption("One Cycle Depot Tower Left", autoCommands.oneCycleDepotTowerLeft());
+        autoChooser.addOption("Two Cycle Neutral Depot Tower Left", autoCommands.twoCycleNeutralDepotTowerLeft());
+        autoChooser.addOption("Two Cycle Depot Neutral Tower Left", autoCommands.twoCycleDepotNeutralTowerLeft());
+        autoChooser.addOption("Two Cycle Neutral Neutral Tower Left", autoCommands.twoCycleNeutralTowerLeft());
+
+        // Center
+        autoChooser.addOption("One Cycle Neutral Left Tower Center", autoCommands.oneCycleNeutralLeftTowerCenter());
+        autoChooser.addOption("One Cycle Neutral Right Tower Center", autoCommands.oneCycleNeutralRightTowerCenter());
+        autoChooser.addOption("Two Cycle Depot Neutral Right Center", autoCommands.twoCycleDepotNeutralRightCenter());
+        autoChooser.addOption("Two Cycle Neutral Left Neutral Center", autoCommands.twoCycleNeutralNeutralLeftCenter());
+        autoChooser.addOption("Two Cycle Neutral Right Neutral Center", autoCommands.twoCycleNeutralNeutralRightCenter());
+        autoChooser.addOption("Two Cycle Depot Neutral Left Center", autoCommands.twoCycleDepotNeutralLeftCenter());
+
+        // Right
+        autoChooser.addOption("One Cycle Neutral Right Tower Right", autoCommands.oneCycleNeutralRightTowerRight());
+        autoChooser.addOption("One Cycle Outpost Tower Right", autoCommands.oneCycleOutpostTowerRight());
+        autoChooser.addOption("Two Cycle Outpost Neutral Tower Right", autoCommands.twoCycleOutpostNeutralTowerRight());
+        autoChooser.addOption("Two Cycle Neutral Outpost Tower Right", autoCommands.twoCycleNeutralOutpostTowerRight());
+        autoChooser.addOption("Two Cycle Neutral Neutral Tower Right", autoCommands.twoCycleNeutralTowerRight());
+
 
         // Configure the button bindings
         if (Robot.isReal()) {
