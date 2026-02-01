@@ -168,5 +168,7 @@ public class Robot extends LoggedRobot {
         robotContainer.updateSimulation();
         Pose3d[] gamePieces = SimulatedArena.getInstance().getGamePiecesArrayByType("Fuel");
         Logger.recordOutput("FieldSimulation/GamePieces", gamePieces);
+        SimulatedArena.getInstance().simulationPeriodic();
+
     }
 }

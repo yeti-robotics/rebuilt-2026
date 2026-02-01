@@ -63,8 +63,6 @@ public class ShooterIOSim implements ShooterIO {
                 Degrees.of(45) // placeholder value
                 );
 
-        SimulatedArena.getInstance().addGamePieceProjectile(flyingFuel);
-
         flyingFuel
                 .withTargetPosition(() ->
                         FieldMirroringUtils.toCurrentAllianceTranslation(new Translation3d(4.625594, 4.034536, 1.8288)))

@@ -124,9 +124,8 @@ public class RobotContainer {
                         new SwerveDriveSimulation(TunerConstants.mapleSimConfig, new Pose2d(3, 3, new Rotation2d()));
                 SimulatedArena.getInstance().addDriveTrainSimulation(driveSimulation);
                 SimulatedArena.overrideInstance(new Arena2026Rebuilt());
-                SimulatedArena.getInstance().addGamePiece(new RebuiltFuelOnField(new Translation2d(2,2)));
-                SimulatedArena.getInstance().addGamePiece(new RebuiltFuelOnField(new Translation2d(3,3)));
-                SimulatedArena.getInstance().addGamePiece(new RebuiltFuelOnField(new Translation2d(4,2)));
+                SimulatedArena.getInstance().addGamePiece(new RebuiltFuelOnField(new Translation2d(2, 2)));
+                SimulatedArena.getInstance().addGamePiece(new RebuiltFuelOnField(new Translation2d(3, 3)));
 
                 // Sim robot, instantiate physics sim IO implementations
                 drive = TunerConstants.createDrivetrain();

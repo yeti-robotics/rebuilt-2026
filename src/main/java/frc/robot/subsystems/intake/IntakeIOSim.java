@@ -10,6 +10,7 @@ import frc.robot.subsystems.shooter.ShooterIOSim;
 import frc.robot.util.sim.PhysicsSim;
 import org.ironmaple.simulation.IntakeSimulation;
 import org.ironmaple.simulation.drivesims.AbstractDriveTrainSimulation;
+import org.littletonrobotics.junction.Logger;
 
 public class IntakeIOSim implements IntakeIO {
     private final TalonFX intakeMotor;
@@ -27,7 +28,7 @@ public class IntakeIOSim implements IntakeIO {
                 driveTrain, // Drive simulation
                 Inches.of(32.5), // Width of intake (placeholder value)
                 Inches.of(12), // Extension length of intake (placeholder value)
-                IntakeSimulation.IntakeSide.BACK, // Side intake is mounted on
+                IntakeSimulation.IntakeSide.FRONT, // Side intake is mounted on
                 44); // placeholder value
 
         this.shooterIOSim = shooterIOSim;
@@ -51,6 +52,8 @@ public class IntakeIOSim implements IntakeIO {
         } else {
             intakeSimulation.stopIntake();
         }
+        Logger.recordOutput("Does intake work", runIntake);
+        Logger.recordOutput("Intake sim", intakeSimulation.getGamePiecesAmount());
     }
 
     @Override
