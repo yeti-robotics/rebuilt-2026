@@ -174,13 +174,16 @@ public class RobotContainer {
         autoChooser.addOption("One Cycle Neutral Right Tower Center", autoCommands.oneCycleNeutralRightTowerCenter());
         autoChooser.addOption("Two Cycle Depot Neutral Right Center", autoCommands.twoCycleDepotNeutralRightCenter());
         autoChooser.addOption("Two Cycle Neutral Left Neutral Center", autoCommands.twoCycleNeutralNeutralLeftCenter());
-        autoChooser.addOption(
-                "Two Cycle Neutral Right Neutral Center", autoCommands.twoCycleNeutralNeutralRightCenter());
+        autoChooser.addOption("Two Cycle Neutral Right Neutral Center", autoCommands.twoCycleNeutralNeutralRightCenter());
         autoChooser.addOption("Two Cycle Depot Neutral Left Center", autoCommands.twoCycleDepotNeutralLeftCenter());
 
         // Right
         autoChooser.addOption("One Cycle Neutral Right Tower Right", autoCommands.oneCycleNeutralRightTowerRight());
         autoChooser.addOption("One Cycle Outpost Tower Right", autoCommands.oneCycleOutpostTowerRight());
+        autoChooser.addOption("Two Cycle Outpost Neutral Tower Right", autoCommands.twoCycleOutpostNeutralTowerRight());
+        autoChooser.addOption("Two Cycle Neutral Outpost Tower Right", autoCommands.twoCycleNeutralOutpostTowerRight());
+        autoChooser.addOption("Two Cycle Neutral Neutral Tower Right", autoCommands.twoCycleNeutralTowerRight());
+
 
         // Configure the button bindings
         if (Robot.isReal()) {
