@@ -109,15 +109,6 @@ public class TunerConstants {
     public static double MaFxAngularRate =
             RotationsPerSecond.of(1).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
 
-    /* Setting up bindings for necessary control of the swerve drive platform */
-    public final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
-            .withDeadband(MAX_VELOCITY_METERS_PER_SECOND * 0.1)
-            .withRotationalDeadband(MaFxAngularRate * 0.1) // Add a 10% deadband
-            .withDriveRequestType(
-                    SwerveModule.DriveRequestType.OpenLoopVoltage); // Use open-loop control for drive motors
-    public final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
-    public final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
-
     //  protected static final Telemetry logger = new Telemetry(MAX_VELOCITY_METERS_PER_SECOND);
     //
     // Every 1 rotation of the azimuth results in kCoupleRatio drive motor turns;
@@ -213,8 +204,6 @@ public class TunerConstants {
     private static final Distance kBackRightXPos = Inches.of(-10);
     private static final Distance kBackRightYPos = Inches.of(-10);
 
-    public static final AngularVelocity MAX_BLUR_SPEED = RotationsPerSecond.of(3);
-
     public static final SwerveModuleConstants<TalonFXConfiguration, TalonFXConfiguration, CANcoderConfiguration>
             FrontLeft = ConstantCreator.createModuleConstants(
                     kFrontLeftSteerMotorId,
@@ -259,33 +248,6 @@ public class TunerConstants {
                     kInvertRightSide,
                     kBackRightSteerMotorInverted,
                     kBackRightEncoderInverted);
-
-    public static final DriveTrainSimulationConfig mapleSimConfig = DriveTrainSimulationConfig.Default()
-            .withRobotMass(Kilograms.of(ROBOT_MASS_KG))
-            .withCustomModuleTranslations(getModuleTranslations())
-            .withGyro(COTS.ofPigeon2())
-            .withSwerveModule(new SwerveModuleSimulationConfig(
-                    DCMotor.getKrakenX60(1),
-                    DCMotor.getFalcon500(1),
-                    TunerConstants.FrontLeft.DriveMotorGearRatio,
-                    TunerConstants.FrontLeft.SteerMotorGearRatio,
-                    Volts.of(TunerConstants.FrontLeft.DriveFrictionVoltage),
-                    Volts.of(TunerConstants.FrontLeft.SteerFrictionVoltage),
-                    Meters.of(TunerConstants.FrontLeft.WheelRadius),
-                    KilogramSquareMeters.of(TunerConstants.FrontLeft.SteerInertia),
-                    WHEEL_COF));
-
-    private static final RobotConfig PP_CONFIG = new RobotConfig(
-            ROBOT_MASS_KG,
-            ROBOT_MOI,
-            new ModuleConfig(
-                    TunerConstants.FrontLeft.WheelRadius,
-                    TunerConstants.kSpeedAt12Volts.in(MetersPerSecond),
-                    WHEEL_COF,
-                    DCMotor.getKrakenX60Foc(1).withReduction(TunerConstants.FrontLeft.DriveMotorGearRatio),
-                    TunerConstants.FrontLeft.SlipCurrent,
-                    1),
-            getModuleTranslations());
     //    /**
     //     * Creates a CommandSwerveDrivetrain instance. This should only be called once in your robot
     //     * program,.
