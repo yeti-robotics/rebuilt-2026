@@ -1,5 +1,6 @@
 package frc.robot.subsystems.hopper;
 
+import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.MotionMagicVelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import frc.robot.Robot;
@@ -8,6 +9,7 @@ import frc.robot.util.sim.PhysicsSim;
 
 public class HopperIOAlpha implements HopperIO {
     public final TalonFX hopperRoller;
+    private final DutyCycleOut dutyCycleOut = new DutyCycleOut(0);
 
     public HopperIOAlpha() {
         hopperRoller = new TalonFX(HopperConfigs.ROLLER_ID, Constants.rioBus);
@@ -25,5 +27,10 @@ public class HopperIOAlpha implements HopperIO {
     @Override
     public void spinHopperRoller(double volts) {
         hopperRoller.setControl(new MotionMagicVelocityVoltage(volts));
+    }
+
+    @Override
+    public void applyPower(double percent) {
+        hopperRoller.setControl(dutyCycleOut.withOutput(percent));
     }
 }
