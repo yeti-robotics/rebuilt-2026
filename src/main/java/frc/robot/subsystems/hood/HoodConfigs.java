@@ -12,6 +12,7 @@ public class HoodConfigs {
     static final int HOOD_CANCODER_ID = 45;
     static final double GEAR_RATIO = 1;
     static final double MAGNET_OFFSET = 0;
+    public static final double TEST_HOOD_SPEED = 0.2;
 
     private static final Slot0Configs SLOT_0_CONFIGS = Robot.isReal()
             ? new Slot0Configs()
