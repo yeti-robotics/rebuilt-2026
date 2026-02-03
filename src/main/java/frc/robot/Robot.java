@@ -164,6 +164,5 @@ public class Robot extends LoggedRobot {
     public void simulationPeriodic() {
         PhysicsSim.getInstance().run();
         robotContainer.updateSimulation();
-
     }
 }
