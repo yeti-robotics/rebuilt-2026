@@ -18,15 +18,19 @@ public class IntakeSubsystem extends SubsystemBase {
         this.io = io;
     }
 
-    private Command setRoller(double volts) {
+    public Command setIntake(double volts) {
         return startEnd(() -> io.setIntakeMotor(volts), () -> io.setIntakeMotor(0));
     }
 
     public Command rollIn() {
-        return setRoller(-0.5);
+        return setIntake(IntakeConfigs.INTAKE_VOLTAGE);
     }
 
     public Command rollOut() {
-        return setRoller(0.5);
+        return setIntake(IntakeConfigs.OUTTAKE_VOLTAGE);
+    }
+
+    public Command applyPower(double percent) {
+        return runEnd(() -> io.applyPower(percent), () -> io.applyPower(0));
     }
 }
