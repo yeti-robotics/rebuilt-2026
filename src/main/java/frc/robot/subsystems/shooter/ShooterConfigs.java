@@ -18,12 +18,12 @@ public class ShooterConfigs {
             .withMotionMagicJerk(0);
 
     static final TalonFXConfiguration TOP_MOTOR_CONFIGS = new TalonFXConfiguration()
-            .withFeedback(new FeedbackConfigs().withSensorToMechanismRatio(2).withRotorToSensorRatio(1))
+            .withFeedback(new FeedbackConfigs().withSensorToMechanismRatio(2.89).withRotorToSensorRatio(1))
             .withSlot0(SLOT_0_CONFIGS)
             .withMotionMagic(MOTION_MAGIC_CONFIGS);
 
     static final TalonFXConfiguration BOTTOM_MOTOR_CONFIGS = new TalonFXConfiguration()
-            .withFeedback(new FeedbackConfigs().withSensorToMechanismRatio(1).withRotorToSensorRatio(1))
+            .withFeedback(new FeedbackConfigs().withSensorToMechanismRatio(2.89).withRotorToSensorRatio(1))
             .withSlot0(SLOT_0_CONFIGS)
             .withMotionMagic(MOTION_MAGIC_CONFIGS);
 }
