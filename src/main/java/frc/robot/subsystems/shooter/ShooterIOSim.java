@@ -59,8 +59,8 @@ public class ShooterIOSim implements ShooterIO {
                 chassisSpeedsFieldRelative.get(),
                 robotSimulationWorldPose.get().getRotation().rotateBy(Rotation2d.k180deg),
                 Meters.of(0.45), // placeholder value
-                MetersPerSecond.of(16), // placeholder value
-                Degrees.of(45) // placeholder value
+                MetersPerSecond.of(8), // placeholder value
+                Degrees.of(80) // placeholder value
                 );
 
         flyingFuel
