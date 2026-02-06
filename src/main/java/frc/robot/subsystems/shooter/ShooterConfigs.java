@@ -11,10 +11,10 @@ public class ShooterConfigs {
     public static final double TEST_SHOOTER_SPEED = 0.8;
 
     public static final Slot0Configs SLOT_0_CONFIGS =
-            new Slot0Configs().withKP(0).withKI(0).withKD(0).withKA(0).withKV(0).withKS(0);
+            new Slot0Configs().withKP(0).withKI(0).withKD(0).withKA(0).withKV(0.125).withKS(11.5);
 
     public static final MotionMagicConfigs MOTION_MAGIC_CONFIGS = new MotionMagicConfigs()
-            .withMotionMagicAcceleration(2)
+            .withMotionMagicAcceleration(8)
             .withMotionMagicCruiseVelocity(4)
             .withMotionMagicJerk(0);
 
