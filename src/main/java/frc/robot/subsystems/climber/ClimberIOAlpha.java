@@ -1,5 +1,6 @@
 package frc.robot.subsystems.climber;
 
+import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.MotionMagicTorqueCurrentFOC;
 import com.ctre.phoenix6.controls.NeutralOut;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -11,6 +12,7 @@ import frc.robot.util.sim.PhysicsSim;
 public class ClimberIOAlpha implements ClimberIO {
     private final TalonFX climberMotor;
     private MotionMagicTorqueCurrentFOC magicRequest = new MotionMagicTorqueCurrentFOC(0);
+    private DutyCycleOut dutyRequest = new DutyCycleOut(0);
 
     public ClimberIOAlpha() {
         climberMotor = new TalonFX(ClimberConfig.CLIMBER_MOTOR_ID, Constants.rioBus);
@@ -39,5 +41,10 @@ public class ClimberIOAlpha implements ClimberIO {
     @Override
     public void neutralizeClimber() {
         climberMotor.setControl(new NeutralOut());
+    }
+
+    @Override
+    public void applyPower(double percent) {
+        climberMotor.setControl(dutyRequest.withOutput(percent));
     }
 }
