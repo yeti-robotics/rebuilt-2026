@@ -26,8 +26,8 @@ public class IntakeIOSim implements IntakeIO {
         this.intakeSimulation = IntakeSimulation.OverTheBumperIntake(
                 "Fuel",
                 driveTrain, // Drive simulation
-                Inches.of(33), // Width of intake (placeholder value)
-                Inches.of(33), // Extension length of intake (placeholder value)
+                Inches.of(24), // Width of intake
+                Inches.of(7), // Extension length of intake
                 IntakeSimulation.IntakeSide.FRONT, // Side intake is mounted on
                 44); // placeholder value
 
