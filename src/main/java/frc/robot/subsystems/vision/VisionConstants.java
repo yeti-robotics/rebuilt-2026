@@ -27,9 +27,6 @@ public class VisionConstants {
     public static String frontCam = "limelight-front";
     public static String sideCam = "limelight-side";
 
-    // Robot to camera transforms
-    // (Not used by Limelight, configure in web UI instead)
-
     // Basic filtering thresholds
     public static double maxAmbiguity = 0.3;
     public static double maxZError = 0.75;
