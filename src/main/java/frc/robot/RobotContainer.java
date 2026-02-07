@@ -24,7 +24,6 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.AutoAimCommands;
-import frc.robot.AutoCommands;
 import frc.robot.constants.Constants;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.climber.*;
@@ -219,8 +218,8 @@ public class RobotContainer {
         controller.start().onTrue(Commands.runOnce(drive::seedFieldCentric, drive));
 
         drive.setDefaultCommand(drive.applyRequest(() -> driveRequest
-                .withVelocityX(controller2.getLeftY() * TunerConstants.kSpeedAt12Volts.magnitude())
-                .withVelocityY(controller2.getLeftX() * TunerConstants.kSpeedAt12Volts.magnitude())
+                .withVelocityX(-controller2.getLeftY() * TunerConstants.kSpeedAt12Volts.magnitude())
+                .withVelocityY(-controller2.getLeftX() * TunerConstants.kSpeedAt12Volts.magnitude())
                 .withRotationalRate(-controller2.getRightX() * TunerConstants.MaFxAngularRate)));
         controller.start().onTrue(Commands.runOnce(drive::seedFieldCentric, drive));
         controller2.start().onTrue(Commands.runOnce(drive::seedFieldCentric, drive));
