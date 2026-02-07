@@ -36,8 +36,8 @@ public class IntakeIOSim implements IntakeIO {
 
     @Override
     public void updateInputs(IntakeIOInputs inputs) {
-        inputs.rollerRPM = intakeMotor.getVelocity().getValueAsDouble();
-        inputs.rollerVoltage = intakeMotor.getMotorVoltage().getValueAsDouble();
+        inputs.primaryMotorRPM = intakeMotor.getVelocity().getValueAsDouble();
+        inputs.primaryMotorVoltage = intakeMotor.getMotorVoltage().getValueAsDouble();
         Logger.recordOutput("Intake run", intakeSimulation.isRunning());
         Logger.recordOutput("Intake balls", intakeSimulation.getGamePiecesAmount());
     }
