@@ -5,9 +5,12 @@ import edu.wpi.first.math.interpolation.InverseInterpolator;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.util.ShooterStateData;
 import org.littletonrobotics.junction.Logger;
+
+import java.util.function.DoubleSupplier;
 
 public class ShooterSubsystem extends SubsystemBase {
     private ShooterIO io;
@@ -35,17 +38,20 @@ public class ShooterSubsystem extends SubsystemBase {
         return runEnd(() -> io.applyPower(power), () -> io.applyPower(0));
     }
 
-    public static final InterpolatingTreeMap<Double, ShooterStateData> SHOOTER_MAP =
-            new InterpolatingTreeMap<>(
-                    InverseInterpolator.forDouble(),
-                    ShooterStateData.interpolator
-            );
+    public static final InterpolatingTreeMap<Double, ShooterStateData> SHOOTER_MAP() {
+        InterpolatingTreeMap<Double, ShooterStateData> map = new InterpolatingTreeMap<>(InverseInterpolator.forDouble(), ShooterStateData.interpolator);
 
-    static {
-        //distance ; hood angle, rps, tof
+        map.put(0.0, new ShooterStateData(0.0, 0.0, 0.0));
+
+        return map;
     }
-    public static double getHorizontalVelocity(double distanceMeters) {
-        ShooterStateData data = SHOOTER_MAP.get(distanceMeters);
-        return distanceMeters / data.timeOfFlight;
+
+    public static double calcRPS(double distance) {
+        return SHOOTER_MAP().get(distance).rps;
     }
+
+    public static double getHorizontalVelocity(double distance) {
+        return distance / SHOOTER_MAP().get(distance).timeOfFlight;
+    }
+
 }

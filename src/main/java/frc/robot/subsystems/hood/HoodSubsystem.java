@@ -2,6 +2,7 @@ package frc.robot.subsystems.hood;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.subsystems.shooter.ShooterSubsystem;
 import org.littletonrobotics.junction.Logger;
 
 public class HoodSubsystem extends SubsystemBase {
@@ -36,5 +37,9 @@ public class HoodSubsystem extends SubsystemBase {
 
     public Command applyPower(double power) {
         return runEnd(() -> io.applyPower(power), () -> io.applyPower(0));
+    }
+
+    public static double calcPos(double distance){
+        return ShooterSubsystem.SHOOTER_MAP().get(distance).hoodPos;
     }
 }

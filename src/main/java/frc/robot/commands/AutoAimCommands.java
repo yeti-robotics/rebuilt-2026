@@ -8,8 +8,14 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.drive.CommandSwerveDrivetrain;
+import frc.robot.subsystems.shooter.ShooterSubsystem;
 import frc.robot.util.AllianceFlipUtil;
+import frc.robot.util.ShooterStateData;
+
+import java.util.LinkedHashMap;
 import java.util.function.DoubleSupplier;
+
+import static frc.robot.subsystems.shooter.ShooterSubsystem.SHOOTER_MAP;
 
 public class AutoAimCommands {
     public static final PIDController headingController = new PIDController(5, 0, 0);
@@ -88,4 +94,5 @@ public class AutoAimCommands {
                 },
                 SwerveRequest.Idle::new);
     }
+
 }
