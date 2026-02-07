@@ -26,8 +26,8 @@ public class IntakeIOAlpha implements IntakeIO {
 
     @Override
     public void updateInputs(IntakeIOInputs inputs) {
-        inputs.alphaMotorRPM = intakeMotor.getVelocity().getValueAsDouble();
-        inputs.alphaMotorVoltage = intakeMotor.getMotorVoltage().getValueAsDouble();
+        inputs.primaryMotorRPM = intakeMotor.getVelocity().getValueAsDouble();
+        inputs.primaryMotorVoltage = intakeMotor.getMotorVoltage().getValueAsDouble();
     }
 
     @Override
