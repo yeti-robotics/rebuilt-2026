@@ -4,6 +4,7 @@ import static frc.robot.subsystems.shooter.ShooterConfigsAlpha.*;
 
 import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.Follower;
+import com.ctre.phoenix6.controls.MotionMagicVelocityTorqueCurrentFOC;
 import com.ctre.phoenix6.controls.MotionMagicVelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.MotorAlignmentValue;
@@ -14,7 +15,7 @@ import frc.robot.util.sim.PhysicsSim;
 public class ShooterIOAlpha implements ShooterIO {
     public TalonFX topMotor;
     public TalonFX bottomMotor;
-    private final MotionMagicVelocityVoltage MOTION_MAGIC_REQUEST = new MotionMagicVelocityVoltage(0);
+    private final MotionMagicVelocityTorqueCurrentFOC MOTION_MAGIC_REQUEST = new MotionMagicVelocityTorqueCurrentFOC(0);
 
     private final DutyCycleOut dutyRequest = new DutyCycleOut(0.0);
 
