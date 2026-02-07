@@ -4,16 +4,19 @@ import com.ctre.phoenix6.configs.FeedbackConfigs;
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import edu.wpi.first.math.interpolation.InterpolatingTreeMap;
+import edu.wpi.first.math.interpolation.InverseInterpolator;
+import frc.robot.util.ShooterStateData;
 
 public class ShooterConfigs {
     static final int RIGHT_SHOOTER_ID = 19;
     static final int LEFT_SHOOTER_ID = 0;
     public static final double TEST_SHOOTER_SPEED = 0.8;
 
-    public static final Slot0Configs SLOT_0_CONFIGS =
+    static final Slot0Configs SLOT_0_CONFIGS =
             new Slot0Configs().withKP(0).withKI(0).withKD(0).withKA(0).withKV(0).withKS(0);
 
-    public static final MotionMagicConfigs MOTION_MAGIC_CONFIGS = new MotionMagicConfigs()
+    static final MotionMagicConfigs MOTION_MAGIC_CONFIGS = new MotionMagicConfigs()
             .withMotionMagicAcceleration(2)
             .withMotionMagicCruiseVelocity(4)
             .withMotionMagicJerk(0);
@@ -27,4 +30,12 @@ public class ShooterConfigs {
             .withFeedback(new FeedbackConfigs().withSensorToMechanismRatio(1).withRotorToSensorRatio(1))
             .withSlot0(SLOT_0_CONFIGS)
             .withMotionMagic(MOTION_MAGIC_CONFIGS);
+
+    static InterpolatingTreeMap<Double, ShooterStateData> SHOOTER_MAP() {
+        InterpolatingTreeMap<Double, ShooterStateData> map =
+                new InterpolatingTreeMap<>(InverseInterpolator.forDouble(), ShooterStateData.interpolator);
+        map.put(0.0, new ShooterStateData(0, 0, 0));
+
+        return map;
+    }
 }
