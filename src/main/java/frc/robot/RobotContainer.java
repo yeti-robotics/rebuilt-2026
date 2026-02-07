@@ -226,13 +226,6 @@ public class RobotContainer {
                 .withRotationalRate(-controller.getRightX() * TunerConstants.MaFxAngularRate)));
         controller.start().onTrue(Commands.runOnce(drive::seedFieldCentric, drive));
 
-        drive.setDefaultCommand(drive.applyRequest(() -> driveRequest
-                .withVelocityX(-controller2.getLeftY() * TunerConstants.kSpeedAt12Volts.magnitude())
-                .withVelocityY(-controller2.getLeftX() * TunerConstants.kSpeedAt12Volts.magnitude())
-                .withRotationalRate(-controller2.getRightX() * TunerConstants.MaFxAngularRate)));
-        controller.start().onTrue(Commands.runOnce(drive::seedFieldCentric, drive));
-        controller2.start().onTrue(Commands.runOnce(drive::seedFieldCentric, drive));
-
         controller.y().onTrue(climber.moveToPosition(ClimberPosition.L1.getHeight()));
 
         controller.rightBumper().whileTrue(intake.rollIn());
@@ -284,6 +277,7 @@ public class RobotContainer {
                 .withVelocityX(-controller.getLeftY() * TunerConstants.kSpeedAt12Volts.magnitude())
                 .withVelocityY(-controller.getLeftX() * TunerConstants.kSpeedAt12Volts.magnitude())
                 .withRotationalRate(-controller.getRightX() * TunerConstants.MaFxAngularRate)));
+        controller.start().onTrue(Commands.runOnce(drive::seedFieldCentric, drive));
         //
         //        controller.button(1).onTrue(climber.moveToPosition(ClimberPosition.L1.getHeight()));
         //        controller.button(2).onTrue(climber.moveToPosition(ClimberPosition.BOTTOM.getHeight()));
