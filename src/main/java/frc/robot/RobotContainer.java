@@ -10,7 +10,7 @@ package frc.robot;
 import static frc.robot.constants.FieldConstants.Hub.centerHubOpening;
 import static frc.robot.subsystems.hopper.HopperConfigs.TEST_HOPPER_SPEED;
 import static frc.robot.subsystems.indexer.IndexerConfigs.TEST_INDEXER_SPEED;
-import static frc.robot.subsystems.shooter.ShooterConfigs.TEST_SHOOTER_SPEED;
+import static frc.robot.subsystems.shooter.ShooterConfigsAlpha.TEST_SHOOTER_SPEED;
 
 import com.ctre.phoenix6.swerve.SwerveModule;
 import com.ctre.phoenix6.swerve.SwerveRequest;
@@ -51,7 +51,6 @@ import frc.robot.subsystems.shooter.ShooterIO;
 import frc.robot.subsystems.shooter.ShooterIOAlpha;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
 import frc.robot.subsystems.vision.*;
-import frc.robot.util.CommandGigaStation;
 import frc.robot.util.sim.Mechanisms;
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
@@ -137,23 +136,14 @@ public class RobotContainer {
             default:
                 // Replayed robot, disable IO implementations
                 drive = TunerConstants.createDrivetrain();
-                linSlide = new LinSlideSubsystem(new LinSlideIO() {
-                });
-                intake = new IntakeSubsystem(new IntakeIO() {
-                });
-                hopper = new Hopper(new HopperIO() {
-                });
-                climber = new Climber(new ClimberIO() {
-                });
-                vision = new Vision(drive, new VisionIO() {
-                }, new VisionIO() {
-                });
-                indexer = new IndexerSubsystem(new IndexerIO() {
-                });
-                shooter = new ShooterSubsystem((new ShooterIO() {
-                }));
-                hood = new HoodSubsystem(new HoodIO() {
-                });
+                linSlide = new LinSlideSubsystem(new LinSlideIO() {});
+                intake = new IntakeSubsystem(new IntakeIO() {});
+                hopper = new Hopper(new HopperIO() {});
+                climber = new Climber(new ClimberIO() {});
+                vision = new Vision(drive, new VisionIO() {}, new VisionIO() {});
+                indexer = new IndexerSubsystem(new IndexerIO() {});
+                shooter = new ShooterSubsystem((new ShooterIO() {}));
+                hood = new HoodSubsystem(new HoodIO() {});
 
                 autoCommands = new AutoCommands(climber, drive, hood, hopper, indexer, intake, linSlide, shooter);
 
@@ -187,7 +177,8 @@ public class RobotContainer {
         autoChooser.addOption("One Cycle Neutral Right Tower Center", autoCommands.oneCycleNeutralRightTowerCenter());
         autoChooser.addOption("Two Cycle Depot Neutral Right Center", autoCommands.twoCycleDepotNeutralRightCenter());
         autoChooser.addOption("Two Cycle Neutral Left Neutral Center", autoCommands.twoCycleNeutralNeutralLeftCenter());
-        autoChooser.addOption("Two Cycle Neutral Right Neutral Center", autoCommands.twoCycleNeutralNeutralRightCenter());
+        autoChooser.addOption(
+                "Two Cycle Neutral Right Neutral Center", autoCommands.twoCycleNeutralNeutralRightCenter());
         autoChooser.addOption("Two Cycle Depot Neutral Left Center", autoCommands.twoCycleDepotNeutralLeftCenter());
 
         // Right
@@ -196,7 +187,6 @@ public class RobotContainer {
         autoChooser.addOption("Two Cycle Outpost Neutral Tower Right", autoCommands.twoCycleOutpostNeutralTowerRight());
         autoChooser.addOption("Two Cycle Neutral Outpost Tower Right", autoCommands.twoCycleNeutralOutpostTowerRight());
         autoChooser.addOption("Two Cycle Neutral Neutral Tower Right", autoCommands.twoCycleNeutralTowerRight());
-
 
         // Configure the button bindings
         if (Robot.isReal()) {
