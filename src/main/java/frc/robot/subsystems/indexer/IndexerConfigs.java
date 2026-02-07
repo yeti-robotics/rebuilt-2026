@@ -20,10 +20,12 @@ public class IndexerConfigs {
     static final CANrangeConfiguration CANRANGE_CONFIGS = new CANrangeConfiguration()
             .withToFParams(new ToFParamsConfigs().withUpdateMode(UpdateModeValue.ShortRange100Hz))
             .withFovParams(new FovParamsConfigs()
-                    .withFOVCenterX(11.8)
-                    .withFOVCenterY(11.8)
-                    .withFOVRangeX(6.75)
-                    .withFOVRangeY(6.75))
-            .withProximityParams(
-                    new ProximityParamsConfigs().withProximityThreshold(0.17).withProximityHysteresis(0.02));
+                    .withFOVCenterX(0)
+                    .withFOVCenterY(0)
+                    .withFOVRangeX(27)
+                    .withFOVRangeY(27))
+            .withProximityParams(new ProximityParamsConfigs()
+                    .withProximityThreshold(0.126)
+                    .withProximityHysteresis(0.1)
+                    .withMinSignalStrengthForValidMeasurement(2500));
 }
