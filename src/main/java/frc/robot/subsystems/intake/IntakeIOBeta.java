@@ -9,8 +9,8 @@ import frc.robot.constants.Constants;
 import frc.robot.util.sim.PhysicsSim;
 
 import static com.ctre.phoenix6.signals.MotorAlignmentValue.Aligned;
-import static frc.robot.subsystems.intake.IntakeConfigs.PRIMARY_TALONFX_CONFIGS;
-import static frc.robot.subsystems.intake.IntakeConfigs.SECONDARY_TALONFX_CONFIGS;
+import static frc.robot.subsystems.intake.IntakeConfigsBeta.PRIMARY_TALONFX_CONFIGS;
+import static frc.robot.subsystems.intake.IntakeConfigsBeta.SECONDARY_TALONFX_CONFIGS;
 
 public class IntakeIOBeta implements IntakeIO {
     private final TalonFX primaryIntakeMotor;
@@ -20,8 +20,8 @@ public class IntakeIOBeta implements IntakeIO {
     private final VoltageOut voltageRequest = new VoltageOut(0);
 
     public IntakeIOBeta(){
-        primaryIntakeMotor = new TalonFX(IntakeConfigs.PRIMARY_INTAKE_MOTOR_ID, Constants.rioBus);
-        secondaryIntakeMotor = new TalonFX(IntakeConfigs.SECONDARY_INTAKE_MOTOR_ID, Constants.rioBus);
+        primaryIntakeMotor = new TalonFX(IntakeConfigsBeta.PRIMARY_INTAKE_MOTOR_ID, Constants.rioBus);
+        secondaryIntakeMotor = new TalonFX(IntakeConfigsBeta.SECONDARY_INTAKE_MOTOR_ID, Constants.rioBus);
         if (Robot.isSimulation()) {
             PhysicsSim.getInstance().addTalonFX(primaryIntakeMotor);
             PhysicsSim.getInstance().addTalonFX(secondaryIntakeMotor);
@@ -29,7 +29,7 @@ public class IntakeIOBeta implements IntakeIO {
 
         primaryIntakeMotor.getConfigurator().apply(PRIMARY_TALONFX_CONFIGS);
         secondaryIntakeMotor.getConfigurator().apply(SECONDARY_TALONFX_CONFIGS);
-        primaryIntakeMotor.setControl(new Follower(IntakeConfigs.PRIMARY_INTAKE_MOTOR_ID, Aligned));
+        primaryIntakeMotor.setControl(new Follower(IntakeConfigsBeta.SECONDARY_INTAKE_MOTOR_ID, Aligned));
     }
 
     @Override
