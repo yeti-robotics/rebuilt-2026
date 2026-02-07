@@ -40,7 +40,7 @@ import frc.robot.subsystems.indexer.IndexerIOAlpha;
 import frc.robot.subsystems.indexer.IndexerSubsystem;
 import frc.robot.subsystems.intake.IntakeIO;
 import frc.robot.subsystems.intake.IntakeIOAlpha;
-import frc.robot.subsystems.intake.IntakeIOSim;
+import frc.robot.subsystems.intake.IntakeIOAlphaSim;
 import frc.robot.subsystems.intake.IntakeSubsystem;
 import frc.robot.subsystems.led.LED;
 import frc.robot.subsystems.led.LEDConstants;
@@ -75,7 +75,7 @@ public class RobotContainer {
     private final Climber climber;
     private final ShooterSubsystem shooter;
     private ShooterIOSim shooterSim;
-    private IntakeIOSim intakeIOSim;
+    private IntakeIOAlphaSim intakeIOSim;
     private final IndexerSubsystem indexer;
     private final Vision vision;
     private final HoodSubsystem hood;
@@ -124,7 +124,7 @@ public class RobotContainer {
                 linSlide = new LinSlideSubsystem(new LinSlideIOAlpha());
                 shooterSim = new ShooterIOSim(
                         drive.getSimulation()::getSimulatedDriveTrainPose, () -> drive.getState().Speeds);
-                intake = new IntakeSubsystem(new IntakeIOSim(drive.getSimulation(), shooterSim));
+                intake = new IntakeSubsystem(new IntakeIOAlphaSim(drive.getSimulation(), shooterSim));
                 hopper = new Hopper(new HopperIOAlpha());
                 vision = new Vision(
                         drive,

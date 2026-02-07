@@ -1,7 +1,6 @@
 package frc.robot.subsystems.intake;
 
 import static edu.wpi.first.units.Units.Inches;
-import static frc.robot.subsystems.intake.IntakeConfigs.INTAKE_TALONFX_CONFIGS;
 
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -12,17 +11,17 @@ import org.ironmaple.simulation.IntakeSimulation;
 import org.ironmaple.simulation.drivesims.AbstractDriveTrainSimulation;
 import org.littletonrobotics.junction.Logger;
 
-public class IntakeIOSim implements IntakeIO {
+public class IntakeIOAlphaSim implements IntakeIO {
     private final TalonFX intakeMotor;
 
     private final VoltageOut voltageRequest = new VoltageOut(0);
     private final IntakeSimulation intakeSimulation;
     private final ShooterIOSim shooterIOSim;
 
-    public IntakeIOSim(AbstractDriveTrainSimulation driveTrain, ShooterIOSim shooterIOSim) {
-        intakeMotor = new TalonFX(IntakeConfigs.INTAKE_MOTOR_ID, Constants.rioBus);
+    public IntakeIOAlphaSim(AbstractDriveTrainSimulation driveTrain, ShooterIOSim shooterIOSim) {
+        intakeMotor = new TalonFX(IntakeConfigs.PRIMARY_INTAKE_MOTOR_ID, Constants.rioBus);
         PhysicsSim.getInstance().addTalonFX(intakeMotor);
-        intakeMotor.getConfigurator().apply(INTAKE_TALONFX_CONFIGS);
+        intakeMotor.getConfigurator().apply(IntakeConfigs.PRIMARY_TALONFX_CONFIGS);
         this.intakeSimulation = IntakeSimulation.OverTheBumperIntake(
                 "Fuel",
                 driveTrain, // Drive simulation
