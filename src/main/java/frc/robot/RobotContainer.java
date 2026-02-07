@@ -40,6 +40,7 @@ import frc.robot.subsystems.indexer.IndexerIOAlpha;
 import frc.robot.subsystems.indexer.IndexerSubsystem;
 import frc.robot.subsystems.intake.IntakeIO;
 import frc.robot.subsystems.intake.IntakeIOAlpha;
+import frc.robot.subsystems.intake.IntakeIOAlphaSim;
 import frc.robot.subsystems.intake.IntakeSubsystem;
 import frc.robot.subsystems.led.LED;
 import frc.robot.subsystems.led.LEDConstants;
@@ -49,9 +50,11 @@ import frc.robot.subsystems.linslide.LinSlideIOAlpha;
 import frc.robot.subsystems.linslide.LinSlideSubsystem;
 import frc.robot.subsystems.shooter.ShooterIO;
 import frc.robot.subsystems.shooter.ShooterIOAlpha;
+import frc.robot.subsystems.shooter.ShooterIOSim;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
 import frc.robot.subsystems.vision.*;
 import frc.robot.util.sim.Mechanisms;
+import org.ironmaple.simulation.SimulatedArena;
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
@@ -71,6 +74,8 @@ public class RobotContainer {
     private final Hopper hopper;
     private final Climber climber;
     private final ShooterSubsystem shooter;
+    private ShooterIOSim shooterSim;
+    private IntakeIOAlphaSim intakeIOSim;
     private final IndexerSubsystem indexer;
     private final Vision vision;
     private final HoodSubsystem hood;
@@ -115,8 +120,11 @@ public class RobotContainer {
             case SIM:
                 // Sim robot, instantiate physics sim IO implementations
                 drive = TunerConstants.createDrivetrain();
+                drive.resetPose(new Pose2d(3, 3, new Rotation2d()));
                 linSlide = new LinSlideSubsystem(new LinSlideIOAlpha());
-                intake = new IntakeSubsystem(new IntakeIOAlpha());
+                shooterSim = new ShooterIOSim(
+                        drive.getSimulation()::getSimulatedDriveTrainPose, () -> drive.getState().Speeds);
+                intake = new IntakeSubsystem(new IntakeIOAlphaSim(drive.getSimulation(), shooterSim));
                 hopper = new Hopper(new HopperIOAlpha());
                 vision = new Vision(
                         drive,
@@ -218,13 +226,6 @@ public class RobotContainer {
                 .withRotationalRate(-controller.getRightX() * TunerConstants.MaFxAngularRate)));
         controller.start().onTrue(Commands.runOnce(drive::seedFieldCentric, drive));
 
-        drive.setDefaultCommand(drive.applyRequest(() -> driveRequest
-                .withVelocityX(-controller2.getLeftY() * TunerConstants.kSpeedAt12Volts.magnitude())
-                .withVelocityY(-controller2.getLeftX() * TunerConstants.kSpeedAt12Volts.magnitude())
-                .withRotationalRate(-controller2.getRightX() * TunerConstants.MaFxAngularRate)));
-        controller.start().onTrue(Commands.runOnce(drive::seedFieldCentric, drive));
-        controller2.start().onTrue(Commands.runOnce(drive::seedFieldCentric, drive));
-
         controller.y().onTrue(climber.moveToPosition(ClimberPosition.L1.getHeight()));
 
         controller.rightBumper().whileTrue(intake.rollIn());
@@ -276,6 +277,7 @@ public class RobotContainer {
                 .withVelocityX(-controller.getLeftY() * TunerConstants.kSpeedAt12Volts.magnitude())
                 .withVelocityY(-controller.getLeftX() * TunerConstants.kSpeedAt12Volts.magnitude())
                 .withRotationalRate(-controller.getRightX() * TunerConstants.MaFxAngularRate)));
+        controller.start().onTrue(Commands.runOnce(drive::seedFieldCentric, drive));
         //
         //        controller.button(1).onTrue(climber.moveToPosition(ClimberPosition.L1.getHeight()));
         //        controller.button(2).onTrue(climber.moveToPosition(ClimberPosition.BOTTOM.getHeight()));
@@ -310,7 +312,17 @@ public class RobotContainer {
         controller.button(3).whileTrue(led.runPattern(LEDModes.RAINBOW));
         controller.button(4).whileTrue(led.runPattern(LEDModes.LOCKED_GREEN));
         controller.button(5).whileTrue(led.runPattern(LEDModes.WAVE));
-        controller.button(6).whileTrue(led.runPattern(LEDModes.SNOWFALL));
+        // controller.button(6).whileTrue(led.runPattern(LEDModes.SNOWFALL));
+        controller
+                .button(6)
+                .whileTrue(AutoAimCommands.autoAimWithOrbit(
+                        drive,
+                        () -> -controller.getLeftY(),
+                        () -> -controller.getLeftX(),
+                        centerHubOpening.toTranslation2d()));
+
+        controller.button(7).whileTrue(intake.setRollerSim(3));
+        controller.button(8).whileTrue(intake.handoffFuel());
     }
 
     public void updateMechanisms() {
@@ -341,5 +353,21 @@ public class RobotContainer {
      */
     public Command getAutonomousCommand() {
         return autoChooser.get();
+    }
+
+    public void resetSimulationField() {
+        if (Constants.currentMode != Constants.Mode.SIM) return;
+
+        drive.getSimulation().setSimulationWorldPose(new Pose2d(8, 3, new Rotation2d()));
+        SimulatedArena.getInstance().resetFieldForAuto();
+    }
+
+    public void updateSimulation() {
+        if (Constants.currentMode != Constants.Mode.SIM) return;
+
+        updateVisionSim();
+        Logger.recordOutput(
+                "FieldSimulation/RobotPosition", drive.getSimulation().getSimulatedDriveTrainPose());
+        Logger.recordOutput("FieldSimulation/Fuel", SimulatedArena.getInstance().getGamePiecesArrayByType("Fuel"));
     }
 }

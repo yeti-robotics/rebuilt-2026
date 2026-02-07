@@ -4,6 +4,9 @@ import com.ctre.phoenix6.configs.FeedbackConfigs;
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import edu.wpi.first.math.interpolation.InterpolatingTreeMap;
+import edu.wpi.first.math.interpolation.InverseInterpolator;
+import frc.robot.util.ShooterStateData;
 
 public class ShooterConfigsAlpha {
     static final int RIGHT_SHOOTER_ID = 19;
@@ -32,4 +35,12 @@ public class ShooterConfigsAlpha {
             .withFeedback(new FeedbackConfigs().withSensorToMechanismRatio(2.89).withRotorToSensorRatio(1))
             .withSlot0(SLOT_0_CONFIGS)
             .withMotionMagic(MOTION_MAGIC_CONFIGS);
+
+    static InterpolatingTreeMap<Double, ShooterStateData> SHOOTER_MAP() {
+        InterpolatingTreeMap<Double, ShooterStateData> map =
+                new InterpolatingTreeMap<>(InverseInterpolator.forDouble(), ShooterStateData.interpolator);
+        map.put(0.0, new ShooterStateData(0, 0, 0));
+
+        return map;
+    }
 }

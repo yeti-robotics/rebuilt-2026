@@ -33,4 +33,24 @@ public class IntakeSubsystem extends SubsystemBase {
     public Command applyPower(double percent) {
         return runEnd(() -> io.applyPower(percent), () -> io.applyPower(0));
     }
+
+    public Command setRollerSim(double power) {
+        return runOnce(() -> io.setRunning(true))
+                .andThen(runOnce(() -> System.out.println("setRunning is true")))
+                .andThen(runEnd(
+                        () -> {
+                            io.setIntakeMotor(power);
+                            System.out.println("Intake");
+                        },
+                        () -> {
+                            io.setIntakeMotor(0);
+                            io.setRunning(false);
+                        }))
+                .andThen(() -> io.setRunning(false))
+                .andThen(runOnce(() -> System.out.println("setRunning is false")));
+    }
+
+    public Command handoffFuel() {
+        return runOnce(io::handoffFuel);
+    }
 }

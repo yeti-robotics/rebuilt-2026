@@ -13,6 +13,7 @@ import com.ctre.phoenix6.swerve.SwerveModuleConstants.DriveMotorArrangement;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants.SteerFeedbackType;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants.SteerMotorArrangement;
 import edu.wpi.first.math.Matrix;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.units.measure.*;
@@ -41,6 +42,19 @@ public class TunerConstants {
             .withKS(0.22332)
             .withKV(0.021196)
             .withKA(0.0015388);
+
+    private static final double ROBOT_MASS_KG = 74.088; // placeholder Value
+    private static final double ROBOT_MOI = 6.883; // Placeholder value
+    private static final double WHEEL_COF = 1.2; // Placeholder value
+
+    public static Translation2d[] getModuleTranslations() {
+        return new Translation2d[] {
+            new Translation2d(TunerConstants.FrontLeft.LocationX, TunerConstants.FrontLeft.LocationY),
+            new Translation2d(TunerConstants.FrontRight.LocationX, TunerConstants.FrontRight.LocationY),
+            new Translation2d(TunerConstants.BackLeft.LocationX, TunerConstants.BackLeft.LocationY),
+            new Translation2d(TunerConstants.BackRight.LocationX, TunerConstants.BackRight.LocationY)
+        };
+    }
 
     // The closed-loop output type to use for the steer motors;
     // This affects the PID/FF gains for the steer motors
@@ -88,15 +102,6 @@ public class TunerConstants {
             kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
     public static double MaFxAngularRate =
             RotationsPerSecond.of(1).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
-
-    /* Setting up bindings for necessary control of the swerve drive platform */
-    public final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
-            .withDeadband(MAX_VELOCITY_METERS_PER_SECOND * 0.1)
-            .withRotationalDeadband(MaFxAngularRate * 0.1) // Add a 10% deadband
-            .withDriveRequestType(
-                    SwerveModule.DriveRequestType.OpenLoopVoltage); // Use open-loop control for drive motors
-    public final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
-    public final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
 
     //  protected static final Telemetry logger = new Telemetry(MAX_VELOCITY_METERS_PER_SECOND);
     //
@@ -193,8 +198,6 @@ public class TunerConstants {
     private static final Distance kBackRightXPos = Inches.of(-10);
     private static final Distance kBackRightYPos = Inches.of(-10);
 
-    public static final AngularVelocity MAX_BLUR_SPEED = RotationsPerSecond.of(3);
-
     public static final SwerveModuleConstants<TalonFXConfiguration, TalonFXConfiguration, CANcoderConfiguration>
             FrontLeft = ConstantCreator.createModuleConstants(
                     kFrontLeftSteerMotorId,
@@ -239,7 +242,6 @@ public class TunerConstants {
                     kInvertRightSide,
                     kBackRightSteerMotorInverted,
                     kBackRightEncoderInverted);
-
     //    /**
     //     * Creates a CommandSwerveDrivetrain instance. This should only be called once in your robot
     //     * program,.
