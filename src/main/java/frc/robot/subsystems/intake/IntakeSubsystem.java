@@ -23,11 +23,11 @@ public class IntakeSubsystem extends SubsystemBase {
     }
 
     public Command rollIn() {
-        return setIntake(IntakeConfigs.INTAKE_VOLTAGE);
+        return setIntake(IntakeConfigsBeta.INTAKE_VOLTAGE);
     }
 
     public Command rollOut() {
-        return setIntake(IntakeConfigs.OUTTAKE_VOLTAGE);
+        return setIntake(IntakeConfigsBeta.OUTTAKE_VOLTAGE);
     }
 
     public Command applyPower(double percent) {
