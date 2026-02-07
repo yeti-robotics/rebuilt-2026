@@ -103,8 +103,6 @@ public class RobotContainer {
                 shooter = new ShooterSubsystem(new ShooterIOAlpha());
                 indexer = new IndexerSubsystem(new IndexerIOAlpha());
                 hood = new HoodSubsystem(new HoodIOBeta());
-                autoCommands = new AutoCommands(climber, drive, hood, hopper, indexer, intake, linSlide, shooter);
-
                 vision = new Vision(
                         drive,
                         new VisionIOLimelight(VisionConstants.frontCam, drive.getRotation3d()::toRotation2d),
@@ -128,8 +126,6 @@ public class RobotContainer {
                 indexer = new IndexerSubsystem(new IndexerIOAlpha());
                 hood = new HoodSubsystem(new HoodIOBeta());
 
-                autoCommands = new AutoCommands(climber, drive, hood, hopper, indexer, intake, linSlide, shooter);
-
                 break;
 
             default:
@@ -144,12 +140,12 @@ public class RobotContainer {
                 shooter = new ShooterSubsystem((new ShooterIO() {}));
                 hood = new HoodSubsystem(new HoodIO() {});
 
-                autoCommands = new AutoCommands(climber, drive, hood, hopper, indexer, intake, linSlide, shooter);
-
                 break;
         }
 
         led = new LED();
+
+        autoCommands = new AutoCommands(climber, drive, hood, hopper, indexer, intake, linSlide, shooter);
 
         // Set up auto routines
         autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
@@ -190,6 +186,7 @@ public class RobotContainer {
         // Configure the button bindings
         if (Robot.isReal()) {
             configureRealBindings();
+            configureDebugBindings();
         } else if (Robot.isSimulation()) {
             configureSimBindings();
         }
@@ -217,14 +214,8 @@ public class RobotContainer {
                 .withRotationalRate(-controller.getRightX() * TunerConstants.MaFxAngularRate)));
         controller.start().onTrue(Commands.runOnce(drive::seedFieldCentric, drive));
 
-        drive.setDefaultCommand(drive.applyRequest(() -> driveRequest
-                .withVelocityX(-controller2.getLeftY() * TunerConstants.kSpeedAt12Volts.magnitude())
-                .withVelocityY(-controller2.getLeftX() * TunerConstants.kSpeedAt12Volts.magnitude())
-                .withRotationalRate(-controller2.getRightX() * TunerConstants.MaFxAngularRate)));
-        controller.start().onTrue(Commands.runOnce(drive::seedFieldCentric, drive));
-        controller2.start().onTrue(Commands.runOnce(drive::seedFieldCentric, drive));
-
         controller.y().onTrue(climber.moveToPosition(ClimberPosition.L1.getHeight()));
+        controller.a().onTrue(climber.moveToPosition(ClimberPosition.BOTTOM.getHeight()));
 
         controller.rightBumper().whileTrue(intake.rollIn());
 
@@ -239,15 +230,29 @@ public class RobotContainer {
                 .leftTrigger()
                 .whileTrue(AutoAimCommands.autoAim(
                                 drive, controller::getLeftY, controller::getLeftX, centerHubOpening.toTranslation2d())
-                        .alongWith(shooter.shoot(100))
-                        .alongWith(indexer.index(3)));
+                        .alongWith(shooter.shoot(100)));
 
-        controller.rightTrigger().whileTrue(hopper.spinHopper(80));
+        controller
+                .rightTrigger()
+                .whileTrue(hopper.spinHopper(80).alongWith(intake.rollIn().alongWith(indexer.applyPower(0.3))));
+    }
 
+    private void configureDebugBindings() {
+        drive.setDefaultCommand(drive.applyRequest(() -> driveRequest
+                .withVelocityX(-controller2.getLeftY() * TunerConstants.kSpeedAt12Volts.magnitude())
+                .withVelocityY(-controller2.getLeftX() * TunerConstants.kSpeedAt12Volts.magnitude())
+                .withRotationalRate(-controller2.getRightX() * TunerConstants.MaFxAngularRate)));
+        controller2.start().onTrue(Commands.runOnce(drive::seedFieldCentric, drive));
         controller2.rightBumper().whileTrue(intake.rollIn());
 
         controller2.x().whileTrue(linSlide.applyPower(0.2)).onFalse(linSlide.applyPower(0));
         controller2.b().whileTrue(linSlide.applyPower(-0.2)).onFalse(linSlide.applyPower(0));
+
+        controller2.povLeft().whileTrue(hood.applyPower(0.1));
+        controller2.povRight().whileTrue(hood.applyPower(-0.1));
+
+        controller2.povUp().whileTrue(climber.applyPower(0.3));
+        controller2.povDown().whileTrue(climber.applyPower(0.3));
 
         controller2
                 .leftBumper()
@@ -280,41 +285,33 @@ public class RobotContainer {
                 .withVelocityX(-controller.getLeftY() * TunerConstants.kSpeedAt12Volts.magnitude())
                 .withVelocityY(-controller.getLeftX() * TunerConstants.kSpeedAt12Volts.magnitude())
                 .withRotationalRate(-controller.getRightX() * TunerConstants.MaFxAngularRate)));
-        //
-        //        controller.button(1).onTrue(climber.moveToPosition(ClimberPosition.L1.getHeight()));
-        //        controller.button(2).onTrue(climber.moveToPosition(ClimberPosition.BOTTOM.getHeight()));
-        //
-        //        controller.button(3).whileTrue(intake.rollIn());
-        //        controller.button(4).whileTrue(intake.rollOut());
-        //
-        //        controller
-        //                .button(5)
-        //                .onTrue(Commands.either(
-        //                        linSlide.moveToPosition(-0.2, false),
-        //                        linSlide.moveToPosition(0.2, true),
-        //                        linSlide::isDeployed));
-        //
-        //        controller
-        //                .button(6)
-        //                .whileTrue(AutoAimCommands.autoAim(
-        //                                drive, controller::getLeftY, controller::getLeftX,
-        // centerHubOpening.toTranslation2d())
-        //                        .alongWith(shooter.shoot(100))
-        //                        .alongWith(indexer.index(3)));
-        //
-        //        controller.button(7).whileTrue(hopper.spinHopper(80));
-        //        controller.button(8).onTrue(Commands.runOnce(drive::seedFieldCentric));
-        //        controller
-        //                .button(9)
-        //                .whileTrue(AutoAimCommands.autoAimWithOrbit(
-        //                        drive, controller::getLeftY, controller::getLeftX,
-        // centerHubOpening.toTranslation2d()));
-        controller.button(1).whileTrue(led.runPattern(LEDModes.BLUE_ALLIANCE_ACTIVE));
-        controller.button(2).whileTrue(led.runPattern(LEDModes.RED_ALLIANCE_ACTIVE));
-        controller.button(3).whileTrue(led.runPattern(LEDModes.RAINBOW));
-        controller.button(4).whileTrue(led.runPattern(LEDModes.LOCKED_GREEN));
-        controller.button(5).whileTrue(led.runPattern(LEDModes.WAVE));
-        controller.button(6).whileTrue(led.runPattern(LEDModes.SNOWFALL));
+
+        controller.button(1).onTrue(climber.moveToPosition(ClimberPosition.L1.getHeight()));
+        controller.button(2).onTrue(climber.moveToPosition(ClimberPosition.BOTTOM.getHeight()));
+
+        controller.button(3).whileTrue(intake.rollIn());
+        controller.button(4).whileTrue(intake.rollOut());
+
+        controller
+                .button(5)
+                .onTrue(Commands.either(
+                        linSlide.moveToPosition(-0.2, false),
+                        linSlide.moveToPosition(0.2, true),
+                        linSlide::isDeployed));
+
+        controller
+                .button(6)
+                .whileTrue(AutoAimCommands.autoAim(
+                                drive, controller::getLeftY, controller::getLeftX, centerHubOpening.toTranslation2d())
+                        .alongWith(shooter.shoot(100))
+                        .alongWith(indexer.index(3)));
+
+        controller.button(7).whileTrue(hopper.spinHopper(80));
+        controller.button(8).onTrue(Commands.runOnce(drive::seedFieldCentric));
+        controller
+                .button(9)
+                .whileTrue(AutoAimCommands.autoAimWithOrbit(
+                        drive, controller::getLeftY, controller::getLeftX, centerHubOpening.toTranslation2d()));
     }
 
     public void updateMechanisms() {
