@@ -35,11 +35,17 @@ public class ShooterSubsystem extends SubsystemBase {
         return runEnd(() -> io.applyPower(power), () -> io.applyPower(0));
     }
 
-    public static InterpolatingTreeMap<Double, ShooterStateData> SHOOTER_MAP() {
-        InterpolatingTreeMap<Double, ShooterStateData> map = new InterpolatingTreeMap<>(InverseInterpolator.forDouble(), ShooterStateData.interpolator);
+    public static final InterpolatingTreeMap<Double, ShooterStateData> SHOOTER_MAP =
+            new InterpolatingTreeMap<>(
+                    InverseInterpolator.forDouble(),
+                    ShooterStateData.interpolator
+            );
 
-        map.put(0.0, new ShooterStateData(0,0, 0));
-
-        return map;
+    static {
+        //distance ; hood angle, rps, tof
+    }
+    public static double getHorizontalVelocity(double distanceMeters) {
+        ShooterStateData data = SHOOTER_MAP.get(distanceMeters);
+        return distanceMeters / data.timeOfFlight;
     }
 }
