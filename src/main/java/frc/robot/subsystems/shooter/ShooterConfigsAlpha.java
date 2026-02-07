@@ -5,7 +5,7 @@ import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 
-public class ShooterConfigs {
+public class ShooterConfigsAlpha {
     static final int RIGHT_SHOOTER_ID = 19;
     static final int LEFT_SHOOTER_ID = 0;
     public static final double TEST_SHOOTER_SPEED = 0.8;

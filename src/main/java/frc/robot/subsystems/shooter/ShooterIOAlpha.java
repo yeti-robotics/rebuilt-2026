@@ -1,6 +1,6 @@
 package frc.robot.subsystems.shooter;
 
-import static frc.robot.subsystems.shooter.ShooterConfigs.*;
+import static frc.robot.subsystems.shooter.ShooterConfigsAlpha.*;
 
 import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.Follower;
@@ -19,9 +19,9 @@ public class ShooterIOAlpha implements ShooterIO {
     private final DutyCycleOut dutyRequest = new DutyCycleOut(0.0);
 
     public ShooterIOAlpha() {
-        topMotor = new TalonFX(ShooterConfigs.RIGHT_SHOOTER_ID, Constants.rioBus);
-        bottomMotor = new TalonFX(ShooterConfigs.LEFT_SHOOTER_ID, Constants.rioBus);
-        bottomMotor.setControl(new Follower(ShooterConfigs.RIGHT_SHOOTER_ID, MotorAlignmentValue.Opposed));
+        topMotor = new TalonFX(ShooterConfigsAlpha.RIGHT_SHOOTER_ID, Constants.rioBus);
+        bottomMotor = new TalonFX(ShooterConfigsAlpha.LEFT_SHOOTER_ID, Constants.rioBus);
+        bottomMotor.setControl(new Follower(ShooterConfigsAlpha.RIGHT_SHOOTER_ID, MotorAlignmentValue.Opposed));
         topMotor.getConfigurator().apply(TOP_MOTOR_CONFIGS);
         bottomMotor.getConfigurator().apply(BOTTOM_MOTOR_CONFIGS);
 
