@@ -64,14 +64,16 @@ public class ShooterIOSim implements ShooterIO {
                 );
 
         flyingFuel
-                .withTargetPosition(
-                        () -> FieldMirroringUtils.toCurrentAllianceTranslation(new Translation3d(0.25, 5.56, 2.3)))
+                .withTargetPosition(() ->
+                        FieldMirroringUtils.toCurrentAllianceTranslation(new Translation3d(4.625594, 4.034536, 1.8288)))
                 .withTargetTolerance(new Translation3d(0.5, 1.2, 0.3))
                 .withHitTargetCallBack(() -> System.out.println("Score: +1 point"))
                 .enableBecomesGamePieceOnFieldAfterTouchGround();
 
-        flyingFuel.withProjectileTrajectoryDisplayCallBack( // Shot Trajectory
-                poses -> Logger.recordOutput("ShooterSim/ShotTrajectory", poses.toArray(Pose3d[]::new)));
+        flyingFuel.withProjectileTrajectoryDisplayCallBack( // Successful trajectory
+                poses -> Logger.recordOutput("ShooterSim/SuccessfulShotTrajectory", poses.toArray(Pose3d[]::new)),
+                // Missed trajectory
+                poses -> Logger.recordOutput("ShooterSim/MissedShotTrajectory", poses.toArray(Pose3d[]::new)));
         flyingFuel.enableBecomesGamePieceOnFieldAfterTouchGround();
 
         // Adding the gamepiece to the arena
