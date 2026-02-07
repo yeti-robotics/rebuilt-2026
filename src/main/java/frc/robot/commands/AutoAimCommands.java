@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.drive.CommandSwerveDrivetrain;
 import frc.robot.util.AllianceFlipUtil;
 import java.util.function.DoubleSupplier;
+import org.littletonrobotics.junction.Logger;
 
 public class AutoAimCommands {
     public static final PIDController headingController = new PIDController(5, 0, 0);
@@ -61,9 +62,14 @@ public class AutoAimCommands {
             return Rotation2d.kZero;
         }
 
-        Rotation2d desiredHeading = target.minus(currentPose.getTranslation())
+        Translation2d targetPose = AllianceFlipUtil.apply(target);
+        Rotation2d desiredHeading = targetPose
+                .minus(currentPose.getTranslation())
                 .getAngle()
-                .rotateBy(Rotation2d.k180deg); // Remove this .rotateBy() if needed for real bot
+                .rotateBy(AllianceFlipUtil.apply(Rotation2d.kPi));
+
+        Logger.recordOutput("AutoAim/Target Heading", desiredHeading);
+        Logger.recordOutput("AutoAim/Target Pose", targetPose);
 
         return desiredHeading;
     }
@@ -73,7 +79,6 @@ public class AutoAimCommands {
             DoubleSupplier xVelSupplier,
             DoubleSupplier yVelSupplier,
             Translation2d target) {
-        Translation2d modifiedTarget = AllianceFlipUtil.apply(target);
 
         return drive.runEnd(
                 () -> {
@@ -81,7 +86,7 @@ public class AutoAimCommands {
                             .withHeadingPID(5, 0, 0)
                             .withVelocityX(-xVelSupplier.getAsDouble() * SPEED_MULTIPLIER)
                             .withVelocityY(-yVelSupplier.getAsDouble() * SPEED_MULTIPLIER)
-                            .withTargetDirection(calcDesiredHeading(drive.getState().Pose, modifiedTarget))
+                            .withTargetDirection(calcDesiredHeading(drive.getState().Pose, target))
                             .withDriveRequestType(SwerveModule.DriveRequestType.Velocity);
 
                     drive.setControl(request);
