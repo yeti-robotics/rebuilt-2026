@@ -337,7 +337,7 @@ public class RobotContainer {
     }
 
     public void updateLoggers() {
-        Logger.recordOutput("Indexer/SensorTrigger", autoCommands.indexerTrigger);
+        //Logger.recordOutput("Indexer/SensorTrigger", autoCommands.indexerTrigger);
     }
 
     /**

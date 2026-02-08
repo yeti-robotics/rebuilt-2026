@@ -30,7 +30,7 @@ public class AutoCommands {
     private final LinSlideSubsystem linSlide;
     private final ShooterSubsystem shooter;
 
-    public final Trigger indexerTrigger;
+    //public final Trigger indexerTrigger;
 
     public AutoCommands(
             Climber climber,
@@ -50,10 +50,10 @@ public class AutoCommands {
         this.linSlide = linSlide;
         this.shooter = shooter;
 
-        indexerTrigger = new Trigger(() -> !indexer.canRangeDetected())
-                .and(() -> shooter.getTargetSpeed() > 0)
-                .debounce(4)
-                .onTrue(shooter.stopFlywheels());
+//        indexerTrigger = new Trigger(() -> !indexer.canRangeDetected())
+//                .and(() -> shooter.getTargetSpeed() > 0)
+//                .debounce(4)
+//                .onTrue(shooter.stopFlywheels());
     }
 
     public Command aimAndRev() {
@@ -72,7 +72,7 @@ public class AutoCommands {
     }
 
     public Command shoot() {
-        return aimAndRev().andThen(runFlywheels().alongWith(index())).until(indexerTrigger);
+        return aimAndRev().andThen(runFlywheels().alongWith(index())).until(new Trigger(() -> !indexer.canRangeDetected()).debounce(3)).andThen(shooter.stopFlywheels());
     }
 
     public Command intake() {
