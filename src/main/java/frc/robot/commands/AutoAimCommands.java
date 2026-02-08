@@ -66,7 +66,7 @@ public class AutoAimCommands {
         Rotation2d desiredHeading = targetPose
                 .minus(currentPose.getTranslation())
                 .getAngle()
-                .rotateBy(AllianceFlipUtil.apply(Rotation2d.kPi));
+                .rotateBy(AllianceFlipUtil.apply(Rotation2d.kZero));
 
         Logger.recordOutput("AutoAim/Target Heading", desiredHeading);
         Logger.recordOutput("AutoAim/Target Pose", targetPose);
@@ -83,7 +83,7 @@ public class AutoAimCommands {
         return drive.runEnd(
                 () -> {
                     SwerveRequest.FieldCentricFacingAngle request = new SwerveRequest.FieldCentricFacingAngle()
-                            .withHeadingPID(5, 0, 0)
+                            .withHeadingPID(20, 0, 0)
                             .withVelocityX(-xVelSupplier.getAsDouble() * SPEED_MULTIPLIER)
                             .withVelocityY(-yVelSupplier.getAsDouble() * SPEED_MULTIPLIER)
                             .withTargetDirection(calcDesiredHeading(drive.getState().Pose, target))
