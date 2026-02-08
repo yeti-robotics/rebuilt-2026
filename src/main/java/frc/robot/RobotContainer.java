@@ -24,6 +24,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.AutoAimCommands;
+import frc.robot.commands.AutoCommands;
 import frc.robot.constants.Constants;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.climber.*;
@@ -87,7 +88,6 @@ public class RobotContainer {
             .withDeadband(TunerConstants.MAX_VELOCITY_METERS_PER_SECOND * 0.1)
             .withRotationalDeadband(TunerConstants.MaFxAngularRate * 0.1)
             .withDriveRequestType(SwerveModule.DriveRequestType.OpenLoopVoltage);
-
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
     public RobotContainer() {
         switch (Constants.currentMode) {
@@ -263,7 +263,8 @@ public class RobotContainer {
         controller2
                 .leftTrigger()
                 .whileTrue(AutoAimCommands.autoAim(
-                        drive, controller::getLeftY, controller::getLeftX, centerHubOpening.toTranslation2d()));
+                                drive, controller::getLeftY, controller::getLeftX, centerHubOpening.toTranslation2d())
+                        .alongWith(shooter.shoot(20)));
 
         controller2
                 .a()
@@ -333,6 +334,10 @@ public class RobotContainer {
         new Trigger(() -> climber.getCurrentPosition()
                         >= ClimberPosition.L1.getHeight().magnitude() - ClimberConfig.HEIGHT_TOLERANCE)
                 .whileTrue(led.runPattern(LEDModes.SNOWFALL));
+    }
+
+    public void updateLoggers() {
+        Logger.recordOutput("Indexer/SensorTrigger", autoCommands.indexerTrigger);
     }
 
     /**

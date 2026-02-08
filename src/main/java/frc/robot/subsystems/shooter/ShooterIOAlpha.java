@@ -53,4 +53,9 @@ public class ShooterIOAlpha implements ShooterIO {
     public void applyPower(double percent) {
         topMotor.setControl(dutyRequest.withOutput(percent));
     }
+
+    @Override
+    public boolean isAtSpeed(double speed) {
+        return topMotor.getVelocity().isNear(speed, 2);
+    }
 }

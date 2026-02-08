@@ -33,4 +33,8 @@ public class IndexerSubsystem extends SubsystemBase {
     public Command applyPower(double power) {
         return runEnd(() -> io.applyPower(power), () -> io.applyPower(0));
     }
+
+    public boolean canRangeDetected() {
+        return inputs.isDetected;
+    }
 }
