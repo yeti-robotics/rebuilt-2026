@@ -51,9 +51,8 @@ public class AutoCommands {
         this.shooter = shooter;
 
         indexerTrigger = new Trigger(() -> !indexer.canRangeDetected())
-                .debounce(3)
                 .and(() -> shooter.getTargetSpeed() > 0)
-                .debounce(3)
+                .debounce(4)
                 .onTrue(shooter.stopFlywheels());
     }
 
@@ -73,7 +72,7 @@ public class AutoCommands {
     }
 
     public Command shoot() {
-        return aimAndRev().andThen(index()).until(indexerTrigger);
+        return aimAndRev().andThen(runFlywheels().alongWith(index())).until(indexerTrigger);
     }
 
     public Command intake() {
