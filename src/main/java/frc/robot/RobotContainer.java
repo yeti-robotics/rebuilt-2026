@@ -243,7 +243,7 @@ public class RobotContainer {
                 .withVelocityY(-controller2.getLeftX() * TunerConstants.kSpeedAt12Volts.magnitude())
                 .withRotationalRate(-controller2.getRightX() * TunerConstants.MaFxAngularRate)));
         controller2.start().onTrue(Commands.runOnce(drive::seedFieldCentric, drive));
-        controller2.rightBumper().whileTrue(intake.rollIn());
+        controller2.rightBumper().whileTrue(intake.applyPower(-0.7));
 
         controller2.x().whileTrue(linSlide.applyPower(0.2)).onFalse(linSlide.applyPower(0));
         controller2.b().whileTrue(linSlide.applyPower(-0.2)).onFalse(linSlide.applyPower(0));
@@ -256,7 +256,7 @@ public class RobotContainer {
 
         controller2
                 .leftBumper()
-                .whileTrue(intake.rollOut()
+                .whileTrue(intake.applyPower(0.7)
                         .alongWith(hopper.applyPower(-TEST_HOPPER_SPEED)
                                 .alongWith(indexer.applyPower(-TEST_INDEXER_SPEED))));
 
@@ -337,7 +337,7 @@ public class RobotContainer {
     }
 
     public void updateLoggers() {
-        Logger.recordOutput("Indexer/SensorTrigger", autoCommands.indexerTrigger);
+        // Logger.recordOutput("Indexer/SensorTrigger", autoCommands.indexerTrigger);
     }
 
     /**

@@ -26,4 +26,12 @@ public class Hopper extends SubsystemBase {
     public Command applyPower(double power) {
         return runEnd(() -> io.applyPower(power), () -> io.applyPower(0));
     }
+
+    public Command apply(double power) {
+        return run(() -> io.applyPower(power));
+    }
+
+    public Command stop() {
+        return runOnce(() -> io.applyPower(0));
+    }
 }

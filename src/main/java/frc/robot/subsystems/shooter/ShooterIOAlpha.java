@@ -46,7 +46,7 @@ public class ShooterIOAlpha implements ShooterIO {
 
     @Override
     public void stopMotors() {
-        topMotor.setVoltage(0);
+        topMotor.set(0);
     }
 
     @Override

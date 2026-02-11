@@ -30,7 +30,11 @@ public class ShooterSubsystem extends SubsystemBase {
 
     public Command shoot(double velocity) {
         return runOnce(() -> this.targetSpeed = velocity)
-                .andThen(startEnd(() -> io.spinMotors(velocity), () -> io.stopMotors()));
+                .andThen(runEnd(() -> io.spinMotors(velocity), () -> io.stopMotors()));
+    }
+
+    public Command shootForever(double velocity) {
+        return runOnce(() -> this.targetSpeed = velocity).andThen(run(() -> io.applyPower(velocity)));
     }
 
     public Command revUpFlywheels(double velocity) {
