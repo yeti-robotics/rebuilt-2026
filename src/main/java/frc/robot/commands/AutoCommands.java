@@ -419,10 +419,12 @@ public class AutoCommands {
                 ? Commands.none()
                 : Commands.sequence(
                         shootNew(),
+                        linSlide.moveToPosition(0.5, true),
                         AutoBuilder.followPath(startOutpost.get()),
                         (Commands.waitSeconds(3)),
                         AutoBuilder.followPath(outpostShoot.get()),
                         shootNew(),
+                        linSlide.moveToPosition(-0.5, false),
                         climbTower(shootTower));
         auto = new PathPlannerAuto(cmd);
         return auto;
