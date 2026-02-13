@@ -170,6 +170,7 @@ public class AutoCommands {
                         aimAndRev().withTimeout(2),
                         followPathAndIntake(startDepot, 4),
                         followPathAndStowIntake(depotShoot),
+                        linSlide.moveToPosition(0.5, true),
                         aimAndRev().withTimeout(2),
                         climbTower(shootTower));
 
@@ -417,11 +418,11 @@ public class AutoCommands {
         var cmd = startOutpost.isEmpty() || outpostShoot.isEmpty() || shootTower.isEmpty()
                 ? Commands.none()
                 : Commands.sequence(
-                        aimAndRev().withTimeout(2),
+                        shootNew(),
                         AutoBuilder.followPath(startOutpost.get()),
                         (Commands.waitSeconds(3)),
                         AutoBuilder.followPath(outpostShoot.get()),
-                        aimAndRev().withTimeout(2),
+                        shootNew(),
                         climbTower(shootTower));
         auto = new PathPlannerAuto(cmd);
         return auto;
