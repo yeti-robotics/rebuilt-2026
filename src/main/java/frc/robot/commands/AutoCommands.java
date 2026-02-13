@@ -1,7 +1,6 @@
 package frc.robot.commands;
 
 import static edu.wpi.first.wpilibj2.command.Commands.runOnce;
-import static edu.wpi.first.wpilibj2.command.Commands.waitSeconds;
 import static frc.robot.constants.FieldConstants.Hub.centerHubOpening;
 import static frc.robot.subsystems.hopper.HopperConfigs.TEST_HOPPER_SPEED;
 import static frc.robot.subsystems.indexer.IndexerConfigs.TEST_INDEXER_SPEED;
@@ -10,7 +9,6 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.path.PathPlannerPath;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.subsystems.climber.Climber;
 import frc.robot.subsystems.climber.ClimberPosition;
@@ -109,13 +107,14 @@ public class AutoCommands {
 
     public Command followPathAndIntake(Optional<PathPlannerPath> path, int waitTime) {
         return AutoBuilder.followPath(path.get())
-                .alongWith(Commands.waitSeconds(waitTime).andThen(intake().withTimeout(5)))
+                .alongWith(Commands.waitSeconds(waitTime).andThen(intake().withTimeout(4)))
                 .andThen(() -> Logger.recordOutput("AutoTest", "Followed path and intaked"));
     }
 
     public Command followPathAndStowIntake(Optional<PathPlannerPath> path) {
         return AutoBuilder.followPath(path.get())
                 .alongWith(linSlide.moveToPosition(-0.2, false))
+                .withTimeout(2)
                 .andThen(() -> Logger.recordOutput("AutoTest", "Followed path and stowed"));
     }
 
@@ -130,13 +129,11 @@ public class AutoCommands {
         return Commands.sequence(
                 AutoAimCommands.autoAim(drivetrain, () -> 0, () -> 0, centerHubOpening.toTranslation2d())
                         .withTimeout(1),
-                shooter.shoot(20).until(shooter::isAtSpeed),
-                hopper.apply(TEST_HOPPER_SPEED).alongWith(indexer.apply(TEST_INDEXER_SPEED)),
-                waitSeconds(3),
-                //                runOnce(() -> CommandScheduler.getInstance().cancel(shooter.shoot(20))),
-                //                indexer.stop(),
-                //                hopper.stop()
-                runOnce(() -> CommandScheduler.getInstance().cancelAll()));
+                shooter.revUpFlywheels(20).until(shooter::isAtSpeed),
+                Commands.parallel(
+                        shooter.shoot(20).withTimeout(2),
+                        hopper.applyPower(TEST_HOPPER_SPEED).withTimeout(2),
+                        indexer.applyPower(TEST_INDEXER_SPEED).withTimeout(2)));
     }
 
     // Real Autos
@@ -151,13 +148,10 @@ public class AutoCommands {
                 ? Commands.none()
                 : Commands.sequence(
                         shootNew(),
-                        //                        stopShooting(),
-                        followPathAndIntake(startNeutral, 2)
-                        //                        followPathAndStowIntake(neutralShoot),
-                        //                        shoot(),
-                        //                        stopShooting(),
-                        //                        climbTower(shootTower
-                        );
+                        followPathAndIntake(startNeutral, 2),
+                        followPathAndStowIntake(neutralShoot),
+                        shootNew(),
+                        climbTower(shootTower));
 
         auto = new PathPlannerAuto(cmd);
         return auto;

@@ -56,6 +56,6 @@ public class ShooterIOAlpha implements ShooterIO {
 
     @Override
     public boolean isAtSpeed(double speed) {
-        return topMotor.getVelocity().isNear(speed, 2);
+        return topMotor.getVelocity().isNear(20, 2);
     }
 }
