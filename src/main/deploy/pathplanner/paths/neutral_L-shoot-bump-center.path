@@ -3,39 +3,35 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.5,
-        "y": 4.0
-      },
-      "prevControl": null,
-      "nextControl": {
-        "x": 2.8357631954350926,
-        "y": 5.839942938659058
-      },
-      "isLocked": false,
-      "linkedName": "shoot-center"
-    },
-    {
-      "anchor": {
         "x": 7.798104304635762,
         "y": 5.232889072847681
       },
+      "prevControl": null,
+      "nextControl": {
+        "x": 6.769115549215405,
+        "y": 5.658801711840229
+      },
+      "isLocked": false,
+      "linkedName": "neutral_L"
+    },
+    {
+      "anchor": {
+        "x": 2.5,
+        "y": 4.0
+      },
       "prevControl": {
-        "x": 7.681656373109373,
-        "y": 5.9574539801230015
+        "x": 2.2923395149786017,
+        "y": 6.150470756062767
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "neutral_L"
+      "linkedName": "shoot-center"
     }
   ],
   "rotationTargets": [
     {
       "waypointRelativePos": 0.4,
-      "rotationDegrees": 0.3579825505308143
-    },
-    {
-      "waypointRelativePos": 0.7,
-      "rotationDegrees": 117.74060289227397
+      "rotationDegrees": -30.973575143077177
     }
   ],
   "constraintZones": [],
@@ -51,13 +47,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 90.0
+    "rotation": 0.0
   },
   "reversed": false,
   "folder": "Center paths",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": 90.0
   },
   "useDefaultConstraints": true
 }
