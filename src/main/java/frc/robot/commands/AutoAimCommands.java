@@ -7,14 +7,16 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.drive.CommandSwerveDrivetrain;
 import frc.robot.util.AllianceFlipUtil;
 import java.util.function.DoubleSupplier;
+import org.littletonrobotics.junction.Logger;
 
 public class AutoAimCommands {
-    public static final PIDController headingController = new PIDController(5, 0, 0);
+    public static final PIDController headingController = new PIDController(20, 0, 0);
 
-    private static final double SPEED_MULTIPLIER = 3;
+    private static final double SPEED_MULTIPLIER = TunerConstants.kSpeedAt12Volts.magnitude();
 
     static {
         headingController.enableContinuousInput(-Math.PI, Math.PI);
@@ -38,8 +40,11 @@ public class AutoAimCommands {
                     double rawXVelo = xVelSupplier.getAsDouble() * SPEED_MULTIPLIER;
                     double rawYVelo = yVelSupplier.getAsDouble() * SPEED_MULTIPLIER;
 
-                    Rotation2d targetHeading =
-                            hubDistance.getAngle().plus(Rotation2d.kPi); // remove if needed for real robot
+                    Rotation2d targetHeading = hubDistance
+                            .getAngle()
+                            .plus(Rotation2d.kPi)
+                            .rotateBy(AllianceFlipUtil.apply(Rotation2d.kZero));
+                    ; // remove if needed for real robot
                     Translation2d fieldRel = new Translation2d(rawXVelo, rawYVelo).rotateBy(targetHeading);
 
                     double angularVelo =
@@ -61,9 +66,14 @@ public class AutoAimCommands {
             return Rotation2d.kZero;
         }
 
-        Rotation2d desiredHeading = target.minus(currentPose.getTranslation())
+        Translation2d targetPose = AllianceFlipUtil.apply(target);
+        Rotation2d desiredHeading = targetPose
+                .minus(currentPose.getTranslation())
                 .getAngle()
-                .rotateBy(Rotation2d.k180deg); // Remove this .rotateBy() if needed for real bot
+                .rotateBy(AllianceFlipUtil.apply(Rotation2d.kZero));
+
+        Logger.recordOutput("AutoAim/Target Heading", desiredHeading);
+        Logger.recordOutput("AutoAim/Target Pose", targetPose);
 
         return desiredHeading;
     }
@@ -73,15 +83,14 @@ public class AutoAimCommands {
             DoubleSupplier xVelSupplier,
             DoubleSupplier yVelSupplier,
             Translation2d target) {
-        Translation2d modifiedTarget = AllianceFlipUtil.apply(target);
 
         return drive.runEnd(
                 () -> {
                     SwerveRequest.FieldCentricFacingAngle request = new SwerveRequest.FieldCentricFacingAngle()
-                            .withHeadingPID(5, 0, 0)
+                            .withHeadingPID(20, 0, 0)
                             .withVelocityX(-xVelSupplier.getAsDouble() * SPEED_MULTIPLIER)
                             .withVelocityY(-yVelSupplier.getAsDouble() * SPEED_MULTIPLIER)
-                            .withTargetDirection(calcDesiredHeading(drive.getState().Pose, modifiedTarget))
+                            .withTargetDirection(calcDesiredHeading(drive.getState().Pose, target))
                             .withDriveRequestType(SwerveModule.DriveRequestType.Velocity);
 
                     drive.setControl(request);
