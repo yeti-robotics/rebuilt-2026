@@ -248,9 +248,6 @@ public class RobotContainer {
 
         controller2.x().whileTrue(linSlide.applyPower(0.2)).onFalse(linSlide.applyPower(0));
         controller2.b().whileTrue(linSlide.applyPower(-0.2)).onFalse(linSlide.applyPower(0));
-        controller2
-                .a()
-                .onTrue(climber.setAngle(ClimberPosition.SERVO_LOWER.getHeight().in(Units.Rotations)));
 
         controller2.povLeft().whileTrue(hood.applyPower(0.1));
         controller2.povRight().whileTrue(hood.applyPower(-0.1));
