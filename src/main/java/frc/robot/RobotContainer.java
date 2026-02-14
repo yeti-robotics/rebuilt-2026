@@ -14,6 +14,7 @@ import static frc.robot.subsystems.indexer.IndexerConfigs.TEST_INDEXER_SPEED;
 import com.ctre.phoenix6.swerve.SwerveModule;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
+import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.*;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.wpilibj.GenericHID;
@@ -144,6 +145,8 @@ public class RobotContainer {
                 break;
         }
 
+        drive.setStateStdDevs(VecBuilder.fill(0.33333, 0.33333, Math.toRadians(0.5)));
+
         led = new LED();
 
         autoCommands = new AutoCommands(climber, drive, hood, hopper, indexer, intake, linSlide, shooter);
@@ -231,7 +234,7 @@ public class RobotContainer {
                 .leftTrigger()
                 .whileTrue(AutoAimCommands.autoAim(
                                 drive, controller::getLeftY, controller::getLeftX, centerHubOpening.toTranslation2d())
-                        .alongWith(shooter.shoot(100)));
+                        .alongWith(shooter.shoot(20)));
 
         controller
                 .rightTrigger()
@@ -264,7 +267,8 @@ public class RobotContainer {
         controller2
                 .leftTrigger()
                 .whileTrue(AutoAimCommands.autoAim(
-                        drive, controller::getLeftY, controller::getLeftX, centerHubOpening.toTranslation2d()));
+                                drive, controller2::getLeftY, controller2::getLeftX, centerHubOpening.toTranslation2d())
+                        .alongWith(shooter.shoot(20)));
 
         controller2
                 .a()
@@ -279,6 +283,11 @@ public class RobotContainer {
                         hopper.applyPower(TEST_HOPPER_SPEED), indexer.applyPower(TEST_INDEXER_SPEED), intake.rollIn()));
 
         controller2.povDown().onTrue(linSlide.zero());
+
+        controller2
+                .y()
+                .whileTrue(AutoAimCommands.autoAimWithOrbit(
+                        drive, controller2::getLeftY, controller2::getLeftX, centerHubOpening.toTranslation2d()));
     }
 
     private void configureSimBindings() {
