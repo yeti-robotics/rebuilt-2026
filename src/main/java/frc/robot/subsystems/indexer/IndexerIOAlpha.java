@@ -19,7 +19,10 @@ public class IndexerIOAlpha implements IndexerIO {
 
     public IndexerIOAlpha() {
         indexerMotor = new TalonFX(INDEXER_MOTOR_ID, Constants.rioBus);
+        indexerMotor.getConfigurator().apply(INDEXER_MOTOR_CONFIGS);
+
         indexerSensor = new CANrange(INDEXER_CANRANGE_ID, Constants.rioBus);
+        indexerSensor.getConfigurator().apply(CANRANGE_CONFIGS);
 
         if (Robot.isSimulation()) {
             PhysicsSim.getInstance().addTalonFX(indexerMotor);

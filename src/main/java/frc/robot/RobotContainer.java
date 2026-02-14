@@ -10,11 +10,11 @@ package frc.robot;
 import static frc.robot.constants.FieldConstants.Hub.centerHubOpening;
 import static frc.robot.subsystems.hopper.HopperConfigs.TEST_HOPPER_SPEED;
 import static frc.robot.subsystems.indexer.IndexerConfigs.TEST_INDEXER_SPEED;
-import static frc.robot.subsystems.shooter.ShooterConfigs.TEST_SHOOTER_SPEED;
 
 import com.ctre.phoenix6.swerve.SwerveModule;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
+import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.*;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.wpilibj.GenericHID;
@@ -25,6 +25,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.AutoAimCommands;
+import frc.robot.commands.AutoCommands;
 import frc.robot.constants.Constants;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.climber.*;
@@ -51,7 +52,6 @@ import frc.robot.subsystems.shooter.ShooterIO;
 import frc.robot.subsystems.shooter.ShooterIOAlpha;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
 import frc.robot.subsystems.vision.*;
-import frc.robot.util.CommandGigaStation;
 import frc.robot.util.sim.Mechanisms;
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
@@ -105,12 +105,10 @@ public class RobotContainer {
                 shooter = new ShooterSubsystem(new ShooterIOAlpha());
                 indexer = new IndexerSubsystem(new IndexerIOAlpha());
                 hood = new HoodSubsystem(new HoodIOBeta());
-                autoCommands = new AutoCommands(climber, drive, hood, hopper, indexer, intake, linSlide, shooter);
-
                 vision = new Vision(
                         drive,
-                        new VisionIOLimelight("Front Camera", drive.getRotation3d()::toRotation2d),
-                        new VisionIOLimelight("Side Camera", drive.getRotation3d()::toRotation2d));
+                        new VisionIOLimelight(VisionConstants.frontCam, drive.getRotation3d()::toRotation2d),
+                        new VisionIOLimelight(VisionConstants.sideCam, drive.getRotation3d()::toRotation2d));
                 break;
 
             case SIM:
@@ -122,45 +120,36 @@ public class RobotContainer {
                 vision = new Vision(
                         drive,
                         new VisionIOPhotonVisionSim(
-                                "Front Camera", VisionConstants.frontCamTrans, () -> drive.getState().Pose),
+                                VisionConstants.frontCam, VisionConstants.frontCamTrans, () -> drive.getState().Pose),
                         new VisionIOPhotonVisionSim(
-                                "Side Camera", VisionConstants.sideCamTrans, () -> drive.getState().Pose));
+                                VisionConstants.sideCam, VisionConstants.sideCamTrans, () -> drive.getState().Pose));
                 climber = new Climber(new ClimberIOAlpha());
                 shooter = new ShooterSubsystem(new ShooterIOAlpha());
                 indexer = new IndexerSubsystem(new IndexerIOAlpha());
                 hood = new HoodSubsystem(new HoodIOBeta());
-
-                autoCommands = new AutoCommands(climber, drive, hood, hopper, indexer, intake, linSlide, shooter);
 
                 break;
 
             default:
                 // Replayed robot, disable IO implementations
                 drive = TunerConstants.createDrivetrain();
-                linSlide = new LinSlideSubsystem(new LinSlideIO() {
-                });
-                intake = new IntakeSubsystem(new IntakeIO() {
-                });
-                hopper = new Hopper(new HopperIO() {
-                });
-                climber = new Climber(new ClimberIO() {
-                });
-                vision = new Vision(drive, new VisionIO() {
-                }, new VisionIO() {
-                });
-                indexer = new IndexerSubsystem(new IndexerIO() {
-                });
-                shooter = new ShooterSubsystem((new ShooterIO() {
-                }));
-                hood = new HoodSubsystem(new HoodIO() {
-                });
-
-                autoCommands = new AutoCommands(climber, drive, hood, hopper, indexer, intake, linSlide, shooter);
+                linSlide = new LinSlideSubsystem(new LinSlideIO() {});
+                intake = new IntakeSubsystem(new IntakeIO() {});
+                hopper = new Hopper(new HopperIO() {});
+                climber = new Climber(new ClimberIO() {});
+                vision = new Vision(drive, new VisionIO() {}, new VisionIO() {});
+                indexer = new IndexerSubsystem(new IndexerIO() {});
+                shooter = new ShooterSubsystem((new ShooterIO() {}));
+                hood = new HoodSubsystem(new HoodIO() {});
 
                 break;
         }
 
+        drive.setStateStdDevs(VecBuilder.fill(0.33333, 0.33333, Math.toRadians(0.5)));
+
         led = new LED();
+
+        autoCommands = new AutoCommands(climber, drive, hood, hopper, indexer, intake, linSlide, shooter);
 
         // Set up auto routines
         autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
@@ -187,7 +176,8 @@ public class RobotContainer {
         autoChooser.addOption("One Cycle Neutral Right Tower Center", autoCommands.oneCycleNeutralRightTowerCenter());
         autoChooser.addOption("Two Cycle Depot Neutral Right Center", autoCommands.twoCycleDepotNeutralRightCenter());
         autoChooser.addOption("Two Cycle Neutral Left Neutral Center", autoCommands.twoCycleNeutralNeutralLeftCenter());
-        autoChooser.addOption("Two Cycle Neutral Right Neutral Center", autoCommands.twoCycleNeutralNeutralRightCenter());
+        autoChooser.addOption(
+                "Two Cycle Neutral Right Neutral Center", autoCommands.twoCycleNeutralNeutralRightCenter());
         autoChooser.addOption("Two Cycle Depot Neutral Left Center", autoCommands.twoCycleDepotNeutralLeftCenter());
 
         // Right
@@ -197,10 +187,10 @@ public class RobotContainer {
         autoChooser.addOption("Two Cycle Neutral Outpost Tower Right", autoCommands.twoCycleNeutralOutpostTowerRight());
         autoChooser.addOption("Two Cycle Neutral Neutral Tower Right", autoCommands.twoCycleNeutralTowerRight());
 
-
         // Configure the button bindings
         if (Robot.isReal()) {
             configureRealBindings();
+            configureDebugBindings();
         } else if (Robot.isSimulation()) {
             configureSimBindings();
         }
@@ -228,37 +218,45 @@ public class RobotContainer {
                 .withRotationalRate(-controller.getRightX() * TunerConstants.MaFxAngularRate)));
         controller.start().onTrue(Commands.runOnce(drive::seedFieldCentric, drive));
 
-        drive.setDefaultCommand(drive.applyRequest(() -> driveRequest
-                .withVelocityX(-controller2.getLeftY() * TunerConstants.kSpeedAt12Volts.magnitude())
-                .withVelocityY(-controller2.getLeftX() * TunerConstants.kSpeedAt12Volts.magnitude())
-                .withRotationalRate(-controller2.getRightX() * TunerConstants.MaFxAngularRate)));
-        controller.start().onTrue(Commands.runOnce(drive::seedFieldCentric, drive));
-        controller2.start().onTrue(Commands.runOnce(drive::seedFieldCentric, drive));
-
         controller.y().onTrue(climber.moveToPosition(ClimberPosition.L1.getHeight()));
+        controller.a().onTrue(climber.moveToPosition(ClimberPosition.BOTTOM.getHeight()));
 
         controller.rightBumper().whileTrue(intake.rollIn());
 
         controller
                 .leftBumper()
                 .onTrue(Commands.either(
-                        linSlide.moveToPosition(-0.2, false),
-                        linSlide.moveToPosition(0.2, true),
+                        linSlide.moveToPosition(-0.2, false).withTimeout(4),
+                        linSlide.moveToPosition(0.2, true).withTimeout(4),
                         linSlide::isDeployed));
 
         controller
                 .leftTrigger()
                 .whileTrue(AutoAimCommands.autoAim(
                                 drive, controller::getLeftY, controller::getLeftX, centerHubOpening.toTranslation2d())
-                        .alongWith(shooter.shoot(100))
-                        .alongWith(indexer.index(3)));
+                        .alongWith(shooter.shoot(20)));
 
-        controller.rightTrigger().whileTrue(hopper.spinHopper(80));
+        controller
+                .rightTrigger()
+                .whileTrue(hopper.spinHopper(80).alongWith(intake.rollIn().alongWith(indexer.applyPower(0.3))));
+    }
 
+    private void configureDebugBindings() {
+        drive.setDefaultCommand(drive.applyRequest(() -> driveRequest
+                .withVelocityX(-controller2.getLeftY() * TunerConstants.kSpeedAt12Volts.magnitude())
+                .withVelocityY(-controller2.getLeftX() * TunerConstants.kSpeedAt12Volts.magnitude())
+                .withRotationalRate(-controller2.getRightX() * TunerConstants.MaFxAngularRate)));
+        controller2.start().onTrue(Commands.runOnce(drive::seedFieldCentric, drive));
         controller2.rightBumper().whileTrue(intake.rollIn());
 
         controller2.x().whileTrue(linSlide.applyPower(0.2)).onFalse(linSlide.applyPower(0));
         controller2.b().whileTrue(linSlide.applyPower(-0.2)).onFalse(linSlide.applyPower(0));
+
+        controller2.povLeft().whileTrue(hood.applyPower(0.1));
+        controller2.povRight().whileTrue(hood.applyPower(-0.1));
+
+        controller2.povUp().whileTrue(climber.applyPower(0.3));
+        controller2.povDown().whileTrue(climber.applyPower(0.3));
 
         controller2
                 .leftBumper()
@@ -266,7 +264,11 @@ public class RobotContainer {
                         .alongWith(hopper.applyPower(-TEST_HOPPER_SPEED)
                                 .alongWith(indexer.applyPower(-TEST_INDEXER_SPEED))));
 
-        controller2.leftTrigger().whileTrue(shooter.applyPower(-TEST_SHOOTER_SPEED));
+        controller2
+                .leftTrigger()
+                .whileTrue(AutoAimCommands.autoAim(
+                                drive, controller2::getLeftY, controller2::getLeftX, centerHubOpening.toTranslation2d())
+                        .alongWith(shooter.shoot(20)));
 
         controller2
                 .a()
@@ -279,6 +281,13 @@ public class RobotContainer {
                 .rightTrigger()
                 .whileTrue(Commands.parallel(
                         hopper.applyPower(TEST_HOPPER_SPEED), indexer.applyPower(TEST_INDEXER_SPEED), intake.rollIn()));
+
+        controller2.povDown().onTrue(linSlide.zero());
+
+        controller2
+                .y()
+                .whileTrue(AutoAimCommands.autoAimWithOrbit(
+                        drive, controller2::getLeftY, controller2::getLeftX, centerHubOpening.toTranslation2d()));
     }
 
     private void configureSimBindings() {
@@ -286,41 +295,33 @@ public class RobotContainer {
                 .withVelocityX(-controller.getLeftY() * TunerConstants.kSpeedAt12Volts.magnitude())
                 .withVelocityY(-controller.getLeftX() * TunerConstants.kSpeedAt12Volts.magnitude())
                 .withRotationalRate(-controller.getRightX() * TunerConstants.MaFxAngularRate)));
-        //
-        //        controller.button(1).onTrue(climber.moveToPosition(ClimberPosition.L1.getHeight()));
-        //        controller.button(2).onTrue(climber.moveToPosition(ClimberPosition.BOTTOM.getHeight()));
-        //
-        //        controller.button(3).whileTrue(intake.rollIn());
-        //        controller.button(4).whileTrue(intake.rollOut());
-        //
-        //        controller
-        //                .button(5)
-        //                .onTrue(Commands.either(
-        //                        linSlide.moveToPosition(-0.2, false),
-        //                        linSlide.moveToPosition(0.2, true),
-        //                        linSlide::isDeployed));
-        //
-        //        controller
-        //                .button(6)
-        //                .whileTrue(AutoAimCommands.autoAim(
-        //                                drive, controller::getLeftY, controller::getLeftX,
-        // centerHubOpening.toTranslation2d())
-        //                        .alongWith(shooter.shoot(100))
-        //                        .alongWith(indexer.index(3)));
-        //
-        //        controller.button(7).whileTrue(hopper.spinHopper(80));
-        //        controller.button(8).onTrue(Commands.runOnce(drive::seedFieldCentric));
-        //        controller
-        //                .button(9)
-        //                .whileTrue(AutoAimCommands.autoAimWithOrbit(
-        //                        drive, controller::getLeftY, controller::getLeftX,
-        // centerHubOpening.toTranslation2d()));
-        controller.button(1).whileTrue(led.runPattern(LEDModes.BLUE_ALLIANCE_ACTIVE));
-        controller.button(2).whileTrue(led.runPattern(LEDModes.RED_ALLIANCE_ACTIVE));
-        controller.button(3).whileTrue(led.runPattern(LEDModes.RAINBOW));
-        controller.button(4).whileTrue(led.runPattern(LEDModes.LOCKED_GREEN));
-        controller.button(5).whileTrue(led.runPattern(LEDModes.WAVE));
-        controller.button(6).whileTrue(led.runPattern(LEDModes.SNOWFALL));
+
+        controller.button(1).onTrue(climber.moveToPosition(ClimberPosition.L1.getHeight()));
+        controller.button(2).onTrue(climber.moveToPosition(ClimberPosition.BOTTOM.getHeight()));
+
+        controller.button(3).whileTrue(intake.rollIn());
+        controller.button(4).whileTrue(intake.rollOut());
+
+        controller
+                .button(5)
+                .onTrue(Commands.either(
+                        linSlide.moveToPosition(-0.2, false),
+                        linSlide.moveToPosition(0.2, true),
+                        linSlide::isDeployed));
+
+        controller
+                .button(6)
+                .whileTrue(AutoAimCommands.autoAim(
+                                drive, controller::getLeftY, controller::getLeftX, centerHubOpening.toTranslation2d())
+                        .alongWith(shooter.shoot(100))
+                        .alongWith(indexer.index(3)));
+
+        controller.button(7).whileTrue(hopper.spinHopper(80));
+        controller.button(8).onTrue(Commands.runOnce(drive::seedFieldCentric));
+        controller
+                .button(9)
+                .whileTrue(AutoAimCommands.autoAimWithOrbit(
+                        drive, controller::getLeftY, controller::getLeftX, centerHubOpening.toTranslation2d()));
     }
 
     public void updateMechanisms() {

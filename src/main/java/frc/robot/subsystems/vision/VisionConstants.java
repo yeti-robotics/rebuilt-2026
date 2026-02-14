@@ -18,22 +18,14 @@ import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
-import edu.wpi.first.math.util.Units;
 
 public class VisionConstants {
     // AprilTag layout
     public static AprilTagFieldLayout aprilTagLayout = AprilTagFieldLayout.loadField(AprilTagFields.kDefaultField);
 
     // Camera names, must match names configured on coprocessor
-    public static String frontCam = "camera_0";
-    public static String rearCam = "camera_1";
-
-    // Robot to camera transforms
-    // (Not used by Limelight, configure in web UI instead)
-    public static Transform3d robotToFrontCam = new Transform3d(
-            new Translation3d(Units.inchesToMeters(-3), Units.inchesToMeters(0), Units.inchesToMeters(15)),
-            new Rotation3d(0, Math.toRadians(0), Math.toRadians(180)));
-    public static Transform3d robotToRearCam = new Transform3d(-0.2, 0.0, 0.2, new Rotation3d(0.0, -0.4, Math.PI));
+    public static String frontCam = "limelight-front";
+    public static String sideCam = "limelight-side";
 
     // Basic filtering thresholds
     public static double maxAmbiguity = 0.3;
@@ -53,9 +45,7 @@ public class VisionConstants {
     public static double angularStdDevMegatag2Factor = Double.POSITIVE_INFINITY; // No rotation data available
 
     public static Transform3d frontCamTrans = new Transform3d(
-            new Translation3d(Units.inchesToMeters(-13), Units.inchesToMeters(0), Units.inchesToMeters(9)),
-            new Rotation3d(0, Math.toRadians(-15), Math.toRadians(180)));
+            new Translation3d(0.3556, -0.05715, 0.257175), new Rotation3d(0, Math.toRadians(15), Math.toRadians(0)));
     public static Transform3d sideCamTrans = new Transform3d(
-            new Translation3d(Units.inchesToMeters(3), Units.inchesToMeters(-15), Units.inchesToMeters(15)),
-            new Rotation3d(0, Math.toRadians(0), Math.toRadians(270)));
+            new Translation3d(0.1778, -0.32385, 0.41656), new Rotation3d(0, Math.toRadians(0), Math.toRadians(90)));
 }

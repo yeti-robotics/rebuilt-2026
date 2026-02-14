@@ -17,3 +17,6 @@ If you do not have a project open, click the `Get from VCS` button.
 
 Once you have the project downloaded, you can open it in IntelliJ and start coding.
 Make sure you have set up your development environment by following [this guide](https://docs.yetirobotics.org/books/robot-software/page/getting-started-with-robot-development)
+
+### Limelight Information
+We are running 2 Limelight 4s on this robot. The static IPs are `10.35.6.44` and `10.35.6.45`.
