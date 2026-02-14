@@ -55,7 +55,7 @@ public class ClimberIOAlpha implements ClimberIO {
 
     @Override
     public void setAngle(double position) {
-        leftLinServo.setAngle(position); // min and max value range for L16 linear servo: 45-135
+        leftLinServo.setAngle(position);
         rightLinServo.setAngle(position);
     }
 }
