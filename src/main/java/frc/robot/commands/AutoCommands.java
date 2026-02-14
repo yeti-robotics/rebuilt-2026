@@ -277,7 +277,7 @@ public class AutoCommands {
 
     public Command oneCycleNeutralLeftTowerCenter() {
         Optional<PathPlannerPath> initNeutralL = PathPlannerUtils.loadPathByName("init-neutral_L-bump-center");
-        Optional<PathPlannerPath> neutralLShoot = PathPlannerUtils.loadPathByName("neutral_L-shoot-bump-center");
+        Optional<PathPlannerPath> neutralLShoot = PathPlannerUtils.loadPathByName("neutral_L-shoot-center");
         Optional<PathPlannerPath> shootTower = PathPlannerUtils.loadPathByName("shoot-tower_L-center");
 
         PathPlannerAuto auto;
@@ -286,7 +286,7 @@ public class AutoCommands {
                 ? Commands.none()
                 : Commands.sequence(
                         shootBumpFire(),
-                        followPathAndIntake(initNeutralL, 4),
+                        followPathAndIntake(initNeutralL, 2),
                         followPathAndStowIntake(neutralLShoot),
                         shootNew(),
                         climbTower(shootTower));
