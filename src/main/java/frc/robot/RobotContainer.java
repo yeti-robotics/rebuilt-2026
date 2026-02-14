@@ -10,11 +10,11 @@ package frc.robot;
 import static frc.robot.constants.FieldConstants.Hub.centerHubOpening;
 import static frc.robot.subsystems.hopper.HopperConfigs.TEST_HOPPER_SPEED;
 import static frc.robot.subsystems.indexer.IndexerConfigs.TEST_INDEXER_SPEED;
-import static frc.robot.subsystems.shooter.ShooterConfigsAlpha.TEST_SHOOTER_SPEED;
 
 import com.ctre.phoenix6.swerve.SwerveModule;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
+import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.*;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.wpilibj.GenericHID;
@@ -25,6 +25,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.AutoAimCommands;
+import frc.robot.commands.AutoCommands;
 import frc.robot.constants.Constants;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.climber.*;
@@ -106,8 +107,8 @@ public class RobotContainer {
                 hood = new HoodSubsystem(new HoodIOBeta());
                 vision = new Vision(
                         drive,
-                        new VisionIOLimelight("Front Camera", drive.getRotation3d()::toRotation2d),
-                        new VisionIOLimelight("Side Camera", drive.getRotation3d()::toRotation2d));
+                        new VisionIOLimelight(VisionConstants.frontCam, drive.getRotation3d()::toRotation2d),
+                        new VisionIOLimelight(VisionConstants.sideCam, drive.getRotation3d()::toRotation2d));
                 break;
 
             case SIM:
@@ -119,9 +120,9 @@ public class RobotContainer {
                 vision = new Vision(
                         drive,
                         new VisionIOPhotonVisionSim(
-                                "Front Camera", VisionConstants.frontCamTrans, () -> drive.getState().Pose),
+                                VisionConstants.frontCam, VisionConstants.frontCamTrans, () -> drive.getState().Pose),
                         new VisionIOPhotonVisionSim(
-                                "Side Camera", VisionConstants.sideCamTrans, () -> drive.getState().Pose));
+                                VisionConstants.sideCam, VisionConstants.sideCamTrans, () -> drive.getState().Pose));
                 climber = new Climber(new ClimberIOAlpha());
                 shooter = new ShooterSubsystem(new ShooterIOAlpha());
                 indexer = new IndexerSubsystem(new IndexerIOAlpha());
@@ -143,6 +144,8 @@ public class RobotContainer {
 
                 break;
         }
+
+        drive.setStateStdDevs(VecBuilder.fill(0.33333, 0.33333, Math.toRadians(0.5)));
 
         led = new LED();
 
@@ -223,15 +226,15 @@ public class RobotContainer {
         controller
                 .leftBumper()
                 .onTrue(Commands.either(
-                        linSlide.moveToPosition(-0.2, false),
-                        linSlide.moveToPosition(0.2, true),
+                        linSlide.moveToPosition(-0.2, false).withTimeout(4),
+                        linSlide.moveToPosition(0.2, true).withTimeout(4),
                         linSlide::isDeployed));
 
         controller
                 .leftTrigger()
                 .whileTrue(AutoAimCommands.autoAim(
                                 drive, controller::getLeftY, controller::getLeftX, centerHubOpening.toTranslation2d())
-                        .alongWith(shooter.shoot(100)));
+                        .alongWith(shooter.shoot(20)));
 
         controller
                 .rightTrigger()
@@ -261,7 +264,11 @@ public class RobotContainer {
                         .alongWith(hopper.applyPower(-TEST_HOPPER_SPEED)
                                 .alongWith(indexer.applyPower(-TEST_INDEXER_SPEED))));
 
-        controller2.leftTrigger().whileTrue(shooter.applyPower(-TEST_SHOOTER_SPEED));
+        controller2
+                .leftTrigger()
+                .whileTrue(AutoAimCommands.autoAim(
+                                drive, controller2::getLeftY, controller2::getLeftX, centerHubOpening.toTranslation2d())
+                        .alongWith(shooter.shoot(20)));
 
         controller2
                 .a()
@@ -274,6 +281,13 @@ public class RobotContainer {
                 .rightTrigger()
                 .whileTrue(Commands.parallel(
                         hopper.applyPower(TEST_HOPPER_SPEED), indexer.applyPower(TEST_INDEXER_SPEED), intake.rollIn()));
+
+        controller2.povDown().onTrue(linSlide.zero());
+
+        controller2
+                .y()
+                .whileTrue(AutoAimCommands.autoAimWithOrbit(
+                        drive, controller2::getLeftY, controller2::getLeftX, centerHubOpening.toTranslation2d()));
     }
 
     private void configureSimBindings() {
