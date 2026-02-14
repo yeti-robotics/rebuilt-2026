@@ -41,7 +41,7 @@ public class ShooterSubsystem extends SubsystemBase {
     public static final InterpolatingTreeMap<Double, ShooterStateData> SHOOTER_MAP() {
         InterpolatingTreeMap<Double, ShooterStateData> map = new InterpolatingTreeMap<>(InverseInterpolator.forDouble(), ShooterStateData.interpolator);
 
-        map.put(0.0, new ShooterStateData(0.0, 0.0, 0.0));
+        map.put(0.0, new ShooterStateData(0.0, 0.0)); //TODO: add values lol
 
         return map;
     }

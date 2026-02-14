@@ -7,7 +7,9 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.subsystems.drive.CommandSwerveDrivetrain;
+import frc.robot.subsystems.hood.HoodSubsystem;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
 import frc.robot.util.AllianceFlipUtil;
 import frc.robot.util.ShooterStateData;
@@ -93,6 +95,21 @@ public class AutoAimCommands {
                     drive.setControl(request);
                 },
                 SwerveRequest.Idle::new);
+    }
+
+    public static Command readyAim(CommandSwerveDrivetrain drive, ShooterSubsystem shooter, HoodSubsystem hood, Translation2d target){
+        return Commands.run(
+                () -> {
+                    Pose2d currentPose = drive.getState().Pose;
+                    Translation2d modifiedTarget = AllianceFlipUtil.apply(target);
+                    Translation2d currentPosition = currentPose.getTranslation();
+                    double distance = modifiedTarget.getDistance(currentPosition);
+
+                    double targetRPS = ShooterSubsystem.calcRPS(distance);
+
+                    shooter.shoot(targetRPS);
+                }
+        );
     }
 
 }
