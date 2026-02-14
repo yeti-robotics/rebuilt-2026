@@ -21,5 +21,5 @@ public interface ClimberIO {
 
     public default void applyPower(double percent) {}
 
-    public default void setAngle(double angle){}
+    public default void setAngle(double position) {}
 }
