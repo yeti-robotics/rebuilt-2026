@@ -104,7 +104,7 @@ public class TunerConstants {
     // This may need to be tuned to your individual robot
     private static final double kCoupleRatio = 4.5;
 
-    private static final double kDriveGearRatio = 5.684210526315789;
+    private static final double kDriveGearRatio = 6.2;
     private static final double kSteerGearRatio = 12.1;
     private static final Distance kWheelRadius = Inches.of(2.16535);
 
