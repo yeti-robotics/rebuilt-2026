@@ -14,6 +14,7 @@ import static frc.robot.subsystems.indexer.IndexerConfigs.TEST_INDEXER_SPEED;
 import com.ctre.phoenix6.swerve.SwerveModule;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
+import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.*;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.wpilibj.GenericHID;
@@ -143,6 +144,8 @@ public class RobotContainer {
                 break;
         }
 
+        drive.setStateStdDevs(VecBuilder.fill(0.33333, 0.33333, Math.toRadians(0.5)));
+
         led = new LED();
 
         autoCommands = new AutoCommands(climber, drive, hood, hopper, indexer, intake, linSlide, shooter);
@@ -230,7 +233,7 @@ public class RobotContainer {
                 .leftTrigger()
                 .whileTrue(AutoAimCommands.autoAim(
                                 drive, controller::getLeftY, controller::getLeftX, centerHubOpening.toTranslation2d())
-                        .alongWith(shooter.shoot(100)));
+                        .alongWith(shooter.shoot(20)));
 
         controller
                 .rightTrigger()
@@ -243,7 +246,7 @@ public class RobotContainer {
                 .withVelocityY(-controller2.getLeftX() * TunerConstants.kSpeedAt12Volts.magnitude())
                 .withRotationalRate(-controller2.getRightX() * TunerConstants.MaFxAngularRate)));
         controller2.start().onTrue(Commands.runOnce(drive::seedFieldCentric, drive));
-        controller2.rightBumper().whileTrue(intake.applyPower(-0.7));
+        controller2.rightBumper().whileTrue(intake.rollIn());
 
         controller2.x().whileTrue(linSlide.applyPower(0.2)).onFalse(linSlide.applyPower(0));
         controller2.b().whileTrue(linSlide.applyPower(-0.2)).onFalse(linSlide.applyPower(0));
@@ -256,14 +259,14 @@ public class RobotContainer {
 
         controller2
                 .leftBumper()
-                .whileTrue(intake.applyPower(0.7)
+                .whileTrue(intake.rollOut()
                         .alongWith(hopper.applyPower(-TEST_HOPPER_SPEED)
                                 .alongWith(indexer.applyPower(-TEST_INDEXER_SPEED))));
 
         controller2
                 .leftTrigger()
                 .whileTrue(AutoAimCommands.autoAim(
-                                drive, controller::getLeftY, controller::getLeftX, centerHubOpening.toTranslation2d())
+                                drive, controller2::getLeftY, controller2::getLeftX, centerHubOpening.toTranslation2d())
                         .alongWith(shooter.shoot(20)));
 
         controller2
