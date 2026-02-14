@@ -2,7 +2,6 @@ package frc.robot.subsystems.climber;
 
 import edu.wpi.first.units.Units;
 import edu.wpi.first.units.measure.Angle;
-import javax.swing.*;
 
 public enum ClimberPosition {
     BOTTOM(0.0),
