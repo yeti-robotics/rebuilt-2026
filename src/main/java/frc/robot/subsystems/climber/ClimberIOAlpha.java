@@ -12,15 +12,13 @@ import frc.robot.util.sim.PhysicsSim;
 
 public class ClimberIOAlpha implements ClimberIO {
     private final TalonFX climberMotor;
-    private final Servo leftLinServo;
-    private final Servo rightLinServo;
+    private final Servo linServo;
     private MotionMagicTorqueCurrentFOC magicRequest = new MotionMagicTorqueCurrentFOC(0);
     private DutyCycleOut dutyRequest = new DutyCycleOut(0);
 
     public ClimberIOAlpha() {
         climberMotor = new TalonFX(ClimberConfig.CLIMBER_MOTOR_ID, Constants.rioBus);
-        leftLinServo = new Servo(ClimberConfig.LEFT_LINEAR_SERVO_CHANNEL);
-        rightLinServo = new Servo(ClimberConfig.RIGHT_LINEAR_SERVO_CHANNEL);
+        linServo = new Servo(ClimberConfig.LINEAR_SERVO_CHANNEL);
         if (Robot.isSimulation()) {
             PhysicsSim.getInstance().addTalonFX(climberMotor);
         }
@@ -55,7 +53,6 @@ public class ClimberIOAlpha implements ClimberIO {
 
     @Override
     public void setAngle(double position) {
-        leftLinServo.setAngle(position);
-        rightLinServo.setAngle(position);
+        linServo.setAngle(position);
     }
 }
