@@ -101,7 +101,7 @@ public class RobotContainer {
                 linSlide = new LinSlideSubsystem(new LinSlideIOAlpha());
                 intake = new IntakeSubsystem(new IntakeIOAlpha());
                 hopper = new Hopper(new HopperIOAlpha());
-                climber = new Climber(new ClimberIOAlpha());
+                climber = new Climber(new ClimberIOBeta());
                 shooter = new ShooterSubsystem(new ShooterIOAlpha());
                 indexer = new IndexerSubsystem(new IndexerIOAlpha());
                 hood = new HoodSubsystem(new HoodIOBeta());
@@ -123,7 +123,7 @@ public class RobotContainer {
                                 VisionConstants.frontCam, VisionConstants.frontCamTrans, () -> drive.getState().Pose),
                         new VisionIOPhotonVisionSim(
                                 VisionConstants.sideCam, VisionConstants.sideCamTrans, () -> drive.getState().Pose));
-                climber = new Climber(new ClimberIOAlpha());
+                climber = new Climber(new ClimberIOBeta());
                 shooter = new ShooterSubsystem(new ShooterIOAlpha());
                 indexer = new IndexerSubsystem(new IndexerIOAlpha());
                 hood = new HoodSubsystem(new HoodIOBeta());

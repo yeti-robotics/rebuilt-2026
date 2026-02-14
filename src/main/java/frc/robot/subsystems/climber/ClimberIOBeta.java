@@ -10,13 +10,13 @@ import frc.robot.Robot;
 import frc.robot.constants.Constants;
 import frc.robot.util.sim.PhysicsSim;
 
-public class ClimberIOAlpha implements ClimberIO {
+public class ClimberIOBeta implements ClimberIO {
     private final TalonFX climberMotor;
     private final Servo linServo;
     private MotionMagicTorqueCurrentFOC magicRequest = new MotionMagicTorqueCurrentFOC(0);
     private DutyCycleOut dutyRequest = new DutyCycleOut(0);
 
-    public ClimberIOAlpha() {
+    public ClimberIOBeta() {
         climberMotor = new TalonFX(ClimberConfig.CLIMBER_MOTOR_ID, Constants.rioBus);
         linServo = new Servo(ClimberConfig.LINEAR_SERVO_CHANNEL);
         if (Robot.isSimulation()) {
