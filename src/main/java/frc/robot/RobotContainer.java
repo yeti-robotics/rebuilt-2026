@@ -7,6 +7,7 @@
 
 package frc.robot;
 
+import static frc.robot.constants.Constants.currentMode;
 import static frc.robot.constants.FieldConstants.Hub.centerHubOpening;
 import static frc.robot.subsystems.hopper.HopperConfigsAlpha.TEST_HOPPER_SPEED;
 import static frc.robot.subsystems.indexer.IndexerConfigsAlpha.TEST_INDEXER_SPEED;
@@ -87,14 +88,15 @@ public class RobotContainer {
     // Dashboard inputs
     private final LoggedDashboardChooser<Command> autoChooser;
 
-    private final SwerveRequest.FieldCentric driveRequest = new SwerveRequest.FieldCentric()
+    private final SwerveRequest.FieldCentric driveRequest = currentMode == Constants.Mode.ALPHA ?
+            new SwerveRequest.FieldCentric()
             .withDeadband(TunerConstantsAlpha.MAX_VELOCITY_METERS_PER_SECOND * 0.1)
             .withRotationalDeadband(TunerConstantsAlpha.MaFxAngularRate * 0.1)
-            .withDriveRequestType(SwerveModule.DriveRequestType.OpenLoopVoltage);
+            .withDriveRequestType(SwerveModule.DriveRequestType.OpenLoopVoltage) : null; //TODO: get beta stuff
 
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
     public RobotContainer() {
-        switch (Constants.currentMode) {
+        switch (currentMode) {
             case ALPHA:
                 drive = TunerConstantsAlpha.createDrivetrain();
                 linSlide = new LinSlideSubsystem(new LinSlideIOReal());
