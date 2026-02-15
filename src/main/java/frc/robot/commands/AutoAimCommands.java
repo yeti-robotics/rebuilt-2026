@@ -98,6 +98,7 @@ public class AutoAimCommands {
     }
 
     public static Command readyAim(CommandSwerveDrivetrain drive, ShooterSubsystem shooter, HoodSubsystem hood, Translation2d target){
+
         return Commands.run(
                 () -> {
                     Pose2d currentPose = drive.getState().Pose;

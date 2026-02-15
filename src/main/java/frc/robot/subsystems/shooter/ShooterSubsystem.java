@@ -54,4 +54,6 @@ public class ShooterSubsystem extends SubsystemBase {
         return distance / SHOOTER_MAP().get(distance).timeOfFlight;
     }
 
+
+
 }
