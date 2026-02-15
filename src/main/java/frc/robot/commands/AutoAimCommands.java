@@ -19,7 +19,7 @@ import static frc.robot.constants.Constants.currentMode;
 public class AutoAimCommands {
     public static final PIDController headingController = new PIDController(20, 0, 0);
 
-    private static final double SPEED_MULTIPLIER = currentMode == Constants.Mode.ALPHA ? TunerConstantsAlpha.kSpeedAt12Volts.magnitude() : null;
+    private static final double SPEED_MULTIPLIER = currentMode == Constants.Mode.ALPHA ? TunerConstantsAlpha.kSpeedAt12Volts.magnitude() : null; //TODO: make sure to get beta stuff
 
     static {
         headingController.enableContinuousInput(-Math.PI, Math.PI);
