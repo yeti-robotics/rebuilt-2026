@@ -1,8 +1,6 @@
 package frc.robot.subsystems.intake;
 
 import static com.ctre.phoenix6.signals.MotorAlignmentValue.Aligned;
-import static frc.robot.subsystems.intake.IntakeConfigsBeta.PRIMARY_TALONFX_CONFIGS;
-import static frc.robot.subsystems.intake.IntakeConfigsBeta.SECONDARY_TALONFX_CONFIGS;
 
 import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.Follower;

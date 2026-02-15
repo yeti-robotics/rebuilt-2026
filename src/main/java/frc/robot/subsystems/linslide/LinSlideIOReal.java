@@ -18,7 +18,7 @@ public class LinSlideIOReal implements LinSlideIO {
     private final MotionMagicTorqueCurrentFOC magicRequest = new MotionMagicTorqueCurrentFOC(0);
 
     public LinSlideIOReal() {
-        if (currentMode == Constants.Mode.ALPHA){
+        if (currentMode == Constants.Mode.ALPHA) {
             linSlideMotor = new TalonFX(LinSlideConfigsAlpha.LIN_SLIDE_MOTOR_ID, rioBus);
             if (Robot.isSimulation()) {
                 PhysicsSim.getInstance().addTalonFX(linSlideMotor);
@@ -26,9 +26,7 @@ public class LinSlideIOReal implements LinSlideIO {
             linSlideMotor.getConfigurator().apply(LinSlideConfigsAlpha.linSlideTalonFXConfigs);
             zeroPosition();
 
-        }
-
-        else{
+        } else {
             linSlideMotor = new TalonFX(LinSlideConfigsBeta.LIN_SLIDE_MOTOR_ID, rioBus);
             if (Robot.isSimulation()) {
                 PhysicsSim.getInstance().addTalonFX(linSlideMotor);

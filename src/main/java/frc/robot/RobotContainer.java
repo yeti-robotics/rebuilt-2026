@@ -28,9 +28,9 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.AutoAimCommands;
 import frc.robot.commands.AutoCommands;
 import frc.robot.constants.Constants;
-import frc.robot.subsystems.drive.TunerConstantsAlpha;
 import frc.robot.subsystems.climber.*;
 import frc.robot.subsystems.drive.*;
+import frc.robot.subsystems.drive.TunerConstantsAlpha;
 import frc.robot.subsystems.hood.HoodIO;
 import frc.robot.subsystems.hood.HoodIOBeta;
 import frc.robot.subsystems.hood.HoodSubsystem;
@@ -88,11 +88,12 @@ public class RobotContainer {
     // Dashboard inputs
     private final LoggedDashboardChooser<Command> autoChooser;
 
-    private final SwerveRequest.FieldCentric driveRequest = currentMode == Constants.Mode.ALPHA ?
-            new SwerveRequest.FieldCentric()
-            .withDeadband(TunerConstantsAlpha.MAX_VELOCITY_METERS_PER_SECOND * 0.1)
-            .withRotationalDeadband(TunerConstantsAlpha.MaFxAngularRate * 0.1)
-            .withDriveRequestType(SwerveModule.DriveRequestType.OpenLoopVoltage) : null; //TODO: get beta stuff
+    private final SwerveRequest.FieldCentric driveRequest = currentMode == Constants.Mode.ALPHA
+            ? new SwerveRequest.FieldCentric()
+                    .withDeadband(TunerConstantsAlpha.MAX_VELOCITY_METERS_PER_SECOND * 0.1)
+                    .withRotationalDeadband(TunerConstantsAlpha.MaFxAngularRate * 0.1)
+                    .withDriveRequestType(SwerveModule.DriveRequestType.OpenLoopVoltage)
+            : null; // TODO: get beta stuff
 
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
     public RobotContainer() {
@@ -112,12 +113,11 @@ public class RobotContainer {
                         new VisionIOLimelight(VisionConstants.sideCam, drive.getRotation3d()::toRotation2d));
                 break;
 
-
-                case BETA:
+            case BETA:
                 // Real robot, instantiate hardware IO implementations
                 // ModuleIOTalonFX is intended for modules with TalonFX drive, TalonFX turn, and
                 // a CANcoder
-                drive = null; //TODO: get beta stuff
+                drive = null; // TODO: get beta stuff
                 linSlide = new LinSlideSubsystem(new LinSlideIOReal());
                 intake = new IntakeSubsystem(new IntakeIOBeta());
                 hopper = new Hopper(new HopperIOBeta());
@@ -125,13 +125,13 @@ public class RobotContainer {
                 shooter = new ShooterSubsystem(new ShooterIOReal());
                 indexer = new IndexerSubsystem(new IndexerIOReal());
                 hood = new HoodSubsystem(new HoodIOBeta());
-                    vision = new Vision(
-                            drive,
-                            new VisionIOLimelight(VisionConstants.frontCam, drive.getRotation3d()::toRotation2d),
-                            new VisionIOLimelight(VisionConstants.sideCam, drive.getRotation3d()::toRotation2d));
+                vision = new Vision(
+                        drive,
+                        new VisionIOLimelight(VisionConstants.frontCam, drive.getRotation3d()::toRotation2d),
+                        new VisionIOLimelight(VisionConstants.sideCam, drive.getRotation3d()::toRotation2d));
                 break;
 
-                case SIM:
+            case SIM:
                 // Sim robot, instantiate physics sim IO implementations
                 drive = TunerConstantsAlpha.createDrivetrain();
                 linSlide = new LinSlideSubsystem(new LinSlideIOReal());

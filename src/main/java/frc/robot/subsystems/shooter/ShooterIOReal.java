@@ -20,7 +20,7 @@ public class ShooterIOReal implements ShooterIO {
     private final DutyCycleOut dutyRequest = new DutyCycleOut(0.0);
 
     public ShooterIOReal() {
-        if(currentMode == Constants.Mode.ALPHA) {
+        if (currentMode == Constants.Mode.ALPHA) {
             topMotor = new TalonFX(ShooterConfigsAlpha.RIGHT_SHOOTER_ID, Constants.rioBus);
             bottomMotor = new TalonFX(ShooterConfigsAlpha.LEFT_SHOOTER_ID, Constants.rioBus);
             bottomMotor.setControl(new Follower(ShooterConfigsAlpha.RIGHT_SHOOTER_ID, MotorAlignmentValue.Opposed));
@@ -31,8 +31,7 @@ public class ShooterIOReal implements ShooterIO {
                 PhysicsSim.getInstance().addTalonFX(topMotor);
                 PhysicsSim.getInstance().addTalonFX(bottomMotor);
             }
-        }
-        else{
+        } else {
             topMotor = new TalonFX(ShooterConfigsBeta.RIGHT_SHOOTER_ID, Constants.rioBus);
             bottomMotor = new TalonFX(ShooterConfigsBeta.LEFT_SHOOTER_ID, Constants.rioBus);
             bottomMotor.setControl(new Follower(ShooterConfigsBeta.RIGHT_SHOOTER_ID, MotorAlignmentValue.Opposed));

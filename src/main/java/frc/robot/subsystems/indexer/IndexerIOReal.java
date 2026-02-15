@@ -19,7 +19,7 @@ public class IndexerIOReal implements IndexerIO {
     public final DutyCycleOut dutyRequest = new DutyCycleOut(0);
 
     public IndexerIOReal() {
-        if(currentMode == Constants.Mode.ALPHA) {
+        if (currentMode == Constants.Mode.ALPHA) {
             indexerMotor = new TalonFX(IndexerConfigsAlpha.INDEXER_MOTOR_ID, Constants.rioBus);
             indexerMotor.getConfigurator().apply(IndexerConfigsAlpha.INDEXER_MOTOR_CONFIGS);
 
@@ -29,8 +29,7 @@ public class IndexerIOReal implements IndexerIO {
             if (Robot.isSimulation()) {
                 PhysicsSim.getInstance().addTalonFX(indexerMotor);
             }
-        }
-        else{
+        } else {
             indexerMotor = new TalonFX(IndexerConfigsBeta.INDEXER_MOTOR_ID, Constants.rioBus);
             indexerMotor.getConfigurator().apply(IndexerConfigsBeta.INDEXER_MOTOR_CONFIGS);
 
