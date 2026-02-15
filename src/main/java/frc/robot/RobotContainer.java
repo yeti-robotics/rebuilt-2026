@@ -89,7 +89,6 @@ public class RobotContainer {
             .withDeadband(TunerConstants.MAX_VELOCITY_METERS_PER_SECOND * 0.1)
             .withRotationalDeadband(TunerConstants.MaFxAngularRate * 0.1)
             .withDriveRequestType(SwerveModule.DriveRequestType.OpenLoopVoltage);
-
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
     public RobotContainer() {
         switch (Constants.currentMode) {
@@ -216,6 +215,7 @@ public class RobotContainer {
                 .withVelocityX(-controller.getLeftY() * TunerConstants.kSpeedAt12Volts.magnitude())
                 .withVelocityY(-controller.getLeftX() * TunerConstants.kSpeedAt12Volts.magnitude())
                 .withRotationalRate(-controller.getRightX() * TunerConstants.MaFxAngularRate)));
+
         controller.start().onTrue(Commands.runOnce(drive::seedFieldCentric, drive));
 
         controller.y().onTrue(climber.moveToPosition(ClimberPosition.L1.getHeight()));
@@ -249,8 +249,8 @@ public class RobotContainer {
         controller2.start().onTrue(Commands.runOnce(drive::seedFieldCentric, drive));
         controller2.rightBumper().whileTrue(intake.rollIn());
 
-        controller2.x().whileTrue(linSlide.applyPower(0.2)).onFalse(linSlide.applyPower(0));
-        controller2.b().whileTrue(linSlide.applyPower(-0.2)).onFalse(linSlide.applyPower(0));
+        controller2.x().whileTrue(linSlide.applyPower(0.4)).onFalse(linSlide.applyPower(0));
+        controller2.b().whileTrue(linSlide.applyPower(-0.4)).onFalse(linSlide.applyPower(0));
 
         controller2.povLeft().whileTrue(hood.applyPower(0.1));
         controller2.povRight().whileTrue(hood.applyPower(-0.1));
@@ -283,11 +283,6 @@ public class RobotContainer {
                         hopper.applyPower(TEST_HOPPER_SPEED), indexer.applyPower(TEST_INDEXER_SPEED), intake.rollIn()));
 
         controller2.povDown().onTrue(linSlide.zero());
-
-        controller2
-                .y()
-                .whileTrue(AutoAimCommands.autoAimWithOrbit(
-                        drive, controller2::getLeftY, controller2::getLeftX, centerHubOpening.toTranslation2d()));
     }
 
     private void configureSimBindings() {
@@ -343,6 +338,10 @@ public class RobotContainer {
         new Trigger(() -> climber.getCurrentPosition()
                         >= ClimberPosition.L1.getHeight().magnitude() - ClimberConfigsBeta.HEIGHT_TOLERANCE)
                 .whileTrue(led.runPattern(LEDModes.SNOWFALL));
+    }
+
+    public void updateLoggers() {
+        // Logger.recordOutput("Indexer/SensorTrigger", autoCommands.indexerTrigger);
     }
 
     /**
