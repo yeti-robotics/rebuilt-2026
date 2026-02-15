@@ -17,12 +17,12 @@ public class ClimberIOBeta implements ClimberIO {
     private DutyCycleOut dutyRequest = new DutyCycleOut(0);
 
     public ClimberIOBeta() {
-        climberMotor = new TalonFX(ClimberConfig.CLIMBER_MOTOR_ID, Constants.rioBus);
-        linServo = new Servo(ClimberConfig.LINEAR_SERVO_CHANNEL);
+        climberMotor = new TalonFX(ClimberConfigsBeta.CLIMBER_MOTOR_ID, Constants.rioBus);
+        linServo = new Servo(ClimberConfigsBeta.LINEAR_SERVO_CHANNEL);
         if (Robot.isSimulation()) {
             PhysicsSim.getInstance().addTalonFX(climberMotor);
         }
-        climberMotor.getConfigurator().apply(ClimberConfig.primaryTalonFXConfigs);
+        climberMotor.getConfigurator().apply(ClimberConfigsBeta.primaryTalonFXConfigs);
     }
 
     @Override

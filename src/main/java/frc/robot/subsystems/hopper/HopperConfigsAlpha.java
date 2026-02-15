@@ -3,7 +3,7 @@ package frc.robot.subsystems.hopper;
 import com.ctre.phoenix6.configs.*;
 import com.ctre.phoenix6.signals.GravityTypeValue;
 
-public class HopperConfigs {
+public class HopperConfigsAlpha {
     static final int ROLLER_ID = 60;
     public static final double TEST_HOPPER_SPEED = -0.7;
 
