@@ -1,19 +1,27 @@
 package frc.robot.subsystems.hopper;
 
+
 import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.MotionMagicVelocityVoltage;
+import com.ctre.phoenix6.hardware.CANrange;
 import com.ctre.phoenix6.hardware.TalonFX;
 import frc.robot.Robot;
 import frc.robot.constants.Constants;
 import frc.robot.util.sim.PhysicsSim;
 
-public class HopperIOAlpha implements HopperIO {
+public class HopperIOBeta implements HopperIO {
     public final TalonFX hopperRoller;
+    public final CANrange topCanRange;
+    public final CANrange bottomCanRange;
     private final DutyCycleOut dutyCycleOut = new DutyCycleOut(0);
 
-    public HopperIOAlpha() {
-        hopperRoller = new TalonFX(HopperConfigsAlpha.ROLLER_ID, Constants.rioBus);
-        hopperRoller.getConfigurator().apply(HopperConfigsAlpha.TalonFXConfigs);
+    public HopperIOBeta() {
+        hopperRoller = new TalonFX(HopperConfigsBeta.BETA_ROLLER_ID, Constants.rioBus);
+        topCanRange = new CANrange(HopperConfigsBeta.TOP_CANRANGE_ID, Constants.rioBus);
+        bottomCanRange = new CANrange(HopperConfigsBeta.BOTTOM_CANRANGE_ID, Constants.rioBus);
+        hopperRoller.getConfigurator().apply(HopperConfigsBeta.TalonFXConfigs);
+        topCanRange.getConfigurator().apply(HopperConfigsBeta.TOP_CANRANGE_CONFIGS);
+        bottomCanRange.getConfigurator().apply(HopperConfigsBeta.BOTTOM_CANRANGE_CONFIGS);
         if (Robot.isSimulation()) {
             PhysicsSim.getInstance().addTalonFX(hopperRoller);
         }
@@ -22,6 +30,8 @@ public class HopperIOAlpha implements HopperIO {
     @Override
     public void updateInputs(HopperIOInputs inputs) {
         inputs.rollerSpeed = hopperRoller.getVelocity().getValueAsDouble();
+        inputs.leftIsDetected = topCanRange.getIsDetected().getValue();
+        inputs.rightIsDetected = bottomCanRange.getIsDetected().getValue();
     }
 
     @Override

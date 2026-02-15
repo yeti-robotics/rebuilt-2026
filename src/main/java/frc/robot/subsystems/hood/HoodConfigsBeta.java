@@ -7,7 +7,7 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
 import frc.robot.Robot;
 
-public class HoodConfigs {
+public class HoodConfigsBeta {
     static final int HOOD_MOTOR_ID = 44;
     static final int HOOD_CANCODER_ID = 45;
     static final double GEAR_RATIO = 1;
