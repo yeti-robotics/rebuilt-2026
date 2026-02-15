@@ -97,7 +97,8 @@ public class AutoAimCommands {
                 SwerveRequest.Idle::new);
     }
 
-    public static Command readyAim(CommandSwerveDrivetrain drive, ShooterSubsystem shooter, HoodSubsystem hood, Translation2d target){
+    public static Command readyAim(CommandSwerveDrivetrain drive, DoubleSupplier xVelSupplier,
+                                   DoubleSupplier yVelSupplier, ShooterSubsystem shooter, HoodSubsystem hood, Translation2d target){
 
         return Commands.run(
                 () -> {
@@ -107,6 +108,15 @@ public class AutoAimCommands {
                     double distance = modifiedTarget.getDistance(currentPosition);
 
                     double targetRPS = ShooterSubsystem.calcRPS(distance);
+
+                    SwerveRequest.FieldCentricFacingAngle request = new SwerveRequest.FieldCentricFacingAngle()
+                            .withHeadingPID(5, 0, 0)
+                            .withVelocityX(-xVelSupplier.getAsDouble() * SPEED_MULTIPLIER)
+                            .withVelocityY(-yVelSupplier.getAsDouble() * SPEED_MULTIPLIER)
+                            .withTargetDirection(calcDesiredHeading(drive.getState().Pose, modifiedTarget))
+                            .withDriveRequestType(SwerveModule.DriveRequestType.Velocity);
+
+                    drive.setControl(request);
 
                     shooter.shoot(targetRPS);
                 }
