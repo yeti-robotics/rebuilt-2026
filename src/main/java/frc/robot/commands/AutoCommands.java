@@ -2,8 +2,8 @@ package frc.robot.commands;
 
 import static edu.wpi.first.wpilibj2.command.Commands.runOnce;
 import static frc.robot.constants.FieldConstants.Hub.centerHubOpening;
-import static frc.robot.subsystems.hopper.HopperConfigs.TEST_HOPPER_SPEED;
-import static frc.robot.subsystems.indexer.IndexerConfigs.TEST_INDEXER_SPEED;
+import static frc.robot.subsystems.hopper.HopperConfigsAlpha.TEST_HOPPER_SPEED;
+import static frc.robot.subsystems.indexer.IndexerConfigsAlpha.TEST_INDEXER_SPEED;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
