@@ -87,7 +87,7 @@ public class AutoAimCommands {
         return drive.runEnd(
                 () -> {
                     SwerveRequest.FieldCentricFacingAngle request = new SwerveRequest.FieldCentricFacingAngle()
-                            .withHeadingPID(20, 0, 0)
+                            .withHeadingPID(150, 0, 1)
                             .withVelocityX(-xVelSupplier.getAsDouble() * SPEED_MULTIPLIER)
                             .withVelocityY(-yVelSupplier.getAsDouble() * SPEED_MULTIPLIER)
                             .withTargetDirection(calcDesiredHeading(drive.getState().Pose, target))

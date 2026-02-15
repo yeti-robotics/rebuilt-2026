@@ -266,9 +266,13 @@ public class RobotContainer {
 
         controller2
                 .leftTrigger()
-                .whileTrue(AutoAimCommands.autoAim(
-                                drive, controller2::getLeftY, controller2::getLeftX, centerHubOpening.toTranslation2d())
-                        .alongWith(shooter.shoot(20)));
+                .whileTrue(
+                        // AutoAimCommands.autoAim(
+                        // drive, controller2::getLeftY, controller2::getLeftX, centerHubOpening.toTranslation2d())
+                        // .alongWith(
+                        shooter.shoot(20)
+                        // )
+                        );
 
         controller2
                 .a()
