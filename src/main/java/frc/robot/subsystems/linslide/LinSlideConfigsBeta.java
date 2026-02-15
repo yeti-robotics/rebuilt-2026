@@ -1,4 +1,4 @@
-package frc.robot.subsystems.hood;
+package frc.robot.subsystems.linslide;
 
 import com.ctre.phoenix6.configs.*;
 import com.ctre.phoenix6.signals.GravityTypeValue;
@@ -7,12 +7,11 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
 import frc.robot.Robot;
 
-public class HoodConfigs {
-    static final int HOOD_MOTOR_ID = 44;
-    static final int HOOD_CANCODER_ID = 45;
-    static final double GEAR_RATIO = 1;
-    static final double MAGNET_OFFSET = 0;
-    public static final double TEST_HOOD_SPEED = 0.2;
+public class LinSlideConfigsBeta {
+    static final int LIN_SLIDE_MOTOR_ID = 53;
+    static final int LIN_SLIDE_CANCODER_ID = 54;
+    static final double GEAR_RATIO = 1; // placeholder value
+    static final double MAGNET_OFFSET = 0; // placeholder value
 
     private static final Slot0Configs SLOT_0_CONFIGS = Robot.isReal()
             ? new Slot0Configs()
@@ -23,7 +22,7 @@ public class HoodConfigs {
                     .withKV(0)
                     .withKA(0)
                     .withKS(0)
-                    .withGravityType(GravityTypeValue.Arm_Cosine)
+                    .withGravityType(GravityTypeValue.Elevator_Static)
             : new Slot0Configs()
                     .withKP(0)
                     .withKI(0)
@@ -32,9 +31,9 @@ public class HoodConfigs {
                     .withKV(0)
                     .withKA(0)
                     .withKS(0)
-                    .withGravityType(GravityTypeValue.Arm_Cosine);
+                    .withGravityType(GravityTypeValue.Elevator_Static);
 
-    static final TalonFXConfiguration HOOD_MOTOR_CONFIGS = new TalonFXConfiguration()
+    static final TalonFXConfiguration linSlideTalonFXConfigs = new TalonFXConfiguration()
             .withSlot0(SLOT_0_CONFIGS)
             .withMotionMagic(new MotionMagicConfigs()
                     .withMotionMagicAcceleration(1) // placeholder values
@@ -45,9 +44,9 @@ public class HoodConfigs {
                     .withInverted(InvertedValue.CounterClockwise_Positive)
                     .withNeutralMode(NeutralModeValue.Brake));
 
-    static final CANcoderConfiguration HOOD_CANCODER_CONFIGS = new CANcoderConfiguration()
+    static final CANcoderConfiguration linSlideCancoderConfiguration = new CANcoderConfiguration()
             .withMagnetSensor(new MagnetSensorConfigs()
                     .withSensorDirection(SensorDirectionValue.CounterClockwise_Positive)
                     .withMagnetOffset(MAGNET_OFFSET)
-                    .withAbsoluteSensorDiscontinuityPoint(0.625)); // placeholder value
+                    .withAbsoluteSensorDiscontinuityPoint(0.625));
 }

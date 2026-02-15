@@ -3,13 +3,14 @@ package frc.robot.subsystems.indexer;
 import com.ctre.phoenix6.configs.*;
 import com.ctre.phoenix6.signals.UpdateModeValue;
 
-public class IndexerConfigs {
-    static final int INDEXER_MOTOR_ID = 32;
-    static final int INDEXER_CANRANGE_ID = 25;
-    public static final double TEST_INDEXER_SPEED = 0.2;
+public class IndexerConfigsBeta {
+    static final int INDEXER_MOTOR_ID = 50;
+    static final int INDEXER_CANRANGE_ID = 51;
+    public static final double TEST_INDEXER_SPEED = 52;
 
-    static final MotionMagicConfigs MOTION_MAGIC_CONFIGS =
-            new MotionMagicConfigs().withMotionMagicCruiseVelocity(4).withMotionMagicAcceleration(2);
+    static final MotionMagicConfigs MOTION_MAGIC_CONFIGS = new MotionMagicConfigs()
+            .withMotionMagicCruiseVelocity(1)
+            .withMotionMagicAcceleration(2); // placeholder values
 
     static final TalonFXConfiguration INDEXER_MOTOR_CONFIGS =
             new TalonFXConfiguration().withMotionMagic(MOTION_MAGIC_CONFIGS);

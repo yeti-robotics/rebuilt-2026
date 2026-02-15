@@ -8,13 +8,13 @@
 package frc.robot;
 
 import static frc.robot.constants.FieldConstants.Hub.centerHubOpening;
-import static frc.robot.subsystems.hopper.HopperConfigs.TEST_HOPPER_SPEED;
-import static frc.robot.subsystems.indexer.IndexerConfigs.TEST_INDEXER_SPEED;
-import static frc.robot.subsystems.shooter.ShooterConfigsAlpha.TEST_SHOOTER_SPEED;
+import static frc.robot.subsystems.hopper.HopperConfigsAlpha.TEST_HOPPER_SPEED;
+import static frc.robot.subsystems.indexer.IndexerConfigsAlpha.TEST_INDEXER_SPEED;
 
 import com.ctre.phoenix6.swerve.SwerveModule;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
+import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.*;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.wpilibj.GenericHID;
@@ -25,6 +25,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.AutoAimCommands;
+import frc.robot.commands.AutoCommands;
 import frc.robot.constants.Constants;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.climber.*;
@@ -88,7 +89,6 @@ public class RobotContainer {
             .withDeadband(TunerConstants.MAX_VELOCITY_METERS_PER_SECOND * 0.1)
             .withRotationalDeadband(TunerConstants.MaFxAngularRate * 0.1)
             .withDriveRequestType(SwerveModule.DriveRequestType.OpenLoopVoltage);
-
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
     public RobotContainer() {
         switch (Constants.currentMode) {
@@ -100,14 +100,14 @@ public class RobotContainer {
                 linSlide = new LinSlideSubsystem(new LinSlideIOAlpha());
                 intake = new IntakeSubsystem(new IntakeIOAlpha());
                 hopper = new Hopper(new HopperIOAlpha());
-                climber = new Climber(new ClimberIOAlpha());
+                climber = new Climber(new ClimberIOBeta());
                 shooter = new ShooterSubsystem(new ShooterIOAlpha());
                 indexer = new IndexerSubsystem(new IndexerIOAlpha());
                 hood = new HoodSubsystem(new HoodIOBeta());
                 vision = new Vision(
                         drive,
-                        new VisionIOLimelight("Front Camera", drive.getRotation3d()::toRotation2d),
-                        new VisionIOLimelight("Side Camera", drive.getRotation3d()::toRotation2d));
+                        new VisionIOLimelight(VisionConstants.frontCam, drive.getRotation3d()::toRotation2d),
+                        new VisionIOLimelight(VisionConstants.sideCam, drive.getRotation3d()::toRotation2d));
                 break;
 
             case SIM:
@@ -119,10 +119,10 @@ public class RobotContainer {
                 vision = new Vision(
                         drive,
                         new VisionIOPhotonVisionSim(
-                                "Front Camera", VisionConstants.frontCamTrans, () -> drive.getState().Pose),
+                                VisionConstants.frontCam, VisionConstants.frontCamTrans, () -> drive.getState().Pose),
                         new VisionIOPhotonVisionSim(
-                                "Side Camera", VisionConstants.sideCamTrans, () -> drive.getState().Pose));
-                climber = new Climber(new ClimberIOAlpha());
+                                VisionConstants.sideCam, VisionConstants.sideCamTrans, () -> drive.getState().Pose));
+                climber = new Climber(new ClimberIOBeta());
                 shooter = new ShooterSubsystem(new ShooterIOAlpha());
                 indexer = new IndexerSubsystem(new IndexerIOAlpha());
                 hood = new HoodSubsystem(new HoodIOBeta());
@@ -143,6 +143,8 @@ public class RobotContainer {
 
                 break;
         }
+
+        drive.setStateStdDevs(VecBuilder.fill(0.33333, 0.33333, Math.toRadians(0.5)));
 
         led = new LED();
 
@@ -213,6 +215,7 @@ public class RobotContainer {
                 .withVelocityX(-controller.getLeftY() * TunerConstants.kSpeedAt12Volts.magnitude())
                 .withVelocityY(-controller.getLeftX() * TunerConstants.kSpeedAt12Volts.magnitude())
                 .withRotationalRate(-controller.getRightX() * TunerConstants.MaFxAngularRate)));
+
         controller.start().onTrue(Commands.runOnce(drive::seedFieldCentric, drive));
 
         controller.y().onTrue(climber.moveToPosition(ClimberPosition.L1.getHeight()));
@@ -223,15 +226,15 @@ public class RobotContainer {
         controller
                 .leftBumper()
                 .onTrue(Commands.either(
-                        linSlide.moveToPosition(-0.2, false),
-                        linSlide.moveToPosition(0.2, true),
+                        linSlide.moveToPosition(-0.2, false).withTimeout(4),
+                        linSlide.moveToPosition(0.2, true).withTimeout(4),
                         linSlide::isDeployed));
 
         controller
                 .leftTrigger()
                 .whileTrue(AutoAimCommands.autoAim(
                                 drive, controller::getLeftY, controller::getLeftX, centerHubOpening.toTranslation2d())
-                        .alongWith(shooter.shoot(100)));
+                        .alongWith(shooter.shoot(20)));
 
         controller
                 .rightTrigger()
@@ -246,8 +249,8 @@ public class RobotContainer {
         controller2.start().onTrue(Commands.runOnce(drive::seedFieldCentric, drive));
         controller2.rightBumper().whileTrue(intake.rollIn());
 
-        controller2.x().whileTrue(linSlide.applyPower(0.2)).onFalse(linSlide.applyPower(0));
-        controller2.b().whileTrue(linSlide.applyPower(-0.2)).onFalse(linSlide.applyPower(0));
+        controller2.x().whileTrue(linSlide.applyPower(0.4)).onFalse(linSlide.applyPower(0));
+        controller2.b().whileTrue(linSlide.applyPower(-0.4)).onFalse(linSlide.applyPower(0));
 
         controller2.povLeft().whileTrue(hood.applyPower(0.1));
         controller2.povRight().whileTrue(hood.applyPower(-0.1));
@@ -261,7 +264,11 @@ public class RobotContainer {
                         .alongWith(hopper.applyPower(-TEST_HOPPER_SPEED)
                                 .alongWith(indexer.applyPower(-TEST_INDEXER_SPEED))));
 
-        controller2.leftTrigger().whileTrue(shooter.applyPower(-TEST_SHOOTER_SPEED));
+        controller2
+                .leftTrigger()
+                .whileTrue(AutoAimCommands.autoAim(
+                                drive, controller2::getLeftY, controller2::getLeftX, centerHubOpening.toTranslation2d())
+                        .alongWith(shooter.shoot(20)));
 
         controller2
                 .a()
@@ -274,6 +281,8 @@ public class RobotContainer {
                 .rightTrigger()
                 .whileTrue(Commands.parallel(
                         hopper.applyPower(TEST_HOPPER_SPEED), indexer.applyPower(TEST_INDEXER_SPEED), intake.rollIn()));
+
+        controller2.povDown().onTrue(linSlide.zero());
     }
 
     private void configureSimBindings() {
@@ -327,8 +336,12 @@ public class RobotContainer {
                         Math.abs(vision.getDistance() - LEDConstants.IDEAL_DISTANCE_TO_HUB) <= LEDConstants.TOLERANCE)
                 .whileTrue(led.runPattern(LEDModes.WAVE));
         new Trigger(() -> climber.getCurrentPosition()
-                        >= ClimberPosition.L1.getHeight().magnitude() - ClimberConfig.HEIGHT_TOLERANCE)
+                        >= ClimberPosition.L1.getHeight().magnitude() - ClimberConfigsBeta.HEIGHT_TOLERANCE)
                 .whileTrue(led.runPattern(LEDModes.SNOWFALL));
+    }
+
+    public void updateLoggers() {
+        // Logger.recordOutput("Indexer/SensorTrigger", autoCommands.indexerTrigger);
     }
 
     /**
