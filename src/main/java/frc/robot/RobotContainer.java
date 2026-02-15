@@ -9,7 +9,7 @@ package frc.robot;
 
 import static frc.robot.constants.FieldConstants.Hub.centerHubOpening;
 import static frc.robot.subsystems.hopper.HopperConfigs.TEST_HOPPER_SPEED;
-import static frc.robot.subsystems.indexer.IndexerConfigs.TEST_INDEXER_SPEED;
+import static frc.robot.subsystems.indexer.IndexerConfigsAlpha.TEST_INDEXER_SPEED;
 
 import com.ctre.phoenix6.swerve.SwerveModule;
 import com.ctre.phoenix6.swerve.SwerveRequest;

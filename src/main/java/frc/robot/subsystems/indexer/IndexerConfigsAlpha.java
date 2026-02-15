@@ -3,7 +3,7 @@ package frc.robot.subsystems.indexer;
 import com.ctre.phoenix6.configs.*;
 import com.ctre.phoenix6.signals.UpdateModeValue;
 
-public class IndexerConfigs {
+public class IndexerConfigsAlpha {
     static final int INDEXER_MOTOR_ID = 32;
     static final int INDEXER_CANRANGE_ID = 25;
     public static final double TEST_INDEXER_SPEED = 0.2;

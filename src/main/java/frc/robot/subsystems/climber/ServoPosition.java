@@ -1,7 +1,5 @@
 package frc.robot.subsystems.climber;
 
-import edu.wpi.first.units.Units;
-
 public enum ServoPosition {
     SERVO_UPPER(135),
     SERVO_LOWER(45);
