@@ -49,5 +49,4 @@ public class HopperConfigsBeta {
                     .withProximityThreshold(0.126)
                     .withProximityHysteresis(0.1)
                     .withMinSignalStrengthForValidMeasurement(2500));
-
 }

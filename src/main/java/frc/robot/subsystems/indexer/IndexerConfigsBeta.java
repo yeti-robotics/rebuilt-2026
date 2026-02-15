@@ -8,8 +8,9 @@ public class IndexerConfigsBeta {
     static final int INDEXER_CANRANGE_ID = 51;
     public static final double TEST_INDEXER_SPEED = 52;
 
-    static final MotionMagicConfigs MOTION_MAGIC_CONFIGS =
-            new MotionMagicConfigs().withMotionMagicCruiseVelocity(1).withMotionMagicAcceleration(2); //placeholder values
+    static final MotionMagicConfigs MOTION_MAGIC_CONFIGS = new MotionMagicConfigs()
+            .withMotionMagicCruiseVelocity(1)
+            .withMotionMagicAcceleration(2); // placeholder values
 
     static final TalonFXConfiguration INDEXER_MOTOR_CONFIGS =
             new TalonFXConfiguration().withMotionMagic(MOTION_MAGIC_CONFIGS);

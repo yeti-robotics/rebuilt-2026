@@ -10,28 +10,28 @@ import frc.robot.Robot;
 public class LinSlideConfigsBeta {
     static final int LIN_SLIDE_MOTOR_ID = 53;
     static final int LIN_SLIDE_CANCODER_ID = 54;
-    static final double GEAR_RATIO = 1; //placeholder value
-    static final double MAGNET_OFFSET = 0; //placeholder value
+    static final double GEAR_RATIO = 1; // placeholder value
+    static final double MAGNET_OFFSET = 0; // placeholder value
 
     private static final Slot0Configs SLOT_0_CONFIGS = Robot.isReal()
             ? new Slot0Configs()
-            .withKP(1) // placeholder values
-            .withKI(0)
-            .withKD(0)
-            .withKG(0)
-            .withKV(0)
-            .withKA(0)
-            .withKS(0)
-            .withGravityType(GravityTypeValue.Elevator_Static)
+                    .withKP(1) // placeholder values
+                    .withKI(0)
+                    .withKD(0)
+                    .withKG(0)
+                    .withKV(0)
+                    .withKA(0)
+                    .withKS(0)
+                    .withGravityType(GravityTypeValue.Elevator_Static)
             : new Slot0Configs()
-            .withKP(0)
-            .withKI(0)
-            .withKD(0)
-            .withKG(0)
-            .withKV(0)
-            .withKA(0)
-            .withKS(0)
-            .withGravityType(GravityTypeValue.Elevator_Static);
+                    .withKP(0)
+                    .withKI(0)
+                    .withKD(0)
+                    .withKG(0)
+                    .withKV(0)
+                    .withKA(0)
+                    .withKS(0)
+                    .withGravityType(GravityTypeValue.Elevator_Static);
 
     static final TalonFXConfiguration linSlideTalonFXConfigs = new TalonFXConfiguration()
             .withSlot0(SLOT_0_CONFIGS)
@@ -44,13 +44,9 @@ public class LinSlideConfigsBeta {
                     .withInverted(InvertedValue.CounterClockwise_Positive)
                     .withNeutralMode(NeutralModeValue.Brake));
 
-    static final CANcoderConfiguration linSlideCancoderConfiguration =
-            new CANcoderConfiguration()
-                    .withMagnetSensor(
-                            new MagnetSensorConfigs()
-                                    .withSensorDirection(
-                                            SensorDirectionValue.CounterClockwise_Positive)
-                                    .withMagnetOffset(MAGNET_OFFSET)
-                                    .withAbsoluteSensorDiscontinuityPoint(0.625));
-
+    static final CANcoderConfiguration linSlideCancoderConfiguration = new CANcoderConfiguration()
+            .withMagnetSensor(new MagnetSensorConfigs()
+                    .withSensorDirection(SensorDirectionValue.CounterClockwise_Positive)
+                    .withMagnetOffset(MAGNET_OFFSET)
+                    .withAbsoluteSensorDiscontinuityPoint(0.625));
 }

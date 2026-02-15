@@ -29,7 +29,6 @@ public class LinSlideIOBeta implements LinSlideIO {
         linSlideMotor.getConfigurator().apply(linSlideTalonFXConfigs);
         linSlideCancoder.getConfigurator().apply(linSlideCancoderConfiguration);
 
-
         zeroPosition();
     }
 
