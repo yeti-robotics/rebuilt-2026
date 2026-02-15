@@ -17,8 +17,8 @@ public class ShooterConfigsBeta {
             .withKS(0);
 
     public static final MotionMagicConfigs MOTION_MAGIC_CONFIGS = new MotionMagicConfigs()
-            .withMotionMagicAcceleration(8)
-            .withMotionMagicCruiseVelocity(4)
+            .withMotionMagicAcceleration(2)
+            .withMotionMagicCruiseVelocity(1)
             .withMotionMagicJerk(0);
 
     static final TalonFXConfiguration TOP_MOTOR_CONFIGS = new TalonFXConfiguration()
