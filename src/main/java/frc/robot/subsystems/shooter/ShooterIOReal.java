@@ -68,4 +68,9 @@ public class ShooterIOReal implements ShooterIO {
     public void applyPower(double percent) {
         topMotor.setControl(dutyRequest.withOutput(percent));
     }
+
+    @Override
+    public boolean isAtSpeed(double speed) {
+        return topMotor.getVelocity().isNear(20, 2);
+    }
 }

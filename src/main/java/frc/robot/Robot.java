@@ -52,6 +52,7 @@ public class Robot extends LoggedRobot {
                 // Running on a real robot, log to a USB stick ("/U/logs")
                 Logger.addDataReceiver(new WPILOGWriter());
                 Logger.addDataReceiver(new NT4Publisher());
+                Logger.recordOutput("Roborio Serial Number", System.getenv("serialnum"));
                 break;
 
             case SIM:
@@ -90,7 +91,7 @@ public class Robot extends LoggedRobot {
         // the Command-based framework to work.
         CommandScheduler.getInstance().run();
         robotContainer.updateMechanisms();
-
+        robotContainer.updateLoggers();
         // Return to non-RT thread priority (do not modify the first argument)
         // Threads.setCurrentThreadPriority(false, 10);
     }
