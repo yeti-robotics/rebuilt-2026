@@ -27,8 +27,8 @@ public class IntakeIOBeta implements IntakeIO {
             PhysicsSim.getInstance().addTalonFX(secondaryIntakeMotor);
         }
 
-        primaryIntakeMotor.getConfigurator().apply(PRIMARY_TALONFX_CONFIGS);
-        secondaryIntakeMotor.getConfigurator().apply(SECONDARY_TALONFX_CONFIGS);
+        primaryIntakeMotor.getConfigurator().apply(IntakeConfigsBeta.PRIMARY_TALONFX_CONFIGS);
+        secondaryIntakeMotor.getConfigurator().apply(IntakeConfigsBeta.SECONDARY_TALONFX_CONFIGS);
         primaryIntakeMotor.setControl(new Follower(IntakeConfigsBeta.SECONDARY_INTAKE_MOTOR_ID, Aligned));
     }
 

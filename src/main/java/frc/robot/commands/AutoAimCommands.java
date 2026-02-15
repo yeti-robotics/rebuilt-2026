@@ -7,16 +7,19 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.generated.TunerConstants;
+import frc.robot.constants.Constants;
+import frc.robot.subsystems.drive.TunerConstantsAlpha;
 import frc.robot.subsystems.drive.CommandSwerveDrivetrain;
 import frc.robot.util.AllianceFlipUtil;
 import java.util.function.DoubleSupplier;
 import org.littletonrobotics.junction.Logger;
 
+import static frc.robot.constants.Constants.currentMode;
+
 public class AutoAimCommands {
     public static final PIDController headingController = new PIDController(20, 0, 0);
 
-    private static final double SPEED_MULTIPLIER = TunerConstants.kSpeedAt12Volts.magnitude();
+    private static final double SPEED_MULTIPLIER = currentMode == Constants.Mode.ALPHA ? TunerConstantsAlpha.kSpeedAt12Volts.magnitude() : null;
 
     static {
         headingController.enableContinuousInput(-Math.PI, Math.PI);

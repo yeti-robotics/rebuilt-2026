@@ -16,12 +16,11 @@ public class IntakeIOAlpha implements IntakeIO {
     private final VoltageOut voltageRequest = new VoltageOut(0);
 
     public IntakeIOAlpha() {
-        intakeMotor = new TalonFX(IntakeConfigsAlpha.ALPHA_INTAKE_MOTOR_ID, Constants.rioBus);
-        if (Robot.isSimulation()) {
-            PhysicsSim.getInstance().addTalonFX(intakeMotor);
-        }
-
-        intakeMotor.getConfigurator().apply(ALPHA_TALONFX_CONFIGS);
+            intakeMotor = new TalonFX(IntakeConfigsAlpha.ALPHA_INTAKE_MOTOR_ID, Constants.rioBus);
+            if (Robot.isSimulation()) {
+                PhysicsSim.getInstance().addTalonFX(intakeMotor);
+            }
+            intakeMotor.getConfigurator().apply(IntakeConfigsAlpha.ALPHA_TALONFX_CONFIGS);
     }
 
     @Override

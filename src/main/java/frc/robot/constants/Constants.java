@@ -20,13 +20,17 @@ public final class Constants {
     public static final int GIGA_PORT = 2;
 
     public static final Mode simMode = Mode.SIM;
-    public static final Mode currentMode = RobotBase.isReal() ? Mode.REAL : simMode;
+    public static final String ALPHA_SERIAL_NUM = "032B4BBC";
+
+    public static final Mode currentMode = System.getenv("serialnum") == "032B4BBC" ? Mode.ALPHA : System.getenv("serialnum") == "BLIZZARD_SERIAL_NUM" ? Mode.BETA : Mode.SIM;
 
     public static final CANBus rioBus = new CANBus("rio");
 
     public static enum Mode {
         /** Running on a real robot. */
-        REAL,
+        ALPHA,
+
+        BETA,
 
         /** Running a physics simulator. */
         SIM,
