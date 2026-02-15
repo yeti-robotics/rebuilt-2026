@@ -3,6 +3,7 @@ package frc.robot.subsystems.linslide;
 import static frc.robot.constants.Constants.rioBus;
 import static frc.robot.subsystems.linslide.LinSlideConfigsAlpha.*;
 import static frc.robot.subsystems.linslide.LinSlideConfigsBeta.LIN_SLIDE_CANCODER_ID;
+import static frc.robot.subsystems.linslide.LinSlideConfigsBeta.linSlideCancoderConfiguration;
 
 import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.MotionMagicTorqueCurrentFOC;
@@ -11,18 +12,23 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import frc.robot.Robot;
 import frc.robot.util.sim.PhysicsSim;
 
-public class LinSlideIOAlpha implements LinSlideIO {
+public class LinSlideIOBeta implements LinSlideIO {
     public final TalonFX linSlideMotor;
+    public final CANcoder linSlideCancoder;
+
     private final DutyCycleOut dutyRequest = new DutyCycleOut(0.0);
 
     private final MotionMagicTorqueCurrentFOC magicRequest = new MotionMagicTorqueCurrentFOC(0);
 
-    public LinSlideIOAlpha() {
+    public LinSlideIOBeta() {
         linSlideMotor = new TalonFX(LIN_SLIDE_MOTOR_ID, rioBus);
+        linSlideCancoder = new CANcoder(LIN_SLIDE_CANCODER_ID, rioBus);
         if (Robot.isSimulation()) {
             PhysicsSim.getInstance().addTalonFX(linSlideMotor);
         }
         linSlideMotor.getConfigurator().apply(linSlideTalonFXConfigs);
+        linSlideCancoder.getConfigurator().apply(linSlideCancoderConfiguration);
+
 
         zeroPosition();
     }
