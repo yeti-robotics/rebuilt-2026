@@ -21,8 +21,9 @@ public final class Constants {
 
     public static final Mode simMode = Mode.SIM;
     public static final String ALPHA_SERIAL_NUM = "032B4BBC";
+    public static final String BETA_SERIAL_NUM = null; //TODO: get beta stuff
 
-    public static final Mode currentMode = System.getenv("serialnum") == "032B4BBC" ? Mode.ALPHA : System.getenv("serialnum") == "BLIZZARD_SERIAL_NUM" ? Mode.BETA : Mode.SIM;
+    public static final Mode currentMode = System.getenv("serialnum") == ALPHA_SERIAL_NUM ? Mode.ALPHA : System.getenv("serialnum") == BETA_SERIAL_NUM ? Mode.BETA : Mode.SIM;
 
     public static final CANBus rioBus = new CANBus("rio");
 
