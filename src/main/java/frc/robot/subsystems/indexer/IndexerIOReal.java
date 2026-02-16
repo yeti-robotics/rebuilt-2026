@@ -26,9 +26,6 @@ public class IndexerIOReal implements IndexerIO {
             indexerSensor = new CANrange(IndexerConfigsAlpha.INDEXER_CANRANGE_ID, Constants.rioBus);
             indexerSensor.getConfigurator().apply(IndexerConfigsAlpha.CANRANGE_CONFIGS);
 
-            if (Robot.isSimulation()) {
-                PhysicsSim.getInstance().addTalonFX(indexerMotor);
-            }
         } else {
             indexerMotor = new TalonFX(IndexerConfigsBeta.INDEXER_MOTOR_ID, Constants.rioBus);
             indexerMotor.getConfigurator().apply(IndexerConfigsBeta.INDEXER_MOTOR_CONFIGS);
@@ -36,9 +33,9 @@ public class IndexerIOReal implements IndexerIO {
             indexerSensor = new CANrange(IndexerConfigsBeta.INDEXER_CANRANGE_ID, Constants.rioBus);
             indexerSensor.getConfigurator().apply(IndexerConfigsBeta.CANRANGE_CONFIGS);
 
-            if (Robot.isSimulation()) {
-                PhysicsSim.getInstance().addTalonFX(indexerMotor);
-            }
+        }
+        if (Robot.isSimulation()) {
+            PhysicsSim.getInstance().addTalonFX(indexerMotor);
         }
     }
 
