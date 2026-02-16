@@ -5,21 +5,24 @@ import com.ctre.phoenix6.controls.MotionMagicTorqueCurrentFOC;
 import com.ctre.phoenix6.controls.NeutralOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.wpilibj.Servo;
 import frc.robot.Robot;
 import frc.robot.constants.Constants;
 import frc.robot.util.sim.PhysicsSim;
 
-public class ClimberIOAlpha implements ClimberIO {
+public class ClimberIOBeta implements ClimberIO {
     private final TalonFX climberMotor;
+    private final Servo linServo;
     private MotionMagicTorqueCurrentFOC magicRequest = new MotionMagicTorqueCurrentFOC(0);
     private DutyCycleOut dutyRequest = new DutyCycleOut(0);
 
-    public ClimberIOAlpha() {
-        climberMotor = new TalonFX(ClimberConfig.CLIMBER_MOTOR_ID, Constants.rioBus);
+    public ClimberIOBeta() {
+        climberMotor = new TalonFX(ClimberConfigsBeta.CLIMBER_MOTOR_ID, Constants.rioBus);
+        linServo = new Servo(ClimberConfigsBeta.LINEAR_SERVO_CHANNEL);
         if (Robot.isSimulation()) {
             PhysicsSim.getInstance().addTalonFX(climberMotor);
         }
-        climberMotor.getConfigurator().apply(ClimberConfig.primaryTalonFXConfigs);
+        climberMotor.getConfigurator().apply(ClimberConfigsBeta.primaryTalonFXConfigs);
     }
 
     @Override
@@ -46,5 +49,10 @@ public class ClimberIOAlpha implements ClimberIO {
     @Override
     public void applyPower(double percent) {
         climberMotor.setControl(dutyRequest.withOutput(percent));
+    }
+
+    @Override
+    public void setAngle(double position) {
+        linServo.setAngle(position);
     }
 }

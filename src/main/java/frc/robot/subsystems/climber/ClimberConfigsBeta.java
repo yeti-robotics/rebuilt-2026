@@ -6,8 +6,9 @@ import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import frc.robot.Robot;
 
-public class ClimberConfig {
+public class ClimberConfigsBeta {
     static final int CLIMBER_MOTOR_ID = 9;
+    static final int LINEAR_SERVO_CHANNEL = 1;
     static final int CLIMBER_SENSOR_ID = 101;
     public static final double TEST_CLIMBER_SPEED = 0.2;
 

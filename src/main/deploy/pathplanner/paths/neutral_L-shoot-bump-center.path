@@ -3,32 +3,37 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.4697574893009984,
-        "y": 3.64037089871612
+        "x": 7.791269614835947,
+        "y": 4.546077032810271
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.5079315263908697,
-        "y": 2.607931526390871
+        "x": 6.76228085941559,
+        "y": 4.971989671802819
       },
       "isLocked": false,
-      "linkedName": "init-center"
+      "linkedName": "neutral_L"
     },
     {
       "anchor": {
-        "x": 0.5,
-        "y": 0.78
+        "x": 2.5,
+        "y": 4.0
       },
       "prevControl": {
-        "x": 1.0890442225392292,
-        "y": 1.3890442225392303
+        "x": 2.2923395149786017,
+        "y": 6.150470756062767
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "outpost"
+      "linkedName": "shoot-center"
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.4,
+      "rotationDegrees": -30.973575143077177
+    }
+  ],
   "constraintZones": [],
   "pointTowardsZones": [],
   "eventMarkers": [],
@@ -48,7 +53,7 @@
   "folder": "Center paths",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 47.57178769531803
+    "rotation": 90.0
   },
   "useDefaultConstraints": true
 }

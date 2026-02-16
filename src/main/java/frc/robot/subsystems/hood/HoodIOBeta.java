@@ -15,15 +15,15 @@ public class HoodIOBeta implements HoodIO {
     private final DutyCycleOut dutyCycleOut = new DutyCycleOut(0);
 
     public HoodIOBeta() {
-        hoodMotor = new TalonFX(HoodConfigs.HOOD_MOTOR_ID, Constants.rioBus);
-        hoodCANcoder = new CANcoder(HoodConfigs.HOOD_CANCODER_ID, Constants.rioBus);
+        hoodMotor = new TalonFX(HoodConfigsBeta.HOOD_MOTOR_ID, Constants.rioBus);
+        hoodCANcoder = new CANcoder(HoodConfigsBeta.HOOD_CANCODER_ID, Constants.rioBus);
 
         if (Robot.isSimulation()) {
             PhysicsSim.getInstance().addTalonFX(hoodMotor, hoodCANcoder);
         }
 
-        hoodMotor.getConfigurator().apply(HoodConfigs.HOOD_MOTOR_CONFIGS);
-        hoodCANcoder.getConfigurator().apply(HoodConfigs.HOOD_CANCODER_CONFIGS);
+        hoodMotor.getConfigurator().apply(HoodConfigsBeta.HOOD_MOTOR_CONFIGS);
+        hoodCANcoder.getConfigurator().apply(HoodConfigsBeta.HOOD_CANCODER_CONFIGS);
     }
 
     @Override
