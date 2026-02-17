@@ -326,6 +326,8 @@ public class RobotContainer {
                 .button(9)
                 .whileTrue(AutoAimCommands.autoAimWithOrbit(
                         drive, controller::getLeftY, controller::getLeftX, centerHubOpening.toTranslation2d()));
+        controller.button(10).whileTrue(intake.setRollerSim(3));
+        controller.button(11).whileTrue(intake.handoffFuel());
     }
 
     public void updateMechanisms() {
