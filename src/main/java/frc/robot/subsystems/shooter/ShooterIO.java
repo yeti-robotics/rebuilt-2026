@@ -20,5 +20,9 @@ public interface ShooterIO {
 
     public default void applyPower(double percent) {}
 
+    public default boolean isAtSpeed(double speed) {
+        return false;
+    }
+
     public default void shootFuel() {}
 }
