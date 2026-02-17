@@ -1,11 +1,11 @@
 package frc.robot.subsystems.shooter;
 
 import com.ctre.phoenix6.configs.*;
-import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.configs.FeedbackConfigs;
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.signals.InvertedValue;
 import edu.wpi.first.math.interpolation.InterpolatingTreeMap;
 import edu.wpi.first.math.interpolation.InverseInterpolator;
 import frc.robot.util.ShooterStateData;

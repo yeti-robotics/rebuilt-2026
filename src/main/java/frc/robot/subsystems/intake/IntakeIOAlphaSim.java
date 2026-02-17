@@ -19,9 +19,9 @@ public class IntakeIOAlphaSim implements IntakeIO {
     private final ShooterIOSim shooterIOSim;
 
     public IntakeIOAlphaSim(AbstractDriveTrainSimulation driveTrain, ShooterIOSim shooterIOSim) {
-        intakeMotor = new TalonFX(IntakeConfigs.PRIMARY_INTAKE_MOTOR_ID, Constants.rioBus);
+        intakeMotor = new TalonFX(IntakeConfigsAlpha.ALPHA_INTAKE_MOTOR_ID, Constants.rioBus);
         PhysicsSim.getInstance().addTalonFX(intakeMotor);
-        intakeMotor.getConfigurator().apply(IntakeConfigs.PRIMARY_TALONFX_CONFIGS);
+        intakeMotor.getConfigurator().apply(IntakeConfigsAlpha.ALPHA_TALONFX_CONFIGS);
         this.intakeSimulation = IntakeSimulation.OverTheBumperIntake(
                 "Fuel",
                 driveTrain, // Drive simulation
