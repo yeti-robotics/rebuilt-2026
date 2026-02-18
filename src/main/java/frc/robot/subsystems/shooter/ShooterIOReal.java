@@ -27,10 +27,6 @@ public class ShooterIOReal implements ShooterIO {
             topMotor.getConfigurator().apply(ShooterConfigsAlpha.TOP_MOTOR_CONFIGS);
             bottomMotor.getConfigurator().apply(ShooterConfigsAlpha.BOTTOM_MOTOR_CONFIGS);
 
-            if (Robot.isSimulation()) {
-                PhysicsSim.getInstance().addTalonFX(topMotor);
-                PhysicsSim.getInstance().addTalonFX(bottomMotor);
-            }
         } else {
             topMotor = new TalonFX(ShooterConfigsBeta.RIGHT_SHOOTER_ID, Constants.rioBus);
             bottomMotor = new TalonFX(ShooterConfigsBeta.LEFT_SHOOTER_ID, Constants.rioBus);
@@ -38,10 +34,10 @@ public class ShooterIOReal implements ShooterIO {
             topMotor.getConfigurator().apply(ShooterConfigsBeta.TOP_MOTOR_CONFIGS);
             bottomMotor.getConfigurator().apply(ShooterConfigsBeta.BOTTOM_MOTOR_CONFIGS);
 
-            if (Robot.isSimulation()) {
-                PhysicsSim.getInstance().addTalonFX(topMotor);
-                PhysicsSim.getInstance().addTalonFX(bottomMotor);
-            }
+        }
+        if (Robot.isSimulation()) {
+            PhysicsSim.getInstance().addTalonFX(topMotor);
+            PhysicsSim.getInstance().addTalonFX(bottomMotor);
         }
     }
 
