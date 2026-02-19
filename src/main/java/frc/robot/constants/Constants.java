@@ -22,13 +22,23 @@ public final class Constants {
 
     public static final Mode simMode = Mode.SIM;
     public static final String ALPHA_SERIAL_NUM = "032B4BBC";
-    public static final String BETA_SERIAL_NUM = null; // TODO: get beta stuff
+    public static final String BETA_SERIAL_NUM = ""; // TODO: get beta stuff
 
-    public static final Mode currentMode =
-            System.getenv("serialnum").equals(ALPHA_SERIAL_NUM) && RobotBase.isReal()
-            ? Mode.ALPHA
-            : System.getenv("serialnum").equals(BETA_SERIAL_NUM) && RobotBase.isReal() ? Mode.BETA :
-                    simMode;
+    public static final Mode currentMode;
+
+    static {
+        String serialNum = System.getenv("serialnum");
+
+        if (RobotBase.isReal() && ALPHA_SERIAL_NUM.equals(serialNum)) {
+            currentMode = Mode.ALPHA;
+        }
+        else if (RobotBase.isReal() && BETA_SERIAL_NUM.equals(serialNum)) {
+            currentMode = Mode.BETA;
+        }
+        else {
+            currentMode = simMode;
+        }
+    }
 
     public static final CANBus rioBus = new CANBus("rio");
 
