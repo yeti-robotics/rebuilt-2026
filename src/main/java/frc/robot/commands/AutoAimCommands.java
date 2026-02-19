@@ -21,7 +21,7 @@ public class AutoAimCommands {
 
     private static final double SPEED_MULTIPLIER = currentMode == Constants.Mode.ALPHA
             ? TunerConstants.kSpeedAt12Volts.magnitude()
-            : null; // TODO: make sure to get beta stuff
+            : 0; // TODO: make sure to get beta stuff
 
     static {
         headingController.enableContinuousInput(-Math.PI, Math.PI);
