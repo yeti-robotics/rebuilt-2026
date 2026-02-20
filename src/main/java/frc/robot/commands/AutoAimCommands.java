@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.constants.Constants;
 import frc.robot.subsystems.drive.CommandSwerveDrivetrain;
 import frc.robot.subsystems.drive.TunerConstantsAlpha;
+import frc.robot.subsystems.drive.TunerConstantsBeta;
 import frc.robot.util.AllianceFlipUtil;
 import java.util.function.DoubleSupplier;
 import org.littletonrobotics.junction.Logger;
@@ -21,7 +22,7 @@ public class AutoAimCommands {
 
     private static final double SPEED_MULTIPLIER = currentMode == Constants.Mode.ALPHA
             ? TunerConstantsAlpha.kSpeedAt12Volts.magnitude()
-            : 0; // TODO: make sure to get beta stuff
+            : TunerConstantsBeta.kSpeedAt12Volts.magnitude();
 
     static {
         headingController.enableContinuousInput(-Math.PI, Math.PI);
