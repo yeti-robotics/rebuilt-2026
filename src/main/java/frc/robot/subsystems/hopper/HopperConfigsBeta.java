@@ -7,7 +7,6 @@ import com.ctre.phoenix6.signals.UpdateModeValue;
 public class HopperConfigsBeta {
     static final int BETA_ROLLER_ID = 60;
     static final int TOP_CANRANGE_ID = 23;
-    static final int BOTTOM_CANRANGE_ID = 24;
     public static final double TEST_HOPPER_SPEED = -0.7;
 
     public static final Slot0Configs SLOT_0_CONFIGS = new Slot0Configs()

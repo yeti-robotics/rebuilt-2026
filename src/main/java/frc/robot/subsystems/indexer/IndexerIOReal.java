@@ -32,7 +32,6 @@ public class IndexerIOReal implements IndexerIO {
 
             indexerSensor = new CANrange(IndexerConfigsBeta.INDEXER_CANRANGE_ID, Constants.rioBus);
             indexerSensor.getConfigurator().apply(IndexerConfigsBeta.CANRANGE_CONFIGS);
-
         }
         if (Robot.isSimulation()) {
             PhysicsSim.getInstance().addTalonFX(indexerMotor);

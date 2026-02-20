@@ -9,7 +9,6 @@ package frc.robot.constants;
 
 import com.ctre.phoenix6.CANBus;
 import edu.wpi.first.wpilibj.RobotBase;
-import frc.robot.Robot;
 
 /**
  * This class defines the runtime mode used by AdvantageKit. The mode is always "real" when running
@@ -22,7 +21,7 @@ public final class Constants {
 
     public static final Mode simMode = Mode.SIM;
     public static final String ALPHA_SERIAL_NUM = "032B4BBC";
-    public static final String BETA_SERIAL_NUM = ""; // TODO: get beta stuff
+    public static final String BETA_SERIAL_NUM = "03260A73";
 
     public static final Mode currentMode;
 
@@ -31,11 +30,9 @@ public final class Constants {
 
         if (RobotBase.isReal() && ALPHA_SERIAL_NUM.equals(serialNum)) {
             currentMode = Mode.ALPHA;
-        }
-        else if (RobotBase.isReal() && BETA_SERIAL_NUM.equals(serialNum)) {
+        } else if (RobotBase.isReal() && BETA_SERIAL_NUM.equals(serialNum)) {
             currentMode = Mode.BETA;
-        }
-        else {
+        } else {
             currentMode = simMode;
         }
     }
