@@ -1,7 +1,5 @@
 package frc.robot.subsystems.intake;
 
-import static frc.robot.subsystems.intake.IntakeConfigsAlpha.ALPHA_TALONFX_CONFIGS;
-
 import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -20,8 +18,7 @@ public class IntakeIOAlpha implements IntakeIO {
         if (Robot.isSimulation()) {
             PhysicsSim.getInstance().addTalonFX(intakeMotor);
         }
-
-        intakeMotor.getConfigurator().apply(ALPHA_TALONFX_CONFIGS);
+        intakeMotor.getConfigurator().apply(IntakeConfigsAlpha.ALPHA_TALONFX_CONFIGS);
     }
 
     @Override
