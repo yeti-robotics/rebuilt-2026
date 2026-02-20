@@ -35,6 +35,7 @@ public class LinSlideIOReal implements LinSlideIO {
                 PhysicsSim.getInstance().addTalonFX(linSlideMotor, linSlideCANcoder);
             }
             linSlideMotor.getConfigurator().apply(LinSlideConfigsBeta.linSlideTalonFXConfigs);
+            linSlideCANcoder.getConfigurator().apply(LinSlideConfigsBeta.linSlideCancoderConfiguration);
             zeroPosition();
         }
     }
