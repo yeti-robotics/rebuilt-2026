@@ -11,7 +11,7 @@ public class HoodConfigsBeta {
     static final int HOOD_MOTOR_ID = 44;
     static final int HOOD_CANCODER_ID = 45;
     static final double GEAR_RATIO = 1;
-    static final double MAGNET_OFFSET = 0;
+    static final double MAGNET_OFFSET = 0.337646;
     public static final double TEST_HOOD_SPEED = 0.2;
 
     private static final Slot0Configs SLOT_0_CONFIGS = Robot.isReal()
@@ -49,5 +49,5 @@ public class HoodConfigsBeta {
             .withMagnetSensor(new MagnetSensorConfigs()
                     .withSensorDirection(SensorDirectionValue.CounterClockwise_Positive)
                     .withMagnetOffset(MAGNET_OFFSET)
-                    .withAbsoluteSensorDiscontinuityPoint(0.625)); // placeholder value
+                    .withAbsoluteSensorDiscontinuityPoint(0.625));
 }
