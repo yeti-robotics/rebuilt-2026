@@ -8,6 +8,9 @@ public class ShooterConfigsBeta {
     static final int LEFT_SHOOTER_ID = 55;
     public static final double TEST_SHOOTER_SPEED = 0.8;
 
+    static final double ROTOR_TO_SENSOR = 1;
+    static final double SENSOR_TO_MECHANISM = 1/2;
+
     public static final Slot0Configs SLOT_0_CONFIGS =
             new Slot0Configs().withKP(0).withKI(0).withKD(0).withKA(0).withKV(0).withKS(0);
 
@@ -17,13 +20,13 @@ public class ShooterConfigsBeta {
             .withMotionMagicJerk(0);
 
     static final TalonFXConfiguration TOP_MOTOR_CONFIGS = new TalonFXConfiguration()
-            .withFeedback(new FeedbackConfigs().withSensorToMechanismRatio(2.89).withRotorToSensorRatio(1))
+            .withFeedback(new FeedbackConfigs().withSensorToMechanismRatio(SENSOR_TO_MECHANISM).withRotorToSensorRatio(ROTOR_TO_SENSOR))
             .withSlot0(SLOT_0_CONFIGS)
             .withMotionMagic(MOTION_MAGIC_CONFIGS)
             .withMotorOutput(new MotorOutputConfigs().withInverted(InvertedValue.Clockwise_Positive));
 
     static final TalonFXConfiguration BOTTOM_MOTOR_CONFIGS = new TalonFXConfiguration()
-            .withFeedback(new FeedbackConfigs().withSensorToMechanismRatio(2.89).withRotorToSensorRatio(1))
+            .withFeedback(new FeedbackConfigs().withSensorToMechanismRatio(SENSOR_TO_MECHANISM).withRotorToSensorRatio(ROTOR_TO_SENSOR))
             .withSlot0(SLOT_0_CONFIGS)
             .withMotionMagic(MOTION_MAGIC_CONFIGS);
 }
