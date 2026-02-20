@@ -83,7 +83,7 @@ public class TunerConstants {
 
     // Theoretical free speed (m/s) at 12 V applied output;
     // This needs to be tuned to your individual robot
-    public static final LinearVelocity kSpeedAt12Volts = MetersPerSecond.of(6.08);
+    public static final LinearVelocity kSpeedAt12Volts = MetersPerSecond.of(8.5);
     public static double MAX_VELOCITY_METERS_PER_SECOND =
             kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
     public static double MaFxAngularRate =
