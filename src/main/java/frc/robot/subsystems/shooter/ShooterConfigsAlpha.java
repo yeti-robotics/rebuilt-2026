@@ -9,15 +9,15 @@ public class ShooterConfigsAlpha {
     public static final double TEST_SHOOTER_SPEED = 0.8;
 
     public static final Slot0Configs SLOT_0_CONFIGS = new Slot0Configs()
-            .withKP(2)
+            .withKP(32)
             .withKI(0)
-            .withKD(0.5)
-            .withKA(1.1)
+            .withKD(1)
+            .withKA(0.5)
             .withKV(0.4)
-            .withKS(11.5);
+            .withKS(10);
 
     public static final MotionMagicConfigs MOTION_MAGIC_CONFIGS = new MotionMagicConfigs()
-            .withMotionMagicAcceleration(8)
+            .withMotionMagicAcceleration(128)
             .withMotionMagicCruiseVelocity(4)
             .withMotionMagicJerk(0);
 
