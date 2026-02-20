@@ -10,6 +10,7 @@ public class HoodSubsystem extends SubsystemBase {
 
     public HoodSubsystem(HoodIO io) {
         this.io = io;
+        setDefaultCommand(stowHood().onlyIf(() -> getHoodPosition() > 0.1));
     }
 
     @Override
