@@ -29,6 +29,7 @@ public class HoodIOBeta implements HoodIO {
     @Override
     public void updateInputs(HoodIOInputs inputs) {
         inputs.hoodPosition = hoodMotor.getPosition().getValueAsDouble();
+        inputs.hoodTargetPosition = hoodMotor.getClosedLoopReference().getValueAsDouble();
         inputs.hoodVelocity = hoodMotor.getVelocity().getValueAsDouble();
     }
 

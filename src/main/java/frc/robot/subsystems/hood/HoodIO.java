@@ -6,6 +6,7 @@ public interface HoodIO {
     @AutoLog
     class HoodIOInputs {
         public double hoodPosition = 0.0;
+        public double hoodTargetPosition = 0.0;
         public double hoodVelocity = 0.0;
     }
 
