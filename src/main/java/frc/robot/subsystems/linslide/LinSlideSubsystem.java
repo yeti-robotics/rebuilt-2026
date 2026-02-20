@@ -10,6 +10,7 @@ public class LinSlideSubsystem extends SubsystemBase {
 
     public LinSlideSubsystem(LinSlideIO io) {
         this.io = io;
+        setDefaultCommand(defaultMovement(-1).onlyIf(() -> !velocityIsBasicallyZero()));
     }
 
     @Override
@@ -41,5 +42,13 @@ public class LinSlideSubsystem extends SubsystemBase {
 
     public boolean isDeployed() {
         return inputs.isDeployed;
+    }
+
+    public boolean velocityIsBasicallyZero() {
+        return inputs.velocityRPM < 0.1;
+    }
+
+    public Command defaultMovement(double volts) {
+        return run(() -> io.defaultCommand(volts)).until(this::velocityIsBasicallyZero);
     }
 }

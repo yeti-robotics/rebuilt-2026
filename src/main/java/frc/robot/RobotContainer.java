@@ -274,8 +274,9 @@ public class RobotContainer {
         controller2.start().onTrue(Commands.runOnce(drive::seedFieldCentric, drive));
         controller2.rightBumper().whileTrue(intake.applyPower(0.7));
 
-        controller2.x().whileTrue(linSlide.applyPower(0.4)).onFalse(linSlide.applyPower(0));
-        controller2.b().whileTrue(linSlide.applyPower(-0.4)).onFalse(linSlide.applyPower(0));
+        controller2.x().whileTrue(linSlide.defaultMovement(3));
+        // controller2.x().whileTrue(linSlide.applyPower(0.4)).onFalse(linSlide.applyPower(0));
+        // controller2.b().whileTrue(linSlide.applyPower(-0.4)).onFalse(linSlide.applyPower(0));
 
         controller2.povLeft().whileTrue(hood.applyPower(0.1));
         controller2.povRight().whileTrue(hood.applyPower(-0.1));
@@ -291,16 +292,17 @@ public class RobotContainer {
 
         controller2
                 .leftTrigger()
-                //                .whileTrue(AutoAimCommands.autoAim(
-                //                                drive, controller2::getLeftY, controller2::getLeftX,
-                // centerHubOpening.toTranslation2d())
+                .whileTrue(AutoAimCommands.autoAim(
+                        drive, controller2::getLeftY, controller2::getLeftX, centerHubOpening.toTranslation2d()))
                 .whileTrue(shooter.applyPower(ShooterConfigsBeta.TEST_SHOOTER_SPEED));
 
-        controller2.a().whileTrue(indexer.applyPower(TEST_INDEXER_SPEED));
-        //                .whileTrue(hopper.applyPower(0.2)
-        //                        .withTimeout(0.1)
-        //                        .andThen(hopper.applyPower(-0.2).withTimeout(0.1))
-        //                        .repeatedly());
+        controller2
+                .a()
+                .whileTrue(indexer.applyPower(TEST_INDEXER_SPEED))
+                .whileTrue(hopper.applyPower(0.2)
+                        .withTimeout(0.1)
+                        .andThen(hopper.applyPower(-0.2).withTimeout(0.1))
+                        .repeatedly());
 
         controller2
                 .rightTrigger()
