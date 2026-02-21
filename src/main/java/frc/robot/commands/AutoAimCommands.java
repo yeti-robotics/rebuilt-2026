@@ -1,7 +1,5 @@
 package frc.robot.commands;
 
-import static frc.robot.constants.Constants.currentMode;
-
 import com.ctre.phoenix6.swerve.SwerveModule;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import edu.wpi.first.math.controller.PIDController;
@@ -9,9 +7,8 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.constants.Constants;
+import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.drive.CommandSwerveDrivetrain;
-import frc.robot.subsystems.drive.TunerConstants;
 import frc.robot.util.AllianceFlipUtil;
 import java.util.function.DoubleSupplier;
 import org.littletonrobotics.junction.Logger;
@@ -19,9 +16,7 @@ import org.littletonrobotics.junction.Logger;
 public class AutoAimCommands {
     public static final PIDController headingController = new PIDController(20, 0, 0);
 
-    private static final double SPEED_MULTIPLIER = currentMode == Constants.Mode.ALPHA
-            ? TunerConstants.kSpeedAt12Volts.magnitude()
-            : 0; // TODO: make sure to get beta stuff
+    private static final double SPEED_MULTIPLIER = TunerConstants.kSpeedAt12Volts.magnitude();
 
     static {
         headingController.enableContinuousInput(-Math.PI, Math.PI);

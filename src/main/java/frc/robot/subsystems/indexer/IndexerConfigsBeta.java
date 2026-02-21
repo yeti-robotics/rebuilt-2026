@@ -26,7 +26,7 @@ public class IndexerConfigsBeta {
                     .withFOVRangeX(27)
                     .withFOVRangeY(27))
             .withProximityParams(new ProximityParamsConfigs()
-                    .withProximityThreshold(0.15)
+                    .withProximityThreshold(0.126)
                     .withProximityHysteresis(0.1)
                     .withMinSignalStrengthForValidMeasurement(2500));
 }

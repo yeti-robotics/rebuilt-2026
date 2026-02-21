@@ -1,6 +1,5 @@
 package frc.robot.subsystems.shooter;
 
-import static frc.robot.constants.Constants.currentMode;
 import static frc.robot.subsystems.shooter.ShooterConfigsAlpha.*;
 
 import com.ctre.phoenix6.controls.DutyCycleOut;
@@ -12,28 +11,20 @@ import frc.robot.Robot;
 import frc.robot.constants.Constants;
 import frc.robot.util.sim.PhysicsSim;
 
-public class ShooterIOReal implements ShooterIO {
+public class ShooterIOAlpha implements ShooterIO {
     public TalonFX topMotor;
     public TalonFX bottomMotor;
     private final MotionMagicVelocityTorqueCurrentFOC MOTION_MAGIC_REQUEST = new MotionMagicVelocityTorqueCurrentFOC(0);
 
     private final DutyCycleOut dutyRequest = new DutyCycleOut(0.0);
 
-    public ShooterIOReal() {
-        if (currentMode == Constants.Mode.ALPHA) {
-            topMotor = new TalonFX(ShooterConfigsAlpha.RIGHT_SHOOTER_ID, Constants.rioBus);
-            bottomMotor = new TalonFX(ShooterConfigsAlpha.LEFT_SHOOTER_ID, Constants.rioBus);
-            bottomMotor.setControl(new Follower(ShooterConfigsAlpha.RIGHT_SHOOTER_ID, MotorAlignmentValue.Opposed));
-            topMotor.getConfigurator().apply(ShooterConfigsAlpha.TOP_MOTOR_CONFIGS);
-            bottomMotor.getConfigurator().apply(ShooterConfigsAlpha.BOTTOM_MOTOR_CONFIGS);
+    public ShooterIOAlpha() {
+        topMotor = new TalonFX(ShooterConfigsAlpha.RIGHT_SHOOTER_ID, Constants.rioBus);
+        bottomMotor = new TalonFX(ShooterConfigsAlpha.LEFT_SHOOTER_ID, Constants.rioBus);
+        bottomMotor.setControl(new Follower(ShooterConfigsAlpha.RIGHT_SHOOTER_ID, MotorAlignmentValue.Opposed));
+        topMotor.getConfigurator().apply(TOP_MOTOR_CONFIGS);
+        bottomMotor.getConfigurator().apply(BOTTOM_MOTOR_CONFIGS);
 
-        } else {
-            topMotor = new TalonFX(ShooterConfigsBeta.RIGHT_SHOOTER_ID, Constants.rioBus);
-            bottomMotor = new TalonFX(ShooterConfigsBeta.LEFT_SHOOTER_ID, Constants.rioBus);
-            bottomMotor.setControl(new Follower(ShooterConfigsBeta.RIGHT_SHOOTER_ID, MotorAlignmentValue.Opposed));
-            topMotor.getConfigurator().apply(ShooterConfigsBeta.TOP_MOTOR_CONFIGS);
-            bottomMotor.getConfigurator().apply(ShooterConfigsBeta.BOTTOM_MOTOR_CONFIGS);
-        }
         if (Robot.isSimulation()) {
             PhysicsSim.getInstance().addTalonFX(topMotor);
             PhysicsSim.getInstance().addTalonFX(bottomMotor);
@@ -55,7 +46,7 @@ public class ShooterIOReal implements ShooterIO {
 
     @Override
     public void stopMotors() {
-        topMotor.setVoltage(0);
+        topMotor.set(0);
     }
 
     @Override

@@ -4,7 +4,6 @@ import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
-import edu.wpi.first.units.measure.Angle;
 import frc.robot.Robot;
 import frc.robot.constants.Constants;
 import frc.robot.util.sim.PhysicsSim;
@@ -30,12 +29,11 @@ public class HoodIOBeta implements HoodIO {
     @Override
     public void updateInputs(HoodIOInputs inputs) {
         inputs.hoodPosition = hoodMotor.getPosition().getValueAsDouble();
-        inputs.hoodTargetPosition = hoodMotor.getClosedLoopReference().getValueAsDouble();
         inputs.hoodVelocity = hoodMotor.getVelocity().getValueAsDouble();
     }
 
     @Override
-    public void moveToPosition(Angle position) {
+    public void moveToPosition(double position) {
         hoodMotor.setControl(positionRequest.withPosition(position));
     }
 

@@ -11,6 +11,12 @@ java {
     targetCompatibility = JavaVersion.VERSION_17
 }
 
+// Add maple-sim repository for vendordep artifacts
+repositories {
+    maven { url 'https://shenzhen-robotics-alliance.github.io/maple-sim/vendordep/repos/releases' }
+    mavenCentral()
+}
+
 def ROBOT_MAIN_CLASS = "frc.robot.Main"
 
 // Define my targets (RoboRIO) and artifacts (deployable files)
@@ -79,6 +85,10 @@ dependencies {
 
     def akitJson = new groovy.json.JsonSlurper().parseText(new File(projectDir.getAbsolutePath() + "/vendordeps/AdvantageKit.json").text)
     annotationProcessor "org.littletonrobotics.akit:akit-autolog:$akitJson.version"
+
+    // Ensure maple-sim and dependencies are available on the compile/runtime classpath
+    implementation 'org.ironmaple:maplesim-java:0.4.0-beta'
+    implementation 'org.dyn4j:dyn4j:5.0.2'
 }
 
 test {

@@ -43,12 +43,10 @@ public class Robot extends LoggedRobot {
                     case 1 -> "Uncommitted changes";
                     default -> "Unknown";
                 });
-        Logger.recordMetadata("Serial Number", System.getenv("serialnum"));
 
         // Set up data receivers & replay source
         switch (Constants.currentMode) {
-            case ALPHA:
-            case BETA:
+            case REAL:
                 // Running on a real robot, log to a USB stick ("/U/logs")
                 Logger.addDataReceiver(new WPILOGWriter());
                 Logger.addDataReceiver(new NT4Publisher());
@@ -96,10 +94,15 @@ public class Robot extends LoggedRobot {
         // Threads.setCurrentThreadPriority(false, 10);
     }
 
+    /** This function is called once when the robot is first started up. */
+    @Override
+    public void robotInit() {}
+
     /** This function is called once when the robot is disabled. */
     @Override
     public void disabledInit() {
         Elastic.selectTab("Prematch");
+        robotContainer.resetSimulationField();
     }
 
     /** This function is called periodically when disabled. */
@@ -153,12 +156,14 @@ public class Robot extends LoggedRobot {
 
     /** This function is called once when the robot is first started up. */
     @Override
-    public void simulationInit() {}
+    public void simulationInit() {
+        robotContainer.resetSimulationField();
+    }
 
     /** This function is called periodically whilst in simulation. */
     @Override
     public void simulationPeriodic() {
         PhysicsSim.getInstance().run();
-        robotContainer.updateVisionSim();
+        robotContainer.updateSimulation();
     }
 }
