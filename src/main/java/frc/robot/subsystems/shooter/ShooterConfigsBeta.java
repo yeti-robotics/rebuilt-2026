@@ -9,18 +9,18 @@ public class ShooterConfigsBeta {
     public static final double TEST_SHOOTER_SPEED = 0.6;
 
     static final double ROTOR_TO_SENSOR = 1;
-    static final double SENSOR_TO_MECHANISM = 1.0 / 2.0;
+    static final double SENSOR_TO_MECHANISM = 1;
 
     public static final Slot0Configs SLOT_0_CONFIGS = new Slot0Configs()
-            .withKP(8)
+            .withKP(16)
             .withKI(0)
-            .withKD(1)
-            .withKS(11)
-            .withKV(0.6)
-            .withKA(2);
+            .withKD(0)
+            .withKS(8.5)
+            .withKV(0.2)
+            .withKA(1.5);
 
     public static final MotionMagicConfigs MOTION_MAGIC_CONFIGS = new MotionMagicConfigs()
-            .withMotionMagicAcceleration(64)
+            .withMotionMagicAcceleration(256)
             .withMotionMagicCruiseVelocity(1)
             .withMotionMagicJerk(0);
 
