@@ -11,14 +11,13 @@ public class ShooterConfigsBeta {
     static final double ROTOR_TO_SENSOR = 1;
     static final double SENSOR_TO_MECHANISM = 1.0 / 2.0;
 
-    public static final Slot0Configs SLOT_0_CONFIGS =
-            new Slot0Configs()
-                    .withKP(8)
-                    .withKI(0)
-                    .withKD(1)
-                    .withKS(11)
-                    .withKV(0.6)
-                    .withKA(2);
+    public static final Slot0Configs SLOT_0_CONFIGS = new Slot0Configs()
+            .withKP(8)
+            .withKI(0)
+            .withKD(1)
+            .withKS(11)
+            .withKV(0.6)
+            .withKA(2);
 
     public static final MotionMagicConfigs MOTION_MAGIC_CONFIGS = new MotionMagicConfigs()
             .withMotionMagicAcceleration(64)
