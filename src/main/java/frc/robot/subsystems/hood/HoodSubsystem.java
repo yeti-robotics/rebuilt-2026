@@ -10,6 +10,7 @@ public class HoodSubsystem extends SubsystemBase {
 
     public HoodSubsystem(HoodIO io) {
         this.io = io;
+        setDefaultCommand(stowHood().onlyIf(() -> getHoodPosition() > 0.1));
     }
 
     @Override
@@ -26,12 +27,12 @@ public class HoodSubsystem extends SubsystemBase {
         return inputs.hoodVelocity;
     }
 
-    private void moveToPosition(double position) {
-        io.moveToPosition(position);
+    public Command deployHood() {
+        return runOnce(() -> io.moveToPosition(HoodPositions.DEPLOY.getPosition()));
     }
 
-    public Command moveHoodToPosition(double position) {
-        return runOnce(() -> moveToPosition(position));
+    public Command stowHood() {
+        return runOnce(() -> io.moveToPosition(HoodPositions.STOW.getPosition()));
     }
 
     public Command applyPower(double power) {
