@@ -9,24 +9,34 @@ public class ShooterConfigsBeta {
     public static final double TEST_SHOOTER_SPEED = 0.6;
 
     static final double ROTOR_TO_SENSOR = 1;
-    static final double SENSOR_TO_MECHANISM = 1/2;
+    static final double SENSOR_TO_MECHANISM = 1.0 / 2.0;
 
     public static final Slot0Configs SLOT_0_CONFIGS =
-            new Slot0Configs().withKP(0).withKI(0).withKD(0).withKA(0).withKV(0).withKS(0);
+            new Slot0Configs()
+                    .withKP(8)
+                    .withKI(0)
+                    .withKD(1)
+                    .withKS(11)
+                    .withKV(0.6)
+                    .withKA(2);
 
     public static final MotionMagicConfigs MOTION_MAGIC_CONFIGS = new MotionMagicConfigs()
-            .withMotionMagicAcceleration(2)
+            .withMotionMagicAcceleration(64)
             .withMotionMagicCruiseVelocity(1)
             .withMotionMagicJerk(0);
 
     static final TalonFXConfiguration TOP_MOTOR_CONFIGS = new TalonFXConfiguration()
-            .withFeedback(new FeedbackConfigs().withSensorToMechanismRatio(SENSOR_TO_MECHANISM).withRotorToSensorRatio(ROTOR_TO_SENSOR))
+            .withFeedback(new FeedbackConfigs()
+                    .withSensorToMechanismRatio(SENSOR_TO_MECHANISM)
+                    .withRotorToSensorRatio(ROTOR_TO_SENSOR))
             .withSlot0(SLOT_0_CONFIGS)
             .withMotionMagic(MOTION_MAGIC_CONFIGS)
             .withMotorOutput(new MotorOutputConfigs().withInverted(InvertedValue.CounterClockwise_Positive));
 
     static final TalonFXConfiguration BOTTOM_MOTOR_CONFIGS = new TalonFXConfiguration()
-            .withFeedback(new FeedbackConfigs().withSensorToMechanismRatio(SENSOR_TO_MECHANISM).withRotorToSensorRatio(ROTOR_TO_SENSOR))
+            .withFeedback(new FeedbackConfigs()
+                    .withSensorToMechanismRatio(SENSOR_TO_MECHANISM)
+                    .withRotorToSensorRatio(ROTOR_TO_SENSOR))
             .withSlot0(SLOT_0_CONFIGS)
             .withMotionMagic(MOTION_MAGIC_CONFIGS);
 }
