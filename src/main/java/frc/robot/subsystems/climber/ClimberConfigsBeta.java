@@ -11,8 +11,8 @@ public class ClimberConfigsBeta {
     static final int LINEAR_SERVO_CHANNEL = 1;
     static final int CLIMBER_SENSOR_ID = 101;
 
-    static final int ROTOR_TO_SENSOR = 1;
-    static final int SENSOR_TO_MECHANISM = 35;
+    static final double ROTOR_TO_SENSOR = 1.0;
+    static final double SENSOR_TO_MECHANISM = 35.0;
     public static final double TEST_CLIMBER_SPEED = 0.2;
 
     public static final double HEIGHT_TOLERANCE = 0.2;
