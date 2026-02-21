@@ -13,7 +13,6 @@ public class LinSlideConfigsBeta {
 
     static final double ROTOR_TO_SENSOR = 50.0/12.0;
     static final double SENSOR_TO_MECHANISM = 24.0/18.0;
-    static final double GEAR_RATIO = 1; // placeholder
     static final double MAGNET_OFFSET = 0; // placeholder value
 
     private static final Slot0Configs SLOT_0_CONFIGS = Robot.isReal()
