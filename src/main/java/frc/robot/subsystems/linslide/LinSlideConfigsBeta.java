@@ -10,10 +10,7 @@ import frc.robot.Robot;
 public class LinSlideConfigsBeta {
     static final int LIN_SLIDE_MOTOR_ID = 53;
     static final int LIN_SLIDE_CANCODER_ID = 54;
-
-    static final double ROTOR_TO_SENSOR = 50/12;
-    static final double SENSOR_TO_MECHANISM = 24/18;
-
+    static final double GEAR_RATIO = 1; // placeholder value
     static final double MAGNET_OFFSET = 0; // placeholder value
 
     private static final Slot0Configs SLOT_0_CONFIGS = Robot.isReal()
@@ -42,7 +39,7 @@ public class LinSlideConfigsBeta {
                     .withMotionMagicAcceleration(1) // placeholder values
                     .withMotionMagicCruiseVelocity(1)
                     .withMotionMagicJerk(0))
-            .withFeedback(new FeedbackConfigs().withRotorToSensorRatio(ROTOR_TO_SENSOR).withSensorToMechanismRatio(SENSOR_TO_MECHANISM))
+            .withFeedback(new FeedbackConfigs().withRotorToSensorRatio(1).withSensorToMechanismRatio(GEAR_RATIO))
             .withMotorOutput(new MotorOutputConfigs()
                     .withInverted(InvertedValue.CounterClockwise_Positive)
                     .withNeutralMode(NeutralModeValue.Brake));
