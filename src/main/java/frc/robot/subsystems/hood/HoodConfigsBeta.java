@@ -10,7 +10,7 @@ import frc.robot.Robot;
 public class HoodConfigsBeta {
     static final int HOOD_MOTOR_ID = 44;
     static final int HOOD_CANCODER_ID = 45;
-    static final double MAGNET_OFFSET = 0.337646;
+    static final double MAGNET_OFFSET = -0.209473;
 
     static final double ROTOR_TO_SENSOR = 16;
     static final double SENSOR_TO_MECHANISM = 1.5;
@@ -43,7 +43,9 @@ public class HoodConfigsBeta {
                     .withMotionMagicAcceleration(1) // placeholder values
                     .withMotionMagicCruiseVelocity(1)
                     .withMotionMagicJerk(0))
-            .withFeedback(new FeedbackConfigs().withRotorToSensorRatio(ROTOR_TO_SENSOR).withSensorToMechanismRatio(SENSOR_TO_MECHANISM))
+            .withFeedback(new FeedbackConfigs()
+                    .withRotorToSensorRatio(ROTOR_TO_SENSOR)
+                    .withSensorToMechanismRatio(SENSOR_TO_MECHANISM))
             .withMotorOutput(new MotorOutputConfigs()
                     .withInverted(InvertedValue.CounterClockwise_Positive)
                     .withNeutralMode(NeutralModeValue.Brake));
