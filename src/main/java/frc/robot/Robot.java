@@ -43,12 +43,10 @@ public class Robot extends LoggedRobot {
                     case 1 -> "Uncommitted changes";
                     default -> "Unknown";
                 });
-        Logger.recordMetadata("Serial Number", System.getenv("serialnum"));
 
         // Set up data receivers & replay source
         switch (Constants.currentMode) {
-            case ALPHA:
-            case BETA:
+            case REAL:
                 // Running on a real robot, log to a USB stick ("/U/logs")
                 Logger.addDataReceiver(new WPILOGWriter());
                 Logger.addDataReceiver(new NT4Publisher());
