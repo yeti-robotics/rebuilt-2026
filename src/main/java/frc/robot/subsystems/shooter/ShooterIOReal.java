@@ -33,7 +33,6 @@ public class ShooterIOReal implements ShooterIO {
             bottomMotor.setControl(new Follower(ShooterConfigsBeta.RIGHT_SHOOTER_ID, MotorAlignmentValue.Opposed));
             topMotor.getConfigurator().apply(ShooterConfigsBeta.TOP_MOTOR_CONFIGS);
             bottomMotor.getConfigurator().apply(ShooterConfigsBeta.BOTTOM_MOTOR_CONFIGS);
-
         }
         if (Robot.isSimulation()) {
             PhysicsSim.getInstance().addTalonFX(topMotor);

@@ -88,6 +88,8 @@ public class RobotContainer {
     // Dashboard inputs
     private final LoggedDashboardChooser<Command> autoChooser;
 
+    private ClimberState climbState;
+
     private final SwerveRequest.FieldCentric driveRequest = currentMode == Constants.Mode.ALPHA
             ? new SwerveRequest.FieldCentric()
                     .withDeadband(TunerConstants.MAX_VELOCITY_METERS_PER_SECOND * 0.1)
@@ -169,6 +171,8 @@ public class RobotContainer {
 
         led = new LED();
 
+        climbState = ClimberState.DEFAULT;
+
         autoCommands = new AutoCommands(climber, drive, hood, hopper, indexer, intake, linSlide, shooter);
 
         // Set up auto routines
@@ -233,14 +237,22 @@ public class RobotContainer {
      */
     private void configureRealBindings() {
         drive.setDefaultCommand(drive.applyRequest(() -> driveRequest
-                .withVelocityX(-controller.getLeftY() * TunerConstants.kSpeedAt12Volts.magnitude())
-                .withVelocityY(-controller.getLeftX() * TunerConstants.kSpeedAt12Volts.magnitude())
-                .withRotationalRate(-controller.getRightX() * TunerConstants.MaFxAngularRate)));
+                .withVelocityX(-controller.getLeftY() * climbState.kSpeedAt12Volts.magnitude())
+                .withVelocityY(-controller.getLeftX() * climbState.kSpeedAt12Volts.magnitude())
+                .withRotationalRate(-controller.getRightX() * climbState.MaFxAngularRate)));
+
+        controller.povUp().onTrue(Commands.runOnce(() -> climbState = climbState.switchState()));
 
         controller.start().onTrue(Commands.runOnce(drive::seedFieldCentric, drive));
 
-        controller.y().onTrue(climber.moveToPosition(ClimberPosition.L1.getHeight()));
-        controller.a().onTrue(climber.moveToPosition(ClimberPosition.BOTTOM.getHeight()));
+        controller.y().onTrue(
+                climber.stowServo()
+                .andThen(climber.moveToPosition(ClimberPosition.L1.getHeight())));
+        controller
+                .a()
+                .onTrue(
+                        climber.moveToPosition(ClimberPosition.BOTTOM.getHeight())
+                        .andThen(climber.extendServo()));
 
         controller.rightBumper().whileTrue(intake.rollIn());
 
@@ -308,9 +320,11 @@ public class RobotContainer {
 
     private void configureSimBindings() {
         drive.setDefaultCommand(drive.applyRequest(() -> driveRequest
-                .withVelocityX(-controller.getLeftY() * TunerConstants.kSpeedAt12Volts.magnitude())
-                .withVelocityY(-controller.getLeftX() * TunerConstants.kSpeedAt12Volts.magnitude())
-                .withRotationalRate(-controller.getRightX() * TunerConstants.MaFxAngularRate)));
+                .withVelocityX(
+                        -controller.getLeftY() * climbState.kSpeedAt12Volts().magnitude())
+                .withVelocityY(
+                        -controller.getLeftX() * climbState.kSpeedAt12Volts().magnitude())
+                .withRotationalRate(-controller.getRightX() * climbState.MaFxAngularRate)));
 
         controller.button(1).onTrue(climber.moveToPosition(ClimberPosition.L1.getHeight()));
         controller.button(2).onTrue(climber.moveToPosition(ClimberPosition.BOTTOM.getHeight()));
@@ -338,6 +352,8 @@ public class RobotContainer {
                 .button(9)
                 .whileTrue(AutoAimCommands.autoAimWithOrbit(
                         drive, controller::getLeftY, controller::getLeftX, centerHubOpening.toTranslation2d()));
+
+        controller.button(10).onTrue(Commands.runOnce(() -> climbState = climbState.switchState()));
     }
 
     public void updateMechanisms() {
@@ -362,7 +378,7 @@ public class RobotContainer {
     }
 
     public void updateLoggers() {
-        // Logger.recordOutput("Indexer/SensorTrigger", autoCommands.indexerTrigger);
+        Logger.recordOutput("Climber/ClimbMode", climbState.toString());
     }
 
     /**
