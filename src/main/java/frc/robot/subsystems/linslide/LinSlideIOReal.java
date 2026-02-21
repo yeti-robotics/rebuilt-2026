@@ -6,8 +6,8 @@ import static frc.robot.subsystems.linslide.LinSlideConfigsAlpha.*;
 
 import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.MotionMagicTorqueCurrentFOC;
-import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.CANcoder;
+import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import frc.robot.Robot;
 import frc.robot.constants.Constants;
@@ -32,17 +32,21 @@ public class LinSlideIOReal implements LinSlideIO {
 
         } else {
             linSlideMotor = new TalonFX(LinSlideConfigsBeta.LIN_SLIDE_MOTOR_ID, rioBus);
+            linSlideCANcoder = new CANcoder(LinSlideConfigsBeta.LIN_SLIDE_CANCODER_ID, rioBus);
             if (Robot.isSimulation()) {
-                PhysicsSim.getInstance().addTalonFX(linSlideMotor);
+                PhysicsSim.getInstance().addTalonFX(linSlideMotor, linSlideCANcoder);
             }
             linSlideMotor.getConfigurator().apply(LinSlideConfigsBeta.linSlideTalonFXConfigs);
+            linSlideCANcoder.getConfigurator().apply(LinSlideConfigsBeta.linSlideCancoderConfiguration);
             zeroPosition();
         }
     }
 
     @Override
     public void updateInputs(LinSlideIO.LinSlideIOInputs inputs) {
-        inputs.positionRotation = linSlideMotor.getPosition().getValueAsDouble();
+        inputs.positionRotation = currentMode == Constants.Mode.ALPHA
+                ? linSlideMotor.getPosition().getValueAsDouble()
+                : linSlideCANcoder.getPosition().getValueAsDouble();
         inputs.targetPositionRotation = linSlideMotor.getClosedLoopReference().getValueAsDouble();
         inputs.isDeployed = linSlideMotor.getPosition().getValueAsDouble() >= 3.1;
         inputs.isStowed = linSlideMotor.getPosition().getValueAsDouble() <= 0.1;

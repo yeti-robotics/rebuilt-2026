@@ -44,6 +44,7 @@ public class Robot extends LoggedRobot {
                     default -> "Unknown";
                 });
         Logger.recordMetadata("Serial Number", System.getenv("serialnum"));
+        Logger.recordMetadata("Current Robot", Constants.currentMode.toString());
 
         // Set up data receivers & replay source
         switch (Constants.currentMode) {

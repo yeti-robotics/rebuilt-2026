@@ -1,6 +1,6 @@
 package frc.robot.subsystems.intake;
 
-import static com.ctre.phoenix6.signals.MotorAlignmentValue.Aligned;
+import static com.ctre.phoenix6.signals.MotorAlignmentValue.Opposed;
 
 import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.Follower;
@@ -27,7 +27,7 @@ public class IntakeIOBeta implements IntakeIO {
 
         primaryIntakeMotor.getConfigurator().apply(IntakeConfigsBeta.PRIMARY_TALONFX_CONFIGS);
         secondaryIntakeMotor.getConfigurator().apply(IntakeConfigsBeta.SECONDARY_TALONFX_CONFIGS);
-        primaryIntakeMotor.setControl(new Follower(IntakeConfigsBeta.SECONDARY_INTAKE_MOTOR_ID, Aligned));
+        secondaryIntakeMotor.setControl(new Follower(IntakeConfigsBeta.PRIMARY_INTAKE_MOTOR_ID, Opposed));
     }
 
     @Override

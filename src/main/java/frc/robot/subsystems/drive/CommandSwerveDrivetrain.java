@@ -42,7 +42,7 @@ import org.littletonrobotics.junction.Logger;
  * be used in command-based projects.
  */
 @Logged
-public class CommandSwerveDrivetrain extends TunerConstants.TunerSwerveDrivetrain
+public class CommandSwerveDrivetrain extends TunerConstantsAlpha.TunerSwerveDrivetrain
         implements Subsystem, Vision.VisionConsumer {
     private static final double kSimLoopPeriod = 0.005; // 5 ms
     private Notifier m_simNotifier = null;
@@ -78,7 +78,7 @@ public class CommandSwerveDrivetrain extends TunerConstants.TunerSwerveDrivetrai
     }
 
     public boolean isMotionBlur() {
-        return getSpin().gte(TunerConstants.MAX_BLUR_SPEED);
+        return getSpin().gte(TunerConstantsAlpha.MAX_BLUR_SPEED);
     }
 
     private final SwerveRequest.ApplyRobotSpeeds AutoReq = new SwerveRequest.ApplyRobotSpeeds();
