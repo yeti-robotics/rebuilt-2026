@@ -1,5 +1,6 @@
 package frc.robot.subsystems.indexer;
 
+import static frc.robot.constants.Constants.currentMode;
 import static frc.robot.subsystems.indexer.IndexerConfigsAlpha.*;
 
 import com.ctre.phoenix6.controls.DutyCycleOut;
@@ -10,20 +11,28 @@ import frc.robot.Robot;
 import frc.robot.constants.Constants;
 import frc.robot.util.sim.PhysicsSim;
 
-public class IndexerIOAlpha implements IndexerIO {
+public class IndexerIOReal implements IndexerIO {
     public final TalonFX indexerMotor;
     public final CANrange indexerSensor;
 
     public final MotionMagicVelocityVoltage velocityVoltageRequest = new MotionMagicVelocityVoltage(0);
     public final DutyCycleOut dutyRequest = new DutyCycleOut(0);
 
-    public IndexerIOAlpha() {
-        indexerMotor = new TalonFX(INDEXER_MOTOR_ID, Constants.rioBus);
-        indexerMotor.getConfigurator().apply(INDEXER_MOTOR_CONFIGS);
+    public IndexerIOReal() {
+        if (currentMode == Constants.Mode.ALPHA) {
+            indexerMotor = new TalonFX(IndexerConfigsAlpha.INDEXER_MOTOR_ID, Constants.rioBus);
+            indexerMotor.getConfigurator().apply(IndexerConfigsAlpha.INDEXER_MOTOR_CONFIGS);
 
-        indexerSensor = new CANrange(INDEXER_CANRANGE_ID, Constants.rioBus);
-        indexerSensor.getConfigurator().apply(CANRANGE_CONFIGS);
+            indexerSensor = new CANrange(IndexerConfigsAlpha.INDEXER_CANRANGE_ID, Constants.rioBus);
+            indexerSensor.getConfigurator().apply(IndexerConfigsAlpha.CANRANGE_CONFIGS);
 
+        } else {
+            indexerMotor = new TalonFX(IndexerConfigsBeta.INDEXER_MOTOR_ID, Constants.rioBus);
+            indexerMotor.getConfigurator().apply(IndexerConfigsBeta.INDEXER_MOTOR_CONFIGS);
+
+            indexerSensor = new CANrange(IndexerConfigsBeta.INDEXER_CANRANGE_ID, Constants.rioBus);
+            indexerSensor.getConfigurator().apply(IndexerConfigsBeta.CANRANGE_CONFIGS);
+        }
         if (Robot.isSimulation()) {
             PhysicsSim.getInstance().addTalonFX(indexerMotor);
         }

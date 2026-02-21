@@ -1,7 +1,5 @@
 package frc.robot.subsystems.climber;
 
-import static edu.wpi.first.wpilibj2.command.Commands.run;
-
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -45,11 +43,11 @@ public class Climber extends SubsystemBase {
         return runEnd(() -> io.applyPower(power), () -> io.applyPower(0));
     }
 
-    public Command upperBound() {
+    public Command extendServo() {
         return run(() -> io.setAngle(ServoPosition.SERVO_UPPER.getDegrees()));
     }
 
-    public Command lowerBound() {
+    public Command stowServo() {
         return run(() -> io.setAngle(ServoPosition.SERVO_LOWER.getDegrees()));
     }
 
