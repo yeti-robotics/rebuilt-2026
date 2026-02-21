@@ -245,13 +245,10 @@ public class RobotContainer {
 
         controller.start().onTrue(Commands.runOnce(drive::seedFieldCentric, drive));
 
-        controller.y().onTrue(
-                climber.stowServo()
-                .andThen(climber.moveToPosition(ClimberPosition.L1.getHeight())));
+        controller.y().onTrue(climber.stowServo().andThen(climber.moveToPosition(ClimberPosition.L1.getHeight())));
         controller
                 .a()
-                .onTrue(
-                        climber.moveToPosition(ClimberPosition.BOTTOM.getHeight())
+                .onTrue(climber.moveToPosition(ClimberPosition.BOTTOM.getHeight())
                         .andThen(climber.extendServo()));
 
         controller.rightBumper().whileTrue(intake.rollIn());

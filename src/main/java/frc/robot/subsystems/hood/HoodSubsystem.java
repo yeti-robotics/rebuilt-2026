@@ -1,5 +1,6 @@
 package frc.robot.subsystems.hood;
 
+import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
@@ -40,7 +41,7 @@ public class HoodSubsystem extends SubsystemBase {
         return runEnd(() -> io.applyPower(power), () -> io.applyPower(0));
     }
 
-    public static double calcPos(double distance){
+    public static Angle calcPos(double distance) {
         return ShooterSubsystem.SHOOTER_MAP().get(distance).hoodPos;
     }
 }

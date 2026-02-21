@@ -1,16 +1,15 @@
 package frc.robot.subsystems.shooter;
 
+import static frc.robot.subsystems.hood.HoodPositions.POSITION1;
+
 import edu.wpi.first.math.interpolation.InterpolatingTreeMap;
 import edu.wpi.first.math.interpolation.InverseInterpolator;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.util.ShooterStateData;
 import org.littletonrobotics.junction.Logger;
-
-import java.util.function.DoubleSupplier;
 
 public class ShooterSubsystem extends SubsystemBase {
     private ShooterIO io;
@@ -56,9 +55,10 @@ public class ShooterSubsystem extends SubsystemBase {
     }
 
     public static final InterpolatingTreeMap<Double, ShooterStateData> SHOOTER_MAP() {
-        InterpolatingTreeMap<Double, ShooterStateData> map = new InterpolatingTreeMap<>(InverseInterpolator.forDouble(), ShooterStateData.interpolator);
+        InterpolatingTreeMap<Double, ShooterStateData> map =
+                new InterpolatingTreeMap<>(InverseInterpolator.forDouble(), ShooterStateData.interpolator);
 
-        map.put(0.0, new ShooterStateData(0.0, 0.0, 0.0)); //TODO: add values lol
+        map.put(0.0, new ShooterStateData(POSITION1.getPosition(), 0.0, 0.0)); // TODO: add values lol
 
         return map;
     }
@@ -70,9 +70,6 @@ public class ShooterSubsystem extends SubsystemBase {
     public static double getHorizontalVelocity(double distance) {
         return distance / SHOOTER_MAP().get(distance).timeOfFlight;
     }
-
-
-
 
     public boolean isAtSpeed() {
         return io.isAtSpeed(targetSpeed);

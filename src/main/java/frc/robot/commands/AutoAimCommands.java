@@ -8,6 +8,7 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.constants.Constants;
@@ -16,13 +17,8 @@ import frc.robot.subsystems.drive.TunerConstants;
 import frc.robot.subsystems.hood.HoodSubsystem;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
 import frc.robot.util.AllianceFlipUtil;
-import frc.robot.util.ShooterStateData;
-
-import java.util.LinkedHashMap;
 import java.util.function.DoubleSupplier;
 import org.littletonrobotics.junction.Logger;
-
-import static frc.robot.subsystems.shooter.ShooterSubsystem.SHOOTER_MAP;
 
 public class AutoAimCommands {
     public static final PIDController headingController = new PIDController(20, 0, 0);
@@ -111,30 +107,32 @@ public class AutoAimCommands {
                 SwerveRequest.Idle::new);
     }
 
-    public static Command readyAim(CommandSwerveDrivetrain drive, DoubleSupplier xVelSupplier,
-                                   DoubleSupplier yVelSupplier, ShooterSubsystem shooter, HoodSubsystem hood, Translation2d target){
+    public static Command readyAim(
+            CommandSwerveDrivetrain drive,
+            DoubleSupplier xVelSupplier,
+            DoubleSupplier yVelSupplier,
+            ShooterSubsystem shooter,
+            HoodSubsystem hood,
+            Translation2d target) {
 
-        return Commands.run(
-                () -> {
-                    Pose2d currentPose = drive.getState().Pose;
-                    Translation2d modifiedTarget = AllianceFlipUtil.apply(target);
-                    Translation2d currentPosition = currentPose.getTranslation();
-                    double distance = modifiedTarget.getDistance(currentPosition);
+        return Commands.run(() -> {
+            Pose2d currentPose = drive.getState().Pose;
+            Translation2d modifiedTarget = AllianceFlipUtil.apply(target);
+            Translation2d currentPosition = currentPose.getTranslation();
+            double distance = modifiedTarget.getDistance(currentPosition);
 
-                    double targetRPS = ShooterSubsystem.calcRPS(distance);
+            double targetRPS = ShooterSubsystem.calcRPS(distance);
+            Angle targetHoodAngle = HoodSubsystem.calcPos(distance);
 
-                    SwerveRequest.FieldCentricFacingAngle request = new SwerveRequest.FieldCentricFacingAngle()
-                            .withHeadingPID(5, 0, 0)
-                            .withVelocityX(-xVelSupplier.getAsDouble() * SPEED_MULTIPLIER)
-                            .withVelocityY(-yVelSupplier.getAsDouble() * SPEED_MULTIPLIER)
-                            .withTargetDirection(calcDesiredHeading(drive.getState().Pose, modifiedTarget))
-                            .withDriveRequestType(SwerveModule.DriveRequestType.Velocity);
+            SwerveRequest.FieldCentricFacingAngle request = new SwerveRequest.FieldCentricFacingAngle()
+                    .withHeadingPID(5, 0, 0)
+                    .withVelocityX(-xVelSupplier.getAsDouble() * SPEED_MULTIPLIER)
+                    .withVelocityY(-yVelSupplier.getAsDouble() * SPEED_MULTIPLIER)
+                    .withTargetDirection(calcDesiredHeading(drive.getState().Pose, modifiedTarget))
+                    .withDriveRequestType(SwerveModule.DriveRequestType.Velocity);
 
-                    drive.setControl(request);
-
-                    shooter.shoot(targetRPS);
-                }
-        );
+            drive.setControl(request);
+            shooter.shoot(targetRPS);
+        });
     }
-
 }

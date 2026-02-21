@@ -58,6 +58,7 @@ public class LinSlideIOReal implements LinSlideIO {
     public void applyPower(double percent) {
         linSlideMotor.setControl(dutyRequest.withOutput(percent));
     }
+
     @Override
     public void defaultCommand(double volts) {
         linSlideMotor.setControl(voltageRequest.withOutput(volts));
