@@ -9,7 +9,7 @@ public class ShooterConfigsBeta {
     public static final double TEST_SHOOTER_SPEED = 0.8;
 
     static final double ROTOR_TO_SENSOR = 1;
-    static final double SENSOR_TO_MECHANISM = 1/2;
+    static final double SENSOR_TO_MECHANISM = 1.0 / 2.0;
 
     public static final Slot0Configs SLOT_0_CONFIGS =
             new Slot0Configs().withKP(0).withKI(0).withKD(0).withKA(0).withKV(0).withKS(0);
