@@ -1,5 +1,7 @@
 package frc.robot.commands;
 
+import static frc.robot.constants.Constants.currentMode;
+
 import com.ctre.phoenix6.swerve.SwerveModule;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import edu.wpi.first.math.controller.PIDController;
@@ -8,10 +10,9 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import frc.robot.generated.TunerConstants;
+import frc.robot.constants.Constants;
 import frc.robot.subsystems.drive.CommandSwerveDrivetrain;
-import frc.robot.subsystems.hood.HoodSubsystem;
-import frc.robot.subsystems.shooter.ShooterSubsystem;
+import frc.robot.subsystems.drive.TunerConstants;
 import frc.robot.util.AllianceFlipUtil;
 import frc.robot.util.ShooterStateData;
 
@@ -24,7 +25,9 @@ import static frc.robot.subsystems.shooter.ShooterSubsystem.SHOOTER_MAP;
 public class AutoAimCommands {
     public static final PIDController headingController = new PIDController(20, 0, 0);
 
-    private static final double SPEED_MULTIPLIER = TunerConstants.kSpeedAt12Volts.magnitude();
+    private static final double SPEED_MULTIPLIER = currentMode == Constants.Mode.ALPHA
+            ? TunerConstants.kSpeedAt12Volts.magnitude()
+            : 0; // TODO: make sure to get beta stuff
 
     static {
         headingController.enableContinuousInput(-Math.PI, Math.PI);
