@@ -51,7 +51,6 @@ import frc.robot.subsystems.led.LEDModes;
 import frc.robot.subsystems.linslide.LinSlideIO;
 import frc.robot.subsystems.linslide.LinSlideIOReal;
 import frc.robot.subsystems.linslide.LinSlideSubsystem;
-import frc.robot.subsystems.shooter.ShooterConfigsBeta;
 import frc.robot.subsystems.shooter.ShooterIO;
 import frc.robot.subsystems.shooter.ShooterIOReal;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
@@ -249,13 +248,10 @@ public class RobotContainer {
 
         controller.start().onTrue(Commands.runOnce(drive::seedFieldCentric, drive));
 
-        controller.y().onTrue(
-                climber.stowServo()
-                .andThen(climber.moveToPosition(ClimberPosition.L1.getHeight())));
+        controller.y().onTrue(climber.stowServo().andThen(climber.moveToPosition(ClimberPosition.L1.getHeight())));
         controller
                 .a()
-                .onTrue(
-                        climber.moveToPosition(ClimberPosition.BOTTOM.getHeight())
+                .onTrue(climber.moveToPosition(ClimberPosition.BOTTOM.getHeight())
                         .andThen(climber.extendServo()));
 
         controller.rightBumper().whileTrue(intake.rollIn());
