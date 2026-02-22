@@ -37,7 +37,7 @@ public class HoodConfigsBeta {
     static final TalonFXConfiguration HOOD_MOTOR_CONFIGS = new TalonFXConfiguration()
             .withSlot0(SLOT_0_CONFIGS)
             .withMotionMagic(new MotionMagicConfigs()
-                    .withMotionMagicAcceleration(8) // placeholder values
+                    .withMotionMagicAcceleration(8)
                     .withMotionMagicCruiseVelocity(2)
                     .withMotionMagicJerk(0))
             .withFeedback(new FeedbackConfigs()

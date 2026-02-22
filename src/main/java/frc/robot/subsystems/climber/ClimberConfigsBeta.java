@@ -17,10 +17,8 @@ public class ClimberConfigsBeta {
 
     public static final double HEIGHT_TOLERANCE = 0.2;
 
-    // get the proper gear ratio;
     static final double GEAR_RATIO = 0;
 
-    // tune the sim values - the bottom ones
     private static final Slot0Configs SLOT_0_CONFIGS = Robot.isReal()
             ? new Slot0Configs()
                     .withKP(0)
