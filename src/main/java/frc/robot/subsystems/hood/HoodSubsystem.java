@@ -42,7 +42,7 @@ public class HoodSubsystem extends SubsystemBase {
     }
 
     public static Angle calcPos(double distance) {
-        return ShooterSubsystem.SHOOTER_MAP().get(distance).hoodPos;
+        return ShooterSubsystem.SHOOTER_MAP.get(distance).hoodPos;
     }
 
     public void moveTo(Angle position) {

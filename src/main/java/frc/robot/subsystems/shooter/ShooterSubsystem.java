@@ -54,21 +54,19 @@ public class ShooterSubsystem extends SubsystemBase {
         return runEnd(() -> io.applyPower(power), () -> io.applyPower(0));
     }
 
-    public static final InterpolatingTreeMap<Double, ShooterStateData> SHOOTER_MAP() {
-        InterpolatingTreeMap<Double, ShooterStateData> map =
-                new InterpolatingTreeMap<>(InverseInterpolator.forDouble(), ShooterStateData.interpolator);
+    public static final InterpolatingTreeMap<Double, ShooterStateData> SHOOTER_MAP =
+            new InterpolatingTreeMap<>(InverseInterpolator.forDouble(), ShooterStateData.interpolator);
 
-        map.put(0.0, new ShooterStateData(POSITION1.getPosition(), 0.0, 0.0)); // TODO: add values lol
-
-        return map;
+    static {
+        SHOOTER_MAP.put(0.0, new ShooterStateData(POSITION1.getPosition(), 0.0, 0.0));
     }
 
     public static double calcRPS(double distance) {
-        return SHOOTER_MAP().get(distance).rps;
+        return SHOOTER_MAP.get(distance).rps;
     }
 
     public static double getHorizontalVelocity(double distance) {
-        return distance / SHOOTER_MAP().get(distance).timeOfFlight;
+        return distance / SHOOTER_MAP.get(distance).timeOfFlight;
     }
 
     public boolean isAtSpeed() {
