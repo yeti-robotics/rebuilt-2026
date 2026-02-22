@@ -105,10 +105,10 @@ public class RobotContainer {
                 linSlide = new LinSlideSubsystem(new LinSlideIOReal());
                 intake = new IntakeSubsystem(new IntakeIOAlpha());
                 hopper = new Hopper(new HopperIOAlpha());
-                climber = null;
+                climber = new Climber(new ClimberIO() {});
                 shooter = new ShooterSubsystem(new ShooterIOReal());
                 indexer = new IndexerSubsystem(new IndexerIOReal());
-                hood = null;
+                hood = new HoodSubsystem(new HoodIO() {});
                 vision = new Vision(
                         drive,
                         new VisionIOLimelight(VisionConstants.frontCam, drive.getRotation3d()::toRotation2d),
@@ -214,7 +214,7 @@ public class RobotContainer {
         // Configure the button bindings
         if (Robot.isReal()) {
             configureRealBindings();
-            configureDebugBindings();
+            //            configureDebugBindings();
         } else if (Robot.isSimulation()) {
             configureSimBindings();
         }
@@ -237,31 +237,27 @@ public class RobotContainer {
      */
     private void configureRealBindings() {
         drive.setDefaultCommand(drive.applyRequest(() -> driveRequest
-                .withVelocityX(-controller.getLeftY() * climbState.kSpeedAt12Volts.magnitude())
-                .withVelocityY(-controller.getLeftX() * climbState.kSpeedAt12Volts.magnitude())
-                .withRotationalRate(-controller.getRightX() * climbState.MaFxAngularRate)));
+                .withVelocityX(-controller.getLeftY() * TunerConstants.kSpeedAt12Volts.magnitude())
+                .withVelocityY(-controller.getLeftX() * TunerConstants.kSpeedAt12Volts.magnitude())
+                .withRotationalRate(-controller.getRightX() * TunerConstants.MaFxAngularRate)));
 
         controller.povUp().onTrue(Commands.runOnce(() -> climbState = climbState.switchState()));
 
         controller.start().onTrue(Commands.runOnce(drive::seedFieldCentric, drive));
 
-        controller.y().onTrue(
-                climber.stowServo()
-                .andThen(climber.moveToPosition(ClimberPosition.L1.getHeight())));
+        controller.y().onTrue(climber.stowServo().andThen(climber.moveToPosition(ClimberPosition.L1.getHeight())));
         controller
                 .a()
-                .onTrue(
-                        climber.moveToPosition(ClimberPosition.BOTTOM.getHeight())
+                .onTrue(climber.moveToPosition(ClimberPosition.BOTTOM.getHeight())
                         .andThen(climber.extendServo()));
 
-        controller.rightBumper().whileTrue(intake.rollIn());
+        controller.rightBumper().whileTrue(intake.applyPower(-0.6));
 
-        controller
-                .leftBumper()
-                .onTrue(Commands.either(
-                        linSlide.moveToPosition(-0.2, false).withTimeout(4),
-                        linSlide.moveToPosition(0.2, true).withTimeout(4),
-                        linSlide::isDeployed));
+        controller.leftBumper().whileTrue(intake.applyPower(0.6));
+        //                .onTrue(Commands.either(
+        //                        linSlide.moveToPosition(-0.2, false).withTimeout(4),
+        //                        linSlide.moveToPosition(0.2, true).withTimeout(4),
+        //                        linSlide::isDeployed));
 
         controller
                 .leftTrigger()
@@ -271,7 +267,8 @@ public class RobotContainer {
 
         controller
                 .rightTrigger()
-                .whileTrue(hopper.spinHopper(80).alongWith(intake.rollIn().alongWith(indexer.applyPower(0.3))));
+                .whileTrue(hopper.applyPower(TEST_HOPPER_SPEED)
+                        .alongWith(intake.applyPower(-0.5).alongWith(indexer.applyPower(0.3))));
     }
 
     private void configureDebugBindings() {

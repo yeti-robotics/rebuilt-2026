@@ -10,7 +10,7 @@ public class LinSlideSubsystem extends SubsystemBase {
 
     public LinSlideSubsystem(LinSlideIO io) {
         this.io = io;
-        setDefaultCommand(defaultMovement(-1).onlyIf(() -> !isBasicallyZeroRPM()));
+        //        setDefaultCommand(defaultMovement(-1).onlyIf(() -> !isBasicallyZeroRPM()));
     }
 
     @Override
