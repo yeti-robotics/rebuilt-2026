@@ -48,4 +48,8 @@ public class HoodSubsystem extends SubsystemBase {
     public void moveTo(Angle position) {
         io.moveToPosition(position);
     }
+
+    public Command moveToPosition(Angle position){
+        return runOnce(() -> this.moveTo(position));
+    }
 }

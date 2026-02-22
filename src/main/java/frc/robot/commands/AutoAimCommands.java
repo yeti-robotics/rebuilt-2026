@@ -133,7 +133,7 @@ public class AutoAimCommands {
 
             drive.setControl(request);
             shooter.shoot(targetRPS);
-            hood.moveTo(targetHoodAngle);
+            hood.moveToPosition(targetHoodAngle)    ;
         });
     }
 }
