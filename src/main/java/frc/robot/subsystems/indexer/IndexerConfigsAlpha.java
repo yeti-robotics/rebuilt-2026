@@ -14,9 +14,6 @@ public class IndexerConfigsAlpha {
     static final TalonFXConfiguration INDEXER_MOTOR_CONFIGS =
             new TalonFXConfiguration().withMotionMagic(MOTION_MAGIC_CONFIGS);
 
-    // ask for ratios later - they said they dont have it yet
-
-    // placeholder values
     static final CANrangeConfiguration CANRANGE_CONFIGS = new CANrangeConfiguration()
             .withToFParams(new ToFParamsConfigs().withUpdateMode(UpdateModeValue.ShortRange100Hz))
             .withFovParams(new FovParamsConfigs()

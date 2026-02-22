@@ -36,16 +36,4 @@ public class HopperConfigsBeta {
                     .withProximityThreshold(0.126)
                     .withProximityHysteresis(0.1)
                     .withMinSignalStrengthForValidMeasurement(2500));
-
-    static final CANrangeConfiguration BOTTOM_CANRANGE_CONFIGS = new CANrangeConfiguration()
-            .withToFParams(new ToFParamsConfigs().withUpdateMode(UpdateModeValue.ShortRange100Hz))
-            .withFovParams(new FovParamsConfigs()
-                    .withFOVCenterX(0)
-                    .withFOVCenterY(0)
-                    .withFOVRangeX(27)
-                    .withFOVRangeY(27))
-            .withProximityParams(new ProximityParamsConfigs()
-                    .withProximityThreshold(0.126)
-                    .withProximityHysteresis(0.1)
-                    .withMinSignalStrengthForValidMeasurement(2500));
 }

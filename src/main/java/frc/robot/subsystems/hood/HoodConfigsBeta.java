@@ -1,32 +1,29 @@
 package frc.robot.subsystems.hood;
 
 import com.ctre.phoenix6.configs.*;
-import com.ctre.phoenix6.signals.GravityTypeValue;
-import com.ctre.phoenix6.signals.InvertedValue;
-import com.ctre.phoenix6.signals.NeutralModeValue;
-import com.ctre.phoenix6.signals.SensorDirectionValue;
+import com.ctre.phoenix6.signals.*;
 import frc.robot.Robot;
 
 public class HoodConfigsBeta {
     static final int HOOD_MOTOR_ID = 44;
     static final int HOOD_CANCODER_ID = 45;
+    static final double MAGNET_OFFSET = 0.342529;
 
     static final double ROTOR_TO_SENSOR = 16.0;
     static final double SENSOR_TO_MECHANISM = 1.5;
 
-    static final double MAGNET_OFFSET = 0;
     public static final double TEST_HOOD_SPEED = 0.2;
 
     private static final Slot0Configs SLOT_0_CONFIGS = Robot.isReal()
             ? new Slot0Configs()
-                    .withKP(1) // placeholder values
+                    .withKP(256)
                     .withKI(0)
                     .withKD(0)
                     .withKG(0)
-                    .withKV(0)
-                    .withKA(0)
-                    .withKS(0)
-                    .withGravityType(GravityTypeValue.Arm_Cosine)
+                    .withKV(3)
+                    .withKA(0.5)
+                    .withKS(4)
+                    .withGravityType(GravityTypeValue.Elevator_Static)
             : new Slot0Configs()
                     .withKP(0)
                     .withKI(0)
@@ -35,24 +32,31 @@ public class HoodConfigsBeta {
                     .withKV(0)
                     .withKA(0)
                     .withKS(0)
-                    .withGravityType(GravityTypeValue.Arm_Cosine);
+                    .withGravityType(GravityTypeValue.Elevator_Static);
 
     static final TalonFXConfiguration HOOD_MOTOR_CONFIGS = new TalonFXConfiguration()
             .withSlot0(SLOT_0_CONFIGS)
             .withMotionMagic(new MotionMagicConfigs()
-                    .withMotionMagicAcceleration(1) // placeholder values
-                    .withMotionMagicCruiseVelocity(1)
+                    .withMotionMagicAcceleration(8)
+                    .withMotionMagicCruiseVelocity(2)
                     .withMotionMagicJerk(0))
             .withFeedback(new FeedbackConfigs()
                     .withRotorToSensorRatio(ROTOR_TO_SENSOR)
-                    .withSensorToMechanismRatio(SENSOR_TO_MECHANISM))
+                    .withSensorToMechanismRatio(SENSOR_TO_MECHANISM)
+                    .withFeedbackRemoteSensorID(HOOD_CANCODER_ID)
+                    .withFeedbackSensorSource(FeedbackSensorSourceValue.FusedCANcoder))
             .withMotorOutput(new MotorOutputConfigs()
-                    .withInverted(InvertedValue.CounterClockwise_Positive)
-                    .withNeutralMode(NeutralModeValue.Brake));
+                    .withInverted(InvertedValue.Clockwise_Positive)
+                    .withNeutralMode(NeutralModeValue.Brake))
+            .withSoftwareLimitSwitch(new SoftwareLimitSwitchConfigs()
+                    .withReverseSoftLimitThreshold(-0.12793000042438507)
+                    .withReverseSoftLimitEnable(true)
+                    .withForwardSoftLimitThreshold(0.2912600040435791)
+                    .withForwardSoftLimitEnable(true));
 
     static final CANcoderConfiguration HOOD_CANCODER_CONFIGS = new CANcoderConfiguration()
             .withMagnetSensor(new MagnetSensorConfigs()
-                    .withSensorDirection(SensorDirectionValue.CounterClockwise_Positive)
+                    .withSensorDirection(SensorDirectionValue.Clockwise_Positive)
                     .withMagnetOffset(MAGNET_OFFSET)
-                    .withAbsoluteSensorDiscontinuityPoint(0.625)); // placeholder value
+                    .withAbsoluteSensorDiscontinuityPoint(0));
 }
