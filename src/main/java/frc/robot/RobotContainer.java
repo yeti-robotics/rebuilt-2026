@@ -89,6 +89,8 @@ public class RobotContainer {
     // Dashboard inputs
     private final LoggedDashboardChooser<Command> autoChooser;
 
+    private ClimberState climbState;
+
     private final SwerveRequest.FieldCentric driveRequest = currentMode == Constants.Mode.ALPHA
             ? new SwerveRequest.FieldCentric()
                     .withDeadband(TunerConstantsAlpha.MAX_VELOCITY_METERS_PER_SECOND * 0.1)
@@ -173,6 +175,8 @@ public class RobotContainer {
 
         led = new LED();
 
+        climbState = ClimberState.DEFAULT;
+
         autoCommands = new AutoCommands(climber, drive, hood, hopper, indexer, intake, linSlide, shooter);
 
         // Set up auto routines
@@ -188,14 +192,14 @@ public class RobotContainer {
         autoChooser.addOption("Drive SysId (Dynamic Forward)", drive.sysIdDynamic(SysIdRoutine.Direction.kForward));
         autoChooser.addOption("Drive SysId (Dynamic Reverse)", drive.sysIdDynamic(SysIdRoutine.Direction.kReverse));
 
-        //         Left
+        // Left
         autoChooser.addOption("One Cycle Neutral Tower Left", autoCommands.oneCycleNeutralTowerLeft());
         autoChooser.addOption("One Cycle Depot Tower Left", autoCommands.oneCycleDepotTowerLeft());
         autoChooser.addOption("Two Cycle Neutral Depot Tower Left", autoCommands.twoCycleNeutralDepotTowerLeft());
         autoChooser.addOption("Two Cycle Depot Neutral Tower Left", autoCommands.twoCycleDepotNeutralTowerLeft());
         autoChooser.addOption("Two Cycle Neutral Neutral Tower Left", autoCommands.twoCycleNeutralTowerLeft());
 
-        //         Center
+        // Center
         autoChooser.addOption("One Cycle Neutral Left Tower Center", autoCommands.oneCycleNeutralLeftTowerCenter());
         autoChooser.addOption("One Cycle Neutral Right Tower Center", autoCommands.oneCycleNeutralRightTowerCenter());
         autoChooser.addOption("Two Cycle Depot Neutral Right Center", autoCommands.twoCycleDepotNeutralRightCenter());
@@ -211,7 +215,7 @@ public class RobotContainer {
         autoChooser.addOption("Two Cycle Neutral Outpost Tower Right", autoCommands.twoCycleNeutralOutpostTowerRight());
         autoChooser.addOption("Two Cycle Neutral Neutral Tower Right", autoCommands.twoCycleNeutralTowerRight());
 
-        //         Configure the button bindings
+        // Configure the button bindings
         if (Robot.isReal()) {
             configureRealBindings();
             configureDebugBindings();
@@ -237,14 +241,22 @@ public class RobotContainer {
      */
     private void configureRealBindings() {
         drive.setDefaultCommand(drive.applyRequest(() -> driveRequest
-                .withVelocityX(-controller.getLeftY() * TunerConstantsAlpha.kSpeedAt12Volts.magnitude())
-                .withVelocityY(-controller.getLeftX() * TunerConstantsAlpha.kSpeedAt12Volts.magnitude())
-                .withRotationalRate(-controller.getRightX() * TunerConstantsAlpha.MaFxAngularRate)));
+                .withVelocityX(-controller.getLeftY() * climbState.kSpeedAt12Volts.magnitude())
+                .withVelocityY(-controller.getLeftX() * climbState.kSpeedAt12Volts.magnitude())
+                .withRotationalRate(-controller.getRightX() * climbState.MaFxAngularRate)));
+
+        controller.povUp().onTrue(Commands.runOnce(() -> climbState = climbState.switchState()));
 
         controller.start().onTrue(Commands.runOnce(drive::seedFieldCentric, drive));
 
-        controller.y().onTrue(climber.moveToPosition(ClimberPosition.L1.getHeight()));
-        controller.a().onTrue(climber.moveToPosition(ClimberPosition.BOTTOM.getHeight()));
+        controller.y().onTrue(
+                climber.stowServo()
+                .andThen(climber.moveToPosition(ClimberPosition.L1.getHeight())));
+        controller
+                .a()
+                .onTrue(
+                        climber.moveToPosition(ClimberPosition.BOTTOM.getHeight())
+                        .andThen(climber.extendServo()));
 
         controller.rightBumper().whileTrue(intake.rollIn());
 
@@ -291,16 +303,16 @@ public class RobotContainer {
 
         controller2
                 .leftTrigger()
-                //                .whileTrue(AutoAimCommands.autoAim(
-                //                                drive, controller2::getLeftY, controller2::getLeftX,
-                // centerHubOpening.toTranslation2d())
-                .whileTrue(shooter.applyPower(ShooterConfigsBeta.TEST_SHOOTER_SPEED));
+                .whileTrue(AutoAimCommands.autoAim(
+                                drive, controller2::getLeftY, controller2::getLeftX, centerHubOpening.toTranslation2d())
+                        .alongWith(shooter.shoot(20)));
 
-        controller2.a().whileTrue(indexer.applyPower(TEST_INDEXER_SPEED));
-        //                .whileTrue(hopper.applyPower(0.2)
-        //                        .withTimeout(0.1)
-        //                        .andThen(hopper.applyPower(-0.2).withTimeout(0.1))
-        //                        .repeatedly());
+        controller2
+                .a()
+                .whileTrue(hopper.applyPower(0.2)
+                        .withTimeout(0.1)
+                        .andThen(hopper.applyPower(-0.2).withTimeout(0.1))
+                        .repeatedly());
 
         controller2
                 .rightTrigger()
@@ -309,14 +321,16 @@ public class RobotContainer {
                         indexer.applyPower(TEST_INDEXER_SPEED),
                         intake.applyPower(0.7)));
 
-        //        controller2.povDown().onTrue(linSlide.zero());
+        controller2.povDown().onTrue(linSlide.zero());
     }
 
     private void configureSimBindings() {
         drive.setDefaultCommand(drive.applyRequest(() -> driveRequest
-                .withVelocityX(-controller.getLeftY() * TunerConstantsAlpha.kSpeedAt12Volts.magnitude())
-                .withVelocityY(-controller.getLeftX() * TunerConstantsAlpha.kSpeedAt12Volts.magnitude())
-                .withRotationalRate(-controller.getRightX() * TunerConstantsAlpha.MaFxAngularRate)));
+                .withVelocityX(
+                        -controller.getLeftY() * climbState.kSpeedAt12Volts().magnitude())
+                .withVelocityY(
+                        -controller.getLeftX() * climbState.kSpeedAt12Volts().magnitude())
+                .withRotationalRate(-controller.getRightX() * climbState.MaFxAngularRate)));
 
         controller.button(1).onTrue(climber.moveToPosition(ClimberPosition.L1.getHeight()));
         controller.button(2).onTrue(climber.moveToPosition(ClimberPosition.BOTTOM.getHeight()));
@@ -344,6 +358,8 @@ public class RobotContainer {
                 .button(9)
                 .whileTrue(AutoAimCommands.autoAimWithOrbit(
                         drive, controller::getLeftY, controller::getLeftX, centerHubOpening.toTranslation2d()));
+
+        controller.button(10).onTrue(Commands.runOnce(() -> climbState = climbState.switchState()));
     }
 
     public void updateMechanisms() {
@@ -368,7 +384,7 @@ public class RobotContainer {
     }
 
     public void updateLoggers() {
-        // Logger.recordOutput("Indexer/SensorTrigger", autoCommands.indexerTrigger);
+        Logger.recordOutput("Climber/ClimbMode", climbState.toString());
     }
 
     /**
