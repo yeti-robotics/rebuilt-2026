@@ -322,6 +322,8 @@ public class RobotContainer {
                         intake.applyPower(0.7)));
 
         controller2.povDown().onTrue(linSlide.zero());
+
+        controller2.leftBumper().whileTrue(intake.applyPower(-0.7).alongWith(hopper.applyPower(-0.7)));
     }
 
     private void configureSimBindings() {
