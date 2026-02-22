@@ -16,7 +16,7 @@ public class HoodConfigsBeta {
 
     private static final Slot0Configs SLOT_0_CONFIGS = Robot.isReal()
             ? new Slot0Configs()
-                    .withKP(256) // placeholder values
+                    .withKP(256)
                     .withKI(0)
                     .withKD(0)
                     .withKG(0)

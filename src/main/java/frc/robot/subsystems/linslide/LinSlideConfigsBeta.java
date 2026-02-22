@@ -18,7 +18,7 @@ public class LinSlideConfigsBeta {
 
     private static final Slot0Configs SLOT_0_CONFIGS = Robot.isReal()
             ? new Slot0Configs()
-                    .withKP(1) // placeholder values
+                    .withKP(1)
                     .withKI(0)
                     .withKD(0)
                     .withKG(0)
@@ -39,7 +39,7 @@ public class LinSlideConfigsBeta {
     static final TalonFXConfiguration linSlideTalonFXConfigs = new TalonFXConfiguration()
             .withSlot0(SLOT_0_CONFIGS)
             .withMotionMagic(new MotionMagicConfigs()
-                    .withMotionMagicAcceleration(1) // placeholder values
+                    .withMotionMagicAcceleration(1)
                     .withMotionMagicCruiseVelocity(1)
                     .withMotionMagicJerk(0))
             .withFeedback(new FeedbackConfigs()
