@@ -8,6 +8,7 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -18,6 +19,7 @@ import frc.robot.subsystems.drive.TunerConstantsBeta;
 import frc.robot.subsystems.hood.HoodSubsystem;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
 import frc.robot.util.AllianceFlipUtil;
+import frc.robot.util.ShooterStateData;
 import java.util.function.DoubleSupplier;
 import org.littletonrobotics.junction.Logger;
 
@@ -116,25 +118,41 @@ public class AutoAimCommands {
             HoodSubsystem hood,
             Translation2d target) {
 
-        return Commands.run(() -> {
-            Pose2d currentPose = drive.getState().Pose;
-            Translation2d modifiedTarget = AllianceFlipUtil.apply(target);
-            Translation2d currentPosition = currentPose.getTranslation();
-            double distance = modifiedTarget.getDistance(currentPosition);
+        Pose2d currentPose = drive.getState().Pose;
+        Translation2d modifiedTarget = AllianceFlipUtil.apply(target);
+        Translation2d currentPosition = currentPose.getTranslation();
+        double distance = modifiedTarget.getDistance(currentPosition);
 
-            double targetRPS = ShooterSubsystem.calcRPS(distance);
-            Angle targetHoodAngle = HoodSubsystem.calcPos(distance);
+        ShooterStateData state = ShooterSubsystem.SHOOTER_MAP.get(distance);
+        double timeOfFlight = state.timeOfFlight;
 
-            SwerveRequest.FieldCentricFacingAngle request = new SwerveRequest.FieldCentricFacingAngle()
-                    .withHeadingPID(5, 0, 0)
-                    .withVelocityX(-xVelSupplier.getAsDouble() * SPEED_MULTIPLIER)
-                    .withVelocityY(-yVelSupplier.getAsDouble() * SPEED_MULTIPLIER)
-                    .withTargetDirection(calcDesiredHeading(drive.getState().Pose, modifiedTarget))
-                    .withDriveRequestType(SwerveModule.DriveRequestType.Velocity);
+        double joystickVX = -xVelSupplier.getAsDouble() * SPEED_MULTIPLIER;
+        double joystickVY = -yVelSupplier.getAsDouble() * SPEED_MULTIPLIER;
 
-            drive.setControl(request);
-            shooter.shoot(targetRPS);
-            hood.moveToPosition(targetHoodAngle);
-        });
+        ChassisSpeeds speeds = drive.getState().Speeds;
+        Translation2d robotVelocity = new Translation2d(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond);
+
+        Translation2d robotDisplacement = robotVelocity.times(timeOfFlight);
+
+        Translation2d compensatedTarget = modifiedTarget.minus(robotDisplacement);
+
+        double compensatedDistance = compensatedTarget.getDistance(currentPosition);
+
+        ShooterStateData compensatedState = ShooterSubsystem.SHOOTER_MAP.get(compensatedDistance);
+
+        double targetRPS = compensatedState.rps;
+        Angle targetHoodAngle = compensatedState.hoodPos;
+
+        SwerveRequest.FieldCentricFacingAngle request = new SwerveRequest.FieldCentricFacingAngle()
+                .withHeadingPID(5, 0, 0)
+                .withVelocityX(joystickVX)
+                .withVelocityY(joystickVY)
+                .withTargetDirection(calcDesiredHeading(currentPose, compensatedTarget))
+                .withDriveRequestType(SwerveModule.DriveRequestType.Velocity);
+
+        return Commands.run(() -> drive.setControl(request))
+                .alongWith(hood.moveToPosition(targetHoodAngle))
+                .alongWith(shooter.shoot(targetRPS));
     }
+    ;
 }
