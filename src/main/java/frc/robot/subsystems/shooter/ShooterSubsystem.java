@@ -1,7 +1,5 @@
 package frc.robot.subsystems.shooter;
 
-import static frc.robot.subsystems.hood.HoodPositions.POSITION1;
-
 import edu.wpi.first.math.interpolation.InterpolatingTreeMap;
 import edu.wpi.first.math.interpolation.InverseInterpolator;
 import edu.wpi.first.units.Units;
@@ -58,7 +56,7 @@ public class ShooterSubsystem extends SubsystemBase {
             new InterpolatingTreeMap<>(InverseInterpolator.forDouble(), ShooterStateData.interpolator);
 
     static {
-        SHOOTER_MAP.put(0.0, new ShooterStateData(POSITION1.getPosition(), 0.0, 0.0));
+        SHOOTER_MAP.put(0.0, new ShooterStateData(Units.Rotations.of(0.0), 0.0, 0.0));
     }
 
     public static double calcRPS(double distance) {
