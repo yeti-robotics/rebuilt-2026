@@ -21,7 +21,7 @@ public final class Constants {
 
     public static final Mode simMode = Mode.SIM;
     public static final String ALPHA_SERIAL_NUM = "032B4BBC";
-    public static final String BETA_SERIAL_NUM = ""; // TODO: get beta stuff
+    public static final String BETA_SERIAL_NUM = "03260A73";
 
     public static final Mode currentMode;
 

@@ -13,7 +13,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.constants.Constants;
 import frc.robot.subsystems.drive.CommandSwerveDrivetrain;
-import frc.robot.subsystems.drive.TunerConstants;
+import frc.robot.subsystems.drive.TunerConstantsAlpha;
+import frc.robot.subsystems.drive.TunerConstantsBeta;
 import frc.robot.subsystems.hood.HoodSubsystem;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
 import frc.robot.util.AllianceFlipUtil;
@@ -24,8 +25,8 @@ public class AutoAimCommands {
     public static final PIDController headingController = new PIDController(20, 0, 0);
 
     private static final double SPEED_MULTIPLIER = currentMode == Constants.Mode.ALPHA
-            ? TunerConstants.kSpeedAt12Volts.magnitude()
-            : 0; // TODO: make sure to get beta stuff
+            ? TunerConstantsAlpha.kSpeedAt12Volts.magnitude()
+            : TunerConstantsBeta.kSpeedAt12Volts.magnitude();
 
     static {
         headingController.enableContinuousInput(-Math.PI, Math.PI);
@@ -133,7 +134,7 @@ public class AutoAimCommands {
 
             drive.setControl(request);
             shooter.shoot(targetRPS);
-            hood.moveToPosition(targetHoodAngle)    ;
+            hood.moveToPosition(targetHoodAngle);
         });
     }
 }

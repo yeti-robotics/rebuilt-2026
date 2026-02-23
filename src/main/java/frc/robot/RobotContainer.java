@@ -30,7 +30,7 @@ import frc.robot.commands.AutoCommands;
 import frc.robot.constants.Constants;
 import frc.robot.subsystems.climber.*;
 import frc.robot.subsystems.drive.*;
-import frc.robot.subsystems.drive.TunerConstants;
+import frc.robot.subsystems.drive.TunerConstantsAlpha;
 import frc.robot.subsystems.hood.HoodIO;
 import frc.robot.subsystems.hood.HoodIOBeta;
 import frc.robot.subsystems.hood.HoodSubsystem;
@@ -92,16 +92,19 @@ public class RobotContainer {
 
     private final SwerveRequest.FieldCentric driveRequest = currentMode == Constants.Mode.ALPHA
             ? new SwerveRequest.FieldCentric()
-                    .withDeadband(TunerConstants.MAX_VELOCITY_METERS_PER_SECOND * 0.1)
-                    .withRotationalDeadband(TunerConstants.MaFxAngularRate * 0.1)
+                    .withDeadband(TunerConstantsAlpha.MAX_VELOCITY_METERS_PER_SECOND * 0.1)
+                    .withRotationalDeadband(TunerConstantsAlpha.MaFxAngularRate * 0.1)
                     .withDriveRequestType(SwerveModule.DriveRequestType.OpenLoopVoltage)
-            : null; // TODO: get beta stuff
+            : new SwerveRequest.FieldCentric()
+                    .withDeadband(TunerConstantsBeta.MAX_VELOCITY_METERS_PER_SECOND * 0.1)
+                    .withRotationalDeadband(TunerConstantsBeta.MaFxAngularRate * 0.1)
+                    .withDriveRequestType(SwerveModule.DriveRequestType.OpenLoopVoltage);
 
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
     public RobotContainer() {
         switch (currentMode) {
             case ALPHA:
-                drive = TunerConstants.createDrivetrain();
+                drive = TunerConstantsAlpha.createDrivetrain();
                 linSlide = new LinSlideSubsystem(new LinSlideIOReal());
                 intake = new IntakeSubsystem(new IntakeIOAlpha());
                 hopper = new Hopper(new HopperIOAlpha());
@@ -119,7 +122,7 @@ public class RobotContainer {
                 // Real robot, instantiate hardware IO implementations
                 // ModuleIOTalonFX is intended for modules with TalonFX drive, TalonFX turn, and
                 // a CANcoder
-                drive = null; // TODO: get beta stuff
+                drive = TunerConstantsBeta.createDrivetrain();
                 linSlide = new LinSlideSubsystem(new LinSlideIOReal());
                 intake = new IntakeSubsystem(new IntakeIOBeta());
                 hopper = new Hopper(new HopperIOBeta());
@@ -135,7 +138,7 @@ public class RobotContainer {
 
             case SIM:
                 // Sim robot, instantiate physics sim IO implementations
-                drive = TunerConstants.createDrivetrain();
+                drive = TunerConstantsAlpha.createDrivetrain();
                 linSlide = new LinSlideSubsystem(new LinSlideIOReal());
                 intake = new IntakeSubsystem(new IntakeIOAlpha());
                 hopper = new Hopper(new HopperIOAlpha());
@@ -154,7 +157,7 @@ public class RobotContainer {
 
             default:
                 // Replayed robot, disable IO implementations
-                drive = TunerConstants.createDrivetrain();
+                drive = TunerConstantsAlpha.createDrivetrain();
                 linSlide = new LinSlideSubsystem(new LinSlideIO() {});
                 intake = new IntakeSubsystem(new IntakeIO() {});
                 hopper = new Hopper(new HopperIO() {});
@@ -273,11 +276,11 @@ public class RobotContainer {
 
     private void configureDebugBindings() {
         drive.setDefaultCommand(drive.applyRequest(() -> driveRequest
-                .withVelocityX(-controller2.getLeftY() * TunerConstants.kSpeedAt12Volts.magnitude())
-                .withVelocityY(-controller2.getLeftX() * TunerConstants.kSpeedAt12Volts.magnitude())
-                .withRotationalRate(-controller2.getRightX() * TunerConstants.MaFxAngularRate)));
+                .withVelocityX(-controller2.getLeftY() * TunerConstantsAlpha.kSpeedAt12Volts.magnitude())
+                .withVelocityY(-controller2.getLeftX() * TunerConstantsAlpha.kSpeedAt12Volts.magnitude())
+                .withRotationalRate(-controller2.getRightX() * TunerConstantsAlpha.MaFxAngularRate)));
         controller2.start().onTrue(Commands.runOnce(drive::seedFieldCentric, drive));
-        controller2.rightBumper().whileTrue(intake.rollIn());
+        controller2.rightBumper().whileTrue(intake.applyPower(0.7));
 
         controller2.x().whileTrue(linSlide.applyPower(0.4)).onFalse(linSlide.applyPower(0));
         controller2.b().whileTrue(linSlide.applyPower(-0.4)).onFalse(linSlide.applyPower(0));
@@ -286,7 +289,7 @@ public class RobotContainer {
         controller2.povRight().whileTrue(hood.applyPower(-0.1));
 
         controller2.povUp().whileTrue(climber.applyPower(0.3));
-        controller2.povDown().whileTrue(climber.applyPower(0.3));
+        controller2.povDown().whileTrue(climber.applyPower(-0.3));
 
         controller2
                 .leftBumper()
@@ -310,9 +313,13 @@ public class RobotContainer {
         controller2
                 .rightTrigger()
                 .whileTrue(Commands.parallel(
-                        hopper.applyPower(TEST_HOPPER_SPEED), indexer.applyPower(TEST_INDEXER_SPEED), intake.rollIn()));
+                        hopper.applyPower(TEST_HOPPER_SPEED),
+                        indexer.applyPower(TEST_INDEXER_SPEED),
+                        intake.applyPower(0.7)));
 
         controller2.povDown().onTrue(linSlide.zero());
+
+        controller2.leftBumper().whileTrue(intake.applyPower(-0.7).alongWith(hopper.applyPower(-0.7)));
     }
 
     private void configureSimBindings() {

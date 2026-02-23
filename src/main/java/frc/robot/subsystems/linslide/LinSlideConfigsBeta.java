@@ -13,11 +13,12 @@ public class LinSlideConfigsBeta {
 
     static final double ROTOR_TO_SENSOR = 50.0 / 12.0;
     static final double SENSOR_TO_MECHANISM = 24.0 / 18.0;
-    static final double MAGNET_OFFSET = 0; // placeholder value
+
+    static final double MAGNET_OFFSET = 0.177246;
 
     private static final Slot0Configs SLOT_0_CONFIGS = Robot.isReal()
             ? new Slot0Configs()
-                    .withKP(1) // placeholder values
+                    .withKP(1)
                     .withKI(0)
                     .withKD(0)
                     .withKG(0)
@@ -38,7 +39,7 @@ public class LinSlideConfigsBeta {
     static final TalonFXConfiguration linSlideTalonFXConfigs = new TalonFXConfiguration()
             .withSlot0(SLOT_0_CONFIGS)
             .withMotionMagic(new MotionMagicConfigs()
-                    .withMotionMagicAcceleration(1) // placeholder values
+                    .withMotionMagicAcceleration(1)
                     .withMotionMagicCruiseVelocity(1)
                     .withMotionMagicJerk(0))
             .withFeedback(new FeedbackConfigs()
