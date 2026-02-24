@@ -58,5 +58,5 @@ public class HoodConfigsBeta {
             .withMagnetSensor(new MagnetSensorConfigs()
                     .withSensorDirection(SensorDirectionValue.Clockwise_Positive)
                     .withMagnetOffset(MAGNET_OFFSET)
-                    .withAbsoluteSensorDiscontinuityPoint(0.625));
+                    .withAbsoluteSensorDiscontinuityPoint(0));
 }

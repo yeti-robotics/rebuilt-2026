@@ -44,9 +44,7 @@ public class LinSlideIOReal implements LinSlideIO {
 
     @Override
     public void updateInputs(LinSlideIO.LinSlideIOInputs inputs) {
-        inputs.positionRotation = currentMode == Constants.Mode.ALPHA
-                ? linSlideMotor.getPosition().getValueAsDouble()
-                : linSlideCANcoder.getPosition().getValueAsDouble();
+        inputs.positionRotation = linSlideMotor.getPosition().getValueAsDouble();
         inputs.targetPositionRotation = linSlideMotor.getClosedLoopReference().getValueAsDouble();
         inputs.isDeployed = linSlideMotor.getPosition().getValueAsDouble() >= 3.1;
         inputs.isStowed = linSlideMotor.getPosition().getValueAsDouble() <= 0.1;
@@ -62,6 +60,7 @@ public class LinSlideIOReal implements LinSlideIO {
     public void applyPower(double percent) {
         linSlideMotor.setControl(dutyRequest.withOutput(percent));
     }
+
     @Override
     public void defaultCommand(double volts) {
         linSlideMotor.setControl(voltageRequest.withOutput(volts));
