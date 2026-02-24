@@ -43,13 +43,17 @@ SKIP_PATTERNS = re.compile(
 # Max diff characters sent in a single API call (keep well under token limit)
 MAX_DIFF_CHARS = 40_000
 
+# Max number of API calls per review run; PRs that would exceed this are skipped
+MAX_CHUNKS = 3
+
 # ---------------------------------------------------------------------------
-# Gradient / OpenAI-compatible client
+# Gradient / OpenAI-compatible client and shared GitHub client
 # ---------------------------------------------------------------------------
 client = openai.OpenAI(
     api_key=GRADIENT_API_KEY,
     base_url="https://inference.do-ai.run/v1",
 )
+gh_client = Github(GITHUB_TOKEN)
 
 
 # ---------------------------------------------------------------------------
@@ -128,8 +132,7 @@ def build_skills_block(skills: list[dict]) -> str:
 # ---------------------------------------------------------------------------
 def get_pr_files(repo_name: str, pr_number: int):
     """Fetch changed files from GitHub, filtered to reviewable extensions."""
-    gh = Github(GITHUB_TOKEN)
-    repo = gh.get_repo(repo_name)
+    repo = gh_client.get_repo(repo_name)
     pr = repo.get_pull(pr_number)
     files = []
     for f in pr.get_files():
@@ -194,7 +197,7 @@ Respond ONLY with valid JSON in this exact schema — no prose, no markdown fenc
   "issues": [
     {{
       "file": "path/to/file.java",
-      "line": 42,
+      "position": 42,
       "severity": "critical|warning|suggestion",
       "skill": "name of the skill violated",
       "message": "what is wrong and how to fix it"
@@ -207,7 +210,7 @@ Rules:
 - "warning": deviation from best practice that should be fixed
 - "suggestion": minor style or improvement opportunity
 - If no issues are found, return {{"issues": []}}
-- line numbers must correspond to the diff's added lines (+) in the patch
+- "position" must be the 1-indexed line number within the patch string (counting the "@@ ... @@" hunk header as line 1); this is the value GitHub uses for inline diff comments
 """
 
 
@@ -250,17 +253,16 @@ def post_review(repo_name: str, pr_number: int, issues: list[dict]) -> None:
         print("No issues found — skipping review post.")
         return
 
-    gh = Github(GITHUB_TOKEN)
-    repo = gh.get_repo(repo_name)
+    repo = gh_client.get_repo(repo_name)
     pr = repo.get_pull(pr_number)
 
-    # Build inline comments (GitHub requires line to be in the diff)
+    # Build inline comments (GitHub requires position = 1-indexed line in the diff hunk)
     comments = []
     for issue in issues:
         body = f"**[{issue['severity'].upper()}]** `{issue['skill']}`\n\n{issue['message']}"
         comments.append({
             "path": issue["file"],
-            "line": issue.get("line", 1),
+            "position": issue.get("position", 1),
             "body": body,
         })
 
@@ -297,7 +299,7 @@ def post_review(repo_name: str, pr_number: int, issues: list[dict]) -> None:
         # Inline comments can fail if lines aren't in the diff; fall back to a plain comment
         print(f"  WARNING: Could not post inline review ({e}), falling back to summary comment")
         issue_list = "\n".join(
-            f"- **{i['severity'].upper()}** `{i['file']}:{i.get('line','?')}` ({i['skill']}): {i['message']}"
+            f"- **{i['severity'].upper()}** `{i['file']}:{i.get('position','?')}` ({i['skill']}): {i['message']}"
             for i in issues
         )
         pr.create_issue_comment(f"{summary}\n### Issues\n{issue_list}")
@@ -336,6 +338,16 @@ def main() -> int:
     # 4. Review in chunks
     all_issues: list[dict] = []
     chunks = chunk_files(pr_files, MAX_DIFF_CHARS)
+    if len(chunks) > MAX_CHUNKS:
+        print(f"PR too large: {len(chunks)} chunks exceeds MAX_CHUNKS={MAX_CHUNKS}. Skipping review.")
+        repo = gh_client.get_repo(GITHUB_REPO)
+        pr = repo.get_pull(PR_NUMBER)
+        pr.create_issue_comment(
+            f"⚠️ **Skill review skipped** — this PR is too large to review automatically "
+            f"({len(pr_files)} files, {len(chunks)} chunks > limit of {MAX_CHUNKS}). "
+            f"Please request a manual review."
+        )
+        return 0
     print(f"\nReviewing {len(chunks)} chunk(s)...")
     for i, chunk in enumerate(chunks, 1):
         print(f"  Chunk {i}/{len(chunks)}: {[f['filename'] for f in chunk]}")

@@ -79,7 +79,7 @@ jobs:
           python-version: '3.11'
 
       - name: Install dependencies
-        run: pip install openai PyGithub
+        run: pip install -r .github/actions/skill-review/requirements.txt
 
       - name: Run skill review
         env:
