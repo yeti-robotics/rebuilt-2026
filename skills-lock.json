@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "skills": {
+    "advantagekit": {
+      "source": "yeti-robotics/robot-skills",
+      "sourceType": "github",
+      "computedHash": "1a3bad93d2e5c1a6b80b7be67caa61b1ba48426b6efd70c57805be09d7ddc7a5"
+    },
+    "wpilib-best-practices": {
+      "source": "yeti-robotics/robot-skills",
+      "sourceType": "github",
+      "computedHash": "8fdd68df9a1b0fbb085fd303516f37a057b537b9f8b65068d09ff314d2a78e36"
+    }
+  }
+}
