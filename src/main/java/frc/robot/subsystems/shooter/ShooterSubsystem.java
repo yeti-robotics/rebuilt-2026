@@ -56,15 +56,7 @@ public class ShooterSubsystem extends SubsystemBase {
             new InterpolatingTreeMap<>(InverseInterpolator.forDouble(), ShooterStateData.interpolator);
 
     static {
-        SHOOTER_MAP.put(0.0, new ShooterStateData(Units.Rotations.of(0.0), 0.0, 0.0));
-    }
-
-    public static double calcRPS(double distance) {
-        return SHOOTER_MAP.get(distance).rps;
-    }
-
-    public static double getHorizontalVelocity(double distance) {
-        return distance / SHOOTER_MAP.get(distance).timeOfFlight;
+        SHOOTER_MAP.put(0.0, new ShooterStateData(Units.Rotations.of(0.0), 0.0, 0.0)); //hood, rps, flight time
     }
 
     public boolean isAtSpeed() {
