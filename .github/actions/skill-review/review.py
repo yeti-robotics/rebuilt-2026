@@ -259,7 +259,14 @@ def call_claude(skills_block: str, diff_block: str) -> list[dict]:
         temperature=0,
         max_tokens=4096,
     )
-    raw = response.choices[0].message.content.strip()
+    choice = response.choices[0]
+    raw = choice.message.content
+
+    if not raw:
+        print(f"  WARNING: Model returned empty content (finish_reason={choice.finish_reason})")
+        return []
+
+    raw = raw.strip()
 
     # Strip accidental markdown fences
     if raw.startswith("```"):
@@ -270,7 +277,7 @@ def call_claude(skills_block: str, diff_block: str) -> list[dict]:
         data = json.loads(raw)
         return data.get("issues", [])
     except json.JSONDecodeError as e:
-        print(f"  WARNING: Could not parse Claude response as JSON: {e}")
+        print(f"  WARNING: Could not parse model response as JSON: {e}")
         print(f"  Raw response (first 500 chars): {raw[:500]}")
         return []
 
