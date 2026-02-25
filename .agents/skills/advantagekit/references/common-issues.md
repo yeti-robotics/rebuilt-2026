@@ -16,10 +16,6 @@ Replay works by re-running identical code with identical logged inputs. Any data
 | Filesystem reads | File contents may change | Log file data as inputs |
 | Driver Station data accessed before `Logger.start()` | Not yet deterministic | Defer all DS access until after `Logger.start()` |
 
-### Verify Replay Consistency
-
-After adding any new data source, replay the log and confirm outputs match. The documentation recommends: _"regularly testing out log replay during development to confirm that the replay outputs match the real outputs."_
-
 ---
 
 ## Multithreading
