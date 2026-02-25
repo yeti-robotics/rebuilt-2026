@@ -86,7 +86,7 @@ jobs:
           GRADIENT_API_KEY: ${{ secrets.GRADIENT_API_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SKILLS_PATH: .agents/skills
-          MODEL: claude-sonnet-4-6
+          MODEL: anthropic-claude-4.6-sonnet
           FAIL_ON_CRITICAL: 'true'
           PR_NUMBER: ${{ needs.check-trigger.outputs.pr_number }}
           GITHUB_REPO: ${{ github.repository }}
