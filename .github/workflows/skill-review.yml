@@ -5,7 +5,7 @@ on:
     types: [created]
 
 permissions:
-  contents: write
+  contents: read
   pull-requests: write
   issues: write
 
@@ -24,3 +24,4 @@ jobs:
           model: anthropic/claude-sonnet-4-5
           fast-model: anthropic/claude-haiku-4-5
           trigger-phrase: "@frc-reviewer"
+          minimum-role: write
