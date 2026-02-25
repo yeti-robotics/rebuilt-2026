@@ -17,7 +17,10 @@ import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.networktables.*;
+import edu.wpi.first.networktables.DoubleArrayPublisher;
+import edu.wpi.first.networktables.DoubleArraySubscriber;
+import edu.wpi.first.networktables.DoubleSubscriber;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.RobotController;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -33,7 +36,9 @@ public class VisionIOLimelight implements VisionIO {
     private final DoubleSubscriber latencySubscriber;
     private final DoubleSubscriber txSubscriber;
     private final DoubleSubscriber tySubscriber;
-    private final DoubleArraySubscriber megatag2Subscriber;
+    private final DoubleArraySubscriber megatag1Subscriber;
+
+    private final String name;
 
     /**
      * Creates a new VisionIOLimelight.
@@ -49,7 +54,8 @@ public class VisionIOLimelight implements VisionIO {
         latencySubscriber = table.getDoubleTopic("tl").subscribe(0.0);
         txSubscriber = table.getDoubleTopic("tx").subscribe(0.0);
         tySubscriber = table.getDoubleTopic("ty").subscribe(0.0);
-        megatag2Subscriber = table.getDoubleArrayTopic("botpose_orb_wpiblue").subscribe(new double[] {});
+        megatag1Subscriber = table.getDoubleArrayTopic("botpose_wpiblue").subscribe(new double[] {});
+        this.name = name;
     }
 
     @Override
@@ -61,6 +67,8 @@ public class VisionIOLimelight implements VisionIO {
         inputs.latestTargetObservation = new TargetObservation(
                 Rotation2d.fromDegrees(txSubscriber.get()), Rotation2d.fromDegrees(tySubscriber.get()));
 
+        inputs.name = name;
+
         // Update orientation for MegaTag 2
         orientationPublisher.accept(new double[] {rotationSupplier.get().getDegrees(), 0.0, 0.0, 0.0, 0.0, 0.0});
         NetworkTableInstance.getDefault().flush(); // Increases network traffic but recommended by Limelight
@@ -68,8 +76,7 @@ public class VisionIOLimelight implements VisionIO {
         // Read new pose observations from NetworkTables
         Set<Integer> tagIds = new HashSet<>();
         List<PoseObservation> poseObservations = new LinkedList<>();
-
-        for (var rawSample : megatag2Subscriber.readQueue()) {
+        for (var rawSample : megatag1Subscriber.readQueue()) {
             if (rawSample.value.length == 0) continue;
             for (int i = 11; i < rawSample.value.length; i += 7) {
                 tagIds.add((int) rawSample.value[i]);
@@ -81,8 +88,8 @@ public class VisionIOLimelight implements VisionIO {
                     // 3D pose estimate
                     parsePose(rawSample.value),
 
-                    // Ambiguity, zeroed because the pose is already disambiguated
-                    0.0,
+                    // Ambiguity, using only the first tag because ambiguity isn't applicable for multitag
+                    rawSample.value.length >= 18 ? rawSample.value[17] : 0.0,
 
                     // Tag count
                     (int) rawSample.value[7],
@@ -91,7 +98,7 @@ public class VisionIOLimelight implements VisionIO {
                     rawSample.value[9],
 
                     // Observation type
-                    PoseObservationType.MEGATAG_2));
+                    PoseObservationType.MEGATAG_1));
         }
 
         // Save pose observations to inputs object
@@ -106,8 +113,6 @@ public class VisionIOLimelight implements VisionIO {
         for (int id : tagIds) {
             inputs.tagIds[i++] = id;
         }
-
-        inputs.distanceToTag = getDistance();
     }
 
     /** Parses the 3D pose from a Limelight botpose array. */
@@ -120,29 +125,5 @@ public class VisionIOLimelight implements VisionIO {
                         Units.degreesToRadians(rawLLArray[3]),
                         Units.degreesToRadians(rawLLArray[4]),
                         Units.degreesToRadians(rawLLArray[5])));
-    }
-
-    private double getDistance() {
-        NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
-        NetworkTableEntry ty = table.getEntry("ty");
-        double targetOffsetAngle_Vertical = ty.getDouble(0.0);
-
-        // how many degrees back is your limelight rotated from perfectly vertical?
-        double limelightMountAngleDegrees = 25.0;
-
-        // distance from the center of the Limelight lens to the floor
-        double limelightLensHeightInches = 20.0;
-
-        // distance from the target to the floor
-        double goalHeightInches = 60.0;
-
-        double angleToGoalDegrees = limelightMountAngleDegrees + targetOffsetAngle_Vertical;
-        double angleToGoalRadians = angleToGoalDegrees * (3.14159 / 180.0);
-
-        // calculate distance
-        double distanceFromLimelightToGoalInches =
-                (goalHeightInches - limelightLensHeightInches) / Math.tan(angleToGoalRadians);
-
-        return distanceFromLimelightToGoalInches;
     }
 }

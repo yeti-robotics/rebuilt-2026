@@ -1,25 +1,23 @@
-package frc.robot.subsystems.climber;
+package frc.robot.subsystems.linslide;
 
 import com.ctre.phoenix6.configs.*;
 import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+import com.ctre.phoenix6.signals.SensorDirectionValue;
 import frc.robot.Robot;
 
-public class ClimberConfig {
-    static final int CLIMBER_MOTOR_ID = 9;
-    static final int CLIMBER_SENSOR_ID = 101;
-    public static final double TEST_CLIMBER_SPEED = 0.2;
+public class LinSlideConfigsBeta {
+    static final int LIN_SLIDE_MOTOR_ID = 53;
+    static final int LIN_SLIDE_CANCODER_ID = 54;
 
-    public static final double HEIGHT_TOLERANCE = 0.2;
+    static final double ROTOR_TO_SENSOR = 50.0/12.0;
+    static final double SENSOR_TO_MECHANISM = 24.0/18.0;
+    static final double MAGNET_OFFSET = 0; // placeholder value
 
-    // get the proper gear ratio;
-    static final double GEAR_RATIO = 0;
-
-    // tune the sim values - the bottom ones
     private static final Slot0Configs SLOT_0_CONFIGS = Robot.isReal()
             ? new Slot0Configs()
-                    .withKP(0)
+                    .withKP(1) // placeholder values
                     .withKI(0)
                     .withKD(0)
                     .withKG(0)
@@ -37,14 +35,20 @@ public class ClimberConfig {
                     .withKS(0)
                     .withGravityType(GravityTypeValue.Elevator_Static);
 
-    static final TalonFXConfiguration primaryTalonFXConfigs = new TalonFXConfiguration()
+    static final TalonFXConfiguration linSlideTalonFXConfigs = new TalonFXConfiguration()
             .withSlot0(SLOT_0_CONFIGS)
             .withMotionMagic(new MotionMagicConfigs()
-                    .withMotionMagicAcceleration(30)
-                    .withMotionMagicCruiseVelocity(15)
+                    .withMotionMagicAcceleration(1) // placeholder values
+                    .withMotionMagicCruiseVelocity(1)
                     .withMotionMagicJerk(0))
-            .withFeedback(new FeedbackConfigs().withRotorToSensorRatio(1).withSensorToMechanismRatio(GEAR_RATIO))
+            .withFeedback(new FeedbackConfigs().withRotorToSensorRatio(ROTOR_TO_SENSOR).withSensorToMechanismRatio(SENSOR_TO_MECHANISM))
             .withMotorOutput(new MotorOutputConfigs()
                     .withInverted(InvertedValue.CounterClockwise_Positive)
                     .withNeutralMode(NeutralModeValue.Brake));
+
+    static final CANcoderConfiguration linSlideCancoderConfiguration = new CANcoderConfiguration()
+            .withMagnetSensor(new MagnetSensorConfigs()
+                    .withSensorDirection(SensorDirectionValue.CounterClockwise_Positive)
+                    .withMagnetOffset(MAGNET_OFFSET)
+                    .withAbsoluteSensorDiscontinuityPoint(0.625));
 }
