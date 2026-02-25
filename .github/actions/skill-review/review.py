@@ -40,8 +40,8 @@ SKIP_PATTERNS = re.compile(
     re.IGNORECASE,
 )
 
-# Max diff characters sent in a single API call (keep well under token limit)
-MAX_DIFF_CHARS = 40_000
+# Max total characters (full file content + diff) sent in a single API call
+MAX_DIFF_CHARS = 80_000
 
 # Max number of API calls per review run; PRs that would exceed this are skipped
 MAX_CHUNKS = 3
@@ -131,7 +131,7 @@ def build_skills_block(skills: list[dict]) -> str:
 # PR diff fetching
 # ---------------------------------------------------------------------------
 def get_pr_files(repo_name: str, pr_number: int):
-    """Fetch changed files from GitHub, filtered to reviewable extensions."""
+    """Fetch changed files from GitHub with full file content and diff patch."""
     repo = gh_client.get_repo(repo_name)
     pr = repo.get_pull(pr_number)
     files = []
@@ -145,7 +145,19 @@ def get_pr_files(repo_name: str, pr_number: int):
             continue
         if not f.patch:
             continue
-        files.append({"filename": f.filename, "patch": f.patch, "status": f.status})
+        # Fetch full file content at the PR head SHA for complete context
+        full_content = None
+        try:
+            contents = repo.get_contents(f.filename, ref=pr.head.sha)
+            full_content = contents.decoded_content.decode("utf-8", errors="replace")
+        except Exception as e:
+            print(f"  WARNING: Could not fetch full content for {f.filename}: {e}")
+        files.append({
+            "filename": f.filename,
+            "patch": f.patch,
+            "status": f.status,
+            "full_content": full_content,
+        })
     return files
 
 
@@ -153,7 +165,12 @@ def chunk_files(files: list[dict], max_chars: int) -> list[list[dict]]:
     """Split file list into chunks that fit within max_chars when serialised."""
     chunks, current, current_len = [], [], 0
     for f in files:
-        entry_len = len(f["filename"]) + len(f["patch"]) + 20
+        entry_len = (
+            len(f["filename"])
+            + len(f["patch"])
+            + len(f["full_content"] or "")
+            + 20
+        )
         if current and current_len + entry_len > max_chars:
             chunks.append(current)
             current, current_len = [], 0
@@ -167,7 +184,12 @@ def chunk_files(files: list[dict], max_chars: int) -> list[list[dict]]:
 def format_diff_block(files: list[dict]) -> str:
     parts = []
     for f in files:
-        parts.append(f"### {f['filename']} ({f['status']})\n```diff\n{f['patch']}\n```")
+        section = f"### {f['filename']} ({f['status']})\n"
+        if f["full_content"]:
+            ext = Path(f["filename"]).suffix.lstrip(".")
+            section += f"**Full file (for context):**\n```{ext}\n{f['full_content']}\n```\n\n"
+        section += f"**Changes (diff):**\n```diff\n{f['patch']}\n```"
+        parts.append(section)
     return "\n\n".join(parts)
 
 
@@ -175,22 +197,28 @@ def format_diff_block(files: list[dict]) -> str:
 # Claude review
 # ---------------------------------------------------------------------------
 SYSTEM_PROMPT = (
-    "You are a strict but fair code reviewer for an FRC (FIRST Robotics Competition) "
-    "Java robot codebase. You review code exclusively against the provided skill "
-    "guidelines — do not invent rules that aren't in the skills. Be precise and "
-    "actionable. Only report issues you are confident about (>= 80% confidence)."
+    "You are a code reviewer for an FRC (FIRST Robotics Competition) Java robot codebase. "
+    "You review code exclusively against the provided skill guidelines — do not invent rules that aren't in the skills. "
+    "Focus on logical correctness, design problems, and pattern violations that a compiler or build system would NOT catch. "
+    "Do NOT flag: compilation errors, missing imports, type errors, syntax issues, or anything that would cause a build failure — "
+    "those are caught by CI. Only report runtime logic bugs, incorrect patterns, misuse of frameworks, "
+    "and meaningful deviations from the skill guidelines. Be precise and actionable. "
+    "Only report issues you are confident about (>= 80% confidence)."
 )
 
 USER_PROMPT_TEMPLATE = """\
-Review the following PR diff against the skill practices below.
+Review the following PR changes against the skill practices below.
+
+Each file includes the full source (for context) and the diff (the actual changes).
+Only report issues on lines that were added or modified in the diff — do not flag pre-existing code that wasn't changed.
 
 <skills>
 {skills_block}
 </skills>
 
-<diff>
+<files>
 {diff_block}
-</diff>
+</files>
 
 Respond ONLY with valid JSON in this exact schema — no prose, no markdown fences:
 {{
@@ -206,9 +234,12 @@ Respond ONLY with valid JSON in this exact schema — no prose, no markdown fenc
 }}
 
 Rules:
-- "critical": code is incorrect, breaks a required pattern, or will cause a bug
-- "warning": deviation from best practice that should be fixed
-- "suggestion": minor style or improvement opportunity
+- Only flag issues on changed lines (additions in the diff), not pre-existing code
+- IGNORE anything a compiler or build system would catch: missing imports, type errors, syntax errors, unresolved symbols, build failures
+- Focus on: logic bugs, incorrect use of frameworks/patterns, violations of the skill guidelines, runtime behavior problems
+- "critical": will cause incorrect runtime behavior or breaks a required architectural pattern
+- "warning": meaningful deviation from best practice that should be fixed
+- "suggestion": minor improvement worth considering
 - If no issues are found, return {{"issues": []}}
 - "position" must be the 1-indexed line number within the patch string (counting the "@@ ... @@" hunk header as line 1); this is the value GitHub uses for inline diff comments
 """

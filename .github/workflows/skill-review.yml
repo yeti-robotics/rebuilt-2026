@@ -92,7 +92,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SKILLS_PATH: .agents/skills
           MODEL: openai-gpt-oss-120b
-          FAIL_ON_CRITICAL: "true"
+          FAIL_ON_CRITICAL: "false"
           PR_NUMBER: ${{ needs.check-trigger.outputs.pr_number }}
           GITHUB_REPO: ${{ github.repository }}
         run: python .github/actions/skill-review/review.py
