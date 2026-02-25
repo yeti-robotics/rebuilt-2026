@@ -21,7 +21,7 @@ jobs:
         with:
           api-key: ${{ secrets.DO_API_KEY }}
           gateway: digitalocean
-          model: anthropic/claude-sonnet-4-5
-          fast-model: anthropic/claude-haiku-4-5
+          model: openai-gpt-oss-120b
+          fast-model: openai-gpt-oss-20b
           trigger-phrase: "@frc-reviewer"
           minimum-role: write
