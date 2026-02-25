@@ -6,8 +6,7 @@ public interface HopperIO {
     @AutoLog
     public static class HopperIOInputs {
         public double rollerSpeed = 0.0;
-        public boolean leftIsDetected = false;
-        public boolean rightIsDetected = false;
+        public boolean isFull = false;
     }
 
     public default void updateInputs(HopperIOInputs inputs) {}

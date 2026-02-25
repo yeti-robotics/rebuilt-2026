@@ -11,7 +11,8 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.constants.Constants;
 import frc.robot.subsystems.drive.CommandSwerveDrivetrain;
-import frc.robot.subsystems.drive.TunerConstants;
+import frc.robot.subsystems.drive.TunerConstantsAlpha;
+import frc.robot.subsystems.drive.TunerConstantsBeta;
 import frc.robot.util.AllianceFlipUtil;
 import java.util.function.DoubleSupplier;
 import org.littletonrobotics.junction.Logger;
@@ -20,8 +21,8 @@ public class AutoAimCommands {
     public static final PIDController headingController = new PIDController(20, 0, 0);
 
     private static final double SPEED_MULTIPLIER = currentMode == Constants.Mode.ALPHA
-            ? TunerConstants.kSpeedAt12Volts.magnitude()
-            : 0; // TODO: make sure to get beta stuff
+            ? TunerConstantsAlpha.kSpeedAt12Volts.magnitude()
+            : TunerConstantsBeta.kSpeedAt12Volts.magnitude();
 
     static {
         headingController.enableContinuousInput(-Math.PI, Math.PI);
@@ -48,7 +49,7 @@ public class AutoAimCommands {
                     Rotation2d targetHeading = hubDistance
                             .getAngle()
                             .plus(Rotation2d.kPi)
-                            .rotateBy(AllianceFlipUtil.apply(Rotation2d.kZero));
+                            .rotateBy(AllianceFlipUtil.apply(Rotation2d.k180deg));
                     ; // remove if needed for real robot
                     Translation2d fieldRel = new Translation2d(rawXVelo, rawYVelo).rotateBy(targetHeading);
 

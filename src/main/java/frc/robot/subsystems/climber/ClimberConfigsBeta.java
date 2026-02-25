@@ -17,10 +17,8 @@ public class ClimberConfigsBeta {
 
     public static final double HEIGHT_TOLERANCE = 0.2;
 
-    // get the proper gear ratio;
     static final double GEAR_RATIO = 0;
 
-    // tune the sim values - the bottom ones
     private static final Slot0Configs SLOT_0_CONFIGS = Robot.isReal()
             ? new Slot0Configs()
                     .withKP(0)
@@ -47,7 +45,9 @@ public class ClimberConfigsBeta {
                     .withMotionMagicAcceleration(30)
                     .withMotionMagicCruiseVelocity(15)
                     .withMotionMagicJerk(0))
-            .withFeedback(new FeedbackConfigs().withRotorToSensorRatio(ROTOR_TO_SENSOR).withSensorToMechanismRatio(SENSOR_TO_MECHANISM))
+            .withFeedback(new FeedbackConfigs()
+                    .withRotorToSensorRatio(ROTOR_TO_SENSOR)
+                    .withSensorToMechanismRatio(SENSOR_TO_MECHANISM))
             .withMotorOutput(new MotorOutputConfigs()
                     .withInverted(InvertedValue.CounterClockwise_Positive)
                     .withNeutralMode(NeutralModeValue.Brake));

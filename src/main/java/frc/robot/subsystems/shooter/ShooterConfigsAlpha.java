@@ -12,9 +12,9 @@ public class ShooterConfigsAlpha {
             .withKP(32)
             .withKI(0)
             .withKD(1)
-            .withKA(0.5)
+            .withKS(10)
             .withKV(0.4)
-            .withKS(10);
+            .withKA(0.5);
 
     public static final MotionMagicConfigs MOTION_MAGIC_CONFIGS = new MotionMagicConfigs()
             .withMotionMagicAcceleration(128)

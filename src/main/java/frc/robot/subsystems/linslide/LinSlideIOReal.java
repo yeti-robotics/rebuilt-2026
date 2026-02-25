@@ -32,10 +32,12 @@ public class LinSlideIOReal implements LinSlideIO {
 
         } else {
             linSlideMotor = new TalonFX(LinSlideConfigsBeta.LIN_SLIDE_MOTOR_ID, rioBus);
+            linSlideCANcoder = new CANcoder(LinSlideConfigsBeta.LIN_SLIDE_CANCODER_ID, rioBus);
             if (Robot.isSimulation()) {
-                PhysicsSim.getInstance().addTalonFX(linSlideMotor);
+                PhysicsSim.getInstance().addTalonFX(linSlideMotor, linSlideCANcoder);
             }
             linSlideMotor.getConfigurator().apply(LinSlideConfigsBeta.linSlideTalonFXConfigs);
+            linSlideCANcoder.getConfigurator().apply(LinSlideConfigsBeta.linSlideCancoderConfiguration);
             zeroPosition();
         }
     }
@@ -58,6 +60,7 @@ public class LinSlideIOReal implements LinSlideIO {
     public void applyPower(double percent) {
         linSlideMotor.setControl(dutyRequest.withOutput(percent));
     }
+
     @Override
     public void defaultCommand(double volts) {
         linSlideMotor.setControl(voltageRequest.withOutput(volts));
