@@ -49,7 +49,7 @@ public class AutoAimCommands {
                     Rotation2d targetHeading = hubDistance
                             .getAngle()
                             .plus(Rotation2d.kPi)
-                            .rotateBy(AllianceFlipUtil.apply(Rotation2d.kZero));
+                            .rotateBy(AllianceFlipUtil.apply(Rotation2d.k180deg));
                     ; // remove if needed for real robot
                     Translation2d fieldRel = new Translation2d(rawXVelo, rawYVelo).rotateBy(targetHeading);
 
