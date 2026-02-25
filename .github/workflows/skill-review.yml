@@ -78,11 +78,13 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: Install dependencies
+      - name: Fetch action scripts from main
         run: |
           git fetch origin main
-          git checkout origin/main -- .github/actions/skill-review/requirements.txt
-          pip install -r .github/actions/skill-review/requirements.txt
+          git checkout origin/main -- .github/actions/skill-review/
+
+      - name: Install dependencies
+        run: pip install -r .github/actions/skill-review/requirements.txt
 
       - name: Run skill review
         env:
