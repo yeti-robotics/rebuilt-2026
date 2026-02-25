@@ -6,10 +6,10 @@ on:
 
 jobs:
   check-trigger:
-    # Only run on PR comments that mention @reviewer
+    # Only run on PR comments that mention @yetirobotics
     if: |
       github.event.issue.pull_request != null &&
-      contains(github.event.comment.body, '@reviewer')
+      contains(github.event.comment.body, '@yetirobotics')
     runs-on: ubuntu-latest
     outputs:
       authorized: ${{ steps.permission-check.outputs.authorized }}
@@ -76,7 +76,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.11'
+          python-version: "3.11"
 
       - name: Install dependencies
         run: pip install -r .github/actions/skill-review/requirements.txt
@@ -87,7 +87,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SKILLS_PATH: .agents/skills
           MODEL: anthropic-claude-4.6-sonnet
-          FAIL_ON_CRITICAL: 'true'
+          FAIL_ON_CRITICAL: "true"
           PR_NUMBER: ${{ needs.check-trigger.outputs.pr_number }}
           GITHUB_REPO: ${{ github.repository }}
         run: python .github/actions/skill-review/review.py
