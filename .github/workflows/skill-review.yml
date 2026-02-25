@@ -91,7 +91,7 @@ jobs:
           GRADIENT_API_KEY: ${{ secrets.GRADIENT_API_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SKILLS_PATH: .agents/skills
-          MODEL: anthropic-claude-4.6-sonnet
+          MODEL: openai-gpt-oss-120b
           FAIL_ON_CRITICAL: "true"
           PR_NUMBER: ${{ needs.check-trigger.outputs.pr_number }}
           GITHUB_REPO: ${{ github.repository }}

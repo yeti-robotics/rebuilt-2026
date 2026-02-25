@@ -24,7 +24,7 @@ GITHUB_TOKEN = os.environ["GITHUB_TOKEN"]
 SKILLS_PATH = os.environ.get("SKILLS_PATH", ".agents/skills")
 PR_NUMBER = int(os.environ["PR_NUMBER"])
 GITHUB_REPO = os.environ["GITHUB_REPO"]
-MODEL = os.environ.get("MODEL", "anthropic-claude-4.6-sonnet")
+MODEL = os.environ.get("MODEL", "openai-gpt-oss-120b")
 FAIL_ON_CRITICAL = os.environ.get("FAIL_ON_CRITICAL", "true").lower() == "true"
 
 # Extensions worth reviewing in this Java/FRC repo
