@@ -11,7 +11,7 @@ public class LinSlideConfigsBeta {
     static final double ROTOR_TO_SENSOR = 50.0 / 12.0;
     static final double SENSOR_TO_MECHANISM = 24.0 / 18.0;
 
-    static final double MAGNET_OFFSET = 0.178223;
+    static final double MAGNET_OFFSET = 0.188477;
 
     private static final Slot0Configs SLOT_0_CONFIGS = Robot.isReal()
             ? new Slot0Configs()
