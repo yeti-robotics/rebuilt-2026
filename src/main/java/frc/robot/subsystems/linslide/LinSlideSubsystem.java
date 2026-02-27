@@ -10,7 +10,6 @@ public class LinSlideSubsystem extends SubsystemBase {
 
     public LinSlideSubsystem(LinSlideIO io) {
         this.io = io;
-        setDefaultCommand(defaultMovement(-1).onlyIf(() -> inputs.positionRotation > 0));
     }
 
     @Override
