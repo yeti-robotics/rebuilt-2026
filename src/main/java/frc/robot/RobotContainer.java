@@ -9,8 +9,6 @@ package frc.robot;
 
 import static frc.robot.constants.Constants.currentMode;
 import static frc.robot.constants.FieldConstants.Hub.centerHubOpening;
-import static frc.robot.subsystems.hopper.HopperConfigsAlpha.TEST_HOPPER_SPEED;
-import static frc.robot.subsystems.indexer.IndexerConfigsAlpha.TEST_INDEXER_SPEED;
 
 import com.ctre.phoenix6.swerve.SwerveModule;
 import com.ctre.phoenix6.swerve.SwerveRequest;
@@ -108,10 +106,10 @@ public class RobotContainer {
                 linSlide = new LinSlideSubsystem(new LinSlideIOReal());
                 intake = new IntakeSubsystem(new IntakeIOAlpha());
                 hopper = new Hopper(new HopperIOAlpha());
-                climber = null;
+                climber = new Climber(new ClimberIO() {});
                 shooter = new ShooterSubsystem(new ShooterIOReal());
                 indexer = new IndexerSubsystem(new IndexerIOReal());
-                hood = null;
+                hood = new HoodSubsystem(new HoodIO() {});
                 vision = new Vision(
                         drive,
                         new VisionIOLimelight(VisionConstants.frontCam, drive.getRotation3d()::toRotation2d),
@@ -280,49 +278,52 @@ public class RobotContainer {
                 .withVelocityY(-controller2.getLeftX() * TunerConstantsAlpha.kSpeedAt12Volts.magnitude())
                 .withRotationalRate(-controller2.getRightX() * TunerConstantsAlpha.MaFxAngularRate)));
         controller2.start().onTrue(Commands.runOnce(drive::seedFieldCentric, drive));
-        controller2
-                .rightBumper()
-                .whileTrue(linSlide.applyPower(0.4).alongWith(intake.applyPower(1)))
-                .onFalse(linSlide.applyPower(0));
-
-        controller2.x().whileTrue(linSlide.applyPower(0.4)).onFalse(linSlide.applyPower(0));
-        controller2.b().whileTrue(linSlide.applyPower(-0.4)).onFalse(linSlide.applyPower(0));
-
-        controller2.povLeft().whileTrue(hood.applyPower(0.1));
-        controller2.povRight().whileTrue(hood.applyPower(-0.1));
-
-        controller2.povUp().whileTrue(climber.applyPower(0.3));
-        controller2.povDown().whileTrue(climber.applyPower(-0.3));
-
-        controller2
-                .leftBumper()
-                .whileTrue(intake.rollOut()
-                        .alongWith(hopper.applyPower(-TEST_HOPPER_SPEED)
-                                .alongWith(indexer.applyPower(-TEST_INDEXER_SPEED))));
-
-        controller2
-                .leftTrigger()
-                .whileTrue(AutoAimCommands.autoAim(
-                                drive, controller2::getLeftY, controller2::getLeftX, centerHubOpening.toTranslation2d())
-                        .alongWith(shooter.shoot(30)));
-
-        controller2
-                .a()
-                .whileTrue(hopper.applyPower(0.2)
-                        .withTimeout(0.1)
-                        .andThen(hopper.applyPower(-0.2).withTimeout(0.1))
-                        .repeatedly());
-
-        controller2
-                .rightTrigger()
-                .whileTrue(Commands.parallel(
-                        hopper.applyPower(TEST_HOPPER_SPEED),
-                        indexer.applyPower(TEST_INDEXER_SPEED),
-                        intake.applyPower(0.7)));
-
-        controller2.povDown().onTrue(linSlide.zero());
-
-        controller2.leftBumper().whileTrue(intake.applyPower(-0.7).alongWith(hopper.applyPower(0.7)));
+        controller2.leftBumper().whileTrue(intake.applyPower(0.7));
+        controller2.rightBumper().whileTrue(intake.applyPower(-0.7));
+        //        controller2
+        //                .rightBumper()
+        //                .whileTrue(linSlide.applyPower(0.4).alongWith(intake.applyPower(1)))
+        //                .onFalse(linSlide.applyPower(0));
+        //
+        //        controller2.x().whileTrue(linSlide.applyPower(0.4)).onFalse(linSlide.applyPower(0));
+        //        controller2.b().whileTrue(linSlide.applyPower(-0.4)).onFalse(linSlide.applyPower(0));
+        //
+        //        controller2.povLeft().whileTrue(hood.applyPower(0.1));
+        //        controller2.povRight().whileTrue(hood.applyPower(-0.1));
+        //
+        //        controller2.povUp().whileTrue(climber.applyPower(0.3));
+        //        controller2.povDown().whileTrue(climber.applyPower(-0.3));
+        //
+        //        controller2
+        //                .leftBumper()
+        //                .whileTrue(intake.rollOut()
+        //                        .alongWith(hopper.applyPower(-TEST_HOPPER_SPEED)
+        //                                .alongWith(indexer.applyPower(-TEST_INDEXER_SPEED))));
+        //
+        //        controller2
+        //                .leftTrigger()
+        //                .whileTrue(AutoAimCommands.autoAim(
+        //                                drive, controller2::getLeftY, controller2::getLeftX,
+        // centerHubOpening.toTranslation2d())
+        //                        .alongWith(shooter.shoot(30)));
+        //
+        //        controller2
+        //                .a()
+        //                .whileTrue(hopper.applyPower(0.2)
+        //                        .withTimeout(0.1)
+        //                        .andThen(hopper.applyPower(-0.2).withTimeout(0.1))
+        //                        .repeatedly());
+        //
+        //        controller2
+        //                .rightTrigger()
+        //                .whileTrue(Commands.parallel(
+        //                        hopper.applyPower(TEST_HOPPER_SPEED),
+        //                        indexer.applyPower(TEST_INDEXER_SPEED),
+        //                        intake.applyPower(0.7)));
+        //
+        //        controller2.povDown().onTrue(linSlide.zero());
+        //
+        //        controller2.leftBumper().whileTrue(intake.applyPower(-0.7).alongWith(hopper.applyPower(0.7)));
     }
 
     private void configureSimBindings() {
