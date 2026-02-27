@@ -299,7 +299,8 @@ public class RobotContainer {
 
         controller2
                 .leftTrigger()
-                .whileTrue(AutoAimCommands.compensationAutoAim(drive, controller::getLeftY, controller::getLeftX, shooter, hood, centerHubOpening.toTranslation2d()));
+                .whileTrue(AutoAimCommands.autoAim(drive, controller::getLeftY, controller::getLeftX, centerHubOpening.toTranslation2d())
+                        .alongWith(AutoAimCommands.readyAim(drive, shooter, hood, centerHubOpening.toTranslation2d())));
 
         controller2
                 .a()
