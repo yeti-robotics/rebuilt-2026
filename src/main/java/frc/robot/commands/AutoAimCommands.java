@@ -110,7 +110,7 @@ public class AutoAimCommands {
                 SwerveRequest.Idle::new);
     }
 
-    public static Command readyAim(
+    public static Command compensationAutoAim(
             CommandSwerveDrivetrain drive,
             DoubleSupplier xVelSupplier,
             DoubleSupplier yVelSupplier,
@@ -155,4 +155,24 @@ public class AutoAimCommands {
                 .alongWith(shooter.shoot(targetRPS));
     }
     ;
+
+    public static Command readyAim (
+            CommandSwerveDrivetrain drive,
+            ShooterSubsystem shooter,
+            HoodSubsystem hood,
+            Translation2d target){
+
+        Pose2d currentPose = drive.getState().Pose;
+        Translation2d modifiedTarget = AllianceFlipUtil.apply(target);
+        Translation2d currentPosition = currentPose.getTranslation();
+        double distance = modifiedTarget.getDistance(currentPosition);
+
+        ShooterStateData state = ShooterSubsystem.SHOOTER_MAP.get(distance);
+
+        double targetRPS = state.rps;
+        Angle targetHoodAngle = state.hoodPos;
+
+        return Commands.run(() -> hood.moveTo(targetHoodAngle)).alongWith(shooter.shoot(targetRPS));
+
+    }
 }
