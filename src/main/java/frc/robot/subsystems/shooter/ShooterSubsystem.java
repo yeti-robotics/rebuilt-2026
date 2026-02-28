@@ -52,8 +52,6 @@ public class ShooterSubsystem extends SubsystemBase {
         return runEnd(() -> io.applyPower(power), () -> io.applyPower(0));
     }
 
-    public static final InterpolatingTreeMap<Double, ShooterStateData> SHOOTER_MAP =
-            new InterpolatingTreeMap<>(InverseInterpolator.forDouble(), ShooterStateData.interpolator);
 
     public boolean isAtSpeed() {
         return io.isAtSpeed(targetSpeed);

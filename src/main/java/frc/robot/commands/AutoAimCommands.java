@@ -17,6 +17,7 @@ import frc.robot.subsystems.drive.CommandSwerveDrivetrain;
 import frc.robot.subsystems.drive.TunerConstantsAlpha;
 import frc.robot.subsystems.drive.TunerConstantsBeta;
 import frc.robot.subsystems.hood.HoodSubsystem;
+import frc.robot.subsystems.shooter.ShooterConfigsBeta;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
 import frc.robot.util.AllianceFlipUtil;
 import frc.robot.util.ShooterStateData;
@@ -124,7 +125,7 @@ public class AutoAimCommands {
         Translation2d currentPosition = currentPose.getTranslation();
         double distance = modifiedTarget.getDistance(currentPosition);
 
-        ShooterStateData state = ShooterSubsystem.SHOOTER_MAP.get(distance);
+        ShooterStateData state = ShooterConfigsBeta.SHOOTER_MAP.get(distance);
         double timeOfFlight = state.timeOfFlight;
 
         double joystickVX = -xVelSupplier.getAsDouble() * SPEED_MULTIPLIER;
@@ -139,7 +140,7 @@ public class AutoAimCommands {
 
         double compensatedDistance = compensatedTarget.getDistance(currentPosition);
 
-        ShooterStateData compensatedState = ShooterSubsystem.SHOOTER_MAP.get(compensatedDistance);
+        ShooterStateData compensatedState = ShooterConfigsBeta.SHOOTER_MAP.get(compensatedDistance);
 
         double targetRPS = compensatedState.rps;
         Angle targetHoodAngle = compensatedState.hoodPos;
@@ -167,7 +168,7 @@ public class AutoAimCommands {
                     Translation2d currentPosition = currentPose.getTranslation();
                     double distance = modifiedTarget.getDistance(currentPosition);
 
-                    ShooterStateData state = ShooterSubsystem.SHOOTER_MAP.get(distance);
+                    ShooterStateData state = ShooterConfigsBeta.SHOOTER_MAP.get(distance);
 
                     double targetRPS = state.rps;
                     Angle targetHoodAngle = state.hoodPos;
