@@ -192,7 +192,7 @@ public class RobotContainer {
         autoChooser.addOption("Drive SysId (Dynamic Forward)", drive.sysIdDynamic(SysIdRoutine.Direction.kForward));
         autoChooser.addOption("Drive SysId (Dynamic Reverse)", drive.sysIdDynamic(SysIdRoutine.Direction.kReverse));
 
-        //Test
+        // Test
         autoChooser.addOption("Climber Testing Path", autoCommands.climberTest());
 
         // Left
@@ -370,7 +370,7 @@ public class RobotContainer {
                         Math.abs(vision.getDistance() - LEDConstants.IDEAL_DISTANCE_TO_HUB) <= LEDConstants.TOLERANCE)
                 .whileTrue(led.runPattern(LEDModes.WAVE));
         new Trigger(() -> climber.getCurrentPosition()
-                        >= ClimberPosition.L1.getHeight().magnitude() - ClimberConfigsBeta.HEIGHT_TOLERANCE)
+                        >= ClimberPosition.L1.getHeight() - ClimberConfigsBeta.HEIGHT_TOLERANCE)
                 .whileTrue(led.runPattern(LEDModes.SNOWFALL));
     }
 

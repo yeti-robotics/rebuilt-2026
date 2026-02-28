@@ -1,11 +1,11 @@
 package frc.robot.subsystems.shooter;
 
+import static frc.robot.subsystems.shooter.ShooterSubsystem.SHOOTER_MAP;
+
 import com.ctre.phoenix6.configs.*;
 import com.ctre.phoenix6.signals.InvertedValue;
 import frc.robot.subsystems.hood.HoodPositions;
 import frc.robot.util.ShooterStateData;
-
-import static frc.robot.subsystems.shooter.ShooterSubsystem.SHOOTER_MAP;
 
 public class ShooterConfigsBeta {
     static final int RIGHT_SHOOTER_ID = 54;

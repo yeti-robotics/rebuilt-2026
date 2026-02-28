@@ -174,7 +174,8 @@ public class AutoAimCommands {
 
                     Logger.recordOutput("AutoAimCommands/target rps", targetRPS);
 
-                    return Commands.run(() -> hood.moveToPosition(targetHoodAngle)).alongWith(shooter.shoot(targetRPS));
+                    return Commands.run(() -> hood.moveToPosition(targetHoodAngle))
+                            .alongWith(shooter.shoot(targetRPS));
                 },
                 Set.of(hood, shooter));
     }
