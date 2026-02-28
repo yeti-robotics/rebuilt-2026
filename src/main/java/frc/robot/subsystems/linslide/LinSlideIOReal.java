@@ -62,7 +62,7 @@ public class LinSlideIOReal implements LinSlideIO {
     }
 
     @Override
-    public void defaultCommand(double volts) {
+    public void applyVoltage(double volts) {
         linSlideMotor.setControl(voltageRequest.withOutput(volts));
     }
 }
