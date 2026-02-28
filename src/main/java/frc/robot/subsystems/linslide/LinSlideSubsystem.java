@@ -10,7 +10,6 @@ public class LinSlideSubsystem extends SubsystemBase {
 
     public LinSlideSubsystem(LinSlideIO io) {
         this.io = io;
-        setDefaultCommand(defaultMovement(-1).onlyIf(() -> !isBasicallyZeroRPM()));
     }
 
     @Override
@@ -19,9 +18,19 @@ public class LinSlideSubsystem extends SubsystemBase {
         Logger.processInputs("LinSlide", inputs);
     }
 
-    public Command moveToPosition(double power, boolean target) {
+    public Command runIntake(double power, boolean stow) {
         return runEnd(() -> io.applyPower(power), () -> io.applyPower(0))
-                .until(() -> target ? inputs.isDeployed : inputs.isStowed);
+                .until(() -> stow ? inputs.isDeployed : inputs.isStowed);
+    }
+
+    public Command agitate() {
+        return applyPower(0.2)
+                .until(() -> inputs.positionRotation
+                        == LinSlidePosition.HALF.getPosition().magnitude())
+                .andThen(applyPower(-0.2)
+                        .until(() -> inputs.positionRotation
+                                == LinSlidePosition.DEPLOY.getPosition().magnitude()))
+                .repeatedly();
     }
 
     public Command applyPower(double power) {
@@ -49,6 +58,6 @@ public class LinSlideSubsystem extends SubsystemBase {
     }
 
     public Command defaultMovement(double volts) {
-        return run(() -> io.defaultCommand(volts)).until(this::isBasicallyZeroRPM);
+        return run(() -> io.applyVoltage(volts)).until(this::isBasicallyZeroRPM);
     }
 }

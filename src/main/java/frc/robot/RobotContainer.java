@@ -9,8 +9,7 @@ package frc.robot;
 
 import static frc.robot.constants.Constants.currentMode;
 import static frc.robot.constants.FieldConstants.Hub.centerHubOpening;
-import static frc.robot.subsystems.hopper.HopperConfigsAlpha.TEST_HOPPER_SPEED;
-import static frc.robot.subsystems.indexer.IndexerConfigsAlpha.TEST_INDEXER_SPEED;
+import static frc.robot.subsystems.hopper.HopperConfigsBeta.TEST_HOPPER_SPEED;
 
 import com.ctre.phoenix6.swerve.SwerveModule;
 import com.ctre.phoenix6.swerve.SwerveRequest;
@@ -22,6 +21,7 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
@@ -254,24 +254,25 @@ public class RobotContainer {
                 .onTrue(climber.moveToPosition(ClimberPosition.BOTTOM.getHeight())
                         .andThen(climber.extendServo()));
 
-        controller.rightBumper().whileTrue(intake.rollIn());
-
         controller
                 .leftBumper()
-                .onTrue(Commands.either(
-                        linSlide.moveToPosition(-0.2, false).withTimeout(4),
-                        linSlide.moveToPosition(0.2, true).withTimeout(4),
-                        linSlide::isDeployed));
+                .whileTrue(linSlide.runIntake(-0.2, false).withTimeout(2).alongWith(intake.rollIn()));
+
+        controller.rightBumper().onTrue(intake.rollOut().alongWith(hopper.applyPower(0.7)));
 
         controller
                 .leftTrigger()
                 .whileTrue(AutoAimCommands.autoAim(
                                 drive, controller::getLeftY, controller::getLeftX, centerHubOpening.toTranslation2d())
-                        .alongWith(shooter.shoot(20)));
+                        .alongWith(shooter.shoot(30)));
 
         controller
                 .rightTrigger()
-                .whileTrue(hopper.spinHopper(80).alongWith(intake.rollIn().alongWith(indexer.applyPower(0.3))));
+                .whileTrue(hopper.spinHopper(80)
+                        .alongWith(intake.rollIn().alongWith(indexer.applyPower(0.3)))
+                        .alongWith(linSlide.runIntake(-0.2, false)
+                                .andThen(linSlide.runIntake(0.2, true))
+                                .repeatedly()));
     }
 
     private void configureDebugBindings() {
@@ -280,7 +281,10 @@ public class RobotContainer {
                 .withVelocityY(-controller2.getLeftX() * TunerConstantsAlpha.kSpeedAt12Volts.magnitude())
                 .withRotationalRate(-controller2.getRightX() * TunerConstantsAlpha.MaFxAngularRate)));
         controller2.start().onTrue(Commands.runOnce(drive::seedFieldCentric, drive));
-        controller2.rightBumper().whileTrue(intake.applyPower(0.7));
+        controller2
+                .leftBumper()
+                .whileTrue(linSlide.applyPower(0.4).alongWith(intake.applyPower(1)))
+                .onFalse(linSlide.applyPower(0));
 
         controller2.x().whileTrue(linSlide.applyPower(0.4)).onFalse(linSlide.applyPower(0));
         controller2.b().whileTrue(linSlide.applyPower(-0.4)).onFalse(linSlide.applyPower(0));
@@ -292,15 +296,10 @@ public class RobotContainer {
         controller2.povDown().whileTrue(climber.applyPower(-0.3));
 
         controller2
-                .leftBumper()
-                .whileTrue(intake.rollOut()
-                        .alongWith(hopper.applyPower(-TEST_HOPPER_SPEED)
-                                .alongWith(indexer.applyPower(-TEST_INDEXER_SPEED))));
-
-        controller2
                 .leftTrigger()
-                .whileTrue(AutoAimCommands.autoAim(drive, controller::getLeftY, controller::getLeftX, centerHubOpening.toTranslation2d())
-                        .alongWith(AutoAimCommands.readyAim(drive, shooter, hood, centerHubOpening.toTranslation2d())));
+                .whileTrue(AutoAimCommands.autoAim(
+                                drive, controller2::getLeftY, controller2::getLeftX, centerHubOpening.toTranslation2d())
+                        .alongWith(shooter.shoot(30)));
 
         controller2
                 .a()
@@ -311,14 +310,14 @@ public class RobotContainer {
 
         controller2
                 .rightTrigger()
-                .whileTrue(Commands.parallel(
-                        hopper.applyPower(TEST_HOPPER_SPEED),
-                        indexer.applyPower(TEST_INDEXER_SPEED),
-                        intake.applyPower(0.7)));
+                .whileTrue(hopper.applyPower(TEST_HOPPER_SPEED)
+                        .alongWith(intake.applyPower(0.7)
+                                .alongWith(indexer.applyPower(0.7)
+                                        .alongWith(new WaitCommand(0.8).andThen(linSlide.applyPower(-0.1))))));
 
         controller2.povDown().onTrue(linSlide.zero());
 
-        controller2.leftBumper().whileTrue(intake.applyPower(-0.7).alongWith(hopper.applyPower(-0.7)));
+        controller2.rightBumper().whileTrue(intake.applyPower(-0.7).alongWith(hopper.applyPower(0.7)));
     }
 
     private void configureSimBindings() {
@@ -338,9 +337,7 @@ public class RobotContainer {
         controller
                 .button(5)
                 .onTrue(Commands.either(
-                        linSlide.moveToPosition(-0.2, false),
-                        linSlide.moveToPosition(0.2, true),
-                        linSlide::isDeployed));
+                        linSlide.runIntake(-0.2, false), linSlide.runIntake(0.2, true), linSlide::isDeployed));
 
         controller
                 .button(6)
