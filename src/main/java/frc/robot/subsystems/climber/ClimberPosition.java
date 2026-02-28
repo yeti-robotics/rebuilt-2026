@@ -1,21 +1,17 @@
 package frc.robot.subsystems.climber;
 
-import edu.wpi.first.units.Units;
-import edu.wpi.first.units.measure.Angle;
-
 public enum ClimberPosition {
-    BOTTOM(0.0),
-    L1(29.0),
-    L2(47.0),
-    L3(65.0);
+    BOTTOM(0.05),
+    L1(4.39),
+    CLIMB_L1(2.70);
 
-    private final Angle height;
+    private final double height;
 
     ClimberPosition(double height) {
-        this.height = Units.Rotations.of(height);
+        this.height = height;
     }
 
-    public Angle getHeight() {
+    public double getHeight() {
         return height;
     }
 }

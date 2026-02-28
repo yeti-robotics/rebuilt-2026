@@ -1,7 +1,9 @@
 package frc.robot.subsystems.hood;
 
+import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.subsystems.shooter.ShooterConfigsBeta;
 import org.littletonrobotics.junction.Logger;
 
 public class HoodSubsystem extends SubsystemBase {
@@ -37,5 +39,17 @@ public class HoodSubsystem extends SubsystemBase {
 
     public Command applyPower(double power) {
         return runEnd(() -> io.applyPower(power), () -> io.applyPower(0));
+    }
+
+    public static Angle calcPos(double distance) {
+        return ShooterConfigsBeta.SHOOTER_MAP.get(distance).hoodPos;
+    }
+
+    private void moveTo(Angle position) {
+        io.moveToPosition(position);
+    }
+
+    public Command moveToPosition(Angle position) {
+        return runOnce(() -> this.moveTo(position));
     }
 }

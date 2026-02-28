@@ -55,6 +55,7 @@ import frc.robot.subsystems.shooter.ShooterIO;
 import frc.robot.subsystems.shooter.ShooterIOReal;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
 import frc.robot.subsystems.vision.*;
+import frc.robot.util.AllianceFlipUtil;
 import frc.robot.util.sim.Mechanisms;
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
@@ -191,6 +192,9 @@ public class RobotContainer {
         autoChooser.addOption("Drive SysId (Dynamic Forward)", drive.sysIdDynamic(SysIdRoutine.Direction.kForward));
         autoChooser.addOption("Drive SysId (Dynamic Reverse)", drive.sysIdDynamic(SysIdRoutine.Direction.kReverse));
 
+        // Test
+        autoChooser.addOption("Climber Testing Path", autoCommands.climberTest());
+
         // Left
         autoChooser.addOption("One Cycle Neutral Tower Left", autoCommands.oneCycleNeutralTowerLeft());
         autoChooser.addOption("One Cycle Depot Tower Left", autoCommands.oneCycleDepotTowerLeft());
@@ -288,9 +292,11 @@ public class RobotContainer {
 
         controller2.x().whileTrue(linSlide.applyPower(0.4)).onFalse(linSlide.applyPower(0));
         controller2.b().whileTrue(linSlide.applyPower(-0.4)).onFalse(linSlide.applyPower(0));
-
-        controller2.povLeft().whileTrue(hood.applyPower(0.1));
-        controller2.povRight().whileTrue(hood.applyPower(-0.1));
+        //
+        //        controller2.povLeft().whileTrue(hood.applyPower(0.1));
+        //        controller2.povRight().whileTrue(hood.applyPower(-0.1));
+        controller2.povLeft().whileTrue(climber.deploy(0.5));
+        controller2.povRight().whileTrue(climber.climb(-0.5));
 
         controller2.povUp().whileTrue(climber.applyPower(0.3));
         controller2.povDown().whileTrue(climber.applyPower(-0.3));
@@ -299,14 +305,7 @@ public class RobotContainer {
                 .leftTrigger()
                 .whileTrue(AutoAimCommands.autoAim(
                                 drive, controller2::getLeftY, controller2::getLeftX, centerHubOpening.toTranslation2d())
-                        .alongWith(shooter.shoot(30)));
-
-        controller2
-                .a()
-                .whileTrue(hopper.applyPower(0.2)
-                        .withTimeout(0.1)
-                        .andThen(hopper.applyPower(-0.2).withTimeout(0.1))
-                        .repeatedly());
+                        .alongWith(AutoAimCommands.readyAim(drive, shooter, hood, centerHubOpening.toTranslation2d())));
 
         controller2
                 .rightTrigger()
@@ -314,8 +313,6 @@ public class RobotContainer {
                         .alongWith(intake.applyPower(0.7)
                                 .alongWith(indexer.applyPower(0.7)
                                         .alongWith(new WaitCommand(0.8).andThen(linSlide.applyPower(-0.1))))));
-
-        controller2.povDown().onTrue(linSlide.zero());
 
         controller2.rightBumper().whileTrue(intake.applyPower(-0.7).alongWith(hopper.applyPower(0.7)));
     }
@@ -373,12 +370,19 @@ public class RobotContainer {
                         Math.abs(vision.getDistance() - LEDConstants.IDEAL_DISTANCE_TO_HUB) <= LEDConstants.TOLERANCE)
                 .whileTrue(led.runPattern(LEDModes.WAVE));
         new Trigger(() -> climber.getCurrentPosition()
-                        >= ClimberPosition.L1.getHeight().magnitude() - ClimberConfigsBeta.HEIGHT_TOLERANCE)
+                        >= ClimberPosition.L1.getHeight() - ClimberConfigsBeta.HEIGHT_TOLERANCE)
                 .whileTrue(led.runPattern(LEDModes.SNOWFALL));
     }
 
     public void updateLoggers() {
         Logger.recordOutput("Climber/ClimbMode", climbState.toString());
+
+        Pose2d currentPose = drive.getState().Pose;
+        Translation2d modifiedTarget = AllianceFlipUtil.apply(centerHubOpening.toTranslation2d());
+        Translation2d currentPosition = currentPose.getTranslation();
+        double distance = modifiedTarget.getDistance(currentPosition);
+
+        Logger.recordOutput("AutoAimCommands/distance", distance);
     }
 
     /**

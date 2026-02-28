@@ -1,6 +1,5 @@
 package frc.robot.subsystems.climber;
 
-import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -35,7 +34,7 @@ public class Climber extends SubsystemBase {
         return inputs.targetPosition;
     }
 
-    public Command moveToPosition(Angle position) {
+    public Command moveToPosition(double position) {
         return run(() -> io.setClimberPosition(position));
     }
 
@@ -53,5 +52,20 @@ public class Climber extends SubsystemBase {
 
     public Command setAngle(double position) {
         return run(() -> io.setAngle(position));
+    }
+
+    public Command deploy(double power) {
+        return runEnd(() -> io.applyPower(power), () -> io.applyPower(0))
+                .until(() -> getCurrentPosition() > ClimberPosition.L1.getHeight());
+    }
+
+    public Command stow(double power) {
+        return runEnd(() -> io.applyPower(power), () -> io.applyPower(0))
+                .until(() -> getCurrentPosition() < ClimberPosition.BOTTOM.getHeight());
+    }
+
+    public Command climb(double power) {
+        return runEnd(() -> io.applyPower(power), () -> io.applyPower(0))
+                .until(() -> getCurrentPosition() < ClimberPosition.CLIMB_L1.getHeight());
     }
 }
