@@ -1,10 +1,7 @@
 package frc.robot.subsystems.linslide;
 
 import com.ctre.phoenix6.configs.*;
-import com.ctre.phoenix6.signals.GravityTypeValue;
-import com.ctre.phoenix6.signals.InvertedValue;
-import com.ctre.phoenix6.signals.NeutralModeValue;
-import com.ctre.phoenix6.signals.SensorDirectionValue;
+import com.ctre.phoenix6.signals.*;
 import frc.robot.Robot;
 
 public class LinSlideConfigsBeta {
@@ -14,7 +11,7 @@ public class LinSlideConfigsBeta {
     static final double ROTOR_TO_SENSOR = 50.0 / 12.0;
     static final double SENSOR_TO_MECHANISM = 24.0 / 18.0;
 
-    static final double MAGNET_OFFSET = 0.177246;
+    static final double MAGNET_OFFSET = 0.188477;
 
     private static final Slot0Configs SLOT_0_CONFIGS = Robot.isReal()
             ? new Slot0Configs()
@@ -44,7 +41,9 @@ public class LinSlideConfigsBeta {
                     .withMotionMagicJerk(0))
             .withFeedback(new FeedbackConfigs()
                     .withRotorToSensorRatio(ROTOR_TO_SENSOR)
-                    .withSensorToMechanismRatio(SENSOR_TO_MECHANISM))
+                    .withSensorToMechanismRatio(SENSOR_TO_MECHANISM)
+                    .withFeedbackRemoteSensorID(LIN_SLIDE_CANCODER_ID)
+                    .withFeedbackSensorSource(FeedbackSensorSourceValue.FusedCANcoder))
             .withMotorOutput(new MotorOutputConfigs()
                     .withInverted(InvertedValue.CounterClockwise_Positive)
                     .withNeutralMode(NeutralModeValue.Brake));

@@ -20,5 +20,5 @@ public interface LinSlideIO {
 
     public default void applyPower(double percent) {}
 
-    public default void defaultCommand(double volts) {}
+    public default void applyVoltage(double volts) {}
 }
