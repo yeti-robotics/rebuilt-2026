@@ -20,6 +20,7 @@ import frc.robot.subsystems.hood.HoodSubsystem;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
 import frc.robot.util.AllianceFlipUtil;
 import frc.robot.util.ShooterStateData;
+import java.util.Set;
 import java.util.function.DoubleSupplier;
 import org.littletonrobotics.junction.Logger;
 
@@ -156,23 +157,26 @@ public class AutoAimCommands {
     }
     ;
 
-    public static Command readyAim (
-            CommandSwerveDrivetrain drive,
-            ShooterSubsystem shooter,
-            HoodSubsystem hood,
-            Translation2d target){
+    public static Command readyAim(
+            CommandSwerveDrivetrain drive, ShooterSubsystem shooter, HoodSubsystem hood, Translation2d target) {
 
-        Pose2d currentPose = drive.getState().Pose;
-        Translation2d modifiedTarget = AllianceFlipUtil.apply(target);
-        Translation2d currentPosition = currentPose.getTranslation();
-        double distance = modifiedTarget.getDistance(currentPosition);
+        return Commands.defer(
+                () -> {
+                    Pose2d currentPose = drive.getState().Pose;
+                    Translation2d modifiedTarget = AllianceFlipUtil.apply(target);
+                    Translation2d currentPosition = currentPose.getTranslation();
+                    double distance = modifiedTarget.getDistance(currentPosition);
 
-        ShooterStateData state = ShooterSubsystem.SHOOTER_MAP.get(distance);
+                    ShooterStateData state = ShooterSubsystem.SHOOTER_MAP.get(distance);
 
-        double targetRPS = state.rps;
-        Angle targetHoodAngle = state.hoodPos;
+                    double targetRPS = state.rps;
+                    Angle targetHoodAngle = state.hoodPos;
 
-        return Commands.run(() -> hood.moveTo(targetHoodAngle)).alongWith(shooter.shoot(targetRPS));
+                    Logger.recordOutput("AutoAimCommands/distance", distance);
+                    Logger.recordOutput("AutoAimCommands/target rps", targetRPS);
 
+                    return Commands.run(() -> hood.moveTo(targetHoodAngle)).alongWith(shooter.shoot(targetRPS));
+                },
+                Set.of(hood, shooter));
     }
 }

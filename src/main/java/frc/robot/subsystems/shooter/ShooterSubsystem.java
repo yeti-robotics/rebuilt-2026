@@ -6,6 +6,7 @@ import edu.wpi.first.units.Units;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.subsystems.hood.HoodPositions;
 import frc.robot.util.ShooterStateData;
 import org.littletonrobotics.junction.Logger;
 
@@ -56,7 +57,11 @@ public class ShooterSubsystem extends SubsystemBase {
             new InterpolatingTreeMap<>(InverseInterpolator.forDouble(), ShooterStateData.interpolator);
 
     static {
-        SHOOTER_MAP.put(0.0, new ShooterStateData(Units.Rotations.of(0.0), 0.0, 0.0)); //hood, rps, flight time
+        SHOOTER_MAP.put(
+                2.08, new ShooterStateData(HoodPositions.STOW.getPosition(), 25, 0.0)); // hood, rps, flight time
+        SHOOTER_MAP.put(3.3, new ShooterStateData(HoodPositions.STOW.getPosition(), 28, 0.0));
+        SHOOTER_MAP.put(3.39, new ShooterStateData(HoodPositions.STOW.getPosition(), 30, 0.0));
+        SHOOTER_MAP.put(4.31, new ShooterStateData(HoodPositions.STOW.getPosition(), 28, 0.0));
     }
 
     public boolean isAtSpeed() {
