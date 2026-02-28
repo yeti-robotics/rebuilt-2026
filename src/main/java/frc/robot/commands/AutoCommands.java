@@ -142,6 +142,19 @@ public class AutoCommands {
                         indexer.applyPower(TEST_INDEXER_SPEED).withTimeout(2)));
     }
 
+    // Testing Autos
+    public Command climberTest() {
+        Optional<PathPlannerPath> climberTest = PathPlannerUtils.loadPathByName("Climb-Test");
+        PathPlannerAuto auto;
+
+        var cmd = climberTest.isEmpty()
+                ? Commands.none()
+                : Commands.sequence(climber.deploy(0.5), AutoBuilder.followPath(climberTest.get()), climber.stow(-0.5));
+
+        auto = new PathPlannerAuto(cmd);
+        return auto;
+    }
+
     // Real Autos
     public Command oneCycleNeutralTowerLeft() {
         Optional<PathPlannerPath> startNeutral = PathPlannerUtils.loadPathByName("start-neutral_L-left");
