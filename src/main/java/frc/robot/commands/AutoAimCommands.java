@@ -172,10 +172,9 @@ public class AutoAimCommands {
                     double targetRPS = state.rps;
                     Angle targetHoodAngle = state.hoodPos;
 
-                    //                    Logger.recordOutput("AutoAimCommands/distance", distance);
                     Logger.recordOutput("AutoAimCommands/target rps", targetRPS);
 
-                    return Commands.run(() -> hood.moveTo(targetHoodAngle)).alongWith(shooter.shoot(targetRPS));
+                    return Commands.run(() -> hood.moveToPosition(targetHoodAngle)).alongWith(shooter.shoot(targetRPS));
                 },
                 Set.of(hood, shooter));
     }

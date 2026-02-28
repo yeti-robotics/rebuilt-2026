@@ -56,14 +56,14 @@ public class Climber extends SubsystemBase {
     }
 
     public Command deploy(double power) {
-        return runEnd(() -> io.applyPower(power), () -> io.applyPower(0)).until(() -> getCurrentPosition() > 4.39);
+        return runEnd(() -> io.applyPower(power), () -> io.applyPower(0)).until(() -> getCurrentPosition() > ClimberPosition.L1.getHeight());
     }
 
     public Command stow(double power) {
-        return runEnd(() -> io.applyPower(power), () -> io.applyPower(0)).until(() -> getCurrentPosition() < 0.05);
+        return runEnd(() -> io.applyPower(power), () -> io.applyPower(0)).until(() -> getCurrentPosition() < ClimberPosition.BOTTOM.getHeight());
     }
 
     public Command climb(double power) {
-        return runEnd(() -> io.applyPower(power), () -> io.applyPower(0)).until(() -> getCurrentPosition() < 2.70);
+        return runEnd(() -> io.applyPower(power), () -> io.applyPower(0)).until(() -> getCurrentPosition() < ClimberPosition.CLIMB_L1.getHeight());
     }
 }

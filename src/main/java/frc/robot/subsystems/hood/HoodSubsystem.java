@@ -45,7 +45,7 @@ public class HoodSubsystem extends SubsystemBase {
         return ShooterSubsystem.SHOOTER_MAP.get(distance).hoodPos;
     }
 
-    public void moveTo(Angle position) {
+    private void moveTo(Angle position) {
         io.moveToPosition(position);
     }
 
