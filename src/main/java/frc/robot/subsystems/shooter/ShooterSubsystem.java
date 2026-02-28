@@ -1,12 +1,9 @@
 package frc.robot.subsystems.shooter;
 
-import edu.wpi.first.math.interpolation.InterpolatingTreeMap;
-import edu.wpi.first.math.interpolation.InverseInterpolator;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.util.ShooterStateData;
 import org.littletonrobotics.junction.Logger;
 
 public class ShooterSubsystem extends SubsystemBase {
@@ -51,7 +48,6 @@ public class ShooterSubsystem extends SubsystemBase {
     public Command applyPower(double power) {
         return runEnd(() -> io.applyPower(power), () -> io.applyPower(0));
     }
-
 
     public boolean isAtSpeed() {
         return io.isAtSpeed(targetSpeed);
