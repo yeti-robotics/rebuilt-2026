@@ -1,0 +1,27 @@
+name: FRC Code Reviewer
+
+on:
+  issue_comment:
+    types: [created]
+
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+
+jobs:
+  review:
+    if: |
+      github.event.issue.pull_request != null &&
+      contains(github.event.comment.body, '@frc-reviewer')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run FRC Reviewer
+        uses: yeti-robotics/frc-reviewer@v1
+        with:
+          api-key: ${{ secrets.DO_API_KEY }}
+          gateway: digitalocean
+          model: openai-gpt-oss-120b
+          fast-model: openai-gpt-oss-20b
+          trigger-phrase: "@frc-reviewer"
+          minimum-role: write
