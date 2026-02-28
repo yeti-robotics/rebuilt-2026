@@ -55,6 +55,7 @@ import frc.robot.subsystems.shooter.ShooterIO;
 import frc.robot.subsystems.shooter.ShooterIOReal;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
 import frc.robot.subsystems.vision.*;
+import frc.robot.util.AllianceFlipUtil;
 import frc.robot.util.sim.Mechanisms;
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
@@ -299,6 +300,8 @@ public class RobotContainer {
                 .leftTrigger()
                 .whileTrue(AutoAimCommands.autoAim(
                                 drive, controller2::getLeftY, controller2::getLeftX, centerHubOpening.toTranslation2d())
+                        .alongWith(intake.applyPower(1))
+                        //                                .alongWith(shooter.shoot(33))
                         .alongWith(AutoAimCommands.readyAim(drive, shooter, hood, centerHubOpening.toTranslation2d())));
 
         controller2
@@ -372,6 +375,13 @@ public class RobotContainer {
 
     public void updateLoggers() {
         Logger.recordOutput("Climber/ClimbMode", climbState.toString());
+
+        Pose2d currentPose = drive.getState().Pose;
+        Translation2d modifiedTarget = AllianceFlipUtil.apply(centerHubOpening.toTranslation2d());
+        Translation2d currentPosition = currentPose.getTranslation();
+        double distance = modifiedTarget.getDistance(currentPosition);
+
+        Logger.recordOutput("AutoAimCommands/distance", distance);
     }
 
     /**

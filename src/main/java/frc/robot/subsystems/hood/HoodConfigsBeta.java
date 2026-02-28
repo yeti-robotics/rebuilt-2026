@@ -7,7 +7,7 @@ import frc.robot.Robot;
 public class HoodConfigsBeta {
     static final int HOOD_MOTOR_ID = 44;
     static final int HOOD_CANCODER_ID = 45;
-    static final double MAGNET_OFFSET = 0.342529;
+    static final double MAGNET_OFFSET = 0.573486;
 
     static final double ROTOR_TO_SENSOR = 16.0;
     static final double SENSOR_TO_MECHANISM = 1.5;
