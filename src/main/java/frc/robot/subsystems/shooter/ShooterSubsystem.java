@@ -64,6 +64,7 @@ public class ShooterSubsystem extends SubsystemBase {
         SHOOTER_MAP.put(4.31, new ShooterStateData(HoodPositions.STOW.getPosition(), 35, 0.0));
         SHOOTER_MAP.put(2.58, new ShooterStateData(HoodPositions.STOW.getPosition(), 27, 0.0));
         SHOOTER_MAP.put(3.74, new ShooterStateData(HoodPositions.STOW.getPosition(), 34, 0.0));
+        SHOOTER_MAP.put(4.46, new ShooterStateData(HoodPositions.STOW.getPosition(), 42, 0.0));
     }
 
     public boolean isAtSpeed() {
