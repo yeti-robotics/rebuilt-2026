@@ -289,9 +289,11 @@ public class RobotContainer {
 
         controller2.x().whileTrue(linSlide.applyPower(0.4)).onFalse(linSlide.applyPower(0));
         controller2.b().whileTrue(linSlide.applyPower(-0.4)).onFalse(linSlide.applyPower(0));
-
-        controller2.povLeft().whileTrue(hood.applyPower(0.1));
-        controller2.povRight().whileTrue(hood.applyPower(-0.1));
+        //
+        //        controller2.povLeft().whileTrue(hood.applyPower(0.1));
+        //        controller2.povRight().whileTrue(hood.applyPower(-0.1));
+        controller2.povLeft().whileTrue(climber.deploy(0.5));
+        controller2.povRight().whileTrue(climber.climb(-0.5));
 
         controller2.povUp().whileTrue(climber.applyPower(0.3));
         controller2.povDown().whileTrue(climber.applyPower(-0.3));
@@ -308,8 +310,6 @@ public class RobotContainer {
                         .alongWith(intake.applyPower(0.7)
                                 .alongWith(indexer.applyPower(0.7)
                                         .alongWith(new WaitCommand(0.8).andThen(linSlide.applyPower(-0.1))))));
-
-        controller2.povDown().onTrue(linSlide.zero());
 
         controller2.rightBumper().whileTrue(intake.applyPower(-0.7).alongWith(hopper.applyPower(0.7)));
     }
