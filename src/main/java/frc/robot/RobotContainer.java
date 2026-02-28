@@ -295,8 +295,8 @@ public class RobotContainer {
         //
         //        controller2.povLeft().whileTrue(hood.applyPower(0.1));
         //        controller2.povRight().whileTrue(hood.applyPower(-0.1));
-        controller2.povLeft().whileTrue(climber.deploy(0.5));
-        controller2.povRight().whileTrue(climber.climb(-0.5));
+        controller2.povLeft().onTrue(climber.deploy(0.5));
+        controller2.povRight().onTrue(climber.climb(-0.5));
 
         controller2.povUp().whileTrue(climber.applyPower(0.3));
         controller2.povDown().whileTrue(climber.applyPower(-0.3));
@@ -305,7 +305,7 @@ public class RobotContainer {
                 .leftTrigger()
                 .whileTrue(AutoAimCommands.autoAim(
                                 drive, controller2::getLeftY, controller2::getLeftX, centerHubOpening.toTranslation2d())
-                        .alongWith(AutoAimCommands.readyAim(drive, shooter, hood, centerHubOpening.toTranslation2d())));
+                        .alongWith(AutoAimCommands.readyAim(drive, shooter, centerHubOpening.toTranslation2d())));
 
         controller2
                 .rightTrigger()

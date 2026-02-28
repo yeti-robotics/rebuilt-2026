@@ -158,8 +158,7 @@ public class AutoAimCommands {
     }
     ;
 
-    public static Command readyAim(
-            CommandSwerveDrivetrain drive, ShooterSubsystem shooter, HoodSubsystem hood, Translation2d target) {
+    public static Command readyAim(CommandSwerveDrivetrain drive, ShooterSubsystem shooter, Translation2d target) {
 
         return Commands.defer(
                 () -> {
@@ -171,13 +170,11 @@ public class AutoAimCommands {
                     ShooterStateData state = ShooterConfigsBeta.SHOOTER_MAP.get(distance);
 
                     double targetRPS = state.rps;
-                    Angle targetHoodAngle = state.hoodPos;
 
                     Logger.recordOutput("AutoAimCommands/target rps", targetRPS);
 
-                    return Commands.run(() -> hood.moveToPosition(targetHoodAngle))
-                            .alongWith(shooter.shoot(targetRPS));
+                    return shooter.shoot(targetRPS);
                 },
-                Set.of(hood, shooter));
+                Set.of(shooter));
     }
 }
