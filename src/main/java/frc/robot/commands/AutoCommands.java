@@ -166,7 +166,7 @@ public class AutoCommands {
         var cmd = startNeutral.isEmpty() || neutralShoot.isEmpty() || shootTower.isEmpty()
                 ? Commands.none()
                 : Commands.sequence(
-                        shootNew(),
+//                        shootNew(),
                         followPathAndIntake(startNeutral, 2),
                         followPathAndStowIntake(neutralShoot),
                         shootNew(),
