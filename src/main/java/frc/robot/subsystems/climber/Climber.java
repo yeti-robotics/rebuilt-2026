@@ -54,4 +54,16 @@ public class Climber extends SubsystemBase {
     public Command setAngle(double position) {
         return run(() -> io.setAngle(position));
     }
+
+    public Command deploy(double power) {
+        return runEnd(() -> io.applyPower(power), () -> io.applyPower(0)).until(() -> getCurrentPosition() > 4.39);
+    }
+
+    public Command stow(double power) {
+        return runEnd(() -> io.applyPower(power), () -> io.applyPower(0)).until(() -> getCurrentPosition() < 0.05);
+    }
+
+    public Command climb(double power) {
+        return runEnd(() -> io.applyPower(power), () -> io.applyPower(0)).until(() -> getCurrentPosition() < 2.70);
+    }
 }

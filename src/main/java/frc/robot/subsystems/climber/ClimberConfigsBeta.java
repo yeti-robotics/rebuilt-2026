@@ -50,5 +50,10 @@ public class ClimberConfigsBeta {
                     .withSensorToMechanismRatio(SENSOR_TO_MECHANISM))
             .withMotorOutput(new MotorOutputConfigs()
                     .withInverted(InvertedValue.CounterClockwise_Positive)
-                    .withNeutralMode(NeutralModeValue.Brake));
+                    .withNeutralMode(NeutralModeValue.Brake))
+            .withSoftwareLimitSwitch(new SoftwareLimitSwitchConfigs()
+                    .withForwardSoftLimitEnable(true)
+                    .withReverseSoftLimitEnable(true)
+                    .withForwardSoftLimitThreshold(4.4)
+                    .withReverseSoftLimitThreshold(0.02));
 }
