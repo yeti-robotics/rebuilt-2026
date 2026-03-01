@@ -30,6 +30,7 @@ public class LinSlideIOReal implements LinSlideIO {
             secondaryLinSlideMotor = new TalonFX(LinSlideConfigsAlpha.OTHER_LIN_SLIDE_MOTOR_ID, rioBus);
             if (Robot.isSimulation()) {
                 PhysicsSim.getInstance().addTalonFX(linSlideMotor);
+                PhysicsSim.getInstance().addTalonFX(secondaryLinSlideMotor);
             }
             linSlideMotor.getConfigurator().apply(LinSlideConfigsAlpha.linSlideTalonFXConfigs);
             secondaryLinSlideMotor.setControl(new Follower(LIN_SLIDE_MOTOR_ID, MotorAlignmentValue.Opposed));
