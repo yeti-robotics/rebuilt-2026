@@ -300,7 +300,7 @@ public class RobotContainer {
         controller2.leftTrigger().onTrue(led.runPattern(LEDModes.LOCKED_GREEN));
         controller2.rightBumper().onTrue(led.runPattern(LEDModes.RAINBOW));
         controller2.rightTrigger().onTrue(led.runPattern(LEDModes.WAVE));
-        controller2.x().onTrue(led.runPattern(LEDModes.TRANSITION_ACTIVE));
+        controller2.povUp().onTrue(led.runPattern(LEDModes.TRANSITION_ACTIVE));
         controller2.povRight().onTrue(led.runPattern(LEDModes.RED_ALLIANCE_ACTIVE));
         controller2.povLeft().onTrue(led.runPattern(LEDModes.NOT_LOCKED_RED));
 
