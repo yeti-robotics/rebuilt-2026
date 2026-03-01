@@ -35,6 +35,7 @@ import frc.robot.subsystems.hood.HoodIO;
 import frc.robot.subsystems.hood.HoodIOBeta;
 import frc.robot.subsystems.hood.HoodSubsystem;
 import frc.robot.subsystems.hopper.*;
+import frc.robot.subsystems.indexer.IndexerConfigsBeta;
 import frc.robot.subsystems.indexer.IndexerIO;
 import frc.robot.subsystems.indexer.IndexerIOReal;
 import frc.robot.subsystems.indexer.IndexerSubsystem;
@@ -312,11 +313,11 @@ public class RobotContainer {
                 .whileTrue(linSlide.applyPower(-LinSlideConfigsBeta.DEPLOY_SPEED))
                 .onFalse(linSlide.applyPower(LinSlideConfigsBeta.STOP));
 
-        controller2.povLeft().onTrue(climber.deploy(0.5));
-        controller2.povRight().onTrue(climber.climb(-0.5));
+        controller2.povLeft().onTrue(climber.deploy(ClimberConfigsBeta.CLIMBER_DEPLOY_CLIMBING_SPEED));
+        controller2.povRight().onTrue(climber.climb(ClimberConfigsBeta.CLIMBER_UNCLIMB_SPEED));
 
-        controller2.povUp().whileTrue(climber.applyPower(0.3));
-        controller2.povDown().whileTrue(climber.applyPower(-0.3));
+        controller2.povUp().whileTrue(climber.applyPower(ClimberConfigsBeta.TEST_CLIMBER_SPEED));
+        controller2.povDown().whileTrue(climber.applyPower(-ClimberConfigsBeta.TEST_CLIMBER_SPEED));
 
         controller2
                 .leftTrigger()
@@ -327,11 +328,11 @@ public class RobotContainer {
         controller2
                 .rightTrigger()
                 .whileTrue(hopper.applyPower(TEST_HOPPER_SPEED)
-                        .alongWith(intake.applyPower(0.7)
-                                .alongWith(indexer.applyPower(0.7)
-                                        .alongWith(new WaitCommand(0.8).andThen(linSlide.applyPower(-0.1))))));
+                        .alongWith(intake.applyPower(IntakeConfigsBeta.ROLL_IN_SLOWER)
+                                .alongWith(indexer.applyPower(IndexerConfigsBeta.TEST_INDEXER_SPEED)
+                                        .alongWith(new WaitCommand(0.8).andThen(linSlide.applyPower(LinSlideConfigsBeta.LINSLIDE_AUTO_SHOOT_SPEED))))));
 
-        controller2.rightBumper().whileTrue(intake.applyPower(-0.7).alongWith(hopper.applyPower(0.7)));
+        controller2.rightBumper().whileTrue(intake.applyPower(-IntakeConfigsBeta.ROLL_IN_SLOWER).alongWith(hopper.applyPower(-TEST_HOPPER_SPEED)));
     }
 
     private void configureSimBindings() {

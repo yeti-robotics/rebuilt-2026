@@ -11,6 +11,7 @@ public class IntakeConfigsBeta {
     static final double OUTTAKE_VOLTAGE = -1;
 
     public static double ROLL_IN_SPEED = 1;
+    public static double ROLL_IN_SLOWER = 0.7;
 
     static TalonFXConfiguration PRIMARY_TALONFX_CONFIGS = new TalonFXConfiguration()
             .withMotorOutput(new MotorOutputConfigs().withInverted(InvertedValue.CounterClockwise_Positive));

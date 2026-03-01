@@ -13,7 +13,9 @@ public class ClimberConfigsBeta {
 
     static final double ROTOR_TO_SENSOR = 1.0;
     static final double SENSOR_TO_MECHANISM = 35.0;
-    public static final double TEST_CLIMBER_SPEED = 0.2;
+    public static final double TEST_CLIMBER_SPEED = 0.3;
+    public static final double CLIMBER_DEPLOY_CLIMBING_SPEED = 0.7;
+    public static final double CLIMBER_UNCLIMB_SPEED = -0.5;
 
     public static final double HEIGHT_TOLERANCE = 0.2;
 

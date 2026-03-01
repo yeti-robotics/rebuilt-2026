@@ -1,8 +1,6 @@
 package frc.robot.commands;
 
 import static frc.robot.constants.FieldConstants.Hub.centerHubOpening;
-import static frc.robot.subsystems.hopper.HopperConfigsAlpha.TEST_HOPPER_SPEED;
-import static frc.robot.subsystems.indexer.IndexerConfigsAlpha.TEST_INDEXER_SPEED;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
@@ -12,11 +10,13 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.subsystems.climber.Climber;
+import frc.robot.subsystems.climber.ClimberConfigsBeta;
 import frc.robot.subsystems.climber.ClimberPosition;
 import frc.robot.subsystems.drive.CommandSwerveDrivetrain;
 import frc.robot.subsystems.hood.HoodSubsystem;
 import frc.robot.subsystems.hopper.Hopper;
-import frc.robot.subsystems.hopper.HopperConfigsAlpha;
+import frc.robot.subsystems.hopper.HopperConfigsBeta;
+import frc.robot.subsystems.indexer.IndexerConfigsBeta;
 import frc.robot.subsystems.indexer.IndexerSubsystem;
 import frc.robot.subsystems.intake.IntakeConfigsBeta;
 import frc.robot.subsystems.intake.IntakeSubsystem;
@@ -106,12 +106,12 @@ public class AutoCommands {
 
     public Command followPathAndStowIntake(Optional<PathPlannerPath> path) {
         return AutoBuilder.followPath(path.get())
-                .alongWith(linSlide.runIntake(-0.2, false))
+                .alongWith(linSlide.runIntake(LinSlideConfigsBeta.LINSLIDE_AUTO_STOWING_SPEED, false))
                 .withTimeout(3);
     }
 
     public Command climbTower(Optional<PathPlannerPath> path) {
-        return Commands.sequence(climber.deploy(0.5), AutoBuilder.followPath(path.get()), climber.climb(-0.5));
+        return Commands.sequence(climber.deploy(ClimberConfigsBeta.CLIMBER_DEPLOY_CLIMBING_SPEED), AutoBuilder.followPath(path.get()), climber.climb(ClimberConfigsBeta.CLIMBER_UNCLIMB_SPEED));
     }
 
     // NEW STUFF
@@ -120,14 +120,14 @@ public class AutoCommands {
         return Commands.deadline(
                 Commands.sequence(
                         new WaitCommand(0.5),
-                        linSlide.applyPower(-0.1).withTimeout(1),
-                        linSlide.applyPower(-0.1).until(linSlide::isBasicallyZeroRPM),
+                        linSlide.applyPower(LinSlideConfigsBeta.LINSLIDE_AUTO_SHOOT_SPEED).withTimeout(1),
+                        linSlide.applyPower(LinSlideConfigsBeta.LINSLIDE_AUTO_SHOOT_SPEED).until(linSlide::isBasicallyZeroRPM),
                         Commands.waitSeconds(1)),
                 Commands.parallel(
                         AutoAimCommands.readyAim(drivetrain, shooter, centerHubOpening.toTranslation2d()),
                         AutoAimCommands.autoAim(drivetrain, () -> 0.0, () -> 0.0, centerHubOpening.toTranslation2d()),
-                        new WaitCommand(0.2).andThen(hopper.applyPower(HopperConfigsAlpha.TEST_HOPPER_SPEED)),
-                        new WaitCommand(0.2).andThen(indexer.applyPower(TEST_INDEXER_SPEED)),
+                        new WaitCommand(0.2).andThen(hopper.applyPower(HopperConfigsBeta.TEST_HOPPER_SPEED)),
+                        new WaitCommand(0.2).andThen(indexer.applyPower(IndexerConfigsBeta.TEST_INDEXER_SPEED)),
                         new WaitCommand(0.2).andThen(intake.applyPower(IntakeConfigsBeta.ROLL_IN_SPEED))));
     }
 
@@ -136,8 +136,8 @@ public class AutoCommands {
                 shooter.revUpFlywheels(20).until(shooter::isAtSpeed),
                 Commands.parallel(
                         shooter.shoot(20).withTimeout(2),
-                        hopper.applyPower(TEST_HOPPER_SPEED).withTimeout(2),
-                        indexer.applyPower(TEST_INDEXER_SPEED).withTimeout(2)));
+                        hopper.applyPower(HopperConfigsBeta.TEST_HOPPER_SPEED).withTimeout(2),
+                        indexer.applyPower(IndexerConfigsBeta.TEST_INDEXER_SPEED).withTimeout(2)));
     }
 
     // Testing Autos
@@ -148,10 +148,10 @@ public class AutoCommands {
         var cmd = climberTest.isEmpty()
                 ? Commands.none()
                 : Commands.sequence(
-                        climber.deploy(0.7),
+                        climber.deploy(ClimberConfigsBeta.CLIMBER_DEPLOY_CLIMBING_SPEED),
                         AutoBuilder.followPath(climberTest.get()),
                         Commands.waitSeconds(0.5),
-                        climber.climb(-0.5));
+                        climber.climb(ClimberConfigsBeta.CLIMBER_UNCLIMB_SPEED));
 
         auto = new PathPlannerAuto(cmd);
         return auto;
