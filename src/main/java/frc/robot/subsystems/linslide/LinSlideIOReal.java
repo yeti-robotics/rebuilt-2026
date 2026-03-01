@@ -22,8 +22,6 @@ public class LinSlideIOReal implements LinSlideIO {
     private final DutyCycleOut dutyRequest = new DutyCycleOut(0.0);
     private final VoltageOut voltageRequest = new VoltageOut(0.0);
 
-    private final MotionMagicTorqueCurrentFOC magicRequest = new MotionMagicTorqueCurrentFOC(0);
-
     public LinSlideIOReal() {
         if (currentMode == Constants.Mode.ALPHA) {
             linSlideMotor = new TalonFX(LinSlideConfigsAlpha.LIN_SLIDE_MOTOR_ID, rioBus);
