@@ -9,7 +9,6 @@ package frc.robot;
 
 import static frc.robot.constants.Constants.currentMode;
 import static frc.robot.constants.FieldConstants.Hub.centerHubOpening;
-import static frc.robot.subsystems.hopper.HopperConfigsBeta.TEST_HOPPER_SPEED;
 
 import com.ctre.phoenix6.swerve.SwerveModule;
 import com.ctre.phoenix6.swerve.SwerveRequest;
@@ -21,7 +20,6 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
@@ -32,27 +30,19 @@ import frc.robot.subsystems.climber.*;
 import frc.robot.subsystems.drive.*;
 import frc.robot.subsystems.drive.TunerConstantsAlpha;
 import frc.robot.subsystems.hood.HoodIO;
-import frc.robot.subsystems.hood.HoodIOBeta;
 import frc.robot.subsystems.hood.HoodSubsystem;
 import frc.robot.subsystems.hopper.Hopper;
 import frc.robot.subsystems.hopper.HopperIO;
-import frc.robot.subsystems.hopper.HopperIOAlpha;
-import frc.robot.subsystems.hopper.HopperIOBeta;
 import frc.robot.subsystems.indexer.IndexerIO;
-import frc.robot.subsystems.indexer.IndexerIOReal;
 import frc.robot.subsystems.indexer.IndexerSubsystem;
 import frc.robot.subsystems.intake.IntakeIO;
-import frc.robot.subsystems.intake.IntakeIOAlpha;
-import frc.robot.subsystems.intake.IntakeIOBeta;
 import frc.robot.subsystems.intake.IntakeSubsystem;
 import frc.robot.subsystems.led.LED;
 import frc.robot.subsystems.led.LEDConstants;
 import frc.robot.subsystems.led.LEDModes;
 import frc.robot.subsystems.linslide.LinSlideIO;
-import frc.robot.subsystems.linslide.LinSlideIOReal;
 import frc.robot.subsystems.linslide.LinSlideSubsystem;
 import frc.robot.subsystems.shooter.ShooterIO;
-import frc.robot.subsystems.shooter.ShooterIOReal;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
 import frc.robot.subsystems.vision.*;
 import frc.robot.util.AllianceFlipUtil;
@@ -103,73 +93,85 @@ public class RobotContainer {
 
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
     public RobotContainer() {
-        switch (currentMode) {
-            case ALPHA:
-                drive = TunerConstantsAlpha.createDrivetrain();
-                linSlide = new LinSlideSubsystem(new LinSlideIOReal());
-                intake = new IntakeSubsystem(new IntakeIOAlpha());
-                hopper = new Hopper(new HopperIOAlpha());
-                climber = null;
-                shooter = new ShooterSubsystem(new ShooterIOReal());
-                indexer = new IndexerSubsystem(new IndexerIOReal());
-                hood = null;
-                vision = new Vision(
-                        drive,
-                        new VisionIOLimelight(VisionConstants.frontCam, drive.getRotation3d()::toRotation2d),
-                        new VisionIOLimelight(VisionConstants.sideCam, drive.getRotation3d()::toRotation2d));
-                break;
+        //        switch (currentMode) {
+        //            case ALPHA:
+        //                drive = TunerConstantsAlpha.createDrivetrain();
+        //                linSlide = new LinSlideSubsystem(new LinSlideIOReal());
+        //                intake = new IntakeSubsystem(new IntakeIOAlpha());
+        //                hopper = new Hopper(new HopperIOAlpha());
+        //                climber = null;
+        //                shooter = new ShooterSubsystem(new ShooterIOReal());
+        //                indexer = new IndexerSubsystem(new IndexerIOReal());
+        //                hood = null;
+        //                vision = new Vision(
+        //                        drive,
+        //                        new VisionIOLimelight(VisionConstants.frontCam, drive.getRotation3d()::toRotation2d),
+        //                        new VisionIOLimelight(VisionConstants.sideCam, drive.getRotation3d()::toRotation2d));
+        //                break;
+        //
+        //            case BETA:
+        //                // Real robot, instantiate hardware IO implementations
+        //                // ModuleIOTalonFX is intended for modules with TalonFX drive, TalonFX turn, and
+        //                // a CANcoder
+        //                drive = TunerConstantsBeta.createDrivetrain();
+        //                linSlide = new LinSlideSubsystem(new LinSlideIOReal());
+        //                intake = new IntakeSubsystem(new IntakeIOBeta());
+        //                hopper = new Hopper(new HopperIOBeta());
+        //                climber = new Climber(new ClimberIOBeta());
+        //                shooter = new ShooterSubsystem(new ShooterIOReal());
+        //                indexer = new IndexerSubsystem(new IndexerIOReal());
+        //                hood = new HoodSubsystem(new HoodIOBeta());
+        //                vision = new Vision(
+        //                        drive,
+        //                        new VisionIOLimelight(VisionConstants.frontCam, drive.getRotation3d()::toRotation2d),
+        //                        new VisionIOLimelight(VisionConstants.sideCam, drive.getRotation3d()::toRotation2d));
+        //                break;
+        //
+        //            case SIM:
+        //                // Sim robot, instantiate physics sim IO implementations
+        //                drive = TunerConstantsAlpha.createDrivetrain();
+        //                linSlide = new LinSlideSubsystem(new LinSlideIOReal());
+        //                intake = new IntakeSubsystem(new IntakeIOAlpha());
+        //                hopper = new Hopper(new HopperIOAlpha());
+        //                vision = new Vision(
+        //                        drive,
+        //                        new VisionIOPhotonVisionSim(
+        //                                VisionConstants.frontCam, VisionConstants.frontCamTrans, () ->
+        // drive.getState().Pose),
+        //                        new VisionIOPhotonVisionSim(
+        //                                VisionConstants.sideCam, VisionConstants.sideCamTrans, () ->
+        // drive.getState().Pose));
+        //                climber = new Climber(new ClimberIOBeta());
+        //                shooter = new ShooterSubsystem(new ShooterIOReal());
+        //                indexer = new IndexerSubsystem(new IndexerIOReal());
+        //                hood = new HoodSubsystem(new HoodIOBeta());
+        //
+        //                break;
+        //
+        //            default:
+        //                // Replayed robot, disable IO implementations
+        //                drive = TunerConstantsAlpha.createDrivetrain();
+        //                linSlide = new LinSlideSubsystem(new LinSlideIO() {});
+        //                intake = new IntakeSubsystem(new IntakeIO() {});
+        //                hopper = new Hopper(new HopperIO() {});
+        //                climber = new Climber(new ClimberIO() {});
+        //                vision = new Vision(drive, new VisionIO() {}, new VisionIO() {});
+        //                indexer = new IndexerSubsystem(new IndexerIO() {});
+        //                shooter = new ShooterSubsystem((new ShooterIO() {}));
+        //                hood = new HoodSubsystem(new HoodIO() {});
+        //
+        //                break;
+        //        }
 
-            case BETA:
-                // Real robot, instantiate hardware IO implementations
-                // ModuleIOTalonFX is intended for modules with TalonFX drive, TalonFX turn, and
-                // a CANcoder
-                drive = TunerConstantsBeta.createDrivetrain();
-                linSlide = new LinSlideSubsystem(new LinSlideIOReal());
-                intake = new IntakeSubsystem(new IntakeIOBeta());
-                hopper = new Hopper(new HopperIOBeta());
-                climber = new Climber(new ClimberIOBeta());
-                shooter = new ShooterSubsystem(new ShooterIOReal());
-                indexer = new IndexerSubsystem(new IndexerIOReal());
-                hood = new HoodSubsystem(new HoodIOBeta());
-                vision = new Vision(
-                        drive,
-                        new VisionIOLimelight(VisionConstants.frontCam, drive.getRotation3d()::toRotation2d),
-                        new VisionIOLimelight(VisionConstants.sideCam, drive.getRotation3d()::toRotation2d));
-                break;
-
-            case SIM:
-                // Sim robot, instantiate physics sim IO implementations
-                drive = TunerConstantsAlpha.createDrivetrain();
-                linSlide = new LinSlideSubsystem(new LinSlideIOReal());
-                intake = new IntakeSubsystem(new IntakeIOAlpha());
-                hopper = new Hopper(new HopperIOAlpha());
-                vision = new Vision(
-                        drive,
-                        new VisionIOPhotonVisionSim(
-                                VisionConstants.frontCam, VisionConstants.frontCamTrans, () -> drive.getState().Pose),
-                        new VisionIOPhotonVisionSim(
-                                VisionConstants.sideCam, VisionConstants.sideCamTrans, () -> drive.getState().Pose));
-                climber = new Climber(new ClimberIOBeta());
-                shooter = new ShooterSubsystem(new ShooterIOReal());
-                indexer = new IndexerSubsystem(new IndexerIOReal());
-                hood = new HoodSubsystem(new HoodIOBeta());
-
-                break;
-
-            default:
-                // Replayed robot, disable IO implementations
-                drive = TunerConstantsAlpha.createDrivetrain();
-                linSlide = new LinSlideSubsystem(new LinSlideIO() {});
-                intake = new IntakeSubsystem(new IntakeIO() {});
-                hopper = new Hopper(new HopperIO() {});
-                climber = new Climber(new ClimberIO() {});
-                vision = new Vision(drive, new VisionIO() {}, new VisionIO() {});
-                indexer = new IndexerSubsystem(new IndexerIO() {});
-                shooter = new ShooterSubsystem((new ShooterIO() {}));
-                hood = new HoodSubsystem(new HoodIO() {});
-
-                break;
-        }
+        drive = TunerConstantsAlpha.createDrivetrain();
+        linSlide = new LinSlideSubsystem(new LinSlideIO() {});
+        intake = new IntakeSubsystem(new IntakeIO() {});
+        hopper = new Hopper(new HopperIO() {});
+        climber = new Climber(new ClimberIO() {});
+        vision = new Vision(drive, new VisionIO() {}, new VisionIO() {});
+        indexer = new IndexerSubsystem(new IndexerIO() {});
+        shooter = new ShooterSubsystem((new ShooterIO() {}));
+        hood = new HoodSubsystem(new HoodIO() {});
 
         drive.setStateStdDevs(VecBuilder.fill(0.33333, 0.33333, Math.toRadians(0.5)));
 
@@ -280,41 +282,56 @@ public class RobotContainer {
     }
 
     private void configureDebugBindings() {
-        drive.setDefaultCommand(drive.applyRequest(() -> driveRequest
-                .withVelocityX(-controller2.getLeftY() * TunerConstantsAlpha.kSpeedAt12Volts.magnitude())
-                .withVelocityY(-controller2.getLeftX() * TunerConstantsAlpha.kSpeedAt12Volts.magnitude())
-                .withRotationalRate(-controller2.getRightX() * TunerConstantsAlpha.MaFxAngularRate)));
-        controller2.start().onTrue(Commands.runOnce(drive::seedFieldCentric, drive));
-        controller2
-                .leftBumper()
-                .whileTrue(linSlide.applyPower(0.4).alongWith(intake.applyPower(1)))
-                .onFalse(linSlide.applyPower(0));
-
-        controller2.x().whileTrue(linSlide.applyPower(0.4)).onFalse(linSlide.applyPower(0));
-        controller2.b().whileTrue(linSlide.applyPower(-0.4)).onFalse(linSlide.applyPower(0));
+        //        drive.setDefaultCommand(drive.applyRequest(() -> driveRequest
+        //                .withVelocityX(-controller2.getLeftY() * TunerConstantsAlpha.kSpeedAt12Volts.magnitude())
+        //                .withVelocityY(-controller2.getLeftX() * TunerConstantsAlpha.kSpeedAt12Volts.magnitude())
+        //                .withRotationalRate(-controller2.getRightX() * TunerConstantsAlpha.MaFxAngularRate)));
+        //        controller2.start().onTrue(Commands.runOnce(drive::seedFieldCentric, drive));
+        //        controller2
+        //                .leftBumper()
+        //                .whileTrue(linSlide.applyPower(0.4).alongWith(intake.applyPower(1)))
+        //                .onFalse(linSlide.applyPower(0));
         //
-        //        controller2.povLeft().whileTrue(hood.applyPower(0.1));
-        //        controller2.povRight().whileTrue(hood.applyPower(-0.1));
-        controller2.povLeft().whileTrue(climber.deploy(0.5));
-        controller2.povRight().whileTrue(climber.climb(-0.5));
+        controller2.a().onTrue(led.runPattern(LEDModes.SNOWFALL));
+        controller2.b().onTrue(led.runPattern(LEDModes.ALLIANCE_DEACTIVATION_WARNING));
+        controller2.x().onTrue(led.runPattern(LEDModes.BLINKING_ORANGE));
+        controller2.y().onTrue(led.runPattern(LEDModes.ENDGAME_ACTIVE));
+        controller2.leftBumper().onTrue(led.runPattern(LEDModes.BLUE_ALLIANCE_ACTIVE));
+        controller2.leftTrigger().onTrue(led.runPattern(LEDModes.LOCKED_GREEN));
+        controller2.rightBumper().onTrue(led.runPattern(LEDModes.RAINBOW));
+        controller2.rightTrigger().onTrue(led.runPattern(LEDModes.WAVE));
+        controller2.x().onTrue(led.runPattern(LEDModes.TRANSITION_ACTIVE));
+        controller2.povRight().onTrue(led.runPattern(LEDModes.RED_ALLIANCE_ACTIVE));
+        controller2.povLeft().onTrue(led.runPattern(LEDModes.NOT_LOCKED_RED));
 
-        controller2.povUp().whileTrue(climber.applyPower(0.3));
-        controller2.povDown().whileTrue(climber.applyPower(-0.3));
-
-        controller2
-                .leftTrigger()
-                .whileTrue(AutoAimCommands.autoAim(
-                                drive, controller2::getLeftY, controller2::getLeftX, centerHubOpening.toTranslation2d())
-                        .alongWith(AutoAimCommands.readyAim(drive, shooter, hood, centerHubOpening.toTranslation2d())));
-
-        controller2
-                .rightTrigger()
-                .whileTrue(hopper.applyPower(TEST_HOPPER_SPEED)
-                        .alongWith(intake.applyPower(0.7)
-                                .alongWith(indexer.applyPower(0.7)
-                                        .alongWith(new WaitCommand(0.8).andThen(linSlide.applyPower(-0.1))))));
-
-        controller2.rightBumper().whileTrue(intake.applyPower(-0.7).alongWith(hopper.applyPower(0.7)));
+        //        //        controller2.x().whileTrue(linSlide.applyPower(0.4)).onFalse(linSlide.applyPower(0));
+        //        controller2.b().whileTrue(linSlide.applyPower(-0.4)).onFalse(linSlide.applyPower(0));
+        //        //
+        //        //        controller2.povLeft().whileTrue(hood.applyPower(0.1));
+        //        //        controller2.povRight().whileTrue(hood.applyPower(-0.1));
+        //        controller2.povLeft().whileTrue(climber.deploy(0.5));
+        //        controller2.povRight().whileTrue(climber.climb(-0.5));
+        //
+        //        controller2.povUp().whileTrue(climber.applyPower(0.3));
+        //        controller2.povDown().whileTrue(climber.applyPower(-0.3));
+        //
+        //        controller2
+        //                .leftTrigger()
+        //                .whileTrue(AutoAimCommands.autoAim(
+        //                                drive, controller2::getLeftY, controller2::getLeftX,
+        // centerHubOpening.toTranslation2d())
+        //                        .alongWith(AutoAimCommands.readyAim(drive, shooter, hood,
+        // centerHubOpening.toTranslation2d())));
+        //
+        //        controller2
+        //                .rightTrigger()
+        //                .whileTrue(hopper.applyPower(TEST_HOPPER_SPEED)
+        //                        .alongWith(intake.applyPower(0.7)
+        //                                .alongWith(indexer.applyPower(0.7)
+        //                                        .alongWith(new
+        // WaitCommand(0.8).andThen(linSlide.applyPower(-0.1))))));
+        //
+        //        controller2.rightBumper().whileTrue(intake.applyPower(-0.7).alongWith(hopper.applyPower(0.7)));
     }
 
     private void configureSimBindings() {
