@@ -41,13 +41,11 @@ import frc.robot.subsystems.hopper.HopperIOBeta;
 import frc.robot.subsystems.indexer.IndexerIO;
 import frc.robot.subsystems.indexer.IndexerIOReal;
 import frc.robot.subsystems.indexer.IndexerSubsystem;
-import frc.robot.subsystems.intake.IntakeIO;
-import frc.robot.subsystems.intake.IntakeIOAlpha;
-import frc.robot.subsystems.intake.IntakeIOBeta;
-import frc.robot.subsystems.intake.IntakeSubsystem;
+import frc.robot.subsystems.intake.*;
 import frc.robot.subsystems.led.LED;
 import frc.robot.subsystems.led.LEDConstants;
 import frc.robot.subsystems.led.LEDModes;
+import frc.robot.subsystems.linslide.LinSlideConfigsBeta;
 import frc.robot.subsystems.linslide.LinSlideIO;
 import frc.robot.subsystems.linslide.LinSlideIOReal;
 import frc.robot.subsystems.linslide.LinSlideSubsystem;
@@ -285,16 +283,22 @@ public class RobotContainer {
                 .withVelocityY(-controller2.getLeftX() * TunerConstantsAlpha.kSpeedAt12Volts.magnitude())
                 .withRotationalRate(-controller2.getRightX() * TunerConstantsAlpha.MaFxAngularRate)));
         controller2.start().onTrue(Commands.runOnce(drive::seedFieldCentric, drive));
+
         controller2
                 .leftBumper()
-                .whileTrue(linSlide.applyPower(0.4).alongWith(intake.applyPower(1)))
-                .onFalse(linSlide.applyPower(0));
+                .whileTrue(linSlide.applyPower(LinSlideConfigsBeta.DEPLOY_SPEED)
+                        .alongWith(intake.applyPower(IntakeConfigsBeta.ROLL_IN_SPEED)))
+                .onFalse(linSlide.applyPower(LinSlideConfigsBeta.STOP));
 
-        controller2.x().whileTrue(linSlide.applyPower(0.4)).onFalse(linSlide.applyPower(0));
-        controller2.b().whileTrue(linSlide.applyPower(-0.4)).onFalse(linSlide.applyPower(0));
-        //
-        //        controller2.povLeft().whileTrue(hood.applyPower(0.1));
-        //        controller2.povRight().whileTrue(hood.applyPower(-0.1));
+        controller2
+                .x()
+                .whileTrue(linSlide.applyPower(LinSlideConfigsBeta.DEPLOY_SPEED))
+                .onFalse(linSlide.applyPower(LinSlideConfigsBeta.STOP));
+        controller2
+                .b()
+                .whileTrue(linSlide.applyPower(-LinSlideConfigsBeta.DEPLOY_SPEED))
+                .onFalse(linSlide.applyPower(LinSlideConfigsBeta.STOP));
+
         controller2.povLeft().onTrue(climber.deploy(0.5));
         controller2.povRight().onTrue(climber.climb(-0.5));
 
