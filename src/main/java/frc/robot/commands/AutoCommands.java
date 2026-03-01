@@ -16,6 +16,7 @@ import frc.robot.subsystems.climber.ClimberPosition;
 import frc.robot.subsystems.drive.CommandSwerveDrivetrain;
 import frc.robot.subsystems.hood.HoodSubsystem;
 import frc.robot.subsystems.hopper.Hopper;
+import frc.robot.subsystems.hopper.HopperConfigsAlpha;
 import frc.robot.subsystems.indexer.IndexerSubsystem;
 import frc.robot.subsystems.intake.IntakeConfigsBeta;
 import frc.robot.subsystems.intake.IntakeSubsystem;
@@ -65,7 +66,7 @@ public class AutoCommands {
         NamedCommands.registerCommand("popLintake", popLintake());
     }
 
-    //Named Commands
+    // Named Commands
     public Command popLintake() {
         return linSlide.applyPower(LinSlideConfigsBeta.DEPLOY_SPEED).withTimeout(1);
     }
@@ -74,7 +75,7 @@ public class AutoCommands {
         return intake.applyPower(IntakeConfigsBeta.ROLL_IN_SPEED);
     }
 
-    //Broken-Up Commands
+    // Broken-Up Commands
     public Command aimAndRev() {
         return Commands.sequence(
                         AutoAimCommands.autoAim(drivetrain, () -> 0, () -> 0, centerHubOpening.toTranslation2d())
@@ -88,7 +89,6 @@ public class AutoCommands {
                 linSlide.applyPower(LinSlideConfigsBeta.DEPLOY_SPEED),
                 intake.applyPower(IntakeConfigsBeta.ROLL_IN_SPEED));
     }
-
 
     public Command cycleNeutralRight(Optional<PathPlannerPath> pathOne, Optional<PathPlannerPath> pathTwo) {
         return Commands.sequence(
@@ -111,22 +111,24 @@ public class AutoCommands {
     }
 
     public Command climbTower(Optional<PathPlannerPath> path) {
-        return Commands.sequence(
-                climber.deploy(0.5),
-                AutoBuilder.followPath(path.get()),
-                climber.climb(-0.5));
+        return Commands.sequence(climber.deploy(0.5), AutoBuilder.followPath(path.get()), climber.climb(-0.5));
     }
 
     // NEW STUFF
 
     public Command shoot() {
-        return Commands.parallel(
-                AutoAimCommands.readyAim(drivetrain, shooter, centerHubOpening.toTranslation2d()),
-                AutoAimCommands.autoAim(drivetrain, () -> 0.0, () -> 0.0, centerHubOpening.toTranslation2d()),
-                new WaitCommand(0.2).andThen(hopper.applyPower(TEST_HOPPER_SPEED)),
-                new WaitCommand(0.2).andThen(indexer.applyPower(TEST_INDEXER_SPEED)),
-                new WaitCommand(0.2).andThen(intake.applyPower(IntakeConfigsBeta.ROLL_IN_SPEED)),
-                new WaitCommand(0.5).andThen(linSlide.applyPower(-0.1)));
+        return Commands.deadline(
+                Commands.sequence(
+                        new WaitCommand(0.5),
+                        linSlide.applyPower(-0.1).withTimeout(1),
+                        linSlide.applyPower(-0.1).until(linSlide::isBasicallyZeroRPM),
+                        Commands.waitSeconds(1)),
+                Commands.parallel(
+                        AutoAimCommands.readyAim(drivetrain, shooter, centerHubOpening.toTranslation2d()),
+                        AutoAimCommands.autoAim(drivetrain, () -> 0.0, () -> 0.0, centerHubOpening.toTranslation2d()),
+                        new WaitCommand(0.2).andThen(hopper.applyPower(HopperConfigsAlpha.TEST_HOPPER_SPEED)),
+                        new WaitCommand(0.2).andThen(indexer.applyPower(TEST_INDEXER_SPEED)),
+                        new WaitCommand(0.2).andThen(intake.applyPower(IntakeConfigsBeta.ROLL_IN_SPEED))));
     }
 
     public Command shootBumpFire() {
@@ -145,13 +147,15 @@ public class AutoCommands {
 
         var cmd = climberTest.isEmpty()
                 ? Commands.none()
-                : Commands.sequence(climber.deploy(1), AutoBuilder.followPath(climberTest.get()), climber.stow(-0.5));
+                : Commands.sequence(
+                        climber.deploy(0.7),
+                        AutoBuilder.followPath(climberTest.get()),
+                        Commands.waitSeconds(0.5),
+                        climber.climb(-0.5));
 
         auto = new PathPlannerAuto(cmd);
         return auto;
     }
-
-
 
     // Real Autos
     public Command oneCycleNeutralTowerLeft() {
@@ -164,10 +168,8 @@ public class AutoCommands {
         var cmd = startNeutral.isEmpty() || neutralShoot.isEmpty() || shootTower.isEmpty()
                 ? Commands.none()
                 : Commands.sequence(
-                        followPathAndIntake(startNeutral, 0.5),
-                        followPathAndStowIntake(neutralShoot),
-                        shoot()
-//                        climbTower(shootTower)
+                        followPathAndIntake(startNeutral, 0.5), followPathAndStowIntake(neutralShoot), shoot()
+                        //                        climbTower(shootTower)
                         );
 
         auto = new PathPlannerAuto(cmd);
@@ -269,14 +271,15 @@ public class AutoCommands {
                         || neutralShootFarther.isEmpty()
                 ? Commands.none().andThen(Commands.print("Command is Empty"))
                 : Commands.sequence(
-                        shoot(),
+                        //                        shoot(),
                         followPathAndIntake(startNeutral, 3),
                         followPathAndStowIntake(neutralShoot),
                         shoot(),
                         followPathAndIntake(shootNeutralFarther, 3),
                         followPathAndStowIntake(neutralShootFarther),
-                        shoot(),
-                        climbTower(shootTower));
+                        shoot()
+                        //                        climbTower(shootTower)
+                        );
 
         auto = new PathPlannerAuto(cmd);
         return auto;

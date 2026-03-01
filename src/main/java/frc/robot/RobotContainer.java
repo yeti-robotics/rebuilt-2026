@@ -34,10 +34,7 @@ import frc.robot.subsystems.drive.TunerConstantsAlpha;
 import frc.robot.subsystems.hood.HoodIO;
 import frc.robot.subsystems.hood.HoodIOBeta;
 import frc.robot.subsystems.hood.HoodSubsystem;
-import frc.robot.subsystems.hopper.Hopper;
-import frc.robot.subsystems.hopper.HopperIO;
-import frc.robot.subsystems.hopper.HopperIOAlpha;
-import frc.robot.subsystems.hopper.HopperIOBeta;
+import frc.robot.subsystems.hopper.*;
 import frc.robot.subsystems.indexer.IndexerIO;
 import frc.robot.subsystems.indexer.IndexerIOReal;
 import frc.robot.subsystems.indexer.IndexerSubsystem;
@@ -113,8 +110,16 @@ public class RobotContainer {
                 hood = null;
                 vision = new Vision(
                         drive,
-                        new VisionIOLimelight(VisionConstants.frontCam, drive.getRotation3d()::toRotation2d),
-                        new VisionIOLimelight(VisionConstants.sideCam, drive.getRotation3d()::toRotation2d));
+                        new VisionIOLimelight(
+                                VisionConstants.frontCam,
+                                drive.getRotation3d()::toRotation2d,
+                                VisionConstants.frontLinearStdDevBaseline,
+                                VisionConstants.frontAngularStdDevBaseline),
+                        new VisionIOLimelight(
+                                VisionConstants.sideCam,
+                                drive.getRotation3d()::toRotation2d,
+                                VisionConstants.sideLinearStdDevBaseline,
+                                VisionConstants.sideAngularStdDevBaseline));
                 break;
 
             case BETA:
@@ -131,8 +136,16 @@ public class RobotContainer {
                 hood = new HoodSubsystem(new HoodIOBeta());
                 vision = new Vision(
                         drive,
-                        new VisionIOLimelight(VisionConstants.frontCam, drive.getRotation3d()::toRotation2d),
-                        new VisionIOLimelight(VisionConstants.sideCam, drive.getRotation3d()::toRotation2d));
+                        new VisionIOLimelight(
+                                VisionConstants.frontCam,
+                                drive.getRotation3d()::toRotation2d,
+                                VisionConstants.frontLinearStdDevBaseline,
+                                VisionConstants.frontAngularStdDevBaseline),
+                        new VisionIOLimelight(
+                                VisionConstants.sideCam,
+                                drive.getRotation3d()::toRotation2d,
+                                VisionConstants.sideLinearStdDevBaseline,
+                                VisionConstants.sideAngularStdDevBaseline));
                 break;
 
             case SIM:

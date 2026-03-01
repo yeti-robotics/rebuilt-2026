@@ -26,6 +26,8 @@ public interface VisionIO {
         public int[] tagIds = new int[0];
         public double distanceToTag = 0.0;
         public String name = "";
+        public double stdLinearTrust = 0.0;
+        public double stdAngularTrust = 0.0;
     }
 
     /** Represents the angle to a simple target, not used for pose estimation. */
@@ -47,4 +49,8 @@ public interface VisionIO {
     }
 
     default void updateInputs(VisionIOInputs inputs) {}
+
+    default double getTrustValue() {
+        return 0;
+    }
 }
