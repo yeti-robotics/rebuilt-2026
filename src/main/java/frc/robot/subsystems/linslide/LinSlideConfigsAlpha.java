@@ -8,6 +8,7 @@ import frc.robot.Robot;
 
 public class LinSlideConfigsAlpha {
     static final int LIN_SLIDE_MOTOR_ID = 21;
+    static final int OTHER_LIN_SLIDE_MOTOR_ID = 12;
     static final double GEAR_RATIO = 2.1333333;
 
     private static final Slot0Configs SLOT_0_CONFIGS = Robot.isReal()
