@@ -138,7 +138,7 @@ public class Robot extends LoggedRobot {
         if (autonomousCommand != null) {
             autonomousCommand.cancel();
         }
-        LimelightHelpers.SetIMUMode(VisionConstants.frontCam, 4);
+        LimelightHelpers.SetIMUMode(VisionConstants.frontCam, 3);
     }
 
     /** This function is called periodically during operator control. */

@@ -295,7 +295,7 @@ public class RobotContainer {
         //
         //        controller2.povLeft().whileTrue(hood.applyPower(0.1));
         //        controller2.povRight().whileTrue(hood.applyPower(-0.1));
-        controller2.povLeft().whileTrue(climber.deploy(0.5));
+        controller2.povLeft().whileTrue(climber.deploy(1));
         controller2.povRight().whileTrue(climber.climb(-0.5));
 
         controller2.povUp().whileTrue(climber.applyPower(0.3));
