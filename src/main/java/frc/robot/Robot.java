@@ -10,7 +10,9 @@ package frc.robot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.constants.Constants;
+import frc.robot.subsystems.vision.VisionConstants;
 import frc.robot.util.Elastic;
+import frc.robot.util.LimelightHelpers;
 import frc.robot.util.sim.PhysicsSim;
 import org.littletonrobotics.junction.LogFileUtil;
 import org.littletonrobotics.junction.LoggedRobot;
@@ -101,6 +103,7 @@ public class Robot extends LoggedRobot {
     @Override
     public void disabledInit() {
         Elastic.selectTab("Prematch");
+        LimelightHelpers.SetIMUMode(VisionConstants.frontCam, 1);
     }
 
     /** This function is called periodically when disabled. */
@@ -135,6 +138,7 @@ public class Robot extends LoggedRobot {
         if (autonomousCommand != null) {
             autonomousCommand.cancel();
         }
+        LimelightHelpers.SetIMUMode(VisionConstants.frontCam, 4);
     }
 
     /** This function is called periodically during operator control. */
