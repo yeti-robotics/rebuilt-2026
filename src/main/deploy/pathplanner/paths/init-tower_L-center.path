@@ -16,12 +16,12 @@
     },
     {
       "anchor": {
-        "x": 1.5473013245033114,
-        "y": 4.013220198675495
+        "x": 1.42,
+        "y": 4.105
       },
       "prevControl": {
-        "x": 2.0853209700427953,
-        "y": 4.054407988587732
+        "x": 1.9580196455394836,
+        "y": 4.146187789912237
       },
       "nextControl": null,
       "isLocked": false,
@@ -47,7 +47,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 179.32147498119969
+    "rotation": 180.0
   },
   "reversed": false,
   "folder": "Center paths",

@@ -330,9 +330,14 @@ public class RobotContainer {
                 .whileTrue(hopper.applyPower(TEST_HOPPER_SPEED)
                         .alongWith(intake.applyPower(IntakeConfigsBeta.ROLL_IN_SLOWER)
                                 .alongWith(indexer.applyPower(IndexerConfigsBeta.TEST_INDEXER_SPEED)
-                                        .alongWith(new WaitCommand(0.8).andThen(linSlide.applyPower(LinSlideConfigsBeta.LINSLIDE_AUTO_SHOOT_SPEED))))));
+                                        .alongWith(new WaitCommand(0.8)
+                                                .andThen(linSlide.applyPower(
+                                                        LinSlideConfigsBeta.LINSLIDE_AUTO_SHOOT_SPEED))))));
 
-        controller2.rightBumper().whileTrue(intake.applyPower(-IntakeConfigsBeta.ROLL_IN_SLOWER).alongWith(hopper.applyPower(-TEST_HOPPER_SPEED)));
+        controller2
+                .rightBumper()
+                .whileTrue(intake.applyPower(-IntakeConfigsBeta.ROLL_IN_SLOWER)
+                        .alongWith(hopper.applyPower(-TEST_HOPPER_SPEED)));
     }
 
     private void configureSimBindings() {

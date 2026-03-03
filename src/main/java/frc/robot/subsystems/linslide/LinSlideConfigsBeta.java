@@ -19,7 +19,6 @@ public class LinSlideConfigsBeta {
     public static final double LINSLIDE_AUTO_SHOOT_SPEED = -0.1;
     public static final double LINSLIDE_AUTO_STOWING_SPEED = -0.2;
 
-
     private static final Slot0Configs SLOT_0_CONFIGS = Robot.isReal()
             ? new Slot0Configs()
                     .withKP(1)
