@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.4257533112582785,
-        "y": 6.575976821192053
+        "x": 3.63796005706134,
+        "y": 7.302011412268189
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.8320399429386587,
-        "y": 8.337104136947218
+        "x": 5.100028530667336,
+        "y": 7.547845934383962
       },
       "isLocked": false,
       "linkedName": "shoot-left"
@@ -34,15 +34,25 @@
       "rotationDegrees": 0.0
     },
     {
-      "waypointRelativePos": 0.5,
-      "rotationDegrees": 0.0
-    },
-    {
-      "waypointRelativePos": 0.75,
+      "waypointRelativePos": 0.6801705756929608,
       "rotationDegrees": 88.34471946059529
     }
   ],
-  "constraintZones": [],
+  "constraintZones": [
+    {
+      "name": "Constraints Zone",
+      "minWaypointRelativePos": 0.6239027683997325,
+      "maxWaypointRelativePos": 1.0,
+      "constraints": {
+        "maxVelocity": 1.0,
+        "maxAcceleration": 5.0,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0,
+        "nominalVoltage": 12.0,
+        "unlimited": false
+      }
+    }
+  ],
   "pointTowardsZones": [],
   "eventMarkers": [
     {
@@ -86,7 +96,7 @@
   "folder": "Left Paths",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -50.07960786001466
+    "rotation": 0.7161599454704586
   },
   "useDefaultConstraints": true
 }

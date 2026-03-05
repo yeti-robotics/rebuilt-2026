@@ -3,37 +3,54 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.5578728070143386,
-        "y": 1.2975804093599288
+        "x": 2.8875178316690437,
+        "y": 1.5960627674750354
       },
       "prevControl": null,
       "nextControl": {
-        "x": 0.867684024865394,
-        "y": 0.8109600945342919
+        "x": 2.072382310984308,
+        "y": 0.9750071326676175
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "newShootRight"
     },
     {
       "anchor": {
-        "x": 0.4552119883008884,
-        "y": 0.6500877193014492
+        "x": 0.506804564907275,
+        "y": 0.7938659058487882
       },
       "prevControl": {
-        "x": 1.1043197809634129,
-        "y": 1.0864240106156933
+        "x": 1.645406562054208,
+        "y": 0.9620684736091312
       },
       "nextControl": null,
       "isLocked": false,
       "linkedName": null
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.125799573560768,
+      "rotationDegrees": 88.64750210124753
+    }
+  ],
   "constraintZones": [],
   "pointTowardsZones": [],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "rollIn",
+      "waypointRelativePos": 0.6860229574611664,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "popLintake"
+        }
+      }
+    }
+  ],
   "globalConstraints": {
-    "maxVelocity": 5.0,
+    "maxVelocity": 1.0,
     "maxAcceleration": 5.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
@@ -42,13 +59,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": 90.4275725068334
   },
   "reversed": false,
   "folder": "Right Paths",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 41.96217884169665
+    "rotation": 55.72305641026317
   },
-  "useDefaultConstraints": true
+  "useDefaultConstraints": false
 }

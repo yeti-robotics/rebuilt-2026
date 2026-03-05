@@ -55,8 +55,7 @@ public class LinSlideSubsystem extends SubsystemBase {
     }
 
     public boolean isBasicallyZeroRPM() {
-        return Units.RotationsPerSecond.of(inputs.velocityRPM)
-                .isNear(Units.RotationsPerSecond.of(0), Units.RotationsPerSecond.of(0.1));
+        return Units.RotationsPerSecond.of(inputs.velocityRPM).isNear(Units.RotationsPerSecond.of(0), 0.1);
     }
 
     public boolean isBasicallyZeroPositonLowKey() {
