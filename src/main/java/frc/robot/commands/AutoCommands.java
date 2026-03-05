@@ -2,7 +2,7 @@ package frc.robot.commands;
 
 import static edu.wpi.first.wpilibj2.command.Commands.runOnce;
 import static frc.robot.constants.FieldConstants.Hub.centerHubOpening;
-import static frc.robot.subsystems.hopper.HopperConfigsAlpha.TEST_HOPPER_SPEED;
+import static frc.robot.subsystems.feeder.FeederConfigsAlpha.TEST_FEEDER_SPEED;
 import static frc.robot.subsystems.indexer.IndexerConfigsAlpha.TEST_INDEXER_SPEED;
 
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -13,8 +13,8 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.subsystems.climber.Climber;
 import frc.robot.subsystems.climber.ClimberPosition;
 import frc.robot.subsystems.drive.CommandSwerveDrivetrain;
+import frc.robot.subsystems.feeder.FeederSubsystem;
 import frc.robot.subsystems.hood.HoodSubsystem;
-import frc.robot.subsystems.hopper.Hopper;
 import frc.robot.subsystems.indexer.IndexerSubsystem;
 import frc.robot.subsystems.intake.IntakeSubsystem;
 import frc.robot.subsystems.linslide.LinSlideSubsystem;
@@ -27,8 +27,8 @@ public class AutoCommands {
     private final Climber climber;
     private final CommandSwerveDrivetrain drivetrain;
     private final HoodSubsystem hood;
-    private final Hopper hopper;
     private final IndexerSubsystem indexer;
+    private final FeederSubsystem feeder;
     private final IntakeSubsystem intake;
     private final LinSlideSubsystem linSlide;
     private final ShooterSubsystem shooter;
@@ -39,16 +39,16 @@ public class AutoCommands {
             Climber climber,
             CommandSwerveDrivetrain drivetrain,
             HoodSubsystem hood,
-            Hopper hopperAuto,
-            IndexerSubsystem indexerAuto,
+            IndexerSubsystem indexerSubsystemAuto,
+            FeederSubsystem indexerAuto,
             IntakeSubsystem intake,
             LinSlideSubsystem linSlide,
             ShooterSubsystem shooter) {
         this.climber = climber;
         this.drivetrain = drivetrain;
         this.hood = hood;
-        this.hopper = hopperAuto;
-        this.indexer = indexerAuto;
+        this.indexer = indexerSubsystemAuto;
+        this.feeder = indexerAuto;
         this.intake = intake;
         this.linSlide = linSlide;
         this.shooter = shooter;
@@ -73,12 +73,12 @@ public class AutoCommands {
 
     public Command index() {
         return runOnce(() -> Logger.recordOutput("AutoTest", "Indexed and hopper"))
-                .andThen(indexer.apply(0.5))
-                .alongWith(hopper.apply(-0.7));
+                .andThen(feeder.apply(0.5))
+                .alongWith(indexer.apply(-0.7));
     }
 
     public Command stopShooting() {
-        return runOnce(() -> shooter.stopFlywheels().alongWith(indexer.stop()).alongWith(hopper.stop()))
+        return runOnce(() -> shooter.stopFlywheels().alongWith(feeder.stop()).alongWith(indexer.stop()))
                 .andThen(() -> Logger.recordOutput("AutoTest", "Stopped"));
     }
 
@@ -86,7 +86,7 @@ public class AutoCommands {
         return aimAndRev()
                 .andThen(runFlywheels()
                         .alongWith(Commands.parallel(
-                                hopper.applyPower(TEST_HOPPER_SPEED), indexer.applyPower(TEST_INDEXER_SPEED))))
+                                indexer.applyPower(TEST_INDEXER_SPEED), feeder.applyPower(TEST_FEEDER_SPEED))))
                 .withTimeout(3)
                 .andThen(stopShooting());
     }
@@ -129,8 +129,8 @@ public class AutoCommands {
                 shooter.revUpFlywheels(20).until(shooter::isAtSpeed),
                 Commands.parallel(
                         shooter.shoot(20).withTimeout(2),
-                        hopper.applyPower(TEST_HOPPER_SPEED).withTimeout(2),
-                        indexer.applyPower(TEST_INDEXER_SPEED).withTimeout(2)));
+                        indexer.applyPower(TEST_INDEXER_SPEED).withTimeout(2),
+                        feeder.applyPower(TEST_FEEDER_SPEED).withTimeout(2)));
     }
 
     public Command shootBumpFire() {
@@ -138,8 +138,8 @@ public class AutoCommands {
                 shooter.revUpFlywheels(20).until(shooter::isAtSpeed),
                 Commands.parallel(
                         shooter.shoot(20).withTimeout(2),
-                        hopper.applyPower(TEST_HOPPER_SPEED).withTimeout(2),
-                        indexer.applyPower(TEST_INDEXER_SPEED).withTimeout(2)));
+                        indexer.applyPower(TEST_INDEXER_SPEED).withTimeout(2),
+                        feeder.applyPower(TEST_FEEDER_SPEED).withTimeout(2)));
     }
 
     // Testing Autos
