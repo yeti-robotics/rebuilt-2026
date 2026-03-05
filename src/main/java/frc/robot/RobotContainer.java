@@ -85,6 +85,7 @@ public class RobotContainer {
     private final CommandXboxController controller =
             new CommandXboxController(Constants.PRIMARY_CONTROLLER_PORT); // real
     private final CommandXboxController controller2 = new CommandXboxController(Constants.GIGA_PORT); // testing
+    private final CommandXboxController controller3 = new CommandXboxController(3);
 
     // Dashboard inputs
     private final LoggedDashboardChooser<Command> autoChooser;
@@ -222,6 +223,7 @@ public class RobotContainer {
         if (Robot.isReal()) {
             configureRealBindings();
             configureDebugBindings();
+            configureLEDBinding();
         } else if (Robot.isSimulation()) {
             configureSimBindings();
         }
@@ -351,6 +353,20 @@ public class RobotContainer {
                         drive, controller::getLeftY, controller::getLeftX, centerHubOpening.toTranslation2d()));
 
         controller.button(10).onTrue(Commands.runOnce(() -> climbState = climbState.switchState()));
+    }
+
+    private void configureLEDBinding() {
+        controller3.a().onTrue(led.runPattern(LEDModes.SNOWFALL));
+        controller3.b().onTrue(led.runPattern(LEDModes.ALLIANCE_DEACTIVATION_WARNING));
+        controller3.x().onTrue(led.runPattern(LEDModes.BLINKING_ORANGE));
+        controller3.y().onTrue(led.runPattern(LEDModes.ENDGAME_ACTIVE));
+        controller3.leftBumper().onTrue(led.runPattern(LEDModes.BLUE_ALLIANCE_ACTIVE));
+        controller3.leftTrigger().onTrue(led.runPattern(LEDModes.LOCKED_GREEN));
+        controller3.rightBumper().onTrue(led.runPattern(LEDModes.RAINBOW));
+        controller3.rightTrigger().onTrue(led.runPattern(LEDModes.WAVE));
+        controller3.povUp().onTrue(led.runPattern(LEDModes.TRANSITION_ACTIVE));
+        controller3.povRight().onTrue(led.runPattern(LEDModes.RED_ALLIANCE_ACTIVE));
+        controller3.povLeft().onTrue(led.runPattern(LEDModes.NOT_LOCKED_RED));
     }
 
     public void updateMechanisms() {
