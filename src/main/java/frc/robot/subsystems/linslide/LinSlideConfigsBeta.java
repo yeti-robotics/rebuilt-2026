@@ -6,12 +6,9 @@ import frc.robot.Robot;
 
 public class LinSlideConfigsBeta {
     static final int LIN_SLIDE_MOTOR_ID = 53;
-    static final int LIN_SLIDE_CANCODER_ID = 54;
 
-    static final double ROTOR_TO_SENSOR = 50.0 / 12.0;
-    static final double SENSOR_TO_MECHANISM = 24.0 / 18.0;
-
-    static final double MAGNET_OFFSET = 0.475586;
+    static final double ROTOR_TO_SENSOR = 1;
+    static final double SENSOR_TO_MECHANISM = (50.0 / 12.0) * (24.0 / 18.0);
 
     public static final double DEPLOY_SPEED = 0.67;
     public static final double STOP = 0;
@@ -47,23 +44,13 @@ public class LinSlideConfigsBeta {
                     .withMotionMagicJerk(0))
             .withFeedback(new FeedbackConfigs()
                     .withRotorToSensorRatio(ROTOR_TO_SENSOR)
-                    .withSensorToMechanismRatio(SENSOR_TO_MECHANISM)
-                    .withFeedbackRemoteSensorID(LIN_SLIDE_CANCODER_ID)
-                    .withFeedbackSensorSource(FeedbackSensorSourceValue.FusedCANcoder))
-            .withMotorOutput(
-                    new MotorOutputConfigs()
-                            .withInverted(InvertedValue.CounterClockwise_Positive)
-                            .withNeutralMode(NeutralModeValue.Brake)
-                    //            .withSoftwareLimitSwitch(new SoftwareLimitSwitchConfigs()
-                    //                    .withReverseSoftLimitEnable(false)
-                    //                    .withForwardSoftLimitEnable(false)
-                    //                    .withForwardSoftLimitThreshold(3.02)
-                    //                    .withReverseSoftLimitThreshold(0.05)
-                    );
-
-    static final CANcoderConfiguration linSlideCancoderConfiguration = new CANcoderConfiguration()
-            .withMagnetSensor(new MagnetSensorConfigs()
-                    .withSensorDirection(SensorDirectionValue.CounterClockwise_Positive)
-                    .withMagnetOffset(MAGNET_OFFSET)
-                    .withAbsoluteSensorDiscontinuityPoint(0));
+                    .withSensorToMechanismRatio(SENSOR_TO_MECHANISM))
+            .withMotorOutput(new MotorOutputConfigs()
+                    .withInverted(InvertedValue.CounterClockwise_Positive)
+                    .withNeutralMode(NeutralModeValue.Brake))
+            .withSoftwareLimitSwitch(new SoftwareLimitSwitchConfigs()
+                    .withReverseSoftLimitEnable(true)
+                    .withForwardSoftLimitEnable(true)
+                    .withForwardSoftLimitThreshold(3)
+                    .withReverseSoftLimitThreshold(0.1));
 }

@@ -298,7 +298,10 @@ public class RobotContainer {
                 .withRotationalRate(-controller2.getRightX() * TunerConstantsAlpha.MaFxAngularRate)));
         controller2.start().onTrue(Commands.runOnce(drive::seedFieldCentric, drive));
 
-        controller2.leftBumper().whileTrue(intake.applyPower(IntakeConfigsBeta.ROLL_IN_SPEED));
+        controller2
+                .leftBumper()
+                .whileTrue(intake.applyPower(IntakeConfigsBeta.ROLL_IN_SPEED)
+                        .alongWith(linSlide.applyPower(LinSlideConfigsBeta.DEPLOY_SPEED)));
 
         controller2
                 .x()
