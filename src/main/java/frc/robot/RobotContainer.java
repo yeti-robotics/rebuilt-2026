@@ -34,20 +34,16 @@ import frc.robot.subsystems.drive.TunerConstantsAlpha;
 import frc.robot.subsystems.hood.HoodIO;
 import frc.robot.subsystems.hood.HoodIOBeta;
 import frc.robot.subsystems.hood.HoodSubsystem;
-import frc.robot.subsystems.hopper.Hopper;
-import frc.robot.subsystems.hopper.HopperIO;
-import frc.robot.subsystems.hopper.HopperIOAlpha;
-import frc.robot.subsystems.hopper.HopperIOBeta;
+import frc.robot.subsystems.hopper.*;
+import frc.robot.subsystems.indexer.IndexerConfigsBeta;
 import frc.robot.subsystems.indexer.IndexerIO;
 import frc.robot.subsystems.indexer.IndexerIOReal;
 import frc.robot.subsystems.indexer.IndexerSubsystem;
-import frc.robot.subsystems.intake.IntakeIO;
-import frc.robot.subsystems.intake.IntakeIOAlpha;
-import frc.robot.subsystems.intake.IntakeIOBeta;
-import frc.robot.subsystems.intake.IntakeSubsystem;
+import frc.robot.subsystems.intake.*;
 import frc.robot.subsystems.led.LED;
 import frc.robot.subsystems.led.LEDConstants;
 import frc.robot.subsystems.led.LEDModes;
+import frc.robot.subsystems.linslide.LinSlideConfigsBeta;
 import frc.robot.subsystems.linslide.LinSlideIO;
 import frc.robot.subsystems.linslide.LinSlideIOReal;
 import frc.robot.subsystems.linslide.LinSlideSubsystem;
@@ -115,8 +111,16 @@ public class RobotContainer {
                 hood = null;
                 vision = new Vision(
                         drive,
-                        new VisionIOLimelight(VisionConstants.frontCam, drive.getRotation3d()::toRotation2d),
-                        new VisionIOLimelight(VisionConstants.sideCam, drive.getRotation3d()::toRotation2d));
+                        new VisionIOLimelight(
+                                VisionConstants.frontCam,
+                                drive.getRotation3d()::toRotation2d,
+                                VisionConstants.frontLinearStdDevBaseline,
+                                VisionConstants.frontAngularStdDevBaseline),
+                        new VisionIOLimelight(
+                                VisionConstants.sideCam,
+                                drive.getRotation3d()::toRotation2d,
+                                VisionConstants.sideLinearStdDevBaseline,
+                                VisionConstants.sideAngularStdDevBaseline));
                 break;
 
             case BETA:
@@ -133,8 +137,16 @@ public class RobotContainer {
                 hood = new HoodSubsystem(new HoodIOBeta());
                 vision = new Vision(
                         drive,
-                        new VisionIOLimelight(VisionConstants.frontCam, drive.getRotation3d()::toRotation2d),
-                        new VisionIOLimelight(VisionConstants.sideCam, drive.getRotation3d()::toRotation2d));
+                        new VisionIOLimelight(
+                                VisionConstants.frontCam,
+                                drive.getRotation3d()::toRotation2d,
+                                VisionConstants.frontLinearStdDevBaseline,
+                                VisionConstants.frontAngularStdDevBaseline),
+                        new VisionIOLimelight(
+                                VisionConstants.sideCam,
+                                drive.getRotation3d()::toRotation2d,
+                                VisionConstants.sideLinearStdDevBaseline,
+                                VisionConstants.sideAngularStdDevBaseline));
                 break;
 
             case SIM:
@@ -285,36 +297,46 @@ public class RobotContainer {
                 .withVelocityY(-controller2.getLeftX() * TunerConstantsAlpha.kSpeedAt12Volts.magnitude())
                 .withRotationalRate(-controller2.getRightX() * TunerConstantsAlpha.MaFxAngularRate)));
         controller2.start().onTrue(Commands.runOnce(drive::seedFieldCentric, drive));
+
         controller2
                 .leftBumper()
-                .whileTrue(linSlide.applyPower(0.4).alongWith(intake.applyPower(1)))
-                .onFalse(linSlide.applyPower(0));
+                .whileTrue(intake.applyPower(IntakeConfigsBeta.ROLL_IN_SPEED)
+                        .alongWith(linSlide.applyPower(LinSlideConfigsBeta.DEPLOY_SPEED)));
 
-        controller2.x().whileTrue(linSlide.applyPower(0.4)).onFalse(linSlide.applyPower(0));
-        controller2.b().whileTrue(linSlide.applyPower(-0.4)).onFalse(linSlide.applyPower(0));
-        //
-        //        controller2.povLeft().whileTrue(hood.applyPower(0.1));
-        //        controller2.povRight().whileTrue(hood.applyPower(-0.1));
-        controller2.povLeft().whileTrue(climber.deploy(0.5));
-        controller2.povRight().whileTrue(climber.climb(-0.5));
+        controller2
+                .x()
+                .whileTrue(linSlide.applyPower(LinSlideConfigsBeta.DEPLOY_SPEED))
+                .onFalse(linSlide.applyPower(LinSlideConfigsBeta.STOP));
+        controller2
+                .b()
+                .whileTrue(linSlide.applyPower(-LinSlideConfigsBeta.DEPLOY_SPEED))
+                .onFalse(linSlide.applyPower(LinSlideConfigsBeta.STOP));
 
-        controller2.povUp().whileTrue(climber.applyPower(0.3));
-        controller2.povDown().whileTrue(climber.applyPower(-0.3));
+        controller2.povLeft().onTrue(climber.deploy(ClimberConfigsBeta.CLIMBER_DEPLOY_CLIMBING_SPEED));
+        controller2.povRight().onTrue(climber.climb(ClimberConfigsBeta.CLIMBER_UNCLIMB_SPEED));
+
+        controller2.povUp().whileTrue(climber.applyPower(ClimberConfigsBeta.TEST_CLIMBER_SPEED));
+        controller2.povDown().whileTrue(climber.applyPower(-ClimberConfigsBeta.TEST_CLIMBER_SPEED));
 
         controller2
                 .leftTrigger()
                 .whileTrue(AutoAimCommands.autoAim(
                                 drive, controller2::getLeftY, controller2::getLeftX, centerHubOpening.toTranslation2d())
-                        .alongWith(AutoAimCommands.readyAim(drive, shooter, hood, centerHubOpening.toTranslation2d())));
+                        .alongWith(AutoAimCommands.readyAim(drive, shooter, centerHubOpening.toTranslation2d())));
 
         controller2
                 .rightTrigger()
                 .whileTrue(hopper.applyPower(TEST_HOPPER_SPEED)
-                        .alongWith(intake.applyPower(0.7)
-                                .alongWith(indexer.applyPower(0.7)
-                                        .alongWith(new WaitCommand(0.8).andThen(linSlide.applyPower(-0.1))))));
+                        .alongWith(intake.applyPower(IntakeConfigsBeta.ROLL_IN_SLOWER)
+                                .alongWith(indexer.applyPower(IndexerConfigsBeta.TEST_INDEXER_SPEED)
+                                        .alongWith(new WaitCommand(0.8)
+                                                .andThen(linSlide.applyPower(
+                                                        LinSlideConfigsBeta.LINSLIDE_AUTO_SHOOT_SPEED))))));
 
-        controller2.rightBumper().whileTrue(intake.applyPower(-0.7).alongWith(hopper.applyPower(0.7)));
+        controller2
+                .rightBumper()
+                .whileTrue(intake.applyPower(-IntakeConfigsBeta.ROLL_IN_SLOWER)
+                        .alongWith(hopper.applyPower(-TEST_HOPPER_SPEED)));
     }
 
     private void configureSimBindings() {

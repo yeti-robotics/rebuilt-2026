@@ -22,6 +22,8 @@ public class ClimberIOBeta implements ClimberIO {
             PhysicsSim.getInstance().addTalonFX(climberMotor);
         }
         climberMotor.getConfigurator().apply(ClimberConfigsBeta.primaryTalonFXConfigs);
+
+        zeroPosition();
     }
 
     @Override
