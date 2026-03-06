@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.littletonrobotics.junction.Logger;
 
 public class IndexerSubsystem extends SubsystemBase {
+
     private IndexerIO io;
     private IndexerIOInputsAutoLogged inputs = new IndexerIOInputsAutoLogged();
 
@@ -18,16 +19,8 @@ public class IndexerSubsystem extends SubsystemBase {
         this.io = io;
     }
 
-    public Command runMotors(double volts) {
-        return runEnd(() -> io.spinIndexer(volts), () -> io.spinIndexer(0));
-    }
-
-    public Command runMotorsUntilDetected(double volts) {
-        return runEnd(() -> io.spinIndexer(volts), () -> io.spinIndexer(0)).until(() -> inputs.isDetected);
-    }
-
-    public Command index(double volts) {
-        return runMotors(volts).onlyIf(() -> inputs.isDetected);
+    public Command spinIndexer(double volts) {
+        return run(() -> io.spinIndexerRoller(volts));
     }
 
     public Command applyPower(double power) {
@@ -40,9 +33,5 @@ public class IndexerSubsystem extends SubsystemBase {
 
     public Command stop() {
         return runOnce(() -> io.applyPower(0));
-    }
-
-    public boolean canRangeDetected() {
-        return inputs.isDetected;
     }
 }

@@ -9,7 +9,7 @@ package frc.robot;
 
 import static frc.robot.constants.Constants.currentMode;
 import static frc.robot.constants.FieldConstants.Hub.centerHubOpening;
-import static frc.robot.subsystems.hopper.HopperConfigsBeta.TEST_HOPPER_SPEED;
+import static frc.robot.subsystems.indexer.IndexerConfigsBeta.TEST_INDEXER_SPEED;
 
 import com.ctre.phoenix6.swerve.SwerveModule;
 import com.ctre.phoenix6.swerve.SwerveRequest;
@@ -31,16 +31,15 @@ import frc.robot.constants.Constants;
 import frc.robot.subsystems.climber.*;
 import frc.robot.subsystems.drive.*;
 import frc.robot.subsystems.drive.TunerConstantsAlpha;
+import frc.robot.subsystems.feeder.FeederIO;
+import frc.robot.subsystems.feeder.FeederIOReal;
+import frc.robot.subsystems.feeder.FeederSubsystem;
 import frc.robot.subsystems.hood.HoodIO;
 import frc.robot.subsystems.hood.HoodIOBeta;
 import frc.robot.subsystems.hood.HoodSubsystem;
-import frc.robot.subsystems.hopper.Hopper;
-import frc.robot.subsystems.hopper.HopperIO;
-import frc.robot.subsystems.hopper.HopperIOAlpha;
-import frc.robot.subsystems.hopper.HopperIOBeta;
+import frc.robot.subsystems.indexer.*;
 import frc.robot.subsystems.indexer.IndexerIO;
-import frc.robot.subsystems.indexer.IndexerIOReal;
-import frc.robot.subsystems.indexer.IndexerSubsystem;
+import frc.robot.subsystems.indexer.IndexerIOAlpha;
 import frc.robot.subsystems.intake.IntakeIO;
 import frc.robot.subsystems.intake.IntakeIOAlpha;
 import frc.robot.subsystems.intake.IntakeIOBeta;
@@ -73,10 +72,10 @@ public class RobotContainer {
     private final LinSlideSubsystem linSlide;
     private final Mechanisms mechanisms;
     private final IntakeSubsystem intake;
-    private final Hopper hopper;
+    private final IndexerSubsystem indexer;
     private final Climber climber;
     private final ShooterSubsystem shooter;
-    private final IndexerSubsystem indexer;
+    private final FeederSubsystem feeder;
     private final Vision vision;
     private final HoodSubsystem hood;
     private final AutoCommands autoCommands;
@@ -108,10 +107,10 @@ public class RobotContainer {
                 drive = TunerConstantsAlpha.createDrivetrain();
                 linSlide = new LinSlideSubsystem(new LinSlideIOReal());
                 intake = new IntakeSubsystem(new IntakeIOAlpha());
-                hopper = new Hopper(new HopperIOAlpha());
+                indexer = new IndexerSubsystem(new IndexerIOAlpha());
                 climber = null;
                 shooter = new ShooterSubsystem(new ShooterIOReal());
-                indexer = new IndexerSubsystem(new IndexerIOReal());
+                feeder = new FeederSubsystem(new FeederIOReal());
                 hood = null;
                 vision = new Vision(
                         drive,
@@ -126,10 +125,10 @@ public class RobotContainer {
                 drive = TunerConstantsBeta.createDrivetrain();
                 linSlide = new LinSlideSubsystem(new LinSlideIOReal());
                 intake = new IntakeSubsystem(new IntakeIOBeta());
-                hopper = new Hopper(new HopperIOBeta());
+                indexer = new IndexerSubsystem(new IndexerIOBeta());
                 climber = new Climber(new ClimberIOBeta());
                 shooter = new ShooterSubsystem(new ShooterIOReal());
-                indexer = new IndexerSubsystem(new IndexerIOReal());
+                feeder = new FeederSubsystem(new FeederIOReal());
                 hood = new HoodSubsystem(new HoodIOBeta());
                 vision = new Vision(
                         drive,
@@ -142,7 +141,7 @@ public class RobotContainer {
                 drive = TunerConstantsAlpha.createDrivetrain();
                 linSlide = new LinSlideSubsystem(new LinSlideIOReal());
                 intake = new IntakeSubsystem(new IntakeIOAlpha());
-                hopper = new Hopper(new HopperIOAlpha());
+                indexer = new IndexerSubsystem(new IndexerIOAlpha());
                 vision = new Vision(
                         drive,
                         new VisionIOPhotonVisionSim(
@@ -151,7 +150,7 @@ public class RobotContainer {
                                 VisionConstants.sideCam, VisionConstants.sideCamTrans, () -> drive.getState().Pose));
                 climber = new Climber(new ClimberIOBeta());
                 shooter = new ShooterSubsystem(new ShooterIOReal());
-                indexer = new IndexerSubsystem(new IndexerIOReal());
+                feeder = new FeederSubsystem(new FeederIOReal());
                 hood = new HoodSubsystem(new HoodIOBeta());
 
                 break;
@@ -161,10 +160,10 @@ public class RobotContainer {
                 drive = TunerConstantsAlpha.createDrivetrain();
                 linSlide = new LinSlideSubsystem(new LinSlideIO() {});
                 intake = new IntakeSubsystem(new IntakeIO() {});
-                hopper = new Hopper(new HopperIO() {});
+                indexer = new IndexerSubsystem(new IndexerIO() {});
                 climber = new Climber(new ClimberIO() {});
                 vision = new Vision(drive, new VisionIO() {}, new VisionIO() {});
-                indexer = new IndexerSubsystem(new IndexerIO() {});
+                feeder = new FeederSubsystem(new FeederIO() {});
                 shooter = new ShooterSubsystem((new ShooterIO() {}));
                 hood = new HoodSubsystem(new HoodIO() {});
 
@@ -177,7 +176,7 @@ public class RobotContainer {
 
         climbState = ClimberState.DEFAULT;
 
-        autoCommands = new AutoCommands(climber, drive, hood, hopper, indexer, intake, linSlide, shooter);
+        autoCommands = new AutoCommands(climber, drive, hood, indexer, feeder, intake, linSlide, shooter);
 
         // Set up auto routines
         autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
@@ -262,7 +261,7 @@ public class RobotContainer {
                 .leftBumper()
                 .whileTrue(linSlide.runIntake(-0.2, false).withTimeout(2).alongWith(intake.rollIn()));
 
-        controller.rightBumper().onTrue(intake.rollOut().alongWith(hopper.applyPower(0.7)));
+        controller.rightBumper().onTrue(intake.rollOut().alongWith(indexer.applyPower(0.7)));
 
         controller
                 .leftTrigger()
@@ -272,8 +271,8 @@ public class RobotContainer {
 
         controller
                 .rightTrigger()
-                .whileTrue(hopper.spinHopper(80)
-                        .alongWith(intake.rollIn().alongWith(indexer.applyPower(0.3)))
+                .whileTrue(indexer.spinIndexer(80)
+                        .alongWith(intake.rollIn().alongWith(feeder.applyPower(0.3)))
                         .alongWith(linSlide.runIntake(-0.2, false)
                                 .andThen(linSlide.runIntake(0.2, true))
                                 .repeatedly()));
@@ -309,12 +308,12 @@ public class RobotContainer {
 
         controller2
                 .rightTrigger()
-                .whileTrue(hopper.applyPower(TEST_HOPPER_SPEED)
+                .whileTrue(indexer.applyPower(TEST_INDEXER_SPEED)
                         .alongWith(intake.applyPower(0.7)
-                                .alongWith(indexer.applyPower(0.7)
+                                .alongWith(feeder.applyPower(0.7)
                                         .alongWith(new WaitCommand(0.8).andThen(linSlide.applyPower(-0.1))))));
 
-        controller2.rightBumper().whileTrue(intake.applyPower(-0.7).alongWith(hopper.applyPower(0.7)));
+        controller2.rightBumper().whileTrue(intake.applyPower(-0.7).alongWith(indexer.applyPower(0.7)));
     }
 
     private void configureSimBindings() {
@@ -341,9 +340,9 @@ public class RobotContainer {
                 .whileTrue(AutoAimCommands.autoAim(
                                 drive, controller::getLeftY, controller::getLeftX, centerHubOpening.toTranslation2d())
                         .alongWith(shooter.shoot(100))
-                        .alongWith(indexer.index(3)));
+                        .alongWith(feeder.index(3)));
 
-        controller.button(7).whileTrue(hopper.spinHopper(80));
+        controller.button(7).whileTrue(indexer.spinIndexer(80));
         controller.button(8).onTrue(Commands.runOnce(drive::seedFieldCentric));
         controller
                 .button(9)
