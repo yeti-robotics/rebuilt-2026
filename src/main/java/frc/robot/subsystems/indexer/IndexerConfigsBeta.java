@@ -11,8 +11,15 @@ public class IndexerConfigsBeta {
     static final MotionMagicConfigs MOTION_MAGIC_CONFIGS =
             new MotionMagicConfigs().withMotionMagicCruiseVelocity(1).withMotionMagicAcceleration(2);
 
-    static final TalonFXConfiguration INDEXER_MOTOR_CONFIGS =
-            new TalonFXConfiguration().withMotionMagic(MOTION_MAGIC_CONFIGS);
+    static final TalonFXConfiguration INDEXER_MOTOR_CONFIGS = new TalonFXConfiguration()
+            .withMotionMagic(MOTION_MAGIC_CONFIGS)
+            .withCurrentLimits(new CurrentLimitsConfigs()
+                    .withStatorCurrentLimit(70)
+                    .withSupplyCurrentLimit(70)
+                    .withStatorCurrentLimitEnable(true)
+                    .withSupplyCurrentLimitEnable(true)
+                    .withSupplyCurrentLowerLimit(40)
+                    .withSupplyCurrentLowerTime(1));
 
     static final CANrangeConfiguration CANRANGE_CONFIGS = new CANrangeConfiguration()
             .withToFParams(new ToFParamsConfigs().withUpdateMode(UpdateModeValue.ShortRange100Hz))

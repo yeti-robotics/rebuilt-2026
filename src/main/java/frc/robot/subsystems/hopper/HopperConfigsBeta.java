@@ -23,7 +23,14 @@ public class HopperConfigsBeta {
             .withMotionMagic(new MotionMagicConfigs()
                     .withMotionMagicAcceleration(2)
                     .withMotionMagicCruiseVelocity(4)
-                    .withMotionMagicJerk(0));
+                    .withMotionMagicJerk(0))
+            .withCurrentLimits(new CurrentLimitsConfigs()
+                    .withStatorCurrentLimit(60)
+                    .withSupplyCurrentLimit(70)
+                    .withStatorCurrentLimitEnable(true)
+                    .withSupplyCurrentLimitEnable(true)
+                    .withSupplyCurrentLowerLimit(40)
+                    .withSupplyCurrentLowerTime(1));
 
     static final CANrangeConfiguration TOP_CANRANGE_CONFIGS = new CANrangeConfiguration()
             .withToFParams(new ToFParamsConfigs().withUpdateMode(UpdateModeValue.ShortRange100Hz))
