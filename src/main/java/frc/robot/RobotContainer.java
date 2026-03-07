@@ -289,7 +289,8 @@ public class RobotContainer {
         controller
                 .leftTrigger()
                 .whileTrue(intake.applyPower(IntakeConfigsBeta.ROLL_IN_SPEED)
-                        .alongWith(linSlide.applyPower(LinSlideConfigsBeta.DEPLOY_SPEED)).alongWith(led.runPattern(LEDModes.SOLID_WHITE)));
+                        .alongWith(linSlide.applyPower(LinSlideConfigsBeta.DEPLOY_SPEED))
+                        .alongWith(led.runPattern(LEDModes.SOLID_WHITE)));
 
         controller.rightBumper().onTrue(intake.rollOut().alongWith(hopper.applyPower(0.7)));
 
