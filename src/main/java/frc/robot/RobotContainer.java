@@ -298,7 +298,7 @@ public class RobotContainer {
                 .leftBumper()
                 .whileTrue(AutoAimCommands.autoAim(
                                 drive, controller::getLeftY, controller::getLeftX, centerHubOpening.toTranslation2d())
-                        .alongWith(AutoAimCommands.readyAim(drive, shooter, centerHubOpening.toTranslation2d())));
+                        .alongWith(AutoAimCommands.readyAim(drive, shooter, centerHubOpening.toTranslation2d())).alongWith(led.runPattern(LEDModes.WAVE)));
 
         controller
                 .rightTrigger()
@@ -406,7 +406,7 @@ public class RobotContainer {
         new Trigger(() -> climber.getCurrentPosition()
                         >= ClimberPosition.L1.getHeight() - ClimberConfigsBeta.HEIGHT_TOLERANCE)
                 .whileTrue(led.runPattern(LEDModes.SNOWFALL));
-        new Trigger(DriverStation::isDisabled).onTrue(led.runPattern(LEDModes.BLUE_ALLIANCE_ACTIVE));
+        new Trigger(DriverStation::isDisabled).whileTrue(led.runPattern(LEDModes.BLUE_ALLIANCE_ACTIVE));
     }
 
     public void updateLoggers() {
