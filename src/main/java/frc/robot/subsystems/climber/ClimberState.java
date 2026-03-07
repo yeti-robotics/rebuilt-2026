@@ -1,8 +1,8 @@
 package frc.robot.subsystems.climber;
 
-import edu.wpi.first.units.measure.LinearVelocity;
-
 import static edu.wpi.first.units.Units.*;
+
+import edu.wpi.first.units.measure.LinearVelocity;
 
 public enum ClimberState {
     DEFAULT(MetersPerSecond.of(8.5), RotationsPerSecond.of(1).in(RadiansPerSecond)),

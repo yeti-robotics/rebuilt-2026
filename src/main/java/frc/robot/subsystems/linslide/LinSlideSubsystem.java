@@ -1,11 +1,11 @@
 package frc.robot.subsystems.linslide;
 
+import static edu.wpi.first.units.Units.Rotations;
+
 import edu.wpi.first.units.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.littletonrobotics.junction.Logger;
-
-import static edu.wpi.first.units.Units.Rotations;
 
 public class LinSlideSubsystem extends SubsystemBase {
     private LinSlideIO io;
