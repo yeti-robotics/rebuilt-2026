@@ -5,6 +5,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.littletonrobotics.junction.Logger;
 
+import static edu.wpi.first.units.Units.Rotations;
+
 public class LinSlideSubsystem extends SubsystemBase {
     private LinSlideIO io;
     private LinSlideIOInputsAutoLogged inputs = new LinSlideIOInputsAutoLogged();
@@ -58,8 +60,8 @@ public class LinSlideSubsystem extends SubsystemBase {
         return Units.RotationsPerSecond.of(inputs.velocityRPM).isNear(Units.RotationsPerSecond.of(0), 0.1);
     }
 
-    public boolean isBasicallyZeroPositonLowKey() {
-        return inputs.positionRotation < 0.1;
+    public boolean isCloseToZero() {
+        return Rotations.of(inputs.positionRotation).isNear(Rotations.of(0), 0.05);
     }
 
     public Command defaultMovement(double volts) {
