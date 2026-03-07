@@ -474,11 +474,11 @@ public class AutoCommands {
                 : Commands.sequence(
                         followPathAndIntake(startNeutral, 0.5),
                         followPath(neutralShoot),
-                        shoot(),
+                        shoot().withTimeout(6),
                         AutoBuilder.followPath(shootOutpost.get()),
                         Commands.waitSeconds(1.5),
                         AutoBuilder.followPath(outpostShoot.get()),
-                        shoot());
+                        shoot().withTimeout(6));
         auto = new PathPlannerAuto(cmd);
         return auto;
     }

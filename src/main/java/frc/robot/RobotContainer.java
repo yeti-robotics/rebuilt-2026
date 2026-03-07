@@ -289,7 +289,7 @@ public class RobotContainer {
         controller
                 .leftTrigger()
                 .whileTrue(intake.applyPower(IntakeConfigsBeta.ROLL_IN_SPEED)
-                        .alongWith(linSlide.applyPower(LinSlideConfigsBeta.DEPLOY_SPEED)));
+                        .alongWith(linSlide.applyPower(LinSlideConfigsBeta.DEPLOY_SPEED)).alongWith(led.runPattern(LEDModes.SOLID_WHITE)));
 
         controller.rightBumper().onTrue(intake.rollOut().alongWith(hopper.applyPower(0.7)));
 
@@ -397,7 +397,7 @@ public class RobotContainer {
     public void configureTriggers() {
         new Trigger(() -> shooter.getVelocity().isNear(Units.RotationsPerSecond.of(120), 0.1))
                 .and(() -> Math.abs(vision.getDistance() - LEDConstants.IDEAL_DISTANCE_TO_HUB) > LEDConstants.TOLERANCE)
-                .whileTrue(led.runPattern(LEDModes.LOCKED_GREEN));
+                .whileTrue(led.runPattern(LEDModes.NOT_LOCKED_RED));
 
         new Trigger(() -> shooter.getVelocity().isNear(Units.RotationsPerSecond.of(120), 0.1))
                 .and(() ->
@@ -407,6 +407,8 @@ public class RobotContainer {
                         >= ClimberPosition.L1.getHeight() - ClimberConfigsBeta.HEIGHT_TOLERANCE)
                 .whileTrue(led.runPattern(LEDModes.SNOWFALL));
         new Trigger(DriverStation::isDisabled).whileTrue(led.runPattern(LEDModes.BLUE_ALLIANCE_ACTIVE));
+
+        new Trigger(() -> climbState.toString().equals("CLIMB")).whileTrue(led.runPattern(LEDModes.RAINBOW));
     }
 
     public void updateLoggers() {

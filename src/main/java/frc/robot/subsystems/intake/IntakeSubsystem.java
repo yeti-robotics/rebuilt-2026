@@ -33,4 +33,6 @@ public class IntakeSubsystem extends SubsystemBase {
     public Command applyPower(double percent) {
         return runEnd(() -> io.applyPower(percent), () -> io.applyPower(0));
     }
+
+    public double getRPM() {return inputs.primaryMotorRPM;}
 }
