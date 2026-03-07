@@ -24,7 +24,6 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.commands.AutoAimCommands;
 import frc.robot.commands.AutoCommands;
 import frc.robot.constants.Constants;
@@ -197,38 +196,38 @@ public class RobotContainer {
         // Set up simulatable mechanisms
         mechanisms = new Mechanisms();
 
-        autoChooser.addOption(
-                "Drive SysId (Quasistatic Forward)", drive.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
-        autoChooser.addOption(
-                "Drive SysId (Quasistatic Reverse)", drive.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
-        autoChooser.addOption("Drive SysId (Dynamic Forward)", drive.sysIdDynamic(SysIdRoutine.Direction.kForward));
-        autoChooser.addOption("Drive SysId (Dynamic Reverse)", drive.sysIdDynamic(SysIdRoutine.Direction.kReverse));
-
-        // Test
-        autoChooser.addOption("Climber Testing Path", autoCommands.climberTest());
-
-        // Left
-        autoChooser.addOption("One Cycle Neutral Tower Left", autoCommands.oneCycleNeutralTowerLeft());
-        autoChooser.addOption("One Cycle Depot Tower Left", autoCommands.oneCycleDepotTowerLeft());
-        autoChooser.addOption("Two Cycle Neutral Depot Tower Left", autoCommands.twoCycleNeutralDepotTowerLeft());
-        autoChooser.addOption("Two Cycle Depot Neutral Tower Left", autoCommands.twoCycleDepotNeutralTowerLeft());
-        autoChooser.addOption("Two Cycle Neutral Neutral Tower Left", autoCommands.twoCycleNeutralTowerLeft());
-
-        // Center
-        autoChooser.addOption("One Cycle Neutral Left Tower Center", autoCommands.oneCycleNeutralLeftTowerCenter());
-        autoChooser.addOption("One Cycle Neutral Right Tower Center", autoCommands.oneCycleNeutralRightTowerCenter());
-        autoChooser.addOption("Two Cycle Depot Neutral Right Center", autoCommands.twoCycleDepotNeutralRightCenter());
-        autoChooser.addOption("Two Cycle Neutral Left Neutral Center", autoCommands.twoCycleNeutralNeutralLeftCenter());
-        autoChooser.addOption(
-                "Two Cycle Neutral Right Neutral Center", autoCommands.twoCycleNeutralNeutralRightCenter());
-        autoChooser.addOption("Two Cycle Depot Neutral Left Center", autoCommands.twoCycleDepotNeutralLeftCenter());
-
-        // Right
-        autoChooser.addOption("One Cycle Neutral Right Tower Right", autoCommands.oneCycleNeutralRightTowerRight());
-        autoChooser.addOption("One Cycle Outpost Tower Right", autoCommands.oneCycleOutpostTowerRight());
-        autoChooser.addOption("Two Cycle Outpost Neutral Tower Right", autoCommands.twoCycleOutpostNeutralTowerRight());
-        autoChooser.addOption("Two Cycle Neutral Outpost Tower Right", autoCommands.twoCycleNeutralOutpostTowerRight());
-        autoChooser.addOption("Two Cycle Neutral Neutral Tower Right", autoCommands.twoCycleNeutralTowerRight());
+//        autoChooser.addOption(
+//                "Drive SysId (Quasistatic Forward)", drive.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
+//        autoChooser.addOption(
+//                "Drive SysId (Quasistatic Reverse)", drive.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
+//        autoChooser.addOption("Drive SysId (Dynamic Forward)", drive.sysIdDynamic(SysIdRoutine.Direction.kForward));
+//        autoChooser.addOption("Drive SysId (Dynamic Reverse)", drive.sysIdDynamic(SysIdRoutine.Direction.kReverse));
+//
+//        // Test
+//        autoChooser.addOption("Climber Testing Path", autoCommands.climberTest());
+//
+//        // Left
+        autoChooser.addOption("Left", autoCommands.oneCycleNeutralTowerLeft());
+//        autoChooser.addOption("One Cycle Depot Tower Left", autoCommands.oneCycleDepotTowerLeft());
+//        autoChooser.addOption("Two Cycle Neutral Depot Tower Left", autoCommands.twoCycleNeutralDepotTowerLeft());
+//        autoChooser.addOption("Two Cycle Depot Neutral Tower Left", autoCommands.twoCycleDepotNeutralTowerLeft());
+//        autoChooser.addOption("Two Cycle Neutral Neutral Tower Left", autoCommands.twoCycleNeutralTowerLeft());
+//
+//        // Center
+//        autoChooser.addOption("One Cycle Neutral Left Tower Center", autoCommands.oneCycleNeutralLeftTowerCenter());
+//        autoChooser.addOption("One Cycle Neutral Right Tower Center", autoCommands.oneCycleNeutralRightTowerCenter());
+//        autoChooser.addOption("Two Cycle Depot Neutral Right Center", autoCommands.twoCycleDepotNeutralRightCenter());
+//        autoChooser.addOption("Two Cycle Neutral Left Neutral Center", autoCommands.twoCycleNeutralNeutralLeftCenter());
+//        autoChooser.addOption(
+//                "Two Cycle Neutral Right Neutral Center", autoCommands.twoCycleNeutralNeutralRightCenter());
+//        autoChooser.addOption("Two Cycle Depot Neutral Left Center", autoCommands.twoCycleDepotNeutralLeftCenter());
+//
+//        // Right
+//        autoChooser.addOption("One Cycle Neutral Right Tower Right", autoCommands.oneCycleNeutralRightTowerRight());
+//        autoChooser.addOption("One Cycle Outpost Tower Right", autoCommands.oneCycleOutpostTowerRight());
+//        autoChooser.addOption("Two Cycle Outpost Neutral Tower Right", autoCommands.twoCycleOutpostNeutralTowerRight());
+        autoChooser.addOption("Right", autoCommands.twoCycleNeutralOutpostTowerRight());
+//        autoChooser.addOption("Two Cycle Neutral Neutral Tower Right", autoCommands.twoCycleNeutralTowerRight());
 
         // Configure the button bindings
         if (Robot.isReal()) {
@@ -264,31 +263,32 @@ public class RobotContainer {
 
         controller.start().onTrue(Commands.runOnce(drive::seedFieldCentric, drive));
 
-        controller.y().onTrue(climber.stowServo().andThen(climber.moveToPosition(ClimberPosition.L1.getHeight())));
-        controller
-                .a()
-                .onTrue(climber.moveToPosition(ClimberPosition.BOTTOM.getHeight())
-                        .andThen(climber.extendServo()));
+        controller.y().whileTrue(climber.applyPower(ClimberConfigsBeta.CLIMBER_EXTEND_SPEED));
+        controller.a().whileTrue(climber.applyPower(ClimberConfigsBeta.CLIMBER_RETRACT_SPEED));
+        controller.x().whileTrue(linSlide.applyPower(LinSlideConfigsBeta.DEPLOY_SPEED));
+        controller.b().whileTrue(linSlide.applyPower(-LinSlideConfigsBeta.DEPLOY_SPEED));
 
         controller
-                .leftBumper()
-                .whileTrue(linSlide.runIntake(-0.2, false).withTimeout(2).alongWith(intake.rollIn()));
+                .leftTrigger()
+                .whileTrue(intake.applyPower(IntakeConfigsBeta.ROLL_IN_SPEED)
+                        .alongWith(linSlide.applyPower(LinSlideConfigsBeta.DEPLOY_SPEED)));
 
         controller.rightBumper().onTrue(intake.rollOut().alongWith(hopper.applyPower(0.7)));
 
         controller
-                .leftTrigger()
+                .leftBumper()
                 .whileTrue(AutoAimCommands.autoAim(
-                                drive, controller::getLeftY, controller::getLeftX, centerHubOpening.toTranslation2d())
-                        .alongWith(shooter.shoot(30)));
+                                drive, controller2::getLeftY, controller2::getLeftX, centerHubOpening.toTranslation2d())
+                        .alongWith(AutoAimCommands.readyAim(drive, shooter, centerHubOpening.toTranslation2d())));
 
         controller
                 .rightTrigger()
-                .whileTrue(hopper.spinHopper(80)
-                        .alongWith(intake.rollIn().alongWith(indexer.applyPower(0.3)))
-                        .alongWith(linSlide.runIntake(-0.2, false)
-                                .andThen(linSlide.runIntake(0.2, true))
-                                .repeatedly()));
+                .whileTrue(hopper.applyPower(TEST_HOPPER_SPEED)
+                        .alongWith(intake.applyPower(IntakeConfigsBeta.ROLL_IN_SLOWER)
+                                .alongWith(indexer.applyPower(IndexerConfigsBeta.TEST_INDEXER_SPEED)
+                                        .alongWith(new WaitCommand(0.8)
+                                                .andThen(linSlide.applyPower(
+                                                        LinSlideConfigsBeta.LINSLIDE_AUTO_SHOOT_SPEED))))));
     }
 
     private void configureDebugBindings() {
@@ -298,10 +298,7 @@ public class RobotContainer {
                 .withRotationalRate(-controller2.getRightX() * TunerConstantsAlpha.MaFxAngularRate)));
         controller2.start().onTrue(Commands.runOnce(drive::seedFieldCentric, drive));
 
-        controller2
-                .leftBumper()
-                .whileTrue(intake.applyPower(IntakeConfigsBeta.ROLL_IN_SPEED)
-                        .alongWith(linSlide.applyPower(LinSlideConfigsBeta.DEPLOY_SPEED)));
+        controller2.leftBumper().whileTrue(intake.applyPower(IntakeConfigsBeta.ROLL_IN_SPEED));
 
         controller2
                 .x()
@@ -312,8 +309,8 @@ public class RobotContainer {
                 .whileTrue(linSlide.applyPower(-LinSlideConfigsBeta.DEPLOY_SPEED))
                 .onFalse(linSlide.applyPower(LinSlideConfigsBeta.STOP));
 
-        controller2.povLeft().onTrue(climber.deploy(ClimberConfigsBeta.CLIMBER_DEPLOY_CLIMBING_SPEED));
-        controller2.povRight().onTrue(climber.climb(ClimberConfigsBeta.CLIMBER_UNCLIMB_SPEED));
+        controller2.povLeft().onTrue(climber.deploy(ClimberConfigsBeta.CLIMBER_EXTEND_SPEED));
+        controller2.povRight().onTrue(climber.climb(ClimberConfigsBeta.CLIMBER_RETRACT_SPEED));
 
         controller2.povUp().whileTrue(climber.applyPower(ClimberConfigsBeta.TEST_CLIMBER_SPEED));
         controller2.povDown().whileTrue(climber.applyPower(-ClimberConfigsBeta.TEST_CLIMBER_SPEED));

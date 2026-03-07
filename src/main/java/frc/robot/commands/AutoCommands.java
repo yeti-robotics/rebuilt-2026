@@ -109,9 +109,9 @@ public class AutoCommands {
 
     public Command climbTower(Optional<PathPlannerPath> path) {
         return Commands.sequence(
-                climber.deploy(ClimberConfigsBeta.CLIMBER_DEPLOY_CLIMBING_SPEED),
+                climber.deploy(ClimberConfigsBeta.CLIMBER_EXTEND_SPEED),
                 AutoBuilder.followPath(path.get()),
-                climber.climb(ClimberConfigsBeta.CLIMBER_UNCLIMB_SPEED));
+                climber.climb(ClimberConfigsBeta.CLIMBER_RETRACT_SPEED));
     }
 
     // NEW STUFF
@@ -151,10 +151,10 @@ public class AutoCommands {
         var cmd = climberTest.isEmpty()
                 ? Commands.none()
                 : Commands.sequence(
-                        climber.deploy(ClimberConfigsBeta.CLIMBER_DEPLOY_CLIMBING_SPEED),
+                        climber.deploy(ClimberConfigsBeta.CLIMBER_EXTEND_SPEED),
                         AutoBuilder.followPath(climberTest.get()),
                         Commands.waitSeconds(0.5),
-                        climber.climb(ClimberConfigsBeta.CLIMBER_UNCLIMB_SPEED));
+                        climber.climb(ClimberConfigsBeta.CLIMBER_RETRACT_SPEED));
 
         auto = new PathPlannerAuto(cmd);
         return auto;

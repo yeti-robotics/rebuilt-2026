@@ -10,7 +10,7 @@ public class LinSlideConfigsBeta {
     static final double ROTOR_TO_SENSOR = 1;
     static final double SENSOR_TO_MECHANISM = (50.0 / 12.0) * (24.0 / 18.0);
 
-    public static final double DEPLOY_SPEED = 0.67;
+    public static final double DEPLOY_SPEED = 0.35;
     public static final double STOP = 0;
 
     public static final double LINSLIDE_AUTO_SHOOT_SPEED = -0.1;
@@ -46,13 +46,13 @@ public class LinSlideConfigsBeta {
                     .withRotorToSensorRatio(ROTOR_TO_SENSOR)
                     .withSensorToMechanismRatio(SENSOR_TO_MECHANISM))
             .withMotorOutput(new MotorOutputConfigs()
-                    .withInverted(InvertedValue.CounterClockwise_Positive)
+                    .withInverted(InvertedValue.Clockwise_Positive)
                     .withNeutralMode(NeutralModeValue.Brake))
-            .withSoftwareLimitSwitch(new SoftwareLimitSwitchConfigs()
-                    .withReverseSoftLimitEnable(true)
-                    .withForwardSoftLimitEnable(true)
-                    .withForwardSoftLimitThreshold(3)
-                    .withReverseSoftLimitThreshold(0.1))
+            //            .withSoftwareLimitSwitch(new SoftwareLimitSwitchConfigs()
+            //                    .withReverseSoftLimitEnable(true)
+            //                    .withForwardSoftLimitEnable(true)
+            //                    .withForwardSoftLimitThreshold(3)
+            //                    .withReverseSoftLimitThreshold(0.1))
             .withCurrentLimits(new CurrentLimitsConfigs()
                     .withStatorCurrentLimit(50)
                     .withSupplyCurrentLimit(70)
