@@ -277,7 +277,6 @@ public class RobotContainer {
                 .povUp()
                 .onTrue(Commands.runOnce(() -> climbState = climbState.switchState())
                         .alongWith(linSlide.applyPower(-LinSlideConfigsBeta.DEPLOY_SPEED)
-                                .until(linSlide::isCloseToZero)
                                 .onlyIf(() -> climbState == ClimberState.CLIMB)));
 
         controller.start().onTrue(Commands.runOnce(drive::seedFieldCentric, drive));
