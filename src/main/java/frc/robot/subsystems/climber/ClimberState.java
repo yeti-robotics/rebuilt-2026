@@ -6,7 +6,7 @@ import edu.wpi.first.units.measure.LinearVelocity;
 
 public enum ClimberState {
     DEFAULT(MetersPerSecond.of(8.5), 1),
-    CLIMB(MetersPerSecond.of(8.5 / 2.0), (double) 1 / 2);
+    CLIMB(MetersPerSecond.of(8.5 / 4.0), (double) 1 / 4);
 
     public final LinearVelocity kSpeedAt12Volts;
     public final double MaFxAngularRate;
