@@ -17,6 +17,7 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.*;
 import edu.wpi.first.units.Units;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -405,6 +406,7 @@ public class RobotContainer {
         new Trigger(() -> climber.getCurrentPosition()
                         >= ClimberPosition.L1.getHeight() - ClimberConfigsBeta.HEIGHT_TOLERANCE)
                 .whileTrue(led.runPattern(LEDModes.SNOWFALL));
+        new Trigger(DriverStation::isDisabled).onTrue(led.runPattern(LEDModes.BLUE_ALLIANCE_ACTIVE));
     }
 
     public void updateLoggers() {
