@@ -291,7 +291,7 @@ public class RobotContainer {
         controller
                 .leftBumper()
                 .whileTrue(AutoAimCommands.autoAim(
-                                drive, controller2::getLeftY, controller2::getLeftX, centerHubOpening.toTranslation2d())
+                                drive, controller::getLeftY, controller::getLeftX, centerHubOpening.toTranslation2d())
                         .alongWith(AutoAimCommands.readyAim(drive, shooter, centerHubOpening.toTranslation2d())));
 
         controller
@@ -305,10 +305,6 @@ public class RobotContainer {
     }
 
     private void configureDebugBindings() {
-        drive.setDefaultCommand(drive.applyRequest(() -> driveRequest
-                .withVelocityX(-controller2.getLeftY() * TunerConstantsAlpha.kSpeedAt12Volts.magnitude())
-                .withVelocityY(-controller2.getLeftX() * TunerConstantsAlpha.kSpeedAt12Volts.magnitude())
-                .withRotationalRate(-controller2.getRightX() * TunerConstantsAlpha.MaFxAngularRate)));
         controller2.start().onTrue(Commands.runOnce(drive::seedFieldCentric, drive));
 
         controller2.leftBumper().whileTrue(intake.applyPower(IntakeConfigsBeta.ROLL_IN_SPEED));
