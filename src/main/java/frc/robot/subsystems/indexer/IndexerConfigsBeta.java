@@ -16,8 +16,8 @@ public class IndexerConfigsBeta {
             .withCurrentLimits(new CurrentLimitsConfigs()
                     .withStatorCurrentLimit(100)
                     .withSupplyCurrentLimit(100)
-                    .withStatorCurrentLimitEnable(true)
-                    .withSupplyCurrentLimitEnable(true)
+                    .withStatorCurrentLimitEnable(false)
+                    .withSupplyCurrentLimitEnable(false)
                     .withSupplyCurrentLowerLimit(40)
                     .withSupplyCurrentLowerTime(1));
 
