@@ -136,8 +136,7 @@ public class AutoCommands {
                         new WaitCommand(0.2).andThen(hopper.applyPower(HopperConfigsBeta.TEST_HOPPER_SPEED)),
                         new WaitCommand(0.2).andThen(indexer.applyPower(IndexerConfigsBeta.TEST_INDEXER_SPEED)),
                         new WaitCommand(0.2).andThen(intake.applyPower(IntakeConfigsBeta.ROLL_IN_SPEED))),
-                        led.runPattern(LEDModes.WAVE)
-        );
+                led.runPattern(LEDModes.WAVE));
     }
 
     public Command shootBumpFire() {
