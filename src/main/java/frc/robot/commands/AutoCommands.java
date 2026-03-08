@@ -19,6 +19,8 @@ import frc.robot.subsystems.indexer.IndexerConfigsBeta;
 import frc.robot.subsystems.indexer.IndexerSubsystem;
 import frc.robot.subsystems.intake.IntakeConfigsBeta;
 import frc.robot.subsystems.intake.IntakeSubsystem;
+import frc.robot.subsystems.led.LED;
+import frc.robot.subsystems.led.LEDModes;
 import frc.robot.subsystems.linslide.LinSlideConfigsBeta;
 import frc.robot.subsystems.linslide.LinSlideSubsystem;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
@@ -35,6 +37,7 @@ public class AutoCommands {
     private final IntakeSubsystem intake;
     private final LinSlideSubsystem linSlide;
     private final ShooterSubsystem shooter;
+    private final LED led;
 
     // public final Trigger indexerTrigger;
 
@@ -46,7 +49,8 @@ public class AutoCommands {
             IndexerSubsystem indexerAuto,
             IntakeSubsystem intake,
             LinSlideSubsystem linSlide,
-            ShooterSubsystem shooter) {
+            ShooterSubsystem shooter,
+            LED leds) {
         this.climber = climber;
         this.drivetrain = drivetrain;
         this.hood = hood;
@@ -55,6 +59,7 @@ public class AutoCommands {
         this.intake = intake;
         this.linSlide = linSlide;
         this.shooter = shooter;
+        this.led = leds;
 
         //        indexerTrigger = new Trigger(() -> !indexer.canRangeDetected())
         //                .and(() -> shooter.getTargetSpeed() > 0)
@@ -130,7 +135,9 @@ public class AutoCommands {
                         AutoAimCommands.autoAim(drivetrain, () -> 0.0, () -> 0.0, centerHubOpening.toTranslation2d()),
                         new WaitCommand(0.2).andThen(hopper.applyPower(HopperConfigsBeta.TEST_HOPPER_SPEED)),
                         new WaitCommand(0.2).andThen(indexer.applyPower(IndexerConfigsBeta.TEST_INDEXER_SPEED)),
-                        new WaitCommand(0.2).andThen(intake.applyPower(IntakeConfigsBeta.ROLL_IN_SPEED))));
+                        new WaitCommand(0.2).andThen(intake.applyPower(IntakeConfigsBeta.ROLL_IN_SPEED))),
+                        led.runPattern(LEDModes.WAVE)
+        );
     }
 
     public Command shootBumpFire() {

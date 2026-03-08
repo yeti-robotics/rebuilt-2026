@@ -189,7 +189,7 @@ public class RobotContainer {
 
         climbState = ClimberState.DEFAULT;
 
-        autoCommands = new AutoCommands(climber, drive, hood, hopper, indexer, intake, linSlide, shooter);
+        autoCommands = new AutoCommands(climber, drive, hood, hopper, indexer, intake, linSlide, shooter, led);
 
         // Set up auto routines
         autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
