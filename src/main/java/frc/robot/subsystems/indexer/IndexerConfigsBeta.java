@@ -15,7 +15,7 @@ public class IndexerConfigsBeta {
             .withMotionMagic(MOTION_MAGIC_CONFIGS)
             .withCurrentLimits(new CurrentLimitsConfigs()
                     .withStatorCurrentLimit(100)
-                    .withSupplyCurrentLimit(70)
+                    .withSupplyCurrentLimit(100)
                     .withStatorCurrentLimitEnable(true)
                     .withSupplyCurrentLimitEnable(true)
                     .withSupplyCurrentLowerLimit(40)
