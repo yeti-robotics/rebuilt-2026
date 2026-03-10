@@ -294,14 +294,16 @@ public class RobotContainer {
 
         controller.rightBumper().onTrue(intake.rollOut().alongWith(hopper.applyPower(0.7)));
 
-//        controller
-//                .leftBumper()
-//                .whileTrue(AutoAimCommands.autoAim(
-//                                drive, controller::getLeftY, controller::getLeftX, centerHubOpening.toTranslation2d())
-//                        .alongWith(AutoAimCommands.readyAim(drive, shooter, centerHubOpening.toTranslation2d()))
-//                        .alongWith(led.runPattern(LEDModes.WAVE)));
+        //        controller
+        //                .leftBumper()
+        //                .whileTrue(AutoAimCommands.autoAim(
+        //                                drive, controller::getLeftY, controller::getLeftX,
+        // centerHubOpening.toTranslation2d())
+        //                        .alongWith(AutoAimCommands.readyAim(drive, shooter,
+        // centerHubOpening.toTranslation2d()))
+        //                        .alongWith(led.runPattern(LEDModes.WAVE)));
 
-        controller.leftBumper().whileTrue(shooter.shoot(45));
+        controller.leftBumper().whileTrue(shooter.shoot(75));
 
         controller
                 .rightTrigger()
