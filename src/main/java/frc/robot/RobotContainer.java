@@ -303,7 +303,7 @@ public class RobotContainer {
         // centerHubOpening.toTranslation2d()))
         //                        .alongWith(led.runPattern(LEDModes.WAVE)));
 
-        controller.leftBumper().whileTrue(shooter.shoot(75));
+        controller.leftBumper().whileTrue(shooter.shoot(60));
 
         controller
                 .rightTrigger()
