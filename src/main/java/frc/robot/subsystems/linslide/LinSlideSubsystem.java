@@ -1,5 +1,7 @@
 package frc.robot.subsystems.linslide;
 
+import static edu.wpi.first.units.Units.Rotations;
+
 import edu.wpi.first.units.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -58,8 +60,8 @@ public class LinSlideSubsystem extends SubsystemBase {
         return Units.RotationsPerSecond.of(inputs.velocityRPM).isNear(Units.RotationsPerSecond.of(0), 0.1);
     }
 
-    public boolean isBasicallyZeroPositonLowKey() {
-        return inputs.positionRotation < 0.1;
+    public boolean isCloseToZero() {
+        return Rotations.of(inputs.positionRotation).isNear(Rotations.of(0), 0.05);
     }
 
     public Command defaultMovement(double volts) {

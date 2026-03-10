@@ -19,6 +19,8 @@ import frc.robot.subsystems.indexer.IndexerConfigsBeta;
 import frc.robot.subsystems.indexer.IndexerSubsystem;
 import frc.robot.subsystems.intake.IntakeConfigsBeta;
 import frc.robot.subsystems.intake.IntakeSubsystem;
+import frc.robot.subsystems.led.LED;
+import frc.robot.subsystems.led.LEDModes;
 import frc.robot.subsystems.linslide.LinSlideConfigsBeta;
 import frc.robot.subsystems.linslide.LinSlideSubsystem;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
@@ -35,6 +37,7 @@ public class AutoCommands {
     private final IntakeSubsystem intake;
     private final LinSlideSubsystem linSlide;
     private final ShooterSubsystem shooter;
+    private final LED led;
 
     // public final Trigger indexerTrigger;
 
@@ -46,7 +49,8 @@ public class AutoCommands {
             IndexerSubsystem indexerAuto,
             IntakeSubsystem intake,
             LinSlideSubsystem linSlide,
-            ShooterSubsystem shooter) {
+            ShooterSubsystem shooter,
+            LED leds) {
         this.climber = climber;
         this.drivetrain = drivetrain;
         this.hood = hood;
@@ -55,6 +59,7 @@ public class AutoCommands {
         this.intake = intake;
         this.linSlide = linSlide;
         this.shooter = shooter;
+        this.led = leds;
 
         //        indexerTrigger = new Trigger(() -> !indexer.canRangeDetected())
         //                .and(() -> shooter.getTargetSpeed() > 0)
@@ -109,9 +114,9 @@ public class AutoCommands {
 
     public Command climbTower(Optional<PathPlannerPath> path) {
         return Commands.sequence(
-                climber.deploy(ClimberConfigsBeta.CLIMBER_DEPLOY_CLIMBING_SPEED),
+                climber.deploy(ClimberConfigsBeta.CLIMBER_EXTEND_SPEED),
                 AutoBuilder.followPath(path.get()),
-                climber.climb(ClimberConfigsBeta.CLIMBER_UNCLIMB_SPEED));
+                climber.climb(ClimberConfigsBeta.CLIMBER_RETRACT_SPEED));
     }
 
     // NEW STUFF
@@ -123,14 +128,15 @@ public class AutoCommands {
                         linSlide.applyPower(LinSlideConfigsBeta.LINSLIDE_AUTO_SHOOT_SPEED)
                                 .withTimeout(1),
                         linSlide.applyPower(LinSlideConfigsBeta.LINSLIDE_AUTO_SHOOT_SPEED)
-                                .until(linSlide::isBasicallyZeroRPM),
+                                .until(linSlide::isCloseToZero),
                         Commands.waitSeconds(1)),
                 Commands.parallel(
                         AutoAimCommands.readyAim(drivetrain, shooter, centerHubOpening.toTranslation2d()),
                         AutoAimCommands.autoAim(drivetrain, () -> 0.0, () -> 0.0, centerHubOpening.toTranslation2d()),
                         new WaitCommand(0.2).andThen(hopper.applyPower(HopperConfigsBeta.TEST_HOPPER_SPEED)),
                         new WaitCommand(0.2).andThen(indexer.applyPower(IndexerConfigsBeta.TEST_INDEXER_SPEED)),
-                        new WaitCommand(0.2).andThen(intake.applyPower(IntakeConfigsBeta.ROLL_IN_SPEED))));
+                        new WaitCommand(0.2).andThen(intake.applyPower(IntakeConfigsBeta.ROLL_IN_SPEED))),
+                led.runPattern(LEDModes.WAVE));
     }
 
     public Command shootBumpFire() {
@@ -151,10 +157,10 @@ public class AutoCommands {
         var cmd = climberTest.isEmpty()
                 ? Commands.none()
                 : Commands.sequence(
-                        climber.deploy(ClimberConfigsBeta.CLIMBER_DEPLOY_CLIMBING_SPEED),
+                        climber.deploy(ClimberConfigsBeta.CLIMBER_EXTEND_SPEED),
                         AutoBuilder.followPath(climberTest.get()),
                         Commands.waitSeconds(0.5),
-                        climber.climb(ClimberConfigsBeta.CLIMBER_UNCLIMB_SPEED));
+                        climber.climb(ClimberConfigsBeta.CLIMBER_RETRACT_SPEED));
 
         auto = new PathPlannerAuto(cmd);
         return auto;
@@ -474,11 +480,11 @@ public class AutoCommands {
                 : Commands.sequence(
                         followPathAndIntake(startNeutral, 0.5),
                         followPath(neutralShoot),
-                        shoot(),
+                        shoot().withTimeout(6),
                         AutoBuilder.followPath(shootOutpost.get()),
                         Commands.waitSeconds(1.5),
                         AutoBuilder.followPath(outpostShoot.get()),
-                        shoot());
+                        shoot().withTimeout(6));
         auto = new PathPlannerAuto(cmd);
         return auto;
     }

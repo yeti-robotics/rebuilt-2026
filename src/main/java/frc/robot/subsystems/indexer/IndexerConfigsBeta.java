@@ -14,10 +14,10 @@ public class IndexerConfigsBeta {
     static final TalonFXConfiguration INDEXER_MOTOR_CONFIGS = new TalonFXConfiguration()
             .withMotionMagic(MOTION_MAGIC_CONFIGS)
             .withCurrentLimits(new CurrentLimitsConfigs()
-                    .withStatorCurrentLimit(70)
-                    .withSupplyCurrentLimit(70)
-                    .withStatorCurrentLimitEnable(true)
-                    .withSupplyCurrentLimitEnable(true)
+                    .withStatorCurrentLimit(100)
+                    .withSupplyCurrentLimit(100)
+                    .withStatorCurrentLimitEnable(false)
+                    .withSupplyCurrentLimitEnable(false)
                     .withSupplyCurrentLowerLimit(40)
                     .withSupplyCurrentLowerTime(1));
 
