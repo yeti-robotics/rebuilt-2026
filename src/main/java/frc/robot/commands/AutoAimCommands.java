@@ -9,6 +9,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -112,6 +113,23 @@ public class AutoAimCommands {
                 SwerveRequest.Idle::new);
     }
 
+    public static Command shittleAim(
+            CommandSwerveDrivetrain drive, DoubleSupplier xVelSupplier, DoubleSupplier yVelSupplier) {
+
+        return drive.runEnd(
+                () -> {
+                    SwerveRequest.FieldCentricFacingAngle request = new SwerveRequest.FieldCentricFacingAngle()
+                            .withHeadingPID(20, 0, 0)
+                            .withVelocityX(-xVelSupplier.getAsDouble() * SPEED_MULTIPLIER)
+                            .withVelocityY(-yVelSupplier.getAsDouble() * SPEED_MULTIPLIER)
+                            .withTargetDirection(AllianceFlipUtil.apply(new Rotation2d(Units.degreesToRadians(180))))
+                            .withDriveRequestType(SwerveModule.DriveRequestType.Velocity);
+
+                    drive.setControl(request);
+                },
+                SwerveRequest.Idle::new);
+    }
+
     public static Command compensationAutoAim(
             CommandSwerveDrivetrain drive,
             DoubleSupplier xVelSupplier,
@@ -168,6 +186,26 @@ public class AutoAimCommands {
                     double distance = modifiedTarget.getDistance(currentPosition);
 
                     ShooterStateData state = ShooterConfigsBeta.SHOOTER_MAP.get(distance);
+
+                    double targetRPS = state.rps;
+
+                    Logger.recordOutput("AutoAimCommands/target rps", targetRPS);
+
+                    return shooter.shoot(targetRPS);
+                },
+                Set.of(shooter));
+    }
+
+    public static Command shuttleAim(CommandSwerveDrivetrain drive, ShooterSubsystem shooter) {
+
+        return Commands.defer(
+                () -> {
+                    Pose2d currentPose = drive.getState().Pose;
+                    Translation2d modifiedTarget = AllianceFlipUtil.apply(new Translation2d(2.35, currentPose.getY()));
+                    Translation2d currentPosition = currentPose.getTranslation();
+                    double distance = modifiedTarget.getDistance(currentPosition);
+
+                    ShooterStateData state = ShooterConfigsBeta.SHUTTLE_MAP.get(distance);
 
                     double targetRPS = state.rps;
 
