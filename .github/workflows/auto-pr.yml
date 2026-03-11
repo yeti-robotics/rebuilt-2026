@@ -1,0 +1,28 @@
+name: Auto-open PR on new branch
+
+on:
+  push:
+    branches-ignore:
+      - main
+
+jobs:
+  open-pr:
+    if: github.event.created == true
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Create pull request
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh pr create \
+            --draft \
+            --base main \
+            --head "${{ github.ref_name }}" \
+            --title "${{ github.ref_name }}" \
+            --body "$(cat .github/pull_request_template.md)" \
+            || echo "PR already exists or could not be created — skipping."
