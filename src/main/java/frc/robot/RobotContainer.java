@@ -292,18 +292,27 @@ public class RobotContainer {
                         .alongWith(linSlide.applyPower(LinSlideConfigsBeta.DEPLOY_SPEED))
                         .alongWith(led.runPattern(LEDModes.SOLID_WHITE)));
 
-        controller.rightBumper().onTrue(intake.rollOut().alongWith(hopper.applyPower(0.7)));
+        controller
+                .rightBumper()
+                .onTrue(intake.applyPower(-IntakeConfigsBeta.ROLL_IN_SPEED).alongWith(hopper.applyPower(0.7)));
+
+        //                controller
+        //                        .leftBumper()
+        //                        .whileTrue(AutoAimCommands.autoAim(
+        //                                        drive, controller::getLeftY, controller::getLeftX,
+        //         centerHubOpening.toTranslation2d())
+        //                                .alongWith(AutoAimCommands.readyAim(drive, shooter,
+        //         centerHubOpening.toTranslation2d()))
+        //                                .alongWith(led.runPattern(LEDModes.WAVE)));
 
         //        controller
         //                .leftBumper()
-        //                .whileTrue(AutoAimCommands.autoAim(
-        //                                drive, controller::getLeftY, controller::getLeftX,
-        // centerHubOpening.toTranslation2d())
-        //                        .alongWith(AutoAimCommands.readyAim(drive, shooter,
-        // centerHubOpening.toTranslation2d()))
-        //                        .alongWith(led.runPattern(LEDModes.WAVE)));
+        //                .whileTrue(AutoAimCommands.shittleAim(
+        //                                drive, controller::getLeftY, controller::getLeftX)
+        //                        .alongWith(AutoAimCommands.shuttleAim(drive, shooter))
+        //                        .alongWith(led.runPattern(LEDModes.LOCKED_GREEN)));
 
-        controller.leftBumper().whileTrue(shooter.shoot(60));
+        controller.leftBumper().whileTrue(shooter.shoot(45));
 
         controller
                 .rightTrigger()
@@ -425,6 +434,11 @@ public class RobotContainer {
         double distance = modifiedTarget.getDistance(currentPosition);
 
         Logger.recordOutput("AutoAimCommands/distance", distance);
+
+        Translation2d shittleTranslation = AllianceFlipUtil.apply(new Translation2d(2.35, currentPose.getY()));
+        double shittleDistance = shittleTranslation.getDistance(currentPosition);
+
+        Logger.recordOutput("AutoAimCommands/shittle distance", shittleDistance);
     }
 
     /**
