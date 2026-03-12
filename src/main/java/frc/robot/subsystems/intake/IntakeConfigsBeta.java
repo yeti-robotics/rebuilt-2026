@@ -1,11 +1,13 @@
 package frc.robot.subsystems.intake;
 
-import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.signals.InvertedValue;
 
-public class IntakeConfigsBeta {
+public class
+
+
+IntakeConfigsBeta {
     static final int PRIMARY_INTAKE_MOTOR_ID = 13;
     static final int SECONDARY_INTAKE_MOTOR_ID = 12;
     static final double INTAKE_VOLTAGE = 1;

@@ -1,0 +1,54 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 7.674821683309556,
+        "y": 5.400028530670471
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 6.650821683309556,
+        "y": 5.400028530670471
+      },
+      "isLocked": false,
+      "linkedName": "citrus-neutral2L"
+    },
+    {
+      "anchor": {
+        "x": 2.834490161001789,
+        "y": 5.56830053667263
+      },
+      "prevControl": {
+        "x": 3.6120827389443653,
+        "y": 5.568231098430813
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "citrus-shootL"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 5.0,
+    "maxAcceleration": 5.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0.0,
+    "rotation": 0.18617572010105274
+  },
+  "reversed": false,
+  "folder": "Left Paths",
+  "idealStartingState": {
+    "velocity": 2.5,
+    "rotation": 0.5729386976834867
+  },
+  "useDefaultConstraints": true
+}
