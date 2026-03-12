@@ -20,7 +20,7 @@ public class BatteryFuelGauge extends SubsystemBase {
         batteryGauge = new BattFuelGauge(ID);
         batteryGauge.setManufacturer(BattFuelGauge.BatteryManufacturer.Duracell);
 
-        //batteryGauge.saveLog("");
+        batteryGauge.saveLog("");
     }
 
     public void updateInputs(BatteryFuelGaugeInputs inputs) {
