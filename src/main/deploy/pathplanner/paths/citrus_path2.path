@@ -1,0 +1,95 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 7.994168157423971,
+        "y": 4.49742397137746
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 7.449627483443709,
+        "y": 5.022350993377484
+      },
+      "isLocked": false,
+      "linkedName": "citrus-neutral1L"
+    },
+    {
+      "anchor": {
+        "x": 6.0775,
+        "y": 5.454722719141323
+      },
+      "prevControl": {
+        "x": 6.518325692419058,
+        "y": 5.327115281862122
+      },
+      "nextControl": {
+        "x": 5.460934704830053,
+        "y": 5.633202146690517
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 3.935819536423841,
+        "y": 5.56830053667263
+      },
+      "prevControl": {
+        "x": 4.400419572607719,
+        "y": 5.545268898897315
+      },
+      "nextControl": {
+        "x": 3.471219500239963,
+        "y": 5.5913321744479445
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 2.834490161001789,
+        "y": 5.56830053667263
+      },
+      "prevControl": {
+        "x": 3.305026833631485,
+        "y": 5.438497316636851
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "citrus-shootL"
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.6101694915254208,
+      "rotationDegrees": 57.87470768980655
+    },
+    {
+      "waypointRelativePos": 1.8159806295399419,
+      "rotationDegrees": 59.29809115475758
+    }
+  ],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 5.0,
+    "maxAcceleration": 5.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 0.18617572010105274
+  },
+  "reversed": false,
+  "folder": "Left Paths",
+  "idealStartingState": {
+    "velocity": 2.5,
+    "rotation": 62.00568692333799
+  },
+  "useDefaultConstraints": true
+}

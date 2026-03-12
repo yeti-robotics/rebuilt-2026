@@ -15,22 +15,8 @@ public class IntakeConfigsBeta {
     public static double ROLL_IN_SLOWER = 0.7;
 
     static TalonFXConfiguration PRIMARY_TALONFX_CONFIGS = new TalonFXConfiguration()
-            .withMotorOutput(new MotorOutputConfigs().withInverted(InvertedValue.CounterClockwise_Positive))
-            .withCurrentLimits(new CurrentLimitsConfigs()
-                    .withStatorCurrentLimit(120)
-                    .withSupplyCurrentLimit(70)
-                    .withStatorCurrentLimitEnable(true)
-                    .withSupplyCurrentLimitEnable(true)
-                    .withSupplyCurrentLowerLimit(40)
-                    .withSupplyCurrentLowerTime(1));
+            .withMotorOutput(new MotorOutputConfigs().withInverted(InvertedValue.CounterClockwise_Positive));
 
     static TalonFXConfiguration SECONDARY_TALONFX_CONFIGS = new TalonFXConfiguration()
-            .withMotorOutput(new MotorOutputConfigs().withInverted(InvertedValue.Clockwise_Positive))
-            .withCurrentLimits(new CurrentLimitsConfigs()
-                    .withStatorCurrentLimit(120)
-                    .withSupplyCurrentLimit(70)
-                    .withStatorCurrentLimitEnable(true)
-                    .withSupplyCurrentLimitEnable(true)
-                    .withSupplyCurrentLowerLimit(40)
-                    .withSupplyCurrentLowerTime(1));
+            .withMotorOutput(new MotorOutputConfigs().withInverted(InvertedValue.Clockwise_Positive));
 }
