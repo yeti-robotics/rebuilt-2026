@@ -7,25 +7,25 @@
         {
           "type": "path",
           "data": {
-            "pathName": "citrus_path1"
+            "pathName": "trench_citrus_path1"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "citrus_path2"
+            "pathName": "trench_citrus_path2"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "citrus_path3"
+            "pathName": "trench_citrus_path3"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "citrus_path4"
+            "pathName": "trench_citrus_path4"
           }
         }
       ]

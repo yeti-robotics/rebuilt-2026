@@ -131,7 +131,7 @@ public class AutoCommands {
                                 .until(linSlide::isCloseToZero),
                         Commands.waitSeconds(1)),
                 Commands.parallel(
-                        AutoAimCommands.readyAim(drivetrain, shooter, centerHubOpening.toTranslation2d()),
+                        AutoAimCommands.readyAim(drivetrain, shooter, led, centerHubOpening.toTranslation2d()),
                         AutoAimCommands.autoAim(drivetrain, () -> 0.0, () -> 0.0, centerHubOpening.toTranslation2d()),
                         new WaitCommand(0.2).andThen(hopper.applyPower(HopperConfigsBeta.TEST_HOPPER_SPEED)),
                         new WaitCommand(0.2).andThen(indexer.applyPower(IndexerConfigsBeta.TEST_INDEXER_SPEED)),
@@ -166,12 +166,33 @@ public class AutoCommands {
         return auto;
     }
 
-    public Command citrusAuto() {
-        Optional<PathPlannerPath> citrus1 = PathPlannerUtils.loadPathByName("citrus_path1");
-        Optional<PathPlannerPath> citrus2 = PathPlannerUtils.loadPathByName("citrus_path2");
-        Optional<PathPlannerPath> citrus3 = PathPlannerUtils.loadPathByName("citrus_path3");
-        Optional<PathPlannerPath> citrus4 = PathPlannerUtils.loadPathByName("citrus_path4");
+    public Command citrusAutoTrenchLeft() {
+        Optional<PathPlannerPath> citrus1 = PathPlannerUtils.loadPathByName("trench_citrus_path1");
+        Optional<PathPlannerPath> citrus2 = PathPlannerUtils.loadPathByName("trench_citrus_path2");
+        Optional<PathPlannerPath> citrus3 = PathPlannerUtils.loadPathByName("trench_citrus_path3");
+        Optional<PathPlannerPath> citrus4 = PathPlannerUtils.loadPathByName("trench_citrus_path4");
 
+        PathPlannerAuto auto;
+
+        var cmd = citrus1.isEmpty() || citrus2.isEmpty() || citrus3.isEmpty() || citrus4.isEmpty()
+                ? Commands.none()
+                : Commands.sequence(
+                        followPathAndIntake(citrus1, 0.5),
+                        followPath(citrus2),
+                        shoot(),
+                        followPathAndIntake(citrus3, 0.5),
+                        followPath(citrus4),
+                        shoot());
+
+        auto = new PathPlannerAuto(cmd);
+        return auto;
+    }
+
+    public Command citrusAutoBumpLeft() {
+        Optional<PathPlannerPath> citrus1 = PathPlannerUtils.loadPathByName("bump_citrus_path1");
+        Optional<PathPlannerPath> citrus2 = PathPlannerUtils.loadPathByName("bump_citrus_path2");
+        Optional<PathPlannerPath> citrus3 = PathPlannerUtils.loadPathByName("trench_citrus_path3");
+        Optional<PathPlannerPath> citrus4 = PathPlannerUtils.loadPathByName("bump_citrus_path4");
 
         PathPlannerAuto auto;
 

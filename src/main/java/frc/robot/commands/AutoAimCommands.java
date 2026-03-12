@@ -17,6 +17,8 @@ import frc.robot.subsystems.drive.CommandSwerveDrivetrain;
 import frc.robot.subsystems.drive.TunerConstantsAlpha;
 import frc.robot.subsystems.drive.TunerConstantsBeta;
 import frc.robot.subsystems.hood.HoodSubsystem;
+import frc.robot.subsystems.led.LED;
+import frc.robot.subsystems.led.LEDModes;
 import frc.robot.subsystems.shooter.ShooterConfigsBeta;
 import frc.robot.subsystems.shooter.ShooterSubsystem;
 import frc.robot.util.AllianceFlipUtil;
@@ -158,7 +160,8 @@ public class AutoAimCommands {
     }
     ;
 
-    public static Command readyAim(CommandSwerveDrivetrain drive, ShooterSubsystem shooter, Translation2d target) {
+    public static Command readyAim(
+            CommandSwerveDrivetrain drive, ShooterSubsystem shooter, LED led, Translation2d target) {
 
         return Commands.defer(
                 () -> {
@@ -173,7 +176,10 @@ public class AutoAimCommands {
 
                     Logger.recordOutput("AutoAimCommands/target rps", targetRPS);
 
-                    return shooter.shoot(targetRPS);
+                    return shooter.shoot(targetRPS)
+                            .alongWith(led.runPattern(LEDModes.NOT_LOCKED_RED)
+                                    .until(shooter::isAtSpeed)
+                                    .andThen(led.runPattern(LEDModes.WAVE)));
                 },
                 Set.of(shooter));
     }

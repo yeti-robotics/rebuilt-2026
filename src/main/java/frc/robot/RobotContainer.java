@@ -211,7 +211,10 @@ public class RobotContainer {
         //
         //        // Left
         autoChooser.addOption("Left", autoCommands.oneCycleNeutralTowerLeft());
-        autoChooser.addOption("Citrus", autoCommands.citrusAuto());
+
+        autoChooser.addOption("Citrus", autoCommands.citrusAutoTrenchLeft());
+        autoChooser.addOption("Citrus", autoCommands.citrusAutoBumpLeft());
+
         //        autoChooser.addOption("One Cycle Depot Tower Left", autoCommands.oneCycleDepotTowerLeft());
         //        autoChooser.addOption("Two Cycle Neutral Depot Tower Left",
         // autoCommands.twoCycleNeutralDepotTowerLeft());
@@ -301,8 +304,7 @@ public class RobotContainer {
                 .leftBumper()
                 .whileTrue(AutoAimCommands.autoAim(
                                 drive, controller::getLeftY, controller::getLeftX, centerHubOpening.toTranslation2d())
-                        .alongWith(AutoAimCommands.readyAim(drive, shooter, centerHubOpening.toTranslation2d()))
-                        .alongWith(led.runPattern(LEDModes.WAVE)));
+                        .alongWith(AutoAimCommands.readyAim(drive, shooter, led, centerHubOpening.toTranslation2d())));
 
         //        controller.leftBumper().whileTrue(shooter.shoot(60));
 
@@ -340,7 +342,7 @@ public class RobotContainer {
                 .leftTrigger()
                 .whileTrue(AutoAimCommands.autoAim(
                                 drive, controller2::getLeftY, controller2::getLeftX, centerHubOpening.toTranslation2d())
-                        .alongWith(AutoAimCommands.readyAim(drive, shooter, centerHubOpening.toTranslation2d())));
+                        .alongWith(AutoAimCommands.readyAim(drive, shooter, led, centerHubOpening.toTranslation2d())));
 
         controller2
                 .rightTrigger()
