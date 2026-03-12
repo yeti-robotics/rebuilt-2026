@@ -166,6 +166,29 @@ public class AutoCommands {
         return auto;
     }
 
+    public Command citrusAuto() {
+        Optional<PathPlannerPath> citrus1 = PathPlannerUtils.loadPathByName("citrus_path1");
+        Optional<PathPlannerPath> citrus2 = PathPlannerUtils.loadPathByName("citrus_path2");
+        Optional<PathPlannerPath> citrus3 = PathPlannerUtils.loadPathByName("citrus_path3");
+        Optional<PathPlannerPath> citrus4 = PathPlannerUtils.loadPathByName("citrus_path4");
+
+
+        PathPlannerAuto auto;
+
+        var cmd = citrus1.isEmpty() || citrus2.isEmpty() || citrus3.isEmpty() || citrus4.isEmpty()
+                ? Commands.none()
+                : Commands.sequence(
+                followPathAndIntake(citrus1, 0.5),
+                followPath(citrus2),
+                shoot(),
+                followPathAndIntake(citrus3, 0.5),
+                followPath(citrus4),
+                shoot());
+
+        auto = new PathPlannerAuto(cmd);
+        return auto;
+    }
+
     // Real Autos
     public Command oneCycleNeutralTowerLeft() {
         Optional<PathPlannerPath> startNeutral = PathPlannerUtils.loadPathByName("start-neutral_L-left");

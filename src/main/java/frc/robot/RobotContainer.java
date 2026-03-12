@@ -211,6 +211,7 @@ public class RobotContainer {
         //
         //        // Left
         autoChooser.addOption("Left", autoCommands.oneCycleNeutralTowerLeft());
+        autoChooser.addOption("Citrus", autoCommands.citrusAuto());
         //        autoChooser.addOption("One Cycle Depot Tower Left", autoCommands.oneCycleDepotTowerLeft());
         //        autoChooser.addOption("Two Cycle Neutral Depot Tower Left",
         // autoCommands.twoCycleNeutralDepotTowerLeft());
