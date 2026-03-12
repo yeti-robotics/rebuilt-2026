@@ -167,10 +167,10 @@ public class AutoCommands {
     }
 
     public Command citrusAutoTrenchLeft() {
-        Optional<PathPlannerPath> citrus1 = PathPlannerUtils.loadPathByName("trench_citrus_path1");
-        Optional<PathPlannerPath> citrus2 = PathPlannerUtils.loadPathByName("trench_citrus_path2");
-        Optional<PathPlannerPath> citrus3 = PathPlannerUtils.loadPathByName("trench_citrus_path3");
-        Optional<PathPlannerPath> citrus4 = PathPlannerUtils.loadPathByName("trench_citrus_path4");
+        Optional<PathPlannerPath> citrus1 = PathPlannerUtils.loadPathByName("trench_citrus_path1L");
+        Optional<PathPlannerPath> citrus2 = PathPlannerUtils.loadPathByName("trench_citrus_path2L");
+        Optional<PathPlannerPath> citrus3 = PathPlannerUtils.loadPathByName("trench_citrus_path3L");
+        Optional<PathPlannerPath> citrus4 = PathPlannerUtils.loadPathByName("trench_citrus_path4L");
 
         PathPlannerAuto auto;
 
@@ -189,10 +189,10 @@ public class AutoCommands {
     }
 
     public Command citrusAutoBumpLeft() {
-        Optional<PathPlannerPath> citrus1 = PathPlannerUtils.loadPathByName("trench_citrus_path1");
-        Optional<PathPlannerPath> citrus2 = PathPlannerUtils.loadPathByName("bump_citrus_path2");
-        Optional<PathPlannerPath> citrus3 = PathPlannerUtils.loadPathByName("trench_citrus_path3");
-        Optional<PathPlannerPath> citrus4 = PathPlannerUtils.loadPathByName("bump_citrus_path4");
+        Optional<PathPlannerPath> citrus1 = PathPlannerUtils.loadPathByName("trench_citrus_path1L");
+        Optional<PathPlannerPath> citrus2 = PathPlannerUtils.loadPathByName("bump_citrus_path2L");
+        Optional<PathPlannerPath> citrus3 = PathPlannerUtils.loadPathByName("trench_citrus_path3L");
+        Optional<PathPlannerPath> citrus4 = PathPlannerUtils.loadPathByName("bump_citrus_path4L");
 
         PathPlannerAuto auto;
 
