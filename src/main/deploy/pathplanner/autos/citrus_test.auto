@@ -1,0 +1,37 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "citrus_path1"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "citrus_path2"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "citrus_path3"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "citrus_path4"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": null,
+  "choreoAuto": false
+}

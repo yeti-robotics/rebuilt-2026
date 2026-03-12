@@ -1,0 +1,155 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 2.834490161001789,
+        "y": 5.56830053667263
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 2.913395149786019,
+        "y": 6.538630527817404
+      },
+      "isLocked": false,
+      "linkedName": "citrus-shootL"
+    },
+    {
+      "anchor": {
+        "x": 3.948487874465049,
+        "y": 7.444336661911555
+      },
+      "prevControl": {
+        "x": 3.5020083421261035,
+        "y": 7.4587392274708755
+      },
+      "nextControl": {
+        "x": 4.750684736091298,
+        "y": 7.41845934379458
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 6.31626248216833,
+        "y": 7.017360912981456
+      },
+      "prevControl": {
+        "x": 6.19981455064194,
+        "y": 7.470213980028531
+      },
+      "nextControl": {
+        "x": 6.507029899976414,
+        "y": 6.275487621505572
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 6.1351212553495005,
+        "y": 5.400028530670471
+      },
+      "prevControl": {
+        "x": 6.445649072753208,
+        "y": 5.943452211126962
+      },
+      "nextControl": {
+        "x": 5.761251353566794,
+        "y": 4.745756202550732
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 6.1351212553495005,
+        "y": 3.8344507845934377
+      },
+      "prevControl": {
+        "x": 5.892764058646676,
+        "y": 4.127830549023174
+      },
+      "nextControl": {
+        "x": 6.380955777460771,
+        "y": 3.5368616262482155
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 7.674821683309556,
+        "y": 3.6015549215406564
+      },
+      "prevControl": {
+        "x": 7.33777023569348,
+        "y": 2.9274520263085058
+      },
+      "nextControl": {
+        "x": 8.050042796005705,
+        "y": 4.351997146932953
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 7.674821683309556,
+        "y": 5.400028530670471
+      },
+      "prevControl": {
+        "x": 7.881840228245363,
+        "y": 4.753095577746076
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "citrus-neutral2L"
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 1,
+      "rotationDegrees": 180.0
+    },
+    {
+      "waypointRelativePos": 1.5454545454545432,
+      "rotationDegrees": 180.0
+    },
+    {
+      "waypointRelativePos": 2,
+      "rotationDegrees": 80.0
+    },
+    {
+      "waypointRelativePos": 4,
+      "rotationDegrees": 90.0
+    },
+    {
+      "waypointRelativePos": 5,
+      "rotationDegrees": -133.87669728592456
+    }
+  ],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 5.0,
+    "maxAcceleration": 5.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 2.5,
+    "rotation": 0.5729386976834867
+  },
+  "reversed": false,
+  "folder": "Left Paths",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": 0.18617572010105274
+  },
+  "useDefaultConstraints": true
+}

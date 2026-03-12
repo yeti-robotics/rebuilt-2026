@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 4.408354203935599,
-        "y": 7.564025044722719
+        "x": 7.674821683309556,
+        "y": 5.400028530670471
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.059877382743546,
-        "y": 7.665664117570401
+        "x": 6.650821683309556,
+        "y": 5.400028530670471
       },
       "isLocked": false,
-      "linkedName": "start-left"
+      "linkedName": "citrus-neutral2L"
     },
     {
       "anchor": {
-        "x": 2.2923395149786017,
-        "y": 6.4092439372325245
+        "x": 2.834490161001789,
+        "y": 5.56830053667263
       },
       "prevControl": {
-        "x": 2.5101375282236345,
-        "y": 6.931959169020604
+        "x": 3.6120827389443653,
+        "y": 5.568231098430813
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "shoot-left"
+      "linkedName": "citrus-shootL"
     }
   ],
   "rotationTargets": [],
@@ -41,14 +41,14 @@
     "unlimited": false
   },
   "goalEndState": {
-    "velocity": 0,
-    "rotation": 0.7161599454704586
+    "velocity": 0.0,
+    "rotation": 0.18617572010105274
   },
   "reversed": false,
   "folder": "Left Paths",
   "idealStartingState": {
-    "velocity": 0,
-    "rotation": -179.0289780689209
+    "velocity": 2.5,
+    "rotation": 0.5729386976834867
   },
   "useDefaultConstraints": true
 }
