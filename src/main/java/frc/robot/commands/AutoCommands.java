@@ -135,8 +135,7 @@ public class AutoCommands {
                         AutoAimCommands.autoAim(drivetrain, () -> 0.0, () -> 0.0, centerHubOpening.toTranslation2d()),
                         new WaitCommand(0.2).andThen(hopper.applyPower(HopperConfigsBeta.TEST_HOPPER_SPEED)),
                         new WaitCommand(0.2).andThen(indexer.applyPower(IndexerConfigsBeta.TEST_INDEXER_SPEED)),
-                        new WaitCommand(0.2).andThen(intake.applyPower(IntakeConfigsBeta.ROLL_IN_SPEED))),
-                led.runPattern(LEDModes.WAVE));
+                        new WaitCommand(0.2).andThen(intake.applyPower(IntakeConfigsBeta.ROLL_IN_SPEED))));
     }
 
     public Command shootBumpFire() {

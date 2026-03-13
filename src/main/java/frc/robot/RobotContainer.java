@@ -311,12 +311,14 @@ public class RobotContainer {
 
         controller
                 .rightTrigger()
-                .whileTrue(hopper.applyPower(TEST_HOPPER_SPEED)
+                .whileTrue(
+                        linSlide.applyPower(LinSlideConfigsBeta.DEPLOY_SPEED).withTimeout(1 )
+                                .andThen(hopper.applyPower(TEST_HOPPER_SPEED)
                         .alongWith(intake.applyPower(IntakeConfigsBeta.ROLL_IN_SLOWER)
                                 .alongWith(indexer.applyPower(IndexerConfigsBeta.TEST_INDEXER_SPEED)
                                         .alongWith(new WaitCommand(0.8)
                                                 .andThen(linSlide.applyPower(
-                                                        LinSlideConfigsBeta.LINSLIDE_AUTO_SHOOT_SPEED))))));
+                                                        LinSlideConfigsBeta.LINSLIDE_AUTO_SHOOT_SPEED)))))));
     }
 
     private void configureDebugBindings() {
