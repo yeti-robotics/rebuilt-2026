@@ -13,7 +13,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "trench_citrus_path2L"
+            "pathName": "bump_citrus_path2L"
           }
         },
         {
@@ -25,7 +25,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "trench_citrus_path4L"
+            "pathName": "bump_citrus_path4L"
           }
         }
       ]
