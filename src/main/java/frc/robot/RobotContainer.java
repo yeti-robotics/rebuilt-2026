@@ -212,8 +212,9 @@ public class RobotContainer {
         //        // Left
         autoChooser.addOption("Left", autoCommands.oneCycleNeutralTowerLeft());
 
-        autoChooser.addOption("Citrus", autoCommands.citrusAutoTrenchLeft());
-        autoChooser.addOption("Citrus", autoCommands.citrusAutoBumpLeft());
+        autoChooser.addOption("Citrus Trench Left", autoCommands.citrusAutoTrenchLeft());
+        autoChooser.addOption("Citrus Bump Left", autoCommands.citrusAutoBumpLeft());
+        autoChooser.addOption("Depot Center", autoCommands.oneCycleDepotShoot());
 
         //        autoChooser.addOption("One Cycle Depot Tower Left", autoCommands.oneCycleDepotTowerLeft());
         //        autoChooser.addOption("Two Cycle Neutral Depot Tower Left",

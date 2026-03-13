@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.4697574893009984,
-        "y": 3.64037089871612
+        "x": 3.6038674698795177,
+        "y": 5.018493975903613
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.9478459343794565,
-        "y": 3.6171469329529247
+        "x": 3.081955914957976,
+        "y": 4.995270010140418
       },
       "isLocked": false,
       "linkedName": "init-center"
@@ -53,7 +53,7 @@
   "folder": "Center paths",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 47.57178769531803
+    "rotation": 0.0
   },
   "useDefaultConstraints": true
 }

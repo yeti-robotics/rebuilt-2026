@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.6038674698795177,
-        "y": 5.018493975903613
+        "x": 0.8063734939759035,
+        "y": 5.88178313253012
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.107833233074952,
-        "y": 5.008208669198906
+        "x": 1.254409638554217,
+        "y": 5.914566265060241
       },
       "isLocked": false,
-      "linkedName": "init-center"
+      "linkedName": "depot"
     },
     {
       "anchor": {
-        "x": 2.5,
-        "y": 4.0
+        "x": 1.5713132530120486,
+        "y": 5.88178313253012
       },
       "prevControl": {
-        "x": 3.0169044222539223,
-        "y": 3.9897146932952925
+        "x": 1.2216265060240963,
+        "y": 5.859927710843374
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "shoot-center"
+      "linkedName": null
     }
   ],
   "rotationTargets": [],
@@ -42,7 +42,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": -34.11447294534129
   },
   "reversed": false,
   "folder": "Center paths",

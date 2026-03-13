@@ -344,6 +344,23 @@ public class AutoCommands {
         return auto;
     }
 
+    public Command oneCycleDepotShoot() {
+        Optional<PathPlannerPath> startDepotRight = PathPlannerUtils.loadPathByName("init-depot-center");
+        Optional<PathPlannerPath> depotForward = PathPlannerUtils.loadPathByName("depot-forward-center");
+
+
+        PathPlannerAuto auto;
+
+        var cmd = startDepotRight.isEmpty() || depotForward.isEmpty()
+                ? Commands.none()
+                : Commands.sequence(
+                followPathAndIntake(startDepotRight, 0.5),
+                followPath(depotForward),
+                shoot());
+        auto = new PathPlannerAuto(cmd);
+        return auto;
+    }
+
     public Command oneCycleNeutralRightTowerCenter() {
         Optional<PathPlannerPath> initNeutralR = PathPlannerUtils.loadPathByName("init-neutral_R-center");
         Optional<PathPlannerPath> neutralRShoot = PathPlannerUtils.loadPathByName("neutral_R-shoot-center");
