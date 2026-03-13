@@ -1,0 +1,182 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 3.1372268211920527,
+        "y": 0.7270000000000003
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 3.5184855674037183,
+        "y": 0.670054512394236
+      },
+      "isLocked": false,
+      "linkedName": "citrus-shootR"
+    },
+    {
+      "anchor": {
+        "x": 6.31626248216833,
+        "y": 0.9829999999999997
+      },
+      "prevControl": {
+        "x": 6.019584905660378,
+        "y": 0.37807547169811295
+      },
+      "nextControl": {
+        "x": 6.518910575449424,
+        "y": 1.3961987448537636
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 5.750802980132451,
+        "y": 2.3019999999999996
+      },
+      "prevControl": {
+        "x": 5.7248810474779654,
+        "y": 1.6687283885106194
+      },
+      "nextControl": {
+        "x": 5.808839496097275,
+        "y": 3.7198293910471136
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 6.31626248216833,
+        "y": 3.9000000000000004
+      },
+      "prevControl": {
+        "x": 6.1626223309243136,
+        "y": 3.7027825973051165
+      },
+      "nextControl": {
+        "x": 6.4942484240078,
+        "y": 4.128468436678593
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 7.529486754966888,
+        "y": 3.9000000000000004
+      },
+      "prevControl": {
+        "x": 7.276466191659065,
+        "y": 4.173984598356204
+      },
+      "nextControl": {
+        "x": 7.835187195901657,
+        "y": 3.568970729367445
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 7.674821683309556,
+        "y": 2.5999999999999996
+      },
+      "prevControl": {
+        "x": 7.788348171693242,
+        "y": 3.164707079660108
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "citrus-Neutral2R"
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.75,
+      "rotationDegrees": -3.0640148334815662
+    },
+    {
+      "waypointRelativePos": 1.0,
+      "rotationDegrees": -32.103
+    },
+    {
+      "waypointRelativePos": 1.9782082324455246,
+      "rotationDegrees": -86.09
+    },
+    {
+      "waypointRelativePos": 3.0,
+      "rotationDegrees": -123.172
+    },
+    {
+      "waypointRelativePos": 4.0,
+      "rotationDegrees": 133.877
+    },
+    {
+      "waypointRelativePos": 5,
+      "rotationDegrees": 0.0
+    }
+  ],
+  "constraintZones": [
+    {
+      "name": "Constraints Zone",
+      "minWaypointRelativePos": 2.341342756183698,
+      "maxWaypointRelativePos": 5.0,
+      "constraints": {
+        "maxVelocity": 1.5,
+        "maxAcceleration": 5.0,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0,
+        "nominalVoltage": 12.0,
+        "unlimited": false
+      }
+    }
+  ],
+  "pointTowardsZones": [],
+  "eventMarkers": [
+    {
+      "name": "rollIn",
+      "waypointRelativePos": 1.5696113074205194,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "rollIn"
+              }
+            },
+            {
+              "type": "named",
+              "data": {
+                "name": "popLintake"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 5.0,
+    "maxAcceleration": 5.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 2.5,
+    "rotation": 0.5729386976834867
+  },
+  "reversed": false,
+  "folder": "Right Paths",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": 0.0
+  },
+  "useDefaultConstraints": true
+}

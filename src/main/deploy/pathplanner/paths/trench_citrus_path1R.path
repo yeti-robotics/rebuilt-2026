@@ -1,0 +1,134 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 4.464150943396227,
+        "y": 0.6097358490566034
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 5.291150943396229,
+        "y": 0.6097358490566034
+      },
+      "isLocked": false,
+      "linkedName": "citrus-start-right"
+    },
+    {
+      "anchor": {
+        "x": 7.8315,
+        "y": 0.8083018867924523
+      },
+      "prevControl": {
+        "x": 7.555621896215972,
+        "y": 0.590504659314126
+      },
+      "nextControl": {
+        "x": 8.12476549954003,
+        "y": 1.0398259252673139
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 8.129349056603774,
+        "y": 2.115528301886792
+      },
+      "prevControl": {
+        "x": 8.147562249468741,
+        "y": 1.4782313448433109
+      },
+      "nextControl": {
+        "x": 8.113119461933191,
+        "y": 2.6834172697516605
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 7.6601655629139085,
+        "y": 3.6020000000000003
+      },
+      "prevControl": {
+        "x": 7.84162004218843,
+        "y": 3.265832214654019
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "citrus-neutral1R"
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.6735751295336797,
+      "rotationDegrees": 180.0
+    },
+    {
+      "waypointRelativePos": 1.823834196891191,
+      "rotationDegrees": -75.0
+    }
+  ],
+  "constraintZones": [
+    {
+      "name": "Constraints Zone",
+      "minWaypointRelativePos": 1.2169611307420487,
+      "maxWaypointRelativePos": 3.0,
+      "constraints": {
+        "maxVelocity": 1.5,
+        "maxAcceleration": 5.0,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0,
+        "nominalVoltage": 12.0,
+        "unlimited": false
+      }
+    }
+  ],
+  "pointTowardsZones": [],
+  "eventMarkers": [
+    {
+      "name": "rollIn",
+      "waypointRelativePos": 1.2254416961130725,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "rollIn"
+              }
+            },
+            {
+              "type": "named",
+              "data": {
+                "name": "popLintake"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 5.0,
+    "maxAcceleration": 5.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 2.5,
+    "rotation": 0.0
+  },
+  "reversed": false,
+  "folder": "Right Paths",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": -179.16116347069553
+  },
+  "useDefaultConstraints": true
+}

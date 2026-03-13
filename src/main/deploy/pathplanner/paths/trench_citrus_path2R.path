@@ -1,0 +1,109 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 7.6601655629139085,
+        "y": 3.6020000000000003
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 6.9523979465205175,
+        "y": 2.494613430420075
+      },
+      "isLocked": false,
+      "linkedName": "citrus-neutral1R"
+    },
+    {
+      "anchor": {
+        "x": 6.643774834437085,
+        "y": 1.678
+      },
+      "prevControl": {
+        "x": 6.718602402036742,
+        "y": 1.9176836574629297
+      },
+      "nextControl": {
+        "x": 6.462132294851629,
+        "y": 1.096172344293914
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 5.69998344370861,
+        "y": 0.6539999999999999
+      },
+      "prevControl": {
+        "x": 5.924048957978284,
+        "y": 0.7648812216521192
+      },
+      "nextControl": {
+        "x": 5.115996265466393,
+        "y": 0.3650076846777174
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 3.1372268211920527,
+        "y": 0.7270000000000003
+      },
+      "prevControl": {
+        "x": 3.647811400230278,
+        "y": 0.6779532163676634
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "citrus-shootR"
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.6101694915254208,
+      "rotationDegrees": 31.219
+    },
+    {
+      "waypointRelativePos": 1.8,
+      "rotationDegrees": 0.0
+    }
+  ],
+  "constraintZones": [
+    {
+      "name": "Constraints Zone",
+      "minWaypointRelativePos": 1.9717314487632502,
+      "maxWaypointRelativePos": 3.0,
+      "constraints": {
+        "maxVelocity": 3.0,
+        "maxAcceleration": 5.0,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0,
+        "nominalVoltage": 12.0,
+        "unlimited": false
+      }
+    }
+  ],
+  "pointTowardsZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 5.0,
+    "maxAcceleration": 5.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 0.0
+  },
+  "reversed": false,
+  "folder": "Right Paths",
+  "idealStartingState": {
+    "velocity": 2.5,
+    "rotation": 0.0
+  },
+  "useDefaultConstraints": true
+}
