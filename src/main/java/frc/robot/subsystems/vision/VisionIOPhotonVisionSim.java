@@ -31,7 +31,6 @@ public class VisionIOPhotonVisionSim extends VisionIOPhotonVision {
 
     private final Supplier<Pose2d> poseSupplier;
     private final PhotonCameraSim cameraSim;
-
     /**
      * Creates a new VisionIOPhotonVisionSim.
      *
@@ -53,6 +52,8 @@ public class VisionIOPhotonVisionSim extends VisionIOPhotonVision {
         cameraSim = new PhotonCameraSim(camera, cameraProperties);
         visionSim.addCamera(cameraSim, robotToCamera);
     }
+
+
 
     @Override
     public void updateInputs(VisionIOInputs inputs) {
