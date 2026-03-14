@@ -1,26 +1,26 @@
-package frc.robot.subsystems.hopper;
+package frc.robot.subsystems.indexer;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.littletonrobotics.junction.Logger;
 
-public class Hopper extends SubsystemBase {
+public class Indexer extends SubsystemBase {
 
-    private HopperIO io;
-    private HopperIOInputsAutoLogged inputs = new HopperIOInputsAutoLogged();
+    private IndexerIO io;
+    private IndexerIOInputsAutoLogged inputs = new IndexerIOInputsAutoLogged();
 
     @Override
     public void periodic() {
         io.updateInputs(inputs);
-        Logger.processInputs("Hopper", inputs);
+        Logger.processInputs("Indexer", inputs);
     }
 
-    public Hopper(HopperIO io) {
+    public Indexer(IndexerIO io) {
         this.io = io;
     }
 
-    public Command spinHopper(double volts) {
-        return run(() -> io.spinHopperRoller(volts));
+    public Command spinIndexer(double volts) {
+        return run(() -> io.spinIndexerRoller(volts));
     }
 
     public Command applyPower(double power) {

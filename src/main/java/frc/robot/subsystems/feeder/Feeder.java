@@ -1,29 +1,29 @@
-package frc.robot.subsystems.indexer;
+package frc.robot.subsystems.feeder;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.littletonrobotics.junction.Logger;
 
-public class IndexerSubsystem extends SubsystemBase {
-    private IndexerIO io;
-    private IndexerIOInputsAutoLogged inputs = new IndexerIOInputsAutoLogged();
+public class Feeder extends SubsystemBase {
+    private FeederIO io;
+    private FeederIOInputsAutoLogged inputs = new FeederIOInputsAutoLogged();
 
     @Override
     public void periodic() {
         io.updateInputs(inputs);
-        Logger.processInputs("Indexer", inputs);
+        Logger.processInputs("Feeder", inputs);
     }
 
-    public IndexerSubsystem(IndexerIO io) {
+    public Feeder(FeederIO io) {
         this.io = io;
     }
 
     public Command runMotors(double volts) {
-        return runEnd(() -> io.spinIndexer(volts), () -> io.spinIndexer(0));
+        return runEnd(() -> io.spinFeeder(volts), () -> io.spinFeeder(0));
     }
 
     public Command runMotorsUntilDetected(double volts) {
-        return runEnd(() -> io.spinIndexer(volts), () -> io.spinIndexer(0)).until(() -> inputs.isDetected);
+        return runEnd(() -> io.spinFeeder(volts), () -> io.spinFeeder(0)).until(() -> inputs.isDetected);
     }
 
     public Command index(double volts) {
