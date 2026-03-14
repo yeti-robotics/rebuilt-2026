@@ -39,7 +39,6 @@ import frc.robot.subsystems.hood.HoodIO;
 import frc.robot.subsystems.hood.HoodIOBeta;
 import frc.robot.subsystems.indexer.*;
 import frc.robot.subsystems.indexer.Indexer;
-import frc.robot.subsystems.indexer.IndexerConfigsBeta;
 import frc.robot.subsystems.indexer.IndexerIO;
 import frc.robot.subsystems.indexer.IndexerIOAlpha;
 import frc.robot.subsystems.intake.*;
