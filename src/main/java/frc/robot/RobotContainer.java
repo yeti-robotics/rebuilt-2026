@@ -399,7 +399,7 @@ public class RobotContainer {
 
     public void configureTriggers() {
         new Trigger(DriverStation::isDisabled).whileTrue(led.runPattern(LEDModes.BLUE_ALLIANCE_ACTIVE));
-        new Trigger(() -> climbState.toString().equals("CLIMB")).whileTrue(led.runPattern(LEDModes.RAINBOW));
+        new Trigger(() -> climbState == ClimberState.CLIMB).whileTrue(led.runPattern(LEDModes.RAINBOW));
     }
 
     public void updateLoggers() {
