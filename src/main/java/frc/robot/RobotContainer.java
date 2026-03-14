@@ -427,6 +427,10 @@ public class RobotContainer {
         Logger.recordOutput("AutoAimCommands/distance", distance);
     }
 
+    public void saveLog() {
+        battery.saveLog();
+    }
+
     /**
      * Use this to pass the autonomous command to the main {@link Robot} class.
      *

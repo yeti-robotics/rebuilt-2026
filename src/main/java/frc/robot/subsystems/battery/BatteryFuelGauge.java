@@ -21,8 +21,6 @@ public class BatteryFuelGauge extends SubsystemBase {
     public BatteryFuelGauge(int ID) {
         batteryGauge = new BattFuelGauge(ID);
         batteryGauge.setManufacturer(BattFuelGauge.BatteryManufacturer.MKPowered);
-
-        batteryGauge.saveLog("");
     }
 
     public void updateInputs(BatteryFuelGaugeIO.BatteryFuelGaugeInputs inputs) {
@@ -35,5 +33,9 @@ public class BatteryFuelGauge extends SubsystemBase {
     public void periodic() {
         updateInputs(inputs);
         Logger.processInputs("Battery Gauge", inputs);
+    }
+
+    public void saveLog() {
+        batteryGauge.saveLog("");
     }
 }
