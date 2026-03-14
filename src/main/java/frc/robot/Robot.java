@@ -101,6 +101,7 @@ public class Robot extends LoggedRobot {
     @Override
     public void disabledInit() {
         Elastic.selectTab("Prematch");
+        robotContainer.saveLog();
     }
 
     /** This function is called periodically when disabled. */
