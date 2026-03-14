@@ -16,9 +16,9 @@ import frc.robot.constants.Constants;
 import frc.robot.subsystems.drive.CommandSwerveDrivetrain;
 import frc.robot.subsystems.drive.TunerConstantsAlpha;
 import frc.robot.subsystems.drive.TunerConstantsBeta;
-import frc.robot.subsystems.hood.HoodSubsystem;
+import frc.robot.subsystems.hood.Hood;
+import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.subsystems.shooter.ShooterConfigsBeta;
-import frc.robot.subsystems.shooter.ShooterSubsystem;
 import frc.robot.util.AllianceFlipUtil;
 import frc.robot.util.ShooterStateData;
 import java.util.Set;
@@ -116,8 +116,8 @@ public class AutoAimCommands {
             CommandSwerveDrivetrain drive,
             DoubleSupplier xVelSupplier,
             DoubleSupplier yVelSupplier,
-            ShooterSubsystem shooter,
-            HoodSubsystem hood,
+            Shooter shooter,
+            Hood hood,
             Translation2d target) {
 
         Pose2d currentPose = drive.getState().Pose;
@@ -158,7 +158,7 @@ public class AutoAimCommands {
     }
     ;
 
-    public static Command readyAim(CommandSwerveDrivetrain drive, ShooterSubsystem shooter, Translation2d target) {
+    public static Command readyAim(CommandSwerveDrivetrain drive, Shooter shooter, Translation2d target) {
 
         return Commands.defer(
                 () -> {
