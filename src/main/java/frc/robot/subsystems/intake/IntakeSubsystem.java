@@ -50,7 +50,6 @@ public class IntakeSubsystem extends SubsystemBase {
                             io.setIntakeMotor(0);
                             io.setRunning(false);
                         }))
-                .andThen(() -> io.setRunning(false))
                 .andThen(runOnce(() -> System.out.println("setRunning is false")));
     }
 

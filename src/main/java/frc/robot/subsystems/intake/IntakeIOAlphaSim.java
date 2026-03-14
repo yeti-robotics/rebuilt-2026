@@ -27,7 +27,7 @@ public class IntakeIOAlphaSim implements IntakeIO {
                 driveTrain, // Drive simulation
                 Inches.of(24), // Width of intake
                 Inches.of(7), // Extension length of intake
-                IntakeSimulation.IntakeSide.FRONT, // Side intake is mounted on
+                IntakeSimulation.IntakeSide.BACK, // Side intake is mounted on
                 44); // placeholder value
 
         this.shooterIOSim = shooterIOSim;

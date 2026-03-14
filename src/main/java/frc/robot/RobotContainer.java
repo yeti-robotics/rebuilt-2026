@@ -152,11 +152,10 @@ public class RobotContainer {
                 // Sim robot, instantiate physics sim IO implementations
                 drive = TunerConstantsAlpha.createDrivetrain();
                 linSlide = new LinSlideSubsystem(new LinSlideIOReal());
-                intake = new IntakeSubsystem(new IntakeIOAlpha());
-                drive.resetPose(new Pose2d(3, 3, new Rotation2d()));
                 shooterSim = new ShooterIOSim(
                         drive.getSimulation()::getSimulatedDriveTrainPose, () -> drive.getState().Speeds);
-                intakeIOSim = new IntakeIOAlphaSim(drive.getSimulation(), shooterSim);
+                intake = new IntakeSubsystem(new IntakeIOAlphaSim(drive.getSimulation(), shooterSim));
+                drive.resetPose(new Pose2d(3, 3, new Rotation2d()));
                 hopper = new Hopper(new HopperIOAlpha());
                 vision = new Vision(
                         drive,
