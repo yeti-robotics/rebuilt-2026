@@ -39,8 +39,6 @@ public class AutoCommands {
     private final Shooter shooter;
     private final LED led;
 
-    // public final Trigger indexerTrigger;
-
     public AutoCommands(
             Climber climber,
             CommandSwerveDrivetrain drivetrain,
