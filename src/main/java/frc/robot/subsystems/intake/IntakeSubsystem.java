@@ -34,6 +34,10 @@ public class IntakeSubsystem extends SubsystemBase {
         return runEnd(() -> io.applyPower(percent), () -> io.applyPower(0));
     }
 
+    public double getRPM() {
+        return inputs.primaryMotorRPM;
+    }
+
     public Command setRollerSim(double power) {
         return runOnce(() -> io.setRunning(true))
                 .andThen(runOnce(() -> System.out.println("setRunning is true")))

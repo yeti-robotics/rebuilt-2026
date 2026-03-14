@@ -4,6 +4,7 @@ import static edu.wpi.first.units.Units.*;
 
 import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.Utils;
+import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.swerve.SwerveDrivetrainConstants;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.swerve.SwerveRequest;
@@ -11,12 +12,17 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
+import edu.wpi.first.epilogue.Logged;
+import edu.wpi.first.epilogue.NotLogged;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Notifier;
@@ -24,9 +30,8 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-import frc.robot.generated.TunerConstants;
-import frc.robot.generated.TunerConstants.TunerSwerveDrivetrain;
 import frc.robot.subsystems.vision.Vision;
 import frc.robot.util.sim.MapleSimSwerveDrivetrain;
 import java.util.function.Supplier;
@@ -37,9 +42,21 @@ import org.littletonrobotics.junction.Logger;
  * Class that extends the Phoenix 6 SwerveDrivetrain class and implements Subsystem so it can easily be used in
  * command-based projects.
  */
-public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Subsystem, Vision.VisionConsumer {
-    private static final double kSimLoopPeriod = 0.002; // 2 ms
+@Logged
+public class CommandSwerveDrivetrain extends TunerConstantsAlpha.TunerSwerveDrivetrain
+        implements Subsystem, Vision.VisionConsumer {
+    private static final double kSimLoopPeriod = 0.005; // 5 ms
     private Notifier m_simNotifier = null;
+    private double m_lastSimTime;
+    RobotConfig config;
+
+    @NotLogged
+    SwerveDriveKinematics m_kinematics;
+
+    public final Trigger zeroedWheels = new Trigger(() -> isWheelZeroed(getCANcoder(0)))
+            .and(() -> isWheelZeroed(getCANcoder(1)))
+            .and(() -> isWheelZeroed(getCANcoder(2)))
+            .and(() -> isWheelZeroed(getCANcoder(3)));
 
     /* Blue alliance sees forward as 0 degrees (toward red alliance wall) */
     private static final Rotation2d kBlueAlliancePerspectiveRotation = Rotation2d.kZero;
@@ -58,6 +75,17 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             new SwerveRequest.SysIdSwerveSteerGains();
     private final SwerveRequest.SysIdSwerveRotation m_rotationCharacterization =
             new SwerveRequest.SysIdSwerveRotation();
+
+    @Logged(name = "spin")
+    public AngularVelocity getSpin() {
+        return this.getPigeon2().getAngularVelocityZWorld().getValue();
+    }
+
+    public boolean isMotionBlur() {
+        return getSpin().gte(TunerConstantsAlpha.MAX_BLUR_SPEED);
+    }
+
+    private final SwerveRequest.ApplyRobotSpeeds AutoReq = new SwerveRequest.ApplyRobotSpeeds();
 
     /* SysId routine for characterizing translation. This is used to find PID gains for the drive motors. */
     private final SysIdRoutine m_sysIdRoutineTranslation = new SysIdRoutine(
@@ -105,7 +133,9 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
                     this));
 
     /* The SysId routine to test */
-    private SysIdRoutine m_sysIdRoutineToApply = m_sysIdRoutineTranslation;
+    private SysIdRoutine m_sysIdRoutineToApply = m_sysIdRoutineRotation;
+    public final PPHolonomicDriveController driveController =
+            new PPHolonomicDriveController(new PIDConstants(10.0, 0.0, 0.0), new PIDConstants(7.0, 0.0, 0.0));
 
     /**
      * Constructs a CTRE SwerveDrivetrain using the specified constants.
@@ -113,16 +143,40 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
      * <p>This constructs the underlying hardware devices, so users should not construct the devices themselves. If they
      * need the devices, they can access them through getters in the classes.
      *
-     * @param drivetrainConstants Drivetrain-wide constants for the swerve drive
-     * @param modules Constants for each specific module
      */
+    public ChassisSpeeds getChassisSpeeds() {
+        return m_kinematics.toChassisSpeeds(getState().ModuleStates);
+    }
+
     public CommandSwerveDrivetrain(
             SwerveDrivetrainConstants drivetrainConstants, SwerveModuleConstants<?, ?, ?>... modules) {
         super(drivetrainConstants, MapleSimSwerveDrivetrain.regulateModuleConstantsForSimulation(modules));
         if (Utils.isSimulation()) {
             startSimThread();
         }
-        configureAutoBuilder();
+        // registerTelemetry(TunerConstants.logger::telemeterize);
+
+        {
+            try {
+                config = RobotConfig.fromGUISettings();
+                m_kinematics = new SwerveDriveKinematics(config.moduleLocations);
+
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+
+            AutoBuilder.configure(
+                    () -> this.getState().Pose,
+                    this::resetPose,
+                    this::getChassisSpeeds,
+                    (ChassisSpeeds speeds) -> this.setControl(AutoReq.withSpeeds(speeds)),
+                    driveController,
+                    config,
+                    () -> DriverStation.getAlliance()
+                            .filter(value -> value == Alliance.Red)
+                            .isPresent(),
+                    this);
+        }
     }
 
     /**
@@ -181,6 +235,11 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             startSimThread();
         }
         configureAutoBuilder();
+    }
+
+    private boolean isWheelZeroed(CANcoder wheel) {
+        double position = wheel.getPosition().refresh().getValueAsDouble();
+        return position >= 0;
     }
 
     private void configureAutoBuilder() {
@@ -285,15 +344,21 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
                 getModuleLocations(),
                 getPigeon2(),
                 getModules(),
-                TunerConstants.FrontLeft,
-                TunerConstants.FrontRight,
-                TunerConstants.BackLeft,
-                TunerConstants.BackRight);
+                TunerConstantsAlpha.FrontLeft,
+                TunerConstantsAlpha.FrontRight,
+                TunerConstantsAlpha.BackLeft,
+                TunerConstantsAlpha.BackRight);
         /* Run simulation at a faster rate so PID gains behave more reasonably */
         m_simNotifier = new Notifier(mapleSimSwerveDrivetrain::update);
         m_simNotifier.startPeriodic(kSimLoopPeriod);
     }
 
+    /**
+     * Adds a vision measurement to the Kalman Filter. This will correct the odometry pose estimate
+     * while still accounting for measurement noise.
+     *
+     * @param pose visionRobotPoseMeters The pose of the robot as measured by the vision camera.
+     */
     @Override
     public void resetPose(Pose2d pose) {
         if (this.mapleSimSwerveDrivetrain != null) mapleSimSwerveDrivetrain.mapleSimDrive.setSimulationWorldPose(pose);
@@ -303,6 +368,10 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 
     public SwerveDriveSimulation getSimulation() {
         return mapleSimSwerveDrivetrain.mapleSimDrive;
+    }
+
+    private CANcoder getCANcoder(int id) {
+        return getModule(id).getEncoder();
     }
 
     @Override

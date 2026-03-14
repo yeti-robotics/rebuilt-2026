@@ -43,10 +43,13 @@ public class Robot extends LoggedRobot {
                     case 1 -> "Uncommitted changes";
                     default -> "Unknown";
                 });
+        Logger.recordMetadata("Serial Number", System.getenv("serialnum"));
+        Logger.recordMetadata("Current Robot", Constants.currentMode.toString());
 
         // Set up data receivers & replay source
         switch (Constants.currentMode) {
-            case REAL:
+            case ALPHA:
+            case BETA:
                 // Running on a real robot, log to a USB stick ("/U/logs")
                 Logger.addDataReceiver(new WPILOGWriter());
                 Logger.addDataReceiver(new NT4Publisher());
@@ -164,6 +167,7 @@ public class Robot extends LoggedRobot {
     @Override
     public void simulationPeriodic() {
         PhysicsSim.getInstance().run();
+        robotContainer.updateVisionSim();
         robotContainer.updateSimulation();
     }
 }

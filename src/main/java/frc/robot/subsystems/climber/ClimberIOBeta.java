@@ -4,7 +4,6 @@ import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.MotionMagicTorqueCurrentFOC;
 import com.ctre.phoenix6.controls.NeutralOut;
 import com.ctre.phoenix6.hardware.TalonFX;
-import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj.Servo;
 import frc.robot.Robot;
 import frc.robot.constants.Constants;
@@ -23,6 +22,8 @@ public class ClimberIOBeta implements ClimberIO {
             PhysicsSim.getInstance().addTalonFX(climberMotor);
         }
         climberMotor.getConfigurator().apply(ClimberConfigsBeta.primaryTalonFXConfigs);
+
+        zeroPosition();
     }
 
     @Override
@@ -32,7 +33,7 @@ public class ClimberIOBeta implements ClimberIO {
     }
 
     @Override
-    public void setClimberPosition(Angle position) {
+    public void setClimberPosition(double position) {
         climberMotor.setControl(magicRequest.withPosition(position));
     }
 

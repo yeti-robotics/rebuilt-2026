@@ -33,8 +33,11 @@ public class VisionConstants {
 
     // Standard deviation baselines, for 1 meter distance and 1 tag
     // (Adjusted automatically based on distance and # of tags)
-    public static double linearStdDevBaseline = 0.02; // Meters
-    public static double angularStdDevBaseline = 0.06; // Radians
+    public static double frontLinearStdDevBaseline = 0.02; // Meters
+    public static double frontAngularStdDevBaseline = 0.06; // Radians
+
+    public static double sideLinearStdDevBaseline = 0.04; // Meters
+    public static double sideAngularStdDevBaseline = 0.12; // Radians
 
     // Standard deviation multipliers for each camera
     // (Adjust to trust some cameras more than others)
@@ -45,7 +48,7 @@ public class VisionConstants {
     public static double angularStdDevMegatag2Factor = Double.POSITIVE_INFINITY; // No rotation data available
 
     public static Transform3d frontCamTrans = new Transform3d(
-            new Translation3d(0.3556, -0.05715, 0.257175), new Rotation3d(0, Math.toRadians(15), Math.toRadians(0)));
+            new Translation3d(0.286512, 0.030988, 0.258318), new Rotation3d(0, Math.toRadians(15), Math.toRadians(0)));
     public static Transform3d sideCamTrans = new Transform3d(
             new Translation3d(0.1778, -0.32385, 0.41656), new Rotation3d(0, Math.toRadians(0), Math.toRadians(90)));
 }

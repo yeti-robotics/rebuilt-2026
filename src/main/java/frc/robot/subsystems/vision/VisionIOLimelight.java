@@ -39,6 +39,8 @@ public class VisionIOLimelight implements VisionIO {
     private final DoubleArraySubscriber megatag1Subscriber;
 
     private final String name;
+    private final double stdLinearTrustValue;
+    private final double stdAngularTrustValue;
 
     /**
      * Creates a new VisionIOLimelight.
@@ -46,7 +48,8 @@ public class VisionIOLimelight implements VisionIO {
      * @param name The configured name of the Limelight.
      * @param rotationSupplier Supplier for the current estimated rotation, used for MegaTag 2.
      */
-    public VisionIOLimelight(String name, Supplier<Rotation2d> rotationSupplier) {
+    public VisionIOLimelight(
+            String name, Supplier<Rotation2d> rotationSupplier, double stdDeviationTrust, double stdAngularTrust) {
         var table = NetworkTableInstance.getDefault().getTable(name);
         this.rotationSupplier = rotationSupplier;
         orientationPublisher =
@@ -56,11 +59,15 @@ public class VisionIOLimelight implements VisionIO {
         tySubscriber = table.getDoubleTopic("ty").subscribe(0.0);
         megatag1Subscriber = table.getDoubleArrayTopic("botpose_wpiblue").subscribe(new double[] {});
         this.name = name;
+        this.stdLinearTrustValue = stdDeviationTrust;
+        this.stdAngularTrustValue = stdAngularTrust;
     }
 
     @Override
     public void updateInputs(VisionIOInputs inputs) {
         // Update connection status based on whether an update has been seen in the last 250ms
+        inputs.stdLinearTrust = this.stdLinearTrustValue;
+        inputs.stdAngularTrust = this.stdAngularTrustValue;
         inputs.connected = ((RobotController.getFPGATime() - latencySubscriber.getLastChange()) / 1000) < 250;
 
         // Update target observation

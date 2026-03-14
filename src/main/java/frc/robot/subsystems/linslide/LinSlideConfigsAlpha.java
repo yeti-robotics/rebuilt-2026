@@ -8,11 +8,12 @@ import frc.robot.Robot;
 
 public class LinSlideConfigsAlpha {
     static final int LIN_SLIDE_MOTOR_ID = 21;
+    static final int OTHER_LIN_SLIDE_MOTOR_ID = 12;
     static final double GEAR_RATIO = 2.1333333;
 
     private static final Slot0Configs SLOT_0_CONFIGS = Robot.isReal()
             ? new Slot0Configs()
-                    .withKP(1) // placeholder values
+                    .withKP(1)
                     .withKI(0)
                     .withKD(0)
                     .withKG(1)
@@ -33,7 +34,7 @@ public class LinSlideConfigsAlpha {
     static final TalonFXConfiguration linSlideTalonFXConfigs = new TalonFXConfiguration()
             .withSlot0(SLOT_0_CONFIGS)
             .withMotionMagic(new MotionMagicConfigs()
-                    .withMotionMagicAcceleration(1) // placeholder values
+                    .withMotionMagicAcceleration(1)
                     .withMotionMagicCruiseVelocity(1)
                     .withMotionMagicJerk(0))
             .withFeedback(new FeedbackConfigs().withRotorToSensorRatio(1).withSensorToMechanismRatio(GEAR_RATIO))

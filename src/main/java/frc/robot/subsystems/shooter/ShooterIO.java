@@ -10,6 +10,8 @@ public interface ShooterIO {
 
         public double bottomMotorVoltage = 0;
         public double bottomMotorRPM = 0;
+
+        public double targetRPM = 0;
     }
 
     public default void updateInputs(ShooterIOInputs inputs) {}

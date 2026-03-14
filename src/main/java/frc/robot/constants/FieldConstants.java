@@ -5,20 +5,21 @@ import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
+import org.littletonrobotics.junction.Logger;
 
 public class FieldConstants {
     public static final double FIELD_LENGTH = Units.inchesToMeters(651.2);
     public static final double FIELD_WIDTH = 317.7; // inches
 
     public static final class Hub {
-        public static final double CENTER_HUB_X = 158.6; // inches
+        public static final double CENTER_HUB_X = 158.6 + 47 / 2; // inches
         public static Translation3d farLeftHubCorner = new Translation3d(
-                Units.inchesToMeters(CENTER_HUB_X + 47 / 2),
+                Units.inchesToMeters(CENTER_HUB_X),
                 Units.inchesToMeters((FIELD_WIDTH + 47) / 2),
                 Units.inchesToMeters(72));
 
         public static Translation3d closeRightHubCorner = new Translation3d(
-                Units.inchesToMeters(CENTER_HUB_X - 47 / 2),
+                Units.inchesToMeters(CENTER_HUB_X),
                 Units.inchesToMeters((FIELD_WIDTH - 47) / 2),
                 Units.inchesToMeters(72));
 
@@ -28,6 +29,7 @@ public class FieldConstants {
 
         static {
             aprilTags = AprilTagFieldLayout.loadField(AprilTagFields.kDefaultField);
+            Logger.recordOutput("Center Hub Opening Transform", centerHubOpening);
         }
     }
 

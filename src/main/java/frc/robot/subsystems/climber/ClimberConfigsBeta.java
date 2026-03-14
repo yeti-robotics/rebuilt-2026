@@ -10,14 +10,17 @@ public class ClimberConfigsBeta {
     static final int CLIMBER_MOTOR_ID = 9;
     static final int LINEAR_SERVO_CHANNEL = 1;
     static final int CLIMBER_SENSOR_ID = 101;
-    public static final double TEST_CLIMBER_SPEED = 0.2;
+
+    static final double ROTOR_TO_SENSOR = 1.0;
+    static final double SENSOR_TO_MECHANISM = 35.0;
+    public static final double TEST_CLIMBER_SPEED = 0.3;
+    public static final double CLIMBER_EXTEND_SPEED = 0.7;
+    public static final double CLIMBER_RETRACT_SPEED = -0.5;
 
     public static final double HEIGHT_TOLERANCE = 0.2;
 
-    // get the proper gear ratio;
     static final double GEAR_RATIO = 0;
 
-    // tune the sim values - the bottom ones
     private static final Slot0Configs SLOT_0_CONFIGS = Robot.isReal()
             ? new Slot0Configs()
                     .withKP(0)
@@ -44,8 +47,15 @@ public class ClimberConfigsBeta {
                     .withMotionMagicAcceleration(30)
                     .withMotionMagicCruiseVelocity(15)
                     .withMotionMagicJerk(0))
-            .withFeedback(new FeedbackConfigs().withRotorToSensorRatio(1).withSensorToMechanismRatio(GEAR_RATIO))
+            .withFeedback(new FeedbackConfigs()
+                    .withRotorToSensorRatio(ROTOR_TO_SENSOR)
+                    .withSensorToMechanismRatio(SENSOR_TO_MECHANISM))
             .withMotorOutput(new MotorOutputConfigs()
                     .withInverted(InvertedValue.CounterClockwise_Positive)
-                    .withNeutralMode(NeutralModeValue.Brake));
+                    .withNeutralMode(NeutralModeValue.Brake))
+            .withSoftwareLimitSwitch(new SoftwareLimitSwitchConfigs()
+                    .withForwardSoftLimitEnable(true)
+                    .withReverseSoftLimitEnable(true)
+                    .withForwardSoftLimitThreshold(4.4)
+                    .withReverseSoftLimitThreshold(0.02));
 }

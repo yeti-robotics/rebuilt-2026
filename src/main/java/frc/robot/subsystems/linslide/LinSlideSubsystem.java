@@ -1,5 +1,8 @@
 package frc.robot.subsystems.linslide;
 
+import static edu.wpi.first.units.Units.Rotations;
+
+import edu.wpi.first.units.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.littletonrobotics.junction.Logger;
@@ -18,9 +21,19 @@ public class LinSlideSubsystem extends SubsystemBase {
         Logger.processInputs("LinSlide", inputs);
     }
 
-    public Command moveToPosition(double power, boolean target) {
+    public Command runIntake(double power, boolean stow) {
         return runEnd(() -> io.applyPower(power), () -> io.applyPower(0))
-                .until(() -> target ? inputs.isDeployed : inputs.isStowed);
+                .until(() -> stow ? inputs.isDeployed : inputs.isStowed);
+    }
+
+    public Command agitate() {
+        return applyPower(0.2)
+                .until(() -> inputs.positionRotation
+                        == LinSlidePosition.HALF.getPosition().magnitude())
+                .andThen(applyPower(-0.2)
+                        .until(() -> inputs.positionRotation
+                                == LinSlidePosition.DEPLOY.getPosition().magnitude()))
+                .repeatedly();
     }
 
     public Command applyPower(double power) {
@@ -41,5 +54,17 @@ public class LinSlideSubsystem extends SubsystemBase {
 
     public boolean isDeployed() {
         return inputs.isDeployed;
+    }
+
+    public boolean isBasicallyZeroRPM() {
+        return Units.RotationsPerSecond.of(inputs.velocityRPM).isNear(Units.RotationsPerSecond.of(0), 0.1);
+    }
+
+    public boolean isCloseToZero() {
+        return Rotations.of(inputs.positionRotation).isNear(Rotations.of(0), 0.05);
+    }
+
+    public Command defaultMovement(double volts) {
+        return run(() -> io.applyVoltage(volts)).until(this::isBasicallyZeroRPM);
     }
 }

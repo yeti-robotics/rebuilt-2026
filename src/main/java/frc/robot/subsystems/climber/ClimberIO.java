@@ -1,6 +1,5 @@
 package frc.robot.subsystems.climber;
 
-import edu.wpi.first.units.measure.Angle;
 import org.littletonrobotics.junction.AutoLog;
 
 public interface ClimberIO {
@@ -13,7 +12,7 @@ public interface ClimberIO {
 
     public default void updateInputs(ClimberIOInputs inputs) {}
 
-    public default void setClimberPosition(Angle position) {}
+    public default void setClimberPosition(double position) {}
 
     public default void zeroPosition() {}
 
