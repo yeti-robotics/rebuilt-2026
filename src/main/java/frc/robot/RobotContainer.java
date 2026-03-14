@@ -28,6 +28,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.AutoAimCommands;
 import frc.robot.commands.AutoCommands;
 import frc.robot.constants.Constants;
+import frc.robot.subsystems.battery.BatteryFuelGauge;
 import frc.robot.subsystems.climber.*;
 import frc.robot.subsystems.drive.*;
 import frc.robot.subsystems.drive.TunerConstantsAlpha;
@@ -76,6 +77,7 @@ public class RobotContainer {
     private final Vision vision;
     private final HoodSubsystem hood;
     private final AutoCommands autoCommands;
+    private final BatteryFuelGauge battery;
 
     // Controller
     private final CommandXboxController controller =
@@ -109,6 +111,7 @@ public class RobotContainer {
                 shooter = new ShooterSubsystem(new ShooterIOReal());
                 indexer = new IndexerSubsystem(new IndexerIOReal());
                 hood = null;
+                battery = new BatteryFuelGauge(0);
                 vision = new Vision(
                         drive,
                         new VisionIOLimelight(
@@ -135,6 +138,7 @@ public class RobotContainer {
                 shooter = new ShooterSubsystem(new ShooterIOReal());
                 indexer = new IndexerSubsystem(new IndexerIOReal());
                 hood = new HoodSubsystem(new HoodIOBeta());
+                battery = new BatteryFuelGauge(0);
                 vision = new Vision(
                         drive,
                         new VisionIOLimelight(
@@ -165,7 +169,7 @@ public class RobotContainer {
                 shooter = new ShooterSubsystem(new ShooterIOReal());
                 indexer = new IndexerSubsystem(new IndexerIOReal());
                 hood = new HoodSubsystem(new HoodIOBeta());
-
+                battery = new BatteryFuelGauge(0);
                 break;
 
             default:
@@ -179,7 +183,7 @@ public class RobotContainer {
                 indexer = new IndexerSubsystem(new IndexerIO() {});
                 shooter = new ShooterSubsystem((new ShooterIO() {}));
                 hood = new HoodSubsystem(new HoodIO() {});
-
+                battery = new BatteryFuelGauge(0);
                 break;
         }
 

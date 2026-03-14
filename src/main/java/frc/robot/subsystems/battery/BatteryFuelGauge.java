@@ -6,11 +6,13 @@ import org.littletonrobotics.junction.AutoLog;
 import org.littletonrobotics.junction.Logger;
 
 public class BatteryFuelGauge extends SubsystemBase {
-    @AutoLog
-    public static class BatteryFuelGaugeInputs {
-        float voltage = 0;
-        float current = 0;
-        float charge = 0;
+    interface BatteryFuelGaugeIO {
+        @AutoLog
+        class BatteryFuelGaugeInputs {
+            float voltage = 0;
+            float current = 0;
+            float charge = 0;
+        }
     }
 
     private BattFuelGauge batteryGauge;
@@ -18,12 +20,12 @@ public class BatteryFuelGauge extends SubsystemBase {
 
     public BatteryFuelGauge(int ID) {
         batteryGauge = new BattFuelGauge(ID);
-        batteryGauge.setManufacturer(BattFuelGauge.BatteryManufacturer.Duracell);
+        batteryGauge.setManufacturer(BattFuelGauge.BatteryManufacturer.MKPowered);
 
         batteryGauge.saveLog("");
     }
 
-    public void updateInputs(BatteryFuelGaugeInputs inputs) {
+    public void updateInputs(BatteryFuelGaugeIO.BatteryFuelGaugeInputs inputs) {
         inputs.voltage = batteryGauge.getVoltage();
         inputs.current = batteryGauge.getCurrent();
         inputs.charge = batteryGauge.getRemainingChargePct();
