@@ -120,43 +120,41 @@ public class AutoAimCommands {
             HoodSubsystem hood,
             Translation2d target) {
 
-        Pose2d currentPose = drive.getState().Pose;
         Translation2d modifiedTarget = AllianceFlipUtil.apply(target);
-        Translation2d currentPosition = currentPose.getTranslation();
-        double distance = modifiedTarget.getDistance(currentPosition);
 
-        ShooterStateData state = ShooterConfigsBeta.SHOOTER_MAP.get(distance);
-        double timeOfFlight = state.timeOfFlight;
+        return Commands.run(() -> {
+            Pose2d currentPose = drive.getState().Pose;
+            Translation2d currentPosition = currentPose.getTranslation();
+            ChassisSpeeds speeds = drive.getState().Speeds;
+            Translation2d robotVelocity = new Translation2d(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond);
 
-        double joystickVX = -xVelSupplier.getAsDouble() * SPEED_MULTIPLIER;
-        double joystickVY = -yVelSupplier.getAsDouble() * SPEED_MULTIPLIER;
+            double distance = modifiedTarget.getDistance(currentPosition);
+            ShooterStateData state = ShooterConfigsBeta.SHOOTER_MAP.get(distance);
+            double timeOfFlight = state.timeOfFlight;
 
-        ChassisSpeeds speeds = drive.getState().Speeds;
-        Translation2d robotVelocity = new Translation2d(speeds.vxMetersPerSecond, speeds.vyMetersPerSecond);
+            Translation2d robotDisplacement = robotVelocity.times(timeOfFlight);
+            Translation2d compensatedTarget = modifiedTarget.minus(robotDisplacement);
+            double compensatedDistance = compensatedTarget.getDistance(currentPosition);
 
-        Translation2d robotDisplacement = robotVelocity.times(timeOfFlight);
+            ShooterStateData compensatedState = ShooterConfigsBeta.SHOOTER_MAP.get(compensatedDistance);
+            double targetRPS = compensatedState.rps;
+            Angle targetHoodAngle = compensatedState.hoodPos;
 
-        Translation2d compensatedTarget = modifiedTarget.minus(robotDisplacement);
+            double joystickVX = -xVelSupplier.getAsDouble() * SPEED_MULTIPLIER;
+            double joystickVY = -yVelSupplier.getAsDouble() * SPEED_MULTIPLIER;
 
-        double compensatedDistance = compensatedTarget.getDistance(currentPosition);
+            SwerveRequest.FieldCentricFacingAngle request = new SwerveRequest.FieldCentricFacingAngle()
+                    .withHeadingPID(5, 0, 0)
+                    .withVelocityX(joystickVX)
+                    .withVelocityY(joystickVY)
+                    .withTargetDirection(calcDesiredHeading(currentPose, compensatedTarget))
+                    .withDriveRequestType(SwerveModule.DriveRequestType.Velocity);
 
-        ShooterStateData compensatedState = ShooterConfigsBeta.SHOOTER_MAP.get(compensatedDistance);
-
-        double targetRPS = compensatedState.rps;
-        Angle targetHoodAngle = compensatedState.hoodPos;
-
-        SwerveRequest.FieldCentricFacingAngle request = new SwerveRequest.FieldCentricFacingAngle()
-                .withHeadingPID(5, 0, 0)
-                .withVelocityX(joystickVX)
-                .withVelocityY(joystickVY)
-                .withTargetDirection(calcDesiredHeading(currentPose, compensatedTarget))
-                .withDriveRequestType(SwerveModule.DriveRequestType.Velocity);
-
-        return Commands.run(() -> drive.setControl(request))
-                .alongWith(hood.moveToPosition(targetHoodAngle))
-                .alongWith(shooter.shoot(targetRPS));
+            drive.setControl(request);
+            hood.moveToPosition(targetHoodAngle);
+            shooter.shoot(targetRPS);
+        }, drive, hood, shooter);
     }
-    ;
 
     public static Command readyAim(CommandSwerveDrivetrain drive, ShooterSubsystem shooter, Translation2d target) {
 
