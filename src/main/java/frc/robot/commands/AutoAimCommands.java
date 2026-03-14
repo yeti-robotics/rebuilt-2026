@@ -58,7 +58,6 @@ public class AutoAimCommands {
                             .getAngle()
                             .plus(Rotation2d.kPi)
                             .rotateBy(AllianceFlipUtil.apply(Rotation2d.k180deg));
-                    ; // remove if needed for real robot
                     Translation2d fieldRel = new Translation2d(rawXVelo, rawYVelo).rotateBy(targetHeading);
 
                     double angularVelo =
@@ -156,7 +155,6 @@ public class AutoAimCommands {
                 .alongWith(hood.moveToPosition(targetHoodAngle))
                 .alongWith(shooter.shoot(targetRPS));
     }
-    ;
 
     public static Command readyAim(CommandSwerveDrivetrain drive, Shooter shooter, Translation2d target) {
 
