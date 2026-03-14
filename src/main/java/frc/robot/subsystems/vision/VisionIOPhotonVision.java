@@ -14,6 +14,7 @@
 package frc.robot.subsystems.vision;
 
 import static frc.robot.subsystems.vision.VisionConstants.aprilTagLayout;
+import static frc.robot.subsystems.vision.VisionConstants.maxAmbiguity;
 
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -25,7 +26,8 @@ import java.util.Set;
 import org.photonvision.PhotonCamera;
 
 /** IO implementation for real PhotonVision hardware. */
-public class VisionIOPhotonVision implements VisionIO {
+public class
+VisionIOPhotonVision implements VisionIO {
     protected final PhotonCamera camera;
     protected final Transform3d robotToCamera;
 
@@ -41,13 +43,26 @@ public class VisionIOPhotonVision implements VisionIO {
         // Read new camera observations
         Set<Short> tagIds = new HashSet<>();
         List<PoseObservation> poseObservations = new LinkedList<>();
+        resultLoop:
         for (var result : camera.getAllUnreadResults()) {
             // Update latest target observation
             if (result.hasTargets()) {
-                inputs.latestTargetObservation = new TargetObservation(
-                        Rotation2d.fromDegrees(result.getBestTarget().getYaw()),
-                        Rotation2d.fromDegrees(result.getBestTarget().getPitch()));
-            } else {
+                for (var target : result.targets) {
+                    boolean lessThan5M =
+                            AprilTagDetectionHelpers.getDetectionDistance(
+                                    target.getBestCameraToTarget())
+                                    > 5;
+                    boolean tagAmb = target.getPoseAmbiguity() > maxAmbiguity;
+
+                    if (lessThan5M || tagAmb) {
+                        break resultLoop;
+                    }
+
+                    inputs.latestTargetObservation = new TargetObservation(
+                            Rotation2d.fromDegrees(result.getBestTarget().getYaw()),
+                            Rotation2d.fromDegrees(result.getBestTarget().getPitch()));
+                }
+            }else {
                 inputs.latestTargetObservation = new TargetObservation(new Rotation2d(), new Rotation2d());
             }
 
