@@ -37,4 +37,24 @@ public class IntakeSubsystem extends SubsystemBase {
     public double getRPM() {
         return inputs.primaryMotorRPM;
     }
+
+    public Command setRollerSim(double power) {
+        return runOnce(() -> io.setRunning(true))
+                .andThen(runOnce(() -> System.out.println("setRunning is true")))
+                .andThen(runEnd(
+                        () -> {
+                            io.setIntakeMotor(power);
+                            System.out.println("Intake");
+                        },
+                        () -> {
+                            io.setIntakeMotor(0);
+                            io.setRunning(false);
+                        }))
+                .andThen(() -> io.setRunning(false))
+                .andThen(runOnce(() -> System.out.println("setRunning is false")));
+    }
+
+    public Command handoffFuel() {
+        return runOnce(io::handoffFuel);
+    }
 }
