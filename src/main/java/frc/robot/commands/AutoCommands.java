@@ -45,8 +45,8 @@ public class AutoCommands {
             Climber climber,
             CommandSwerveDrivetrain drivetrain,
             Hood hood,
-            Indexer indexerAuto,
-            Feeder feederAuto,
+            Indexer indexer,
+            Feeder feeder,
             Intake intake,
             LinSlide linSlide,
             Shooter shooter,
@@ -54,17 +54,12 @@ public class AutoCommands {
         this.climber = climber;
         this.drivetrain = drivetrain;
         this.hood = hood;
-        this.indexer = indexerAuto;
-        this.feeder = feederAuto;
+        this.indexer = indexer;
+        this.feeder = feeder;
         this.intake = intake;
         this.linSlide = linSlide;
         this.shooter = shooter;
         this.led = leds;
-
-        //        indexerTrigger = new Trigger(() -> !indexer.canRangeDetected())
-        //                .and(() -> shooter.getTargetSpeed() > 0)
-        //                .debounce(4)
-        //                .onTrue(shooter.stopFlywheels());
 
         NamedCommands.registerCommand("rollIn", rollIn());
         NamedCommands.registerCommand("popLintake", popLintake());
@@ -80,14 +75,6 @@ public class AutoCommands {
     }
 
     // Broken-Up Commands
-    public Command aimAndRev() {
-        return Commands.sequence(
-                        AutoAimCommands.autoAim(drivetrain, () -> 0, () -> 0, centerHubOpening.toTranslation2d())
-                                .withTimeout(1),
-                        shooter.revUpFlywheels(20).until(shooter::isAtSpeed))
-                .andThen(() -> Logger.recordOutput("AutoTest", "Aimed and revved"));
-    }
-
     public Command intake() {
         return Commands.parallel(
                 linSlide.applyPower(LinSlideConfigsBeta.DEPLOY_SPEED),
@@ -119,8 +106,6 @@ public class AutoCommands {
                 climber.climb(ClimberConfigsBeta.CLIMBER_RETRACT_SPEED));
     }
 
-    // NEW STUFF
-
     public Command shoot() {
         return Commands.deadline(
                 Commands.sequence(
@@ -148,7 +133,7 @@ public class AutoCommands {
                         feeder.applyPower(TEST_FEEDER_SPEED).withTimeout(2)));
     }
 
-    // Testing Autos
+    // Test Commands
     public Command climberTest() {
         Optional<PathPlannerPath> climberTest = PathPlannerUtils.loadPathByName("Climb-Test");
         PathPlannerAuto auto;
@@ -165,7 +150,7 @@ public class AutoCommands {
         return auto;
     }
 
-    // Real Autos
+    // Autos
     public Command oneCycleNeutralTowerLeft() {
         Optional<PathPlannerPath> startNeutral = PathPlannerUtils.loadPathByName("start-neutral_L-left");
         Optional<PathPlannerPath> neutralShoot = PathPlannerUtils.loadPathByName("neutral_L-shoot-left");

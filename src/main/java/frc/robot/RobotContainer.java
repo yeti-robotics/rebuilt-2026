@@ -31,6 +31,7 @@ import frc.robot.subsystems.climber.*;
 import frc.robot.subsystems.drive.*;
 import frc.robot.subsystems.drive.TunerConstantsAlpha;
 import frc.robot.subsystems.feeder.Feeder;
+import frc.robot.subsystems.feeder.FeederConfigsBeta;
 import frc.robot.subsystems.feeder.FeederIO;
 import frc.robot.subsystems.feeder.FeederIOReal;
 import frc.robot.subsystems.hood.Hood;
@@ -110,10 +111,10 @@ public class RobotContainer {
                 linSlide = new LinSlide(new LinSlideIOReal());
                 intake = new Intake(new IntakeIOAlpha());
                 indexer = new Indexer(new IndexerIOAlpha());
-                climber = null;
+                climber = new Climber(new ClimberIO() {});
                 shooter = new Shooter(new ShooterIOReal());
                 feeder = new Feeder(new FeederIOReal());
-                hood = null;
+                hood = new Hood(new HoodIO() {});
                 vision = new Vision(
                         drive,
                         new VisionIOLimelight(
@@ -315,7 +316,7 @@ public class RobotContainer {
                 .rightTrigger()
                 .whileTrue(indexer.applyPower(TEST_INDEXER_SPEED)
                         .alongWith(intake.applyPower(IntakeConfigsBeta.ROLL_IN_SLOWER)
-                                .alongWith(indexer.applyPower(IndexerConfigsBeta.TEST_INDEXER_SPEED)
+                                .alongWith(feeder.applyPower(FeederConfigsBeta.TEST_FEEDER_SPEED)
                                         .alongWith(new WaitCommand(0.8)
                                                 .andThen(linSlide.applyPower(
                                                         LinSlideConfigsBeta.LINSLIDE_AUTO_SHOOT_SPEED))))));

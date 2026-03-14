@@ -13,5 +13,5 @@ public interface IndexerIO {
 
     public default void spinIndexerRoller(double volts) {}
 
-    public default void applyPower(double volts) {}
+    public default void applyPower(double power) {}
 }
