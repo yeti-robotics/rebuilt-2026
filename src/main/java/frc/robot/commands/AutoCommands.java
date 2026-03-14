@@ -1,6 +1,8 @@
 package frc.robot.commands;
 
 import static frc.robot.constants.FieldConstants.Hub.centerHubOpening;
+import static frc.robot.subsystems.feeder.FeederConfigsBeta.TEST_FEEDER_SPEED;
+import static frc.robot.subsystems.indexer.IndexerConfigsBeta.TEST_INDEXER_SPEED;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
@@ -12,18 +14,16 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.subsystems.climber.Climber;
 import frc.robot.subsystems.climber.ClimberConfigsBeta;
 import frc.robot.subsystems.drive.CommandSwerveDrivetrain;
-import frc.robot.subsystems.hood.HoodSubsystem;
-import frc.robot.subsystems.hopper.Hopper;
-import frc.robot.subsystems.hopper.HopperConfigsBeta;
-import frc.robot.subsystems.indexer.IndexerConfigsBeta;
-import frc.robot.subsystems.indexer.IndexerSubsystem;
+import frc.robot.subsystems.feeder.Feeder;
+import frc.robot.subsystems.hood.Hood;
+import frc.robot.subsystems.indexer.Indexer;
+import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.IntakeConfigsBeta;
-import frc.robot.subsystems.intake.IntakeSubsystem;
 import frc.robot.subsystems.led.LED;
 import frc.robot.subsystems.led.LEDModes;
+import frc.robot.subsystems.linslide.LinSlide;
 import frc.robot.subsystems.linslide.LinSlideConfigsBeta;
-import frc.robot.subsystems.linslide.LinSlideSubsystem;
-import frc.robot.subsystems.shooter.ShooterSubsystem;
+import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.util.PathPlannerUtils;
 import java.util.Optional;
 import org.littletonrobotics.junction.Logger;
@@ -31,12 +31,12 @@ import org.littletonrobotics.junction.Logger;
 public class AutoCommands {
     private final Climber climber;
     private final CommandSwerveDrivetrain drivetrain;
-    private final HoodSubsystem hood;
-    private final Hopper hopper;
-    private final IndexerSubsystem indexer;
-    private final IntakeSubsystem intake;
-    private final LinSlideSubsystem linSlide;
-    private final ShooterSubsystem shooter;
+    private final Hood hood;
+    private final Feeder feeder;
+    private final Indexer indexer;
+    private final Intake intake;
+    private final LinSlide linSlide;
+    private final Shooter shooter;
     private final LED led;
 
     // public final Trigger indexerTrigger;
@@ -44,18 +44,18 @@ public class AutoCommands {
     public AutoCommands(
             Climber climber,
             CommandSwerveDrivetrain drivetrain,
-            HoodSubsystem hood,
-            Hopper hopperAuto,
-            IndexerSubsystem indexerAuto,
-            IntakeSubsystem intake,
-            LinSlideSubsystem linSlide,
-            ShooterSubsystem shooter,
+            Hood hood,
+            Indexer indexerAuto,
+            Feeder feederAuto,
+            Intake intake,
+            LinSlide linSlide,
+            Shooter shooter,
             LED leds) {
         this.climber = climber;
         this.drivetrain = drivetrain;
         this.hood = hood;
-        this.hopper = hopperAuto;
         this.indexer = indexerAuto;
+        this.feeder = feederAuto;
         this.intake = intake;
         this.linSlide = linSlide;
         this.shooter = shooter;
@@ -133,8 +133,8 @@ public class AutoCommands {
                 Commands.parallel(
                         AutoAimCommands.readyAim(drivetrain, shooter, centerHubOpening.toTranslation2d()),
                         AutoAimCommands.autoAim(drivetrain, () -> 0.0, () -> 0.0, centerHubOpening.toTranslation2d()),
-                        new WaitCommand(0.2).andThen(hopper.applyPower(HopperConfigsBeta.TEST_HOPPER_SPEED)),
-                        new WaitCommand(0.2).andThen(indexer.applyPower(IndexerConfigsBeta.TEST_INDEXER_SPEED)),
+                        new WaitCommand(0.2).andThen(indexer.applyPower(TEST_INDEXER_SPEED)),
+                        new WaitCommand(0.2).andThen(feeder.applyPower(TEST_FEEDER_SPEED)),
                         new WaitCommand(0.2).andThen(intake.applyPower(IntakeConfigsBeta.ROLL_IN_SPEED))),
                 led.runPattern(LEDModes.WAVE));
     }
@@ -144,9 +144,8 @@ public class AutoCommands {
                 shooter.revUpFlywheels(20).until(shooter::isAtSpeed),
                 Commands.parallel(
                         shooter.shoot(20).withTimeout(2),
-                        hopper.applyPower(HopperConfigsBeta.TEST_HOPPER_SPEED).withTimeout(2),
-                        indexer.applyPower(IndexerConfigsBeta.TEST_INDEXER_SPEED)
-                                .withTimeout(2)));
+                        indexer.applyPower(TEST_INDEXER_SPEED).withTimeout(2),
+                        feeder.applyPower(TEST_FEEDER_SPEED).withTimeout(2)));
     }
 
     // Testing Autos

@@ -30,33 +30,31 @@ import frc.robot.constants.Constants;
 import frc.robot.subsystems.climber.*;
 import frc.robot.subsystems.drive.*;
 import frc.robot.subsystems.drive.TunerConstantsAlpha;
-import frc.robot.subsystems.feeder.FeederConfigsBeta;
+import frc.robot.subsystems.feeder.Feeder;
 import frc.robot.subsystems.feeder.FeederIO;
 import frc.robot.subsystems.feeder.FeederIOReal;
-import frc.robot.subsystems.feeder.FeederSubsystem;
+import frc.robot.subsystems.hood.Hood;
 import frc.robot.subsystems.hood.HoodIO;
 import frc.robot.subsystems.hood.HoodIOBeta;
-import frc.robot.subsystems.hood.HoodSubsystem;
-import frc.robot.subsystems.hopper.*;
-import frc.robot.subsystems.indexer.IndexerConfigsBeta;
 import frc.robot.subsystems.indexer.*;
+import frc.robot.subsystems.indexer.Indexer;
+import frc.robot.subsystems.indexer.IndexerConfigsBeta;
 import frc.robot.subsystems.indexer.IndexerIO;
 import frc.robot.subsystems.indexer.IndexerIOAlpha;
+import frc.robot.subsystems.intake.*;
+import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.IntakeIO;
 import frc.robot.subsystems.intake.IntakeIOAlpha;
 import frc.robot.subsystems.intake.IntakeIOBeta;
-import frc.robot.subsystems.intake.IntakeSubsystem;
-import frc.robot.subsystems.indexer.IndexerSubsystem;
-import frc.robot.subsystems.intake.*;
 import frc.robot.subsystems.led.LED;
 import frc.robot.subsystems.led.LEDModes;
+import frc.robot.subsystems.linslide.LinSlide;
 import frc.robot.subsystems.linslide.LinSlideConfigsBeta;
 import frc.robot.subsystems.linslide.LinSlideIO;
 import frc.robot.subsystems.linslide.LinSlideIOReal;
-import frc.robot.subsystems.linslide.LinSlideSubsystem;
+import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.subsystems.shooter.ShooterIO;
 import frc.robot.subsystems.shooter.ShooterIOReal;
-import frc.robot.subsystems.shooter.ShooterSubsystem;
 import frc.robot.subsystems.vision.*;
 import frc.robot.util.AllianceFlipUtil;
 import frc.robot.util.sim.Mechanisms;
@@ -73,15 +71,15 @@ public class RobotContainer {
     // Subsystems
     private final CommandSwerveDrivetrain drive;
     private final LED led;
-    private final LinSlideSubsystem linSlide;
+    private final LinSlide linSlide;
     private final Mechanisms mechanisms;
-    private final IntakeSubsystem intake;
-    private final IndexerSubsystem indexer;
+    private final Intake intake;
+    private final Indexer indexer;
     private final Climber climber;
-    private final ShooterSubsystem shooter;
-    private final FeederSubsystem feeder;
+    private final Shooter shooter;
+    private final Feeder feeder;
     private final Vision vision;
-    private final HoodSubsystem hood;
+    private final Hood hood;
     private final AutoCommands autoCommands;
 
     // Controller
@@ -109,12 +107,12 @@ public class RobotContainer {
         switch (currentMode) {
             case ALPHA:
                 drive = TunerConstantsAlpha.createDrivetrain();
-                linSlide = new LinSlideSubsystem(new LinSlideIOReal());
-                intake = new IntakeSubsystem(new IntakeIOAlpha());
-                indexer = new IndexerSubsystem(new IndexerIOAlpha());
+                linSlide = new LinSlide(new LinSlideIOReal());
+                intake = new Intake(new IntakeIOAlpha());
+                indexer = new Indexer(new IndexerIOAlpha());
                 climber = null;
-                shooter = new ShooterSubsystem(new ShooterIOReal());
-                feeder = new FeederSubsystem(new FeederIOReal());
+                shooter = new Shooter(new ShooterIOReal());
+                feeder = new Feeder(new FeederIOReal());
                 hood = null;
                 vision = new Vision(
                         drive,
@@ -135,13 +133,13 @@ public class RobotContainer {
                 // ModuleIOTalonFX is intended for modules with TalonFX drive, TalonFX turn, and
                 // a CANcoder
                 drive = TunerConstantsBeta.createDrivetrain();
-                linSlide = new LinSlideSubsystem(new LinSlideIOReal());
-                intake = new IntakeSubsystem(new IntakeIOBeta());
-                indexer = new IndexerSubsystem(new IndexerIOBeta());
+                linSlide = new LinSlide(new LinSlideIOReal());
+                intake = new Intake(new IntakeIOBeta());
+                indexer = new Indexer(new IndexerIOBeta());
                 climber = new Climber(new ClimberIOBeta());
-                shooter = new ShooterSubsystem(new ShooterIOReal());
-                feeder = new FeederSubsystem(new FeederIOReal());
-                hood = new HoodSubsystem(new HoodIOBeta());
+                shooter = new Shooter(new ShooterIOReal());
+                feeder = new Feeder(new FeederIOReal());
+                hood = new Hood(new HoodIOBeta());
                 vision = new Vision(
                         drive,
                         new VisionIOLimelight(
@@ -159,9 +157,9 @@ public class RobotContainer {
             case SIM:
                 // Sim robot, instantiate physics sim IO implementations
                 drive = TunerConstantsAlpha.createDrivetrain();
-                linSlide = new LinSlideSubsystem(new LinSlideIOReal());
-                intake = new IntakeSubsystem(new IntakeIOAlpha());
-                indexer = new IndexerSubsystem(new IndexerIOAlpha());
+                linSlide = new LinSlide(new LinSlideIOReal());
+                intake = new Intake(new IntakeIOAlpha());
+                indexer = new Indexer(new IndexerIOAlpha());
                 vision = new Vision(
                         drive,
                         new VisionIOPhotonVisionSim(
@@ -169,23 +167,23 @@ public class RobotContainer {
                         new VisionIOPhotonVisionSim(
                                 VisionConstants.sideCam, VisionConstants.sideCamTrans, () -> drive.getState().Pose));
                 climber = new Climber(new ClimberIOBeta());
-                shooter = new ShooterSubsystem(new ShooterIOReal());
-                feeder = new FeederSubsystem(new FeederIOReal());
-                hood = new HoodSubsystem(new HoodIOBeta());
+                shooter = new Shooter(new ShooterIOReal());
+                feeder = new Feeder(new FeederIOReal());
+                hood = new Hood(new HoodIOBeta());
 
                 break;
 
             default:
                 // Replayed robot, disable IO implementations
                 drive = TunerConstantsAlpha.createDrivetrain();
-                linSlide = new LinSlideSubsystem(new LinSlideIO() {});
-                intake = new IntakeSubsystem(new IntakeIO() {});
-                indexer = new IndexerSubsystem(new IndexerIO() {});
+                linSlide = new LinSlide(new LinSlideIO() {});
+                intake = new Intake(new IntakeIO() {});
+                indexer = new Indexer(new IndexerIO() {});
                 climber = new Climber(new ClimberIO() {});
                 vision = new Vision(drive, new VisionIO() {}, new VisionIO() {});
-                feeder = new FeederSubsystem(new FeederIO() {});
-                shooter = new ShooterSubsystem((new ShooterIO() {}));
-                hood = new HoodSubsystem(new HoodIO() {});
+                feeder = new Feeder(new FeederIO() {});
+                shooter = new Shooter((new ShooterIO() {}));
+                hood = new Hood(new HoodIO() {});
 
                 break;
         }
@@ -301,7 +299,8 @@ public class RobotContainer {
 
         controller
                 .rightBumper()
-                .onTrue(intake.applyPower(-IntakeConfigsBeta.ROLL_IN_SPEED).alongWith(hopper.applyPower(0.7)));
+                .onTrue(intake.applyPower(-IntakeConfigsBeta.ROLL_IN_SPEED)
+                        .alongWith(indexer.applyPower(TEST_INDEXER_SPEED)));
 
         controller
                 .leftBumper()

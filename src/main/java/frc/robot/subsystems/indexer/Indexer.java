@@ -4,7 +4,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.littletonrobotics.junction.Logger;
 
-public class IndexerSubsystem extends SubsystemBase {
+public class Indexer extends SubsystemBase {
 
     private IndexerIO io;
     private IndexerIOInputsAutoLogged inputs = new IndexerIOInputsAutoLogged();
@@ -15,7 +15,7 @@ public class IndexerSubsystem extends SubsystemBase {
         Logger.processInputs("Indexer", inputs);
     }
 
-    public IndexerSubsystem(IndexerIO io) {
+    public Indexer(IndexerIO io) {
         this.io = io;
     }
 

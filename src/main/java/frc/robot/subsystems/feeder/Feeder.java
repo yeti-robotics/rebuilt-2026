@@ -4,7 +4,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.littletonrobotics.junction.Logger;
 
-public class FeederSubsystem extends SubsystemBase {
+public class Feeder extends SubsystemBase {
     private FeederIO io;
     private FeederIOInputsAutoLogged inputs = new FeederIOInputsAutoLogged();
 
@@ -14,7 +14,7 @@ public class FeederSubsystem extends SubsystemBase {
         Logger.processInputs("Feeder", inputs);
     }
 
-    public FeederSubsystem(FeederIO io) {
+    public Feeder(FeederIO io) {
         this.io = io;
     }
 
