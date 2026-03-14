@@ -1,12 +1,12 @@
 package frc.robot.subsystems.climber;
 
-import static edu.wpi.first.units.Units.MetersPerSecond;
+import static edu.wpi.first.units.Units.*;
 
 import edu.wpi.first.units.measure.LinearVelocity;
 
 public enum ClimberState {
-    DEFAULT(MetersPerSecond.of(8.5), 1),
-    CLIMB(MetersPerSecond.of(8.5 / 2.0), (double) 1 / 2);
+    DEFAULT(MetersPerSecond.of(8.5), RotationsPerSecond.of(1).in(RadiansPerSecond)),
+    CLIMB(MetersPerSecond.of(8.5 / 4.0), RotationsPerSecond.of(1).in(RadiansPerSecond) / 4);
 
     public final LinearVelocity kSpeedAt12Volts;
     public final double MaFxAngularRate;

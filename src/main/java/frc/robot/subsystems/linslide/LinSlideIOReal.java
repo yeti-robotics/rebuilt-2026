@@ -7,7 +7,6 @@ import static frc.robot.subsystems.linslide.LinSlideConfigsAlpha.*;
 import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.VoltageOut;
-import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.MotorAlignmentValue;
 import frc.robot.Robot;
@@ -17,7 +16,6 @@ import frc.robot.util.sim.PhysicsSim;
 public class LinSlideIOReal implements LinSlideIO {
     private final TalonFX linSlideMotor;
     private TalonFX secondaryLinSlideMotor;
-    private CANcoder linSlideCANcoder;
     private final DutyCycleOut dutyRequest = new DutyCycleOut(0.0);
     private final VoltageOut voltageRequest = new VoltageOut(0.0);
 
@@ -35,12 +33,10 @@ public class LinSlideIOReal implements LinSlideIO {
 
         } else {
             linSlideMotor = new TalonFX(LinSlideConfigsBeta.LIN_SLIDE_MOTOR_ID, rioBus);
-            linSlideCANcoder = new CANcoder(LinSlideConfigsBeta.LIN_SLIDE_CANCODER_ID, rioBus);
             if (Robot.isSimulation()) {
-                PhysicsSim.getInstance().addTalonFX(linSlideMotor, linSlideCANcoder);
+                PhysicsSim.getInstance().addTalonFX(linSlideMotor);
             }
             linSlideMotor.getConfigurator().apply(LinSlideConfigsBeta.linSlideTalonFXConfigs);
-            linSlideCANcoder.getConfigurator().apply(LinSlideConfigsBeta.linSlideCancoderConfiguration);
             zeroPosition();
         }
     }

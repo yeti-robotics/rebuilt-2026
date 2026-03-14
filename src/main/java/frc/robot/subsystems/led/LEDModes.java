@@ -19,6 +19,7 @@ public enum LEDModes {
     BLINKING_ORANGE(LEDPattern.solid(Color.kOrange).synchronizedBlink(RobotController::getRSLState), true),
     NOT_LOCKED_RED(LEDPattern.solid(Color.kRed)),
     SNOWFALL(new SnowfallLEDPattern(), true),
+    SOLID_WHITE(LEDPattern.solid(Color.kWhite)),
     WAVE(new WaveLEDPattern(), true),
     ALLIANCE_DEACTIVATION_WARNING(
             LEDPattern.gradient(LEDPattern.GradientType.kContinuous, LEDConstants.VIHAAN_RED, LEDConstants.YETI_BLUE)
