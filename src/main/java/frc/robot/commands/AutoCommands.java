@@ -69,14 +69,14 @@ public class AutoCommands {
     }
 
     public Command rollIn() {
-        return intake.applyPower(IntakeConfigsBeta.ROLL_IN_SPEED);
+        return intake.applyPower(IntakeConfigsBeta.ROLL_IN_SPEED, 0);
     }
 
     // Broken-Up Commands
     public Command intake() {
         return Commands.parallel(
                 linSlide.applyPower(LinSlideConfigsBeta.DEPLOY_SPEED),
-                intake.applyPower(IntakeConfigsBeta.ROLL_IN_SPEED));
+                intake.applyPower(IntakeConfigsBeta.ROLL_IN_SPEED, 0));
     }
 
     public Command cycleNeutralRight(Optional<PathPlannerPath> pathOne, Optional<PathPlannerPath> pathTwo) {
@@ -118,7 +118,7 @@ public class AutoCommands {
                         AutoAimCommands.autoAim(drivetrain, () -> 0.0, () -> 0.0, centerHubOpening.toTranslation2d()),
                         new WaitCommand(0.2).andThen(indexer.applyPower(TEST_INDEXER_SPEED)),
                         new WaitCommand(0.2).andThen(feeder.applyPower(TEST_FEEDER_SPEED)),
-                        new WaitCommand(0.2).andThen(intake.applyPower(IntakeConfigsBeta.ROLL_IN_SPEED))),
+                        new WaitCommand(0.2).andThen(intake.applyPower(IntakeConfigsBeta.ROLL_IN_SPEED, 0))),
                 led.runPattern(LEDModes.WAVE));
     }
 

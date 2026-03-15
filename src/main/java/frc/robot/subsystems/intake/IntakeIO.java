@@ -15,5 +15,5 @@ public interface IntakeIO {
 
     public default void setIntakeMotor(double volts) {}
 
-    public default void applyPower(double percent) {}
+    public default void applyPower(double percent, double percentTwo) {}
 }

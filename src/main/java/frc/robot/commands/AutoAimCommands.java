@@ -9,6 +9,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -111,6 +112,26 @@ public class AutoAimCommands {
                 SwerveRequest.Idle::new);
     }
 
+    public static Command shuttleAim(
+            CommandSwerveDrivetrain drive,
+            DoubleSupplier xVelSupplier,
+            DoubleSupplier yVelSupplier,
+            Translation2d target) {
+
+        return drive.runEnd(
+                () -> {
+                    SwerveRequest.FieldCentricFacingAngle request = new SwerveRequest.FieldCentricFacingAngle()
+                            .withHeadingPID(20, 0, 0)
+                            .withVelocityX(-xVelSupplier.getAsDouble() * SPEED_MULTIPLIER)
+                            .withVelocityY(-yVelSupplier.getAsDouble() * SPEED_MULTIPLIER)
+                            .withTargetDirection(AllianceFlipUtil.apply(new Rotation2d(Units.degreesToRadians(180))))
+                            .withDriveRequestType(SwerveModule.DriveRequestType.Velocity);
+
+                    drive.setControl(request);
+                },
+                SwerveRequest.Idle::new);
+    }
+
     public static Command compensationAutoAim(
             CommandSwerveDrivetrain drive,
             DoubleSupplier xVelSupplier,
@@ -174,5 +195,27 @@ public class AutoAimCommands {
                     return shooter.shoot(targetRPS);
                 },
                 Set.of(shooter));
+    }
+
+    public static Command shuttleReadyAim(CommandSwerveDrivetrain drive, Shooter shooter, Translation2d target, Hood hood) {
+
+        return Commands.defer(
+                () -> {
+                    Pose2d currentPose = drive.getState().Pose;
+                    Translation2d modifiedTarget = AllianceFlipUtil.apply(new Translation2d(2.35, currentPose.getY()));
+                    Translation2d currentPosition = currentPose.getTranslation();
+                    double distance = modifiedTarget.getDistance(currentPosition);
+
+                    ShooterStateData state = ShooterConfigsBeta.SHUTTLE_MAP.get(distance);
+
+                    double targetRPS = state.rps;
+                    Angle targetHoodPos = state.hoodPos;
+
+                    Logger.recordOutput("AutoAimCommands/target rps", targetRPS);
+                    Logger.recordOutput("AutoAimCommands/target hood position", targetHoodPos);
+
+                    return shooter.shoot(targetRPS).alongWith(hood.setHoodPosition((targetHoodPos.magnitude())));
+                },
+                Set.of(shooter, hood));
     }
 }

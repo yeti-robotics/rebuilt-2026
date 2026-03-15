@@ -33,7 +33,7 @@ public class IntakeIOAlpha implements IntakeIO {
     }
 
     @Override
-    public void applyPower(double percent) {
+    public void applyPower(double percent, double percentTwo) {
         intakeMotor.setControl(dutyCycleOut.withOutput(percent));
     }
 }

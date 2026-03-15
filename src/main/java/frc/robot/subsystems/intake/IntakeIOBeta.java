@@ -1,9 +1,6 @@
 package frc.robot.subsystems.intake;
 
-import static com.ctre.phoenix6.signals.MotorAlignmentValue.Opposed;
-
 import com.ctre.phoenix6.controls.DutyCycleOut;
-import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import frc.robot.Robot;
@@ -27,7 +24,6 @@ public class IntakeIOBeta implements IntakeIO {
 
         primaryIntakeMotor.getConfigurator().apply(IntakeConfigsBeta.PRIMARY_TALONFX_CONFIGS);
         secondaryIntakeMotor.getConfigurator().apply(IntakeConfigsBeta.SECONDARY_TALONFX_CONFIGS);
-        secondaryIntakeMotor.setControl(new Follower(IntakeConfigsBeta.PRIMARY_INTAKE_MOTOR_ID, Opposed));
     }
 
     @Override
@@ -44,7 +40,8 @@ public class IntakeIOBeta implements IntakeIO {
     }
 
     @Override
-    public void applyPower(double percent) {
+    public void applyPower(double percent, double percentTwo) {
         primaryIntakeMotor.setControl(dutyCycleOut.withOutput(percent));
+        secondaryIntakeMotor.setControl(dutyCycleOut.withOutput(percentTwo));
     }
 }
