@@ -297,20 +297,20 @@ public class RobotContainer {
 
         controller.start().onTrue(Commands.runOnce(drive::seedFieldCentric, drive));
 
-        controller.y().whileTrue(climber.applyPower(ClimberConfigsBeta.CLIMBER_EXTEND_SPEED));
-        controller.a().whileTrue(climber.applyPower(ClimberConfigsBeta.CLIMBER_RETRACT_SPEED));
+//        controller.y().whileTrue(climber.applyPower(ClimberConfigsBeta.CLIMBER_EXTEND_SPEED));
+//        controller.a().whileTrue(climber.applyPower(ClimberConfigsBeta.CLIMBER_RETRACT_SPEED));
         controller.x().whileTrue(linSlide.applyPower(LinSlideConfigsBeta.DEPLOY_SPEED));
         controller.b().whileTrue(linSlide.applyPower(-LinSlideConfigsBeta.DEPLOY_SPEED));
 
         controller
                 .leftTrigger()
-                .whileTrue(intake.applyPower(0.7, 0.5)
+                .whileTrue(intake.applyPower(IntakeConfigsBeta.PRIMARY_ROLLER_SPEED, IntakeConfigsBeta.SECONDARY_ROLLER_SPEED)
                         .alongWith(linSlide.setLinslidePosition(LinSlideConfigsBeta.LINSLIDE_INTAKE_POSITION))
                         .alongWith(led.runPattern(LEDModes.SOLID_WHITE)));
 
         controller
                 .rightBumper()
-                .onTrue(intake.applyPower(-IntakeConfigsBeta.ROLL_IN_SPEED, -0.7)
+                .onTrue(intake.applyPower(-IntakeConfigsBeta.PRIMARY_ROLLER_SPEED, -IntakeConfigsBeta.SECONDARY_ROLLER_SPEED)
                         .alongWith(indexer.applyPower(TEST_INDEXER_SPEED)));
 
         controller
@@ -328,15 +328,11 @@ public class RobotContainer {
 
         controller
                 .rightTrigger()
-                .whileTrue(
-                        //                        linSlide.applyPower(LinSlideConfigsBeta.DEPLOY_SPEED)
-                        //                        .withTimeout(1)
-                        (indexer.applyPower(TEST_INDEXER_SPEED)
-                                .alongWith(intake.applyPower(0.5, 0.7)
+                .whileTrue(indexer.applyPower(TEST_INDEXER_SPEED)
+                                .alongWith(intake.applyPower(IntakeConfigsBeta.PRIMARY_ROLLER_SPEED, IntakeConfigsBeta.SECONDARY_ROLLER_SPEED)
                                         .alongWith(feeder.applyPower(FeederConfigsBeta.TEST_FEEDER_SPEED)
-                                                .alongWith(new WaitCommand(0.5)
-                                                        .andThen(linSlide.applyPower(
-                                                                LinSlideConfigsBeta.LINSLIDE_AUTO_STOWING_SPEED)))))));
+                                                .alongWith(new WaitCommand(0.8)
+                                                        .andThen(linSlide.setLinslidePosition(0))))));
     }
 
     private void configureDebugBindings() {
