@@ -190,7 +190,7 @@ public class AutoAimCommands {
 
                     double targetRPS = state.rps;
 
-                    Logger.recordOutput("AutoAimCommands/target rps", targetRPS);
+                    Logger.recordOutput("AutoAimCommands/Shooter Map/target rps", targetRPS);
 
                     return shooter.shoot(targetRPS);
                 },
@@ -211,8 +211,8 @@ public class AutoAimCommands {
                     double targetRPS = state.rps;
                     Angle targetHoodPos = state.hoodPos;
 
-                    Logger.recordOutput("AutoAimCommands/target rps", targetRPS);
-                    Logger.recordOutput("AutoAimCommands/target hood position", targetHoodPos);
+                    Logger.recordOutput("AutoAimCommands/Shuttle Map/target rps", targetRPS);
+                    Logger.recordOutput("AutoAimCommands/Shuttle Map/target hood position", targetHoodPos);
 
                     return shooter.shoot(targetRPS).alongWith(hood.setHoodPosition((targetHoodPos.magnitude())));
                 },
