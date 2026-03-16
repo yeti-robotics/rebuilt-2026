@@ -435,7 +435,12 @@ public class RobotContainer {
         Translation2d currentPosition = currentPose.getTranslation();
         double distance = modifiedTarget.getDistance(currentPosition);
 
-        Logger.recordOutput("AutoAimCommands/distance", distance);
+        Logger.recordOutput("AutoAimCommands/Shooter Map/hub distance", distance);
+
+        Translation2d shuttleTranslation = AllianceFlipUtil.apply(new Translation2d(2.35, currentPose.getY()));
+        double shuttleDistance = shuttleTranslation.getDistance(currentPosition);
+
+        Logger.recordOutput("AutoAimCommands/Shuttle Map/ideal shuttle distance", shuttleDistance);
     }
 
     public void saveLog() {
