@@ -13,7 +13,6 @@ public class LinSlide extends SubsystemBase {
 
     public LinSlide(LinSlideIO io) {
         this.io = io;
-        setDefaultCommand(defaultMovement(-1));
     }
 
     @Override
