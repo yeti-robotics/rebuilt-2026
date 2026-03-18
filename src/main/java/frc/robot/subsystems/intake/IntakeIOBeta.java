@@ -15,8 +15,8 @@ public class IntakeIOBeta implements IntakeIO {
     private final VoltageOut voltageRequest = new VoltageOut(0);
 
     public IntakeIOBeta() {
-        primaryIntakeMotor = new TalonFX(IntakeConfigsBeta.PRIMARY_INTAKE_MOTOR_ID, Constants.rioBus);
-        secondaryIntakeMotor = new TalonFX(IntakeConfigsBeta.SECONDARY_INTAKE_MOTOR_ID, Constants.rioBus);
+        primaryIntakeMotor = new TalonFX(IntakeConfigsBeta.OUTER_INTAKE_MOTOR_ID, Constants.rioBus);
+        secondaryIntakeMotor = new TalonFX(IntakeConfigsBeta.INNER_INTAKE_MOTOR_ID, Constants.rioBus);
         if (Robot.isSimulation()) {
             PhysicsSim.getInstance().addTalonFX(primaryIntakeMotor);
             PhysicsSim.getInstance().addTalonFX(secondaryIntakeMotor);

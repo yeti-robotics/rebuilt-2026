@@ -47,19 +47,19 @@ public class ShooterConfigsBeta {
             new InterpolatingTreeMap<>(InverseInterpolator.forDouble(), ShooterStateData.interpolator);
 
     static {
-        SHOOTER_MAP.put(1.74, new ShooterStateData(HoodPositions.STOW.getPosition(), 25, 0.0));
-        SHOOTER_MAP.put(2.13, new ShooterStateData(HoodPositions.STOW.getPosition(), 27, 0.0));
-        SHOOTER_MAP.put(2.43, new ShooterStateData(HoodPositions.STOW.getPosition(), 30, 0.0));
-        SHOOTER_MAP.put(2.78, new ShooterStateData(HoodPositions.STOW.getPosition(), 31, 0.0));
-        SHOOTER_MAP.put(3.15, new ShooterStateData(HoodPositions.STOW.getPosition(), 33, 0.0));
-        SHOOTER_MAP.put(3.78, new ShooterStateData(HoodPositions.STOW.getPosition(), 38.7, 0.0));
-        SHOOTER_MAP.put(4.36, new ShooterStateData(HoodPositions.STOW.getPosition(), 44, 0.0));
+        SHOOTER_MAP.put(1.74, new ShooterStateData(HoodPositions.STOW.getPosition(), 24, 0.0));
+        SHOOTER_MAP.put(2.13, new ShooterStateData(HoodPositions.STOW.getPosition(), 26, 0.0));
+        SHOOTER_MAP.put(2.43, new ShooterStateData(HoodPositions.STOW.getPosition(), 29, 0.0));
+        SHOOTER_MAP.put(2.78, new ShooterStateData(HoodPositions.STOW.getPosition(), 30, 0.0));
+        SHOOTER_MAP.put(3.15, new ShooterStateData(HoodPositions.STOW.getPosition(), 32, 0.0));
+        SHOOTER_MAP.put(3.78, new ShooterStateData(HoodPositions.STOW.getPosition(), 34, 0.0));
+        SHOOTER_MAP.put(4.36, new ShooterStateData(HoodPositions.STOW.getPosition(), 38.5, 0.0));
     }
 
     public static final InterpolatingTreeMap<Double, ShooterStateData> SHUTTLE_MAP =
             new InterpolatingTreeMap<>(InverseInterpolator.forDouble(), ShooterStateData.interpolator);
 
     static {
-
+        SHUTTLE_MAP.put(0.0, new ShooterStateData(HoodPositions.STOW.getPosition(), 0, 0.0));
     }
 }

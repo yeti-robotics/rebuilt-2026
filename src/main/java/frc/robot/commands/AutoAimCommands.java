@@ -197,7 +197,8 @@ public class AutoAimCommands {
                 Set.of(shooter));
     }
 
-    public static Command shuttleReadyAim(CommandSwerveDrivetrain drive, Shooter shooter, Translation2d target, Hood hood) {
+    public static Command shuttleReadyAim(
+            CommandSwerveDrivetrain drive, Shooter shooter, Translation2d target, Hood hood) {
 
         return Commands.defer(
                 () -> {
