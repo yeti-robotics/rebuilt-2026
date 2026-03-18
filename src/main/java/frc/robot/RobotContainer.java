@@ -315,12 +315,13 @@ public class RobotContainer {
 
         controller
                 .leftBumper()
-                .whileTrue(AutoAimCommands.autoAim(
+                .whileTrue(AutoAimCommands.shuttleAim(
                                 drive, controller::getLeftY, controller::getLeftX, centerHubOpening.toTranslation2d())
-                        .alongWith(AutoAimCommands.readyAim(drive, shooter, centerHubOpening.toTranslation2d()))
+                        .alongWith(AutoAimCommands.shuttleReadyAim(
+                                drive, shooter, centerHubOpening.toTranslation2d(), hood))
                         .alongWith(led.runPattern(LEDModes.WAVE)));
 
-        //        controller.leftBumper().whileTrue(shooter.shoot(80));
+        //        controller.leftBumper().whileTrue(shooter.shoot(44));
 
         controller.povLeft().onTrue(hood.setHoodPosition(0));
         controller.povRight().onTrue(hood.setHoodPosition(0.65));
@@ -331,7 +332,9 @@ public class RobotContainer {
                         .alongWith(intake.applyPower(
                                         IntakeConfigsBeta.OUTER_ROLLER_SPEED, IntakeConfigsBeta.INNER_ROLLER_SPEED)
                                 .alongWith(feeder.applyPower(FeederConfigsBeta.TEST_FEEDER_SPEED)
-                                        .alongWith(new WaitCommand(1.4).andThen(linSlide.setLinslidePosition(0))))));
+                                        .alongWith(new WaitCommand(1)
+                                                .andThen(linSlide.applyPower(
+                                                        LinSlideConfigsBeta.LINSLIDE_AUTO_STOWING_SPEED))))));
     }
 
     private void configureDebugBindings() {

@@ -13,6 +13,7 @@ public class Hood extends SubsystemBase {
     public Hood(HoodIO io) {
         this.io = io;
         io.zero();
+        setDefaultCommand(setHoodPosition(0));
     }
 
     @Override

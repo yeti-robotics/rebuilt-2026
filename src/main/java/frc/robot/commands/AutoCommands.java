@@ -108,8 +108,9 @@ public class AutoCommands {
     public Command shoot() {
         return Commands.deadline(
                 Commands.sequence(
-                        new WaitCommand(0.8),
-                        linSlide.setLinslidePosition(0).until(linSlide::isCloseToZero),
+                        new WaitCommand(1),
+                        linSlide.applyPower(LinSlideConfigsBeta.LINSLIDE_AUTO_STOWING_SPEED)
+                                .until(linSlide::isCloseToZero),
                         Commands.waitSeconds(1)),
                 Commands.parallel(
                         AutoAimCommands.readyAim(drivetrain, shooter, centerHubOpening.toTranslation2d()),
