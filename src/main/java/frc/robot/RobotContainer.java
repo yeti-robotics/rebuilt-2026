@@ -17,7 +17,6 @@ import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.*;
-import edu.wpi.first.math.kinematics.Odometry;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
@@ -317,15 +316,20 @@ public class RobotContainer {
 
         controller
                 .leftBumper()
-                        .whileTrue(Commands.either(
+                .whileTrue(Commands.either(
                                 AutoAimCommands.autoAim(
-                                        drive, controller::getLeftY, controller::getLeftX, centerHubOpening.toTranslation2d())
-                                .alongWith(AutoAimCommands.readyAim(drive, shooter, centerHubOpening.toTranslation2d())),
+                                                drive,
+                                                controller::getLeftY,
+                                                controller::getLeftX,
+                                                centerHubOpening.toTranslation2d())
+                                        .alongWith(AutoAimCommands.readyAim(
+                                                drive, shooter, centerHubOpening.toTranslation2d())),
                                 AutoAimCommands.shuttleAim(
-                                        drive, controller::getLeftY, controller::getLeftX, shuttleTargetZone)
-                                .alongWith(AutoAimCommands.shuttleReadyAim(drive, shooter, shuttleTargetZone, hood)),
+                                                drive, controller::getLeftY, controller::getLeftX, shuttleTargetZone)
+                                        .alongWith(AutoAimCommands.shuttleReadyAim(
+                                                drive, shooter, shuttleTargetZone, hood)),
                                 () -> drive.getState().Pose.getX() < 4.9)
-                                .alongWith(led.runPattern(LEDModes.WAVE)));
+                        .alongWith(led.runPattern(LEDModes.WAVE)));
 
         //        controller.leftBumper().whileTrue(shooter.shoot(44));
 
