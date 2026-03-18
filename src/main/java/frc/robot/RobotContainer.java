@@ -324,7 +324,8 @@ public class RobotContainer {
                                 .alongWith(feeder.applyPower(FeederConfigsBeta.TEST_FEEDER_SPEED)
                                         .alongWith(new WaitCommand(0.8)
                                                 .andThen(linSlide.applyPower(
-                                                        LinSlideConfigsBeta.LINSLIDE_AUTO_SHOOT_SPEED))))));
+                                                        LinSlideConfigsBeta.LINSLIDE_AUTO_SHOOT_SPEED))
+                                                    .alongWith(drive.applyRequest(SwerveRequest.SwerveDriveBrake::new))))));
     }
 
     private void configureDebugBindings() {
