@@ -9,6 +9,7 @@ package frc.robot;
 
 import static frc.robot.constants.Constants.currentMode;
 import static frc.robot.constants.FieldConstants.Hub.centerHubOpening;
+import static frc.robot.constants.FieldConstants.Shuttle.shuttleTargetZone;
 import static frc.robot.subsystems.indexer.IndexerConfigsBeta.TEST_INDEXER_SPEED;
 
 import com.ctre.phoenix6.swerve.SwerveModule;
@@ -16,6 +17,7 @@ import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.*;
+import edu.wpi.first.math.kinematics.Odometry;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
@@ -315,11 +317,15 @@ public class RobotContainer {
 
         controller
                 .leftBumper()
-                .whileTrue(AutoAimCommands.shuttleAim(
-                                drive, controller::getLeftY, controller::getLeftX, centerHubOpening.toTranslation2d())
-                        .alongWith(AutoAimCommands.shuttleReadyAim(
-                                drive, shooter, centerHubOpening.toTranslation2d(), hood))
-                        .alongWith(led.runPattern(LEDModes.WAVE)));
+                        .whileTrue(Commands.either(
+                                AutoAimCommands.autoAim(
+                                        drive, controller::getLeftY, controller::getLeftX, centerHubOpening.toTranslation2d())
+                                .alongWith(AutoAimCommands.readyAim(drive, shooter, centerHubOpening.toTranslation2d())),
+                                AutoAimCommands.shuttleAim(
+                                        drive, controller::getLeftY, controller::getLeftX, shuttleTargetZone)
+                                .alongWith(AutoAimCommands.shuttleReadyAim(drive, shooter, shuttleTargetZone, hood)),
+                                () -> drive.getState().Pose.getX() < 4.9)
+                                .alongWith(led.runPattern(LEDModes.WAVE)));
 
         //        controller.leftBumper().whileTrue(shooter.shoot(44));
 
