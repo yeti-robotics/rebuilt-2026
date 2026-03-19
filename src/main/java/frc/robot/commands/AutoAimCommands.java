@@ -111,7 +111,8 @@ public class AutoAimCommands {
                 SwerveRequest.Idle::new);
     }
 
-    public static Command shuttleAim(
+    public static Command
+    shuttleAim(
             CommandSwerveDrivetrain drive,
             DoubleSupplier xVelSupplier,
             DoubleSupplier yVelSupplier,
@@ -126,8 +127,7 @@ public class AutoAimCommands {
                             .withTargetDirection(calcDesiredHeading(
                                     drive.getState().Pose,
                                     new Translation2d(
-                                            AllianceFlipUtil.apply(2.35),
-                                            drive.getState().Pose.getY())))
+                                            2.35, drive.getState().Pose.getY())))
                             .withDriveRequestType(SwerveModule.DriveRequestType.Velocity);
 
                     drive.setControl(request);
