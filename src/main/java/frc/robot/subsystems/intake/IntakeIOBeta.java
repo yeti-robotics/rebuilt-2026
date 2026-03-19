@@ -1,47 +1,49 @@
 package frc.robot.subsystems.intake;
 
 import com.ctre.phoenix6.controls.DutyCycleOut;
+import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.MotorAlignmentValue;
 import frc.robot.Robot;
 import frc.robot.constants.Constants;
 import frc.robot.util.sim.PhysicsSim;
 
 public class IntakeIOBeta implements IntakeIO {
-    private final TalonFX primaryIntakeMotor;
-    private final TalonFX secondaryIntakeMotor;
+    private final TalonFX rightIntakeMotor;
+    private final TalonFX leftIntakeMotor;
 
     private final DutyCycleOut dutyCycleOut = new DutyCycleOut(0);
     private final VoltageOut voltageRequest = new VoltageOut(0);
 
     public IntakeIOBeta() {
-        primaryIntakeMotor = new TalonFX(IntakeConfigsBeta.OUTER_INTAKE_MOTOR_ID, Constants.rioBus);
-        secondaryIntakeMotor = new TalonFX(IntakeConfigsBeta.INNER_INTAKE_MOTOR_ID, Constants.rioBus);
+        rightIntakeMotor = new TalonFX(IntakeConfigsBeta.RIGHT_INTAKE_MOTOR_ID, Constants.rioBus);
+        leftIntakeMotor = new TalonFX(IntakeConfigsBeta.LEFT_INTAKE_MOTOR_ID, Constants.rioBus);
         if (Robot.isSimulation()) {
-            PhysicsSim.getInstance().addTalonFX(primaryIntakeMotor);
-            PhysicsSim.getInstance().addTalonFX(secondaryIntakeMotor);
+            PhysicsSim.getInstance().addTalonFX(rightIntakeMotor);
+            PhysicsSim.getInstance().addTalonFX(leftIntakeMotor);
         }
 
-        primaryIntakeMotor.getConfigurator().apply(IntakeConfigsBeta.PRIMARY_TALONFX_CONFIGS);
-        secondaryIntakeMotor.getConfigurator().apply(IntakeConfigsBeta.SECONDARY_TALONFX_CONFIGS);
+        rightIntakeMotor.getConfigurator().apply(IntakeConfigsBeta.RIGHT_TALONFX_CONFIGS);
+        leftIntakeMotor.getConfigurator().apply(IntakeConfigsBeta.RIGHT_TALONFX_CONFIGS);
+        leftIntakeMotor.setControl(new Follower(IntakeConfigsBeta.RIGHT_INTAKE_MOTOR_ID, MotorAlignmentValue.Opposed));
     }
 
     @Override
     public void updateInputs(IntakeIO.IntakeIOInputs inputs) {
-        inputs.primaryMotorRPM = primaryIntakeMotor.getVelocity().getValueAsDouble();
-        inputs.primaryMotorVoltage = primaryIntakeMotor.getMotorVoltage().getValueAsDouble();
-        inputs.secondaryMotorRPM = secondaryIntakeMotor.getVelocity().getValueAsDouble();
-        inputs.secondaryMotorVoltage = secondaryIntakeMotor.getMotorVoltage().getValueAsDouble();
+        inputs.primaryMotorRPM = rightIntakeMotor.getVelocity().getValueAsDouble();
+        inputs.primaryMotorVoltage = rightIntakeMotor.getMotorVoltage().getValueAsDouble();
+        inputs.secondaryMotorRPM = leftIntakeMotor.getVelocity().getValueAsDouble();
+        inputs.secondaryMotorVoltage = leftIntakeMotor.getMotorVoltage().getValueAsDouble();
     }
 
     @Override
     public void setIntakeMotor(double volts) {
-        primaryIntakeMotor.setControl(voltageRequest.withOutput(volts));
+        rightIntakeMotor.setControl(voltageRequest.withOutput(volts));
     }
 
     @Override
     public void applyPower(double percent, double percentTwo) {
-        primaryIntakeMotor.setControl(dutyCycleOut.withOutput(percent));
-        secondaryIntakeMotor.setControl(dutyCycleOut.withOutput(percentTwo));
+        rightIntakeMotor.setControl(dutyCycleOut.withOutput(percent));
     }
 }
