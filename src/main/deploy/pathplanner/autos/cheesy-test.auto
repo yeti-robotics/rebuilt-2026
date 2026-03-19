@@ -1,0 +1,37 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "cheesy_path1L"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "cheesy_path2L"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "cheesy_path3L"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "cheesy_path4L"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": null,
+  "choreoAuto": false
+}
