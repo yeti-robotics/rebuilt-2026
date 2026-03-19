@@ -328,7 +328,7 @@ public class RobotContainer {
                                                 drive, controller::getLeftY, controller::getLeftX, shuttleTargetZone)
                                         .alongWith(AutoAimCommands.shuttleReadyAim(
                                                 drive, shooter, shuttleTargetZone, hood)),
-                                () -> drive.getState().Pose.getX() < 4.9)
+                                () -> drive.getState().Pose.getX() < AllianceFlipUtil.apply(4.9))
                         .alongWith(led.runPattern(LEDModes.WAVE)));
 
         //        controller.leftBumper().whileTrue(shooter.shoot(44));
