@@ -16,4 +16,8 @@ public interface HoodIO {
     default void moveToPosition(Angle position) {}
 
     default void applyPower(double percent) {}
+
+    default void zero() {}
+
+    default void setPosition(double position) {}
 }

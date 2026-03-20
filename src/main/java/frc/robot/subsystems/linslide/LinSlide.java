@@ -65,6 +65,10 @@ public class LinSlide extends SubsystemBase {
     }
 
     public Command defaultMovement(double volts) {
-        return run(() -> io.applyVoltage(volts)).until(this::isBasicallyZeroRPM);
+        return run(() -> io.applyPower(volts)).until(this::isCloseToZero);
+    }
+
+    public Command setLinslidePosition(double position) {
+        return runOnce(() -> io.setPosition(position));
     }
 }

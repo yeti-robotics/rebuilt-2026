@@ -65,18 +65,19 @@ public class AutoCommands {
 
     // Named Commands
     public Command popLintake() {
-        return linSlide.applyPower(LinSlideConfigsBeta.DEPLOY_SPEED).withTimeout(0.75);
+        return linSlide.setLinslidePosition(LinSlideConfigsBeta.LINSLIDE_INTAKE_POSITION)
+                .withTimeout(0.75);
     }
 
     public Command rollIn() {
-        return intake.applyPower(IntakeConfigsBeta.ROLL_IN_SPEED);
+        return intake.applyPower(IntakeConfigsBeta.ROLLER_SPEED);
     }
 
     // Broken-Up Commands
     public Command intake() {
         return Commands.parallel(
                 linSlide.applyPower(LinSlideConfigsBeta.DEPLOY_SPEED),
-                intake.applyPower(IntakeConfigsBeta.ROLL_IN_SPEED));
+                intake.applyPower(IntakeConfigsBeta.ROLLER_SPEED));
     }
 
     public Command cycleNeutralRight(Optional<PathPlannerPath> pathOne, Optional<PathPlannerPath> pathTwo) {
@@ -107,10 +108,8 @@ public class AutoCommands {
     public Command shoot() {
         return Commands.deadline(
                 Commands.sequence(
-                        new WaitCommand(0.5),
-                        linSlide.applyPower(LinSlideConfigsBeta.LINSLIDE_AUTO_SHOOT_SPEED)
-                                .withTimeout(1),
-                        linSlide.applyPower(LinSlideConfigsBeta.LINSLIDE_AUTO_SHOOT_SPEED)
+                        new WaitCommand(1),
+                        linSlide.applyPower(LinSlideConfigsBeta.LINSLIDE_AUTO_STOWING_SPEED)
                                 .until(linSlide::isCloseToZero),
                         Commands.waitSeconds(1)),
                 Commands.parallel(
@@ -118,7 +117,7 @@ public class AutoCommands {
                         AutoAimCommands.autoAim(drivetrain, () -> 0.0, () -> 0.0, centerHubOpening.toTranslation2d()),
                         new WaitCommand(0.2).andThen(indexer.applyPower(TEST_INDEXER_SPEED)),
                         new WaitCommand(0.2).andThen(feeder.applyPower(TEST_FEEDER_SPEED)),
-                        new WaitCommand(0.2).andThen(intake.applyPower(IntakeConfigsBeta.ROLL_IN_SPEED))),
+                        new WaitCommand(0.2).andThen(intake.applyPower(IntakeConfigsBeta.ROLLER_SPEED))),
                 led.runPattern(LEDModes.WAVE));
     }
 
@@ -158,10 +157,7 @@ public class AutoCommands {
 
         var cmd = startNeutral.isEmpty() || neutralShoot.isEmpty() || shootTower.isEmpty()
                 ? Commands.none()
-                : Commands.sequence(
-                        followPathAndIntake(startNeutral, 0.5), followPath(neutralShoot), shoot()
-                        //                        climbTower(shootTower)
-                        );
+                : Commands.sequence(followPathAndIntake(startNeutral, 0.5), followPath(neutralShoot), shoot());
 
         auto = new PathPlannerAuto(cmd);
         return auto;
