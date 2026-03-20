@@ -9,6 +9,7 @@ package frc.robot;
 
 import static frc.robot.constants.Constants.currentMode;
 import static frc.robot.constants.FieldConstants.Hub.centerHubOpening;
+import static frc.robot.constants.FieldConstants.Shuttle.shuttleTargetZone;
 import static frc.robot.subsystems.indexer.IndexerConfigsBeta.TEST_INDEXER_SPEED;
 
 import com.ctre.phoenix6.swerve.SwerveModule;
@@ -258,6 +259,7 @@ public class RobotContainer {
         autoChooser.addOption("Right", autoCommands.twoCycleNeutralOutpostTowerRight());
         //        autoChooser.addOption("Two Cycle Neutral Neutral Tower Right",
         // autoCommands.twoCycleNeutralTowerRight());
+        autoChooser.addOption("Cheesy Left", autoCommands.cheesyLeft());
 
         // Configure the button bindings
         if (Robot.isReal()) {
@@ -304,23 +306,38 @@ public class RobotContainer {
 
         controller
                 .leftTrigger()
-                .whileTrue(intake.applyPower(IntakeConfigsBeta.OUTER_ROLLER_SPEED, IntakeConfigsBeta.INNER_ROLLER_SPEED)
-                        .alongWith(linSlide.setLinslidePosition(LinSlideConfigsBeta.LINSLIDE_INTAKE_POSITION))
+                .whileTrue(intake.applyPower(IntakeConfigsBeta.ROLLER_SPEED)
+                        .alongWith(linSlide.applyPower(LinSlideConfigsBeta.DEPLOY_SPEED)
+                                .until(linSlide::isDeployed))
                         .alongWith(led.runPattern(LEDModes.SOLID_WHITE)));
 
         controller
                 .rightBumper()
-                .onTrue(intake.applyPower(-IntakeConfigsBeta.OUTER_ROLLER_SPEED, -IntakeConfigsBeta.INNER_ROLLER_SPEED)
-                        .alongWith(indexer.applyPower(TEST_INDEXER_SPEED)));
+                .onTrue(intake.applyPower(-IntakeConfigsBeta.ROLLER_SPEED)
+                        .alongWith(indexer.applyPower(TEST_INDEXER_SPEED))
+                        .alongWith(feeder.applyPower(-FeederConfigsBeta.TEST_FEEDER_SPEED)
+                                .alongWith(shooter.applyPower(-0.1))));
 
         controller
                 .leftBumper()
-                .whileTrue(AutoAimCommands.autoAim(
-                                drive, controller::getLeftY, controller::getLeftX, centerHubOpening.toTranslation2d())
-                        .alongWith(AutoAimCommands.readyAim(drive, shooter, centerHubOpening.toTranslation2d()))
+                .whileTrue(Commands.either(
+                                AutoAimCommands.autoAim(
+                                                drive,
+                                                controller::getLeftY,
+                                                controller::getLeftX,
+                                                centerHubOpening.toTranslation2d())
+                                        .alongWith(AutoAimCommands.readyAim(
+                                                drive, shooter, centerHubOpening.toTranslation2d())),
+                                AutoAimCommands.shuttleAim(
+                                                drive, controller::getLeftY, controller::getLeftX, shuttleTargetZone)
+                                        .alongWith(AutoAimCommands.shuttleReadyAim(
+                                                drive, shooter, shuttleTargetZone, hood)),
+                                () -> AllianceFlipUtil.apply(
+                                                drive.getState().Pose.getX())
+                                        < 4.9)
                         .alongWith(led.runPattern(LEDModes.WAVE)));
 
-        //        controller.leftBumper().whileTrue(shooter.shoot(80));
+        //        controller.leftBumper().whileTrue(shooter.shoot(44));
 
         controller.povLeft().onTrue(hood.setHoodPosition(0));
         controller.povRight().onTrue(hood.setHoodPosition(0.65));
@@ -328,10 +345,11 @@ public class RobotContainer {
         controller
                 .rightTrigger()
                 .whileTrue(indexer.applyPower(TEST_INDEXER_SPEED)
-                        .alongWith(intake.applyPower(
-                                        IntakeConfigsBeta.OUTER_ROLLER_SPEED, IntakeConfigsBeta.INNER_ROLLER_SPEED)
+                        .alongWith(intake.applyPower(IntakeConfigsBeta.ROLLER_SPEED)
                                 .alongWith(feeder.applyPower(FeederConfigsBeta.TEST_FEEDER_SPEED)
-                                        .alongWith(new WaitCommand(1.4).andThen(linSlide.setLinslidePosition(0))))));
+                                        .alongWith(new WaitCommand(1)
+                                                .andThen(linSlide.applyPower(
+                                                        LinSlideConfigsBeta.LINSLIDE_AUTO_STOWING_SPEED))))));
     }
 
     private void configureDebugBindings() {
