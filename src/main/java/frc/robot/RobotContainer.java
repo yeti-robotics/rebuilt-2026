@@ -305,13 +305,13 @@ public class RobotContainer {
 
         controller
                 .leftTrigger()
-                .whileTrue(intake.applyPower(IntakeConfigsBeta.OUTER_ROLLER_SPEED, IntakeConfigsBeta.INNER_ROLLER_SPEED)
-                        .alongWith(linSlide.setLinslidePosition(LinSlideConfigsBeta.LINSLIDE_INTAKE_POSITION))
+                .whileTrue(intake.applyPower(IntakeConfigsBeta.ROLLER_SPEED)
+                        .alongWith(linSlide.applyPower(LinSlideConfigsBeta.DEPLOY_SPEED))
                         .alongWith(led.runPattern(LEDModes.SOLID_WHITE)));
 
         controller
                 .rightBumper()
-                .onTrue(intake.applyPower(-IntakeConfigsBeta.OUTER_ROLLER_SPEED, -IntakeConfigsBeta.INNER_ROLLER_SPEED)
+                .onTrue(intake.applyPower(-IntakeConfigsBeta.ROLLER_SPEED)
                         .alongWith(indexer.applyPower(TEST_INDEXER_SPEED)));
 
         controller
@@ -341,8 +341,7 @@ public class RobotContainer {
         controller
                 .rightTrigger()
                 .whileTrue(indexer.applyPower(TEST_INDEXER_SPEED)
-                        .alongWith(intake.applyPower(
-                                        IntakeConfigsBeta.OUTER_ROLLER_SPEED, IntakeConfigsBeta.INNER_ROLLER_SPEED)
+                        .alongWith(intake.applyPower(IntakeConfigsBeta.ROLLER_SPEED)
                                 .alongWith(feeder.applyPower(FeederConfigsBeta.TEST_FEEDER_SPEED)
                                         .alongWith(new WaitCommand(1)
                                                 .andThen(linSlide.applyPower(

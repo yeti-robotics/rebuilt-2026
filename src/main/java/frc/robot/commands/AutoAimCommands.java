@@ -111,8 +111,7 @@ public class AutoAimCommands {
                 SwerveRequest.Idle::new);
     }
 
-    public static Command
-    shuttleAim(
+    public static Command shuttleAim(
             CommandSwerveDrivetrain drive,
             DoubleSupplier xVelSupplier,
             DoubleSupplier yVelSupplier,
