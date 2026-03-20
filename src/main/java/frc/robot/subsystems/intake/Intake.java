@@ -30,8 +30,8 @@ public class Intake extends SubsystemBase {
         return setIntake(IntakeConfigsAlpha.OUTTAKE_VOLTAGE);
     }
 
-    public Command applyPower(double percent, double percentTwo) {
-        return runEnd(() -> io.applyPower(percent, percentTwo), () -> io.applyPower(0, 0));
+    public Command applyPower(double percent) {
+        return runEnd(() -> io.applyPower(percent), () -> io.applyPower(0));
     }
 
     public double getRPM() {

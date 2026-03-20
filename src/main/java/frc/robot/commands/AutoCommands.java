@@ -65,19 +65,18 @@ public class AutoCommands {
 
     // Named Commands
     public Command popLintake() {
-        return linSlide.setLinslidePosition(LinSlideConfigsBeta.LINSLIDE_INTAKE_POSITION)
-                .withTimeout(0.75);
+        return linSlide.applyPower(LinSlideConfigsBeta.DEPLOY_SPEED).until(linSlide::isDeployed);
     }
 
     public Command rollIn() {
-        return intake.applyPower(IntakeConfigsBeta.OUTER_ROLLER_SPEED, IntakeConfigsBeta.INNER_ROLLER_SPEED);
+        return intake.applyPower(IntakeConfigsBeta.ROLLER_SPEED);
     }
 
     // Broken-Up Commands
     public Command intake() {
         return Commands.parallel(
                 linSlide.applyPower(LinSlideConfigsBeta.DEPLOY_SPEED),
-                intake.applyPower(IntakeConfigsBeta.OUTER_ROLLER_SPEED, IntakeConfigsBeta.INNER_ROLLER_SPEED));
+                intake.applyPower(IntakeConfigsBeta.ROLLER_SPEED));
     }
 
     public Command cycleNeutralRight(Optional<PathPlannerPath> pathOne, Optional<PathPlannerPath> pathTwo) {
@@ -108,18 +107,16 @@ public class AutoCommands {
     public Command shoot() {
         return Commands.deadline(
                 Commands.sequence(
-                        new WaitCommand(1),
+                        new WaitCommand(0.5),
                         linSlide.applyPower(LinSlideConfigsBeta.LINSLIDE_AUTO_STOWING_SPEED)
                                 .until(linSlide::isCloseToZero),
                         Commands.waitSeconds(1)),
                 Commands.parallel(
                         AutoAimCommands.readyAim(drivetrain, shooter, centerHubOpening.toTranslation2d()),
                         AutoAimCommands.autoAim(drivetrain, () -> 0.0, () -> 0.0, centerHubOpening.toTranslation2d()),
-                        new WaitCommand(0.2).andThen(indexer.applyPower(TEST_INDEXER_SPEED)),
-                        new WaitCommand(0.2).andThen(feeder.applyPower(TEST_FEEDER_SPEED)),
-                        new WaitCommand(0.2)
-                                .andThen(intake.applyPower(
-                                        IntakeConfigsBeta.OUTER_ROLLER_SPEED, IntakeConfigsBeta.INNER_ROLLER_SPEED))),
+                        new WaitCommand(0.4).andThen(indexer.applyPower(TEST_INDEXER_SPEED)),
+                        new WaitCommand(0.4).andThen(feeder.applyPower(TEST_FEEDER_SPEED)),
+                        new WaitCommand(0.4).andThen(intake.applyPower(IntakeConfigsBeta.ROLLER_SPEED))),
                 led.runPattern(LEDModes.WAVE));
     }
 
@@ -415,6 +412,25 @@ public class AutoCommands {
                         shoot(),
                         linSlide.runIntake(-0.5, false),
                         climbTower(shootTower));
+        auto = new PathPlannerAuto(cmd);
+        return auto;
+    }
+
+    public Command cheesyLeft() {
+        Optional<PathPlannerPath> cheesy1 = PathPlannerUtils.loadPathByName("cheesy_path1L");
+        Optional<PathPlannerPath> cheesy2 = PathPlannerUtils.loadPathByName("cheesy_path2L");
+        Optional<PathPlannerPath> cheesy3 = PathPlannerUtils.loadPathByName("cheesy_path3L");
+        Optional<PathPlannerPath> cheesy4 = PathPlannerUtils.loadPathByName("cheesy_path4L");
+
+        PathPlannerAuto auto;
+
+        var cmd = cheesy1.isEmpty() || cheesy2.isEmpty() || cheesy3.isEmpty() || cheesy4.isEmpty()
+                ? Commands.none()
+                : Commands.sequence(
+                        followPathAndIntake(cheesy1, 0.5),
+                        followPath(cheesy2),
+                        shoot().withTimeout(7),
+                        followPathAndIntake(cheesy3, 0.5));
         auto = new PathPlannerAuto(cmd);
         return auto;
     }

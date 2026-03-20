@@ -47,7 +47,7 @@ public class LinSlideIOReal implements LinSlideIO {
     public void updateInputs(LinSlideIO.LinSlideIOInputs inputs) {
         inputs.positionRotation = linSlideMotor.getPosition().getValueAsDouble();
         inputs.targetPositionRotation = linSlideMotor.getClosedLoopReference().getValueAsDouble();
-        inputs.isDeployed = linSlideMotor.getPosition().getValueAsDouble() >= 3.1;
+        inputs.isDeployed = linSlideMotor.getPosition().getValueAsDouble() >= 1.59;
         inputs.isStowed = linSlideMotor.getPosition().getValueAsDouble() <= 0.1;
         inputs.velocityRPM = linSlideMotor.getVelocity().getValueAsDouble();
     }

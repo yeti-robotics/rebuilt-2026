@@ -123,7 +123,10 @@ public class AutoAimCommands {
                             .withHeadingPID(20, 0, 0)
                             .withVelocityX(-xVelSupplier.getAsDouble() * SPEED_MULTIPLIER)
                             .withVelocityY(-yVelSupplier.getAsDouble() * SPEED_MULTIPLIER)
-                            .withTargetDirection(AllianceFlipUtil.apply(Rotation2d.k180deg))
+                            .withTargetDirection(calcDesiredHeading(
+                                    drive.getState().Pose,
+                                    new Translation2d(
+                                            2.35, drive.getState().Pose.getY())))
                             .withDriveRequestType(SwerveModule.DriveRequestType.Velocity);
 
                     drive.setControl(request);
