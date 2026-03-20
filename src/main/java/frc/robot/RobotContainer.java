@@ -314,7 +314,9 @@ public class RobotContainer {
         controller
                 .rightBumper()
                 .onTrue(intake.applyPower(-IntakeConfigsBeta.ROLLER_SPEED)
-                        .alongWith(indexer.applyPower(TEST_INDEXER_SPEED)));
+                        .alongWith(indexer.applyPower(TEST_INDEXER_SPEED))
+                        .alongWith(feeder.applyPower(-FeederConfigsBeta.TEST_FEEDER_SPEED)
+                                .alongWith(shooter.applyPower(-0.1))));
 
         controller
                 .leftBumper()
