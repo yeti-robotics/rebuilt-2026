@@ -259,6 +259,7 @@ public class RobotContainer {
         autoChooser.addOption("Right", autoCommands.twoCycleNeutralOutpostTowerRight());
         //        autoChooser.addOption("Two Cycle Neutral Neutral Tower Right",
         // autoCommands.twoCycleNeutralTowerRight());
+        autoChooser.addOption("Cheesy Left", autoCommands.cheesyLeft());
 
         // Configure the button bindings
         if (Robot.isReal()) {

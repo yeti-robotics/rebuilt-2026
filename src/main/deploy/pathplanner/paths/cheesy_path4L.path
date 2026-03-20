@@ -3,32 +3,37 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 6.0057346647646215,
-        "y": 7.3
+        "x": 6.193734939759036,
+        "y": 7.335168674698796
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.587915925706606,
-        "y": 7.32571652717875
+        "x": 4.775916200701021,
+        "y": 7.360885201877546
       },
       "isLocked": false,
       "linkedName": "cheesy-hairpin2L"
     },
     {
       "anchor": {
-        "x": 3.1462910128388017,
-        "y": 7.3
+        "x": 2.9522111269614832,
+        "y": 7.030299572039943
       },
       "prevControl": {
-        "x": 3.873438622948883,
-        "y": 7.297089918678428
+        "x": 3.909671897289586,
+        "y": 7.664293865905849
       },
       "nextControl": null,
       "isLocked": false,
       "linkedName": "cheesy-shootL"
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.5,
+      "rotationDegrees": 0.0
+    }
+  ],
   "constraintZones": [],
   "pointTowardsZones": [],
   "eventMarkers": [],
@@ -42,13 +47,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -90.76113640348223
+    "rotation": -60.72670006136305
   },
   "reversed": false,
   "folder": "Left Paths",
   "idealStartingState": {
     "velocity": 1.0,
-    "rotation": -89.63965393661279
+    "rotation": -1.6254791123568504
   },
   "useDefaultConstraints": true
 }
