@@ -111,6 +111,29 @@ public class AutoAimCommands {
                 SwerveRequest.Idle::new);
     }
 
+    public static Command shuttleAim(
+            CommandSwerveDrivetrain drive,
+            DoubleSupplier xVelSupplier,
+            DoubleSupplier yVelSupplier,
+            Translation2d target) {
+
+        return drive.runEnd(
+                () -> {
+                    SwerveRequest.FieldCentricFacingAngle request = new SwerveRequest.FieldCentricFacingAngle()
+                            .withHeadingPID(20, 0, 0)
+                            .withVelocityX(-xVelSupplier.getAsDouble() * SPEED_MULTIPLIER)
+                            .withVelocityY(-yVelSupplier.getAsDouble() * SPEED_MULTIPLIER)
+                            .withTargetDirection(calcDesiredHeading(
+                                    drive.getState().Pose,
+                                    new Translation2d(
+                                            2.35, drive.getState().Pose.getY())))
+                            .withDriveRequestType(SwerveModule.DriveRequestType.Velocity);
+
+                    drive.setControl(request);
+                },
+                SwerveRequest.Idle::new);
+    }
+
     public static Command compensationAutoAim(
             CommandSwerveDrivetrain drive,
             DoubleSupplier xVelSupplier,
@@ -169,10 +192,33 @@ public class AutoAimCommands {
 
                     double targetRPS = state.rps;
 
-                    Logger.recordOutput("AutoAimCommands/target rps", targetRPS);
+                    Logger.recordOutput("AutoAimCommands/Shooter Map/target rps", targetRPS);
 
                     return shooter.shoot(targetRPS);
                 },
                 Set.of(shooter));
+    }
+
+    public static Command shuttleReadyAim(
+            CommandSwerveDrivetrain drive, Shooter shooter, Translation2d target, Hood hood) {
+
+        return Commands.defer(
+                () -> {
+                    Pose2d currentPose = drive.getState().Pose;
+                    Translation2d modifiedTarget = new Translation2d(AllianceFlipUtil.apply(2.35), currentPose.getY());
+                    Translation2d currentPosition = currentPose.getTranslation();
+                    double distance = modifiedTarget.getDistance(currentPosition);
+
+                    ShooterStateData state = ShooterConfigsBeta.SHUTTLE_MAP.get(distance);
+
+                    double targetRPS = state.rps;
+                    Angle targetHoodPos = state.hoodPos;
+
+                    Logger.recordOutput("AutoAimCommands/Shuttle Map/target rps", targetRPS);
+                    Logger.recordOutput("AutoAimCommands/Shuttle Map/target hood position", targetHoodPos);
+
+                    return shooter.shoot(targetRPS).alongWith(hood.setHoodPosition((targetHoodPos.magnitude())));
+                },
+                Set.of(shooter, hood));
     }
 }
