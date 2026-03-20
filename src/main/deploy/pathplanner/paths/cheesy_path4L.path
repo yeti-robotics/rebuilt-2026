@@ -1,0 +1,59 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 6.0079638554216865,
+        "y": 4.428397590361445
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 7.603409638554217,
+        "y": 5.543024096385542
+      },
+      "isLocked": false,
+      "linkedName": "cheesy-hairpin2L"
+    },
+    {
+      "anchor": {
+        "x": 3.0684096385542166,
+        "y": 5.3463253012048195
+      },
+      "prevControl": {
+        "x": 4.139325301204819,
+        "y": 5.455602409638555
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": null
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.2929460580912863,
+      "rotationDegrees": -55.249264738566346
+    }
+  ],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 10.0,
+    "maxAcceleration": 12.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": -40.8043503082194
+  },
+  "reversed": false,
+  "folder": "Left Paths",
+  "idealStartingState": {
+    "velocity": 1.0,
+    "rotation": 75.61860540890947
+  },
+  "useDefaultConstraints": false
+}

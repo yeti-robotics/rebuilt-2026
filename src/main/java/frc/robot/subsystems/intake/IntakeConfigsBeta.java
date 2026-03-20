@@ -15,7 +15,7 @@ public class IntakeConfigsBeta {
     public static double ROLL_IN_SPEED = 1;
     public static double ROLL_IN_SLOWER = 0.5;
 
-    public static double ROLLER_SPEED = -0.8;
+    public static double ROLLER_SPEED = -1;
     public static double INNER_ROLLER_SPEED = -0.5;
 
     static TalonFXConfiguration RIGHT_TALONFX_CONFIGS = new TalonFXConfiguration()

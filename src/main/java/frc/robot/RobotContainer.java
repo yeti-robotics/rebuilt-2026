@@ -259,6 +259,7 @@ public class RobotContainer {
         autoChooser.addOption("Right", autoCommands.twoCycleNeutralOutpostTowerRight());
         //        autoChooser.addOption("Two Cycle Neutral Neutral Tower Right",
         // autoCommands.twoCycleNeutralTowerRight());
+        autoChooser.addOption("Cheesy Left", autoCommands.cheesyLeft());
 
         // Configure the button bindings
         if (Robot.isReal()) {
@@ -313,7 +314,9 @@ public class RobotContainer {
         controller
                 .rightBumper()
                 .onTrue(intake.applyPower(-IntakeConfigsBeta.ROLLER_SPEED)
-                        .alongWith(indexer.applyPower(TEST_INDEXER_SPEED)));
+                        .alongWith(indexer.applyPower(TEST_INDEXER_SPEED))
+                        .alongWith(feeder.applyPower(-FeederConfigsBeta.TEST_FEEDER_SPEED)
+                                .alongWith(shooter.applyPower(-0.1))));
 
         controller
                 .leftBumper()
