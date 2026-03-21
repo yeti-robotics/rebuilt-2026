@@ -51,7 +51,7 @@ public class ShooterConfigsBeta {
         SHOOTER_MAP.put(2.13, new ShooterStateData(HoodPositions.STOW.getPosition(), 26, 0.0));
         SHOOTER_MAP.put(2.43, new ShooterStateData(HoodPositions.STOW.getPosition(), 29, 0.0));
         SHOOTER_MAP.put(2.78, new ShooterStateData(HoodPositions.STOW.getPosition(), 30, 0.0));
-        SHOOTER_MAP.put(3.15, new ShooterStateData(HoodPositions.STOW.getPosition(), 30, 0.0));
+        SHOOTER_MAP.put(3.15, new ShooterStateData(HoodPositions.STOW.getPosition(), 32, 0.0));
         SHOOTER_MAP.put(3.78, new ShooterStateData(HoodPositions.STOW.getPosition(), 34, 0.0));
         SHOOTER_MAP.put(4.30, new ShooterStateData(HoodPositions.STOW.getPosition(), 36, 0.0));
         SHOOTER_MAP.put(4.36, new ShooterStateData(HoodPositions.STOW.getPosition(), 38.5, 0.0));
