@@ -9,7 +9,6 @@ package frc.robot;
 
 import static frc.robot.constants.Constants.currentMode;
 import static frc.robot.constants.FieldConstants.Hub.centerHubOpening;
-import static frc.robot.constants.FieldConstants.Shuttle.shuttleTargetZone;
 import static frc.robot.subsystems.indexer.IndexerConfigsBeta.TEST_INDEXER_SPEED;
 
 import com.ctre.phoenix6.swerve.SwerveModule;
@@ -321,12 +320,8 @@ public class RobotContainer {
         controller
                 .leftBumper()
                 .whileTrue(AutoAimCommands.autoAim(
-                                                drive,
-                                                controller::getLeftY,
-                                                controller::getLeftX,
-                                                centerHubOpening.toTranslation2d())
-                                        .alongWith(AutoAimCommands.readyAim(
-                                                drive, shooter, centerHubOpening.toTranslation2d()))
+                                drive, controller::getLeftY, controller::getLeftX, centerHubOpening.toTranslation2d())
+                        .alongWith(AutoAimCommands.readyAim(drive, shooter, centerHubOpening.toTranslation2d()))
                         .alongWith(led.runPattern(LEDModes.WAVE)));
 
         //        controller.leftBumper().whileTrue(shooter.shoot(44));
