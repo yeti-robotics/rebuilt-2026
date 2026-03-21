@@ -27,6 +27,7 @@ public class IndexerIOBeta implements IndexerIO {
     public void updateInputs(IndexerIOInputs inputs) {
         inputs.rollerSpeed = indexerRoller.getVelocity().getValueAsDouble();
         inputs.isFull = topCanRange.getIsDetected().getValue();
+        inputs.motorTemp = indexerRoller.getDeviceTemp().getValueAsDouble();
     }
 
     @Override

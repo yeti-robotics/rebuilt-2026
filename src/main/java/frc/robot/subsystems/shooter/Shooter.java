@@ -33,6 +33,11 @@ public class Shooter extends SubsystemBase {
                 .andThen(runEnd(() -> io.spinMotors(velocity), () -> io.stopMotors()));
     }
 
+    public void spinMotors(double velocity) {
+        io.spinMotors(velocity);
+        this.targetSpeed = velocity;
+    }
+
     public Command shootForever(double velocity) {
         return runOnce(() -> this.targetSpeed = velocity).andThen(run(() -> io.applyPower(velocity)));
     }
@@ -43,6 +48,11 @@ public class Shooter extends SubsystemBase {
 
     public Command stopFlywheels() {
         return runOnce(() -> io.stopMotors()).andThen(() -> this.targetSpeed = 0);
+    }
+
+    public void stopMotors() {
+        io.stopMotors();
+        this.targetSpeed = 0;
     }
 
     public Command applyPower(double power) {
