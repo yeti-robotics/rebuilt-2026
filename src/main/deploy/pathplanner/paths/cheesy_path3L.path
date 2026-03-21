@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.9263493975903616,
-        "y": 7.182180722891567
+        "x": 2.874579172610556,
+        "y": 6.473937232524964
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.778710843373495,
-        "y": 8.00175903614458
+        "x": 3.379186875891583,
+        "y": 7.793680456490728
       },
       "isLocked": false,
       "linkedName": "cheesy-shootL"
@@ -122,7 +122,7 @@
   "folder": "Left Paths",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -60.72670006136305
+    "rotation": -52.88313931672973
   },
   "useDefaultConstraints": true
 }
