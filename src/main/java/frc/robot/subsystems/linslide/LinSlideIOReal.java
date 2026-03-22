@@ -6,6 +6,7 @@ import static frc.robot.subsystems.linslide.LinSlideConfigsAlpha.*;
 
 import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.Follower;
+import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.MotorAlignmentValue;
@@ -18,6 +19,7 @@ public class LinSlideIOReal implements LinSlideIO {
     private TalonFX secondaryLinSlideMotor;
     private final DutyCycleOut dutyRequest = new DutyCycleOut(0.0);
     private final VoltageOut voltageRequest = new VoltageOut(0.0);
+    private final PositionVoltage positionRequest = new PositionVoltage(0.0);
 
     public LinSlideIOReal() {
         if (currentMode == Constants.Mode.ALPHA) {
@@ -45,7 +47,7 @@ public class LinSlideIOReal implements LinSlideIO {
     public void updateInputs(LinSlideIO.LinSlideIOInputs inputs) {
         inputs.positionRotation = linSlideMotor.getPosition().getValueAsDouble();
         inputs.targetPositionRotation = linSlideMotor.getClosedLoopReference().getValueAsDouble();
-        inputs.isDeployed = linSlideMotor.getPosition().getValueAsDouble() >= 3.1;
+        inputs.isDeployed = linSlideMotor.getPosition().getValueAsDouble() >= 1.59;
         inputs.isStowed = linSlideMotor.getPosition().getValueAsDouble() <= 0.1;
         inputs.velocityRPM = linSlideMotor.getVelocity().getValueAsDouble();
     }
@@ -63,5 +65,10 @@ public class LinSlideIOReal implements LinSlideIO {
     @Override
     public void applyVoltage(double volts) {
         linSlideMotor.setControl(voltageRequest.withOutput(volts));
+    }
+
+    @Override
+    public void setPosition(double position) {
+        linSlideMotor.setControl(positionRequest.withPosition(position));
     }
 }

@@ -222,6 +222,11 @@ public class RobotContainer {
         //
         //        // Left
         autoChooser.addOption("Left", autoCommands.oneCycleNeutralTowerLeft());
+
+        //        autoChooser.addOption("Citrus Trench Left", autoCommands.citrusAutoTrenchLeft());
+        //        autoChooser.addOption("Citrus Bump Left", autoCommands.citrusAutoBumpLeft());
+        //        autoChooser.addOption("Depot Center", autoCommands.oneCycleDepotShoot());
+
         //        autoChooser.addOption("One Cycle Depot Tower Left", autoCommands.oneCycleDepotTowerLeft());
         //        autoChooser.addOption("Two Cycle Neutral Depot Tower Left",
         // autoCommands.twoCycleNeutralDepotTowerLeft());
@@ -253,6 +258,7 @@ public class RobotContainer {
         autoChooser.addOption("Right", autoCommands.twoCycleNeutralOutpostTowerRight());
         //        autoChooser.addOption("Two Cycle Neutral Neutral Tower Right",
         // autoCommands.twoCycleNeutralTowerRight());
+        autoChooser.addOption("Cheesy Left", autoCommands.cheesyLeft());
 
         // Configure the button bindings
         if (Robot.isReal()) {
@@ -292,21 +298,24 @@ public class RobotContainer {
 
         controller.start().onTrue(Commands.runOnce(drive::seedFieldCentric, drive));
 
-        controller.y().whileTrue(climber.applyPower(ClimberConfigsBeta.CLIMBER_EXTEND_SPEED));
-        controller.a().whileTrue(climber.applyPower(ClimberConfigsBeta.CLIMBER_RETRACT_SPEED));
+        //        controller.y().whileTrue(climber.applyPower(ClimberConfigsBeta.CLIMBER_EXTEND_SPEED));
+        //        controller.a().whileTrue(climber.applyPower(ClimberConfigsBeta.CLIMBER_RETRACT_SPEED));
         controller.x().whileTrue(linSlide.applyPower(LinSlideConfigsBeta.DEPLOY_SPEED));
         controller.b().whileTrue(linSlide.applyPower(-LinSlideConfigsBeta.DEPLOY_SPEED));
 
         controller
                 .leftTrigger()
-                .whileTrue(intake.applyPower(IntakeConfigsBeta.ROLL_IN_SPEED)
-                        .alongWith(linSlide.applyPower(LinSlideConfigsBeta.DEPLOY_SPEED))
+                .whileTrue(intake.applyPower(IntakeConfigsBeta.ROLLER_SPEED)
+                        .alongWith(linSlide.applyPower(LinSlideConfigsBeta.DEPLOY_SPEED)
+                                .until(linSlide::isDeployed))
                         .alongWith(led.runPattern(LEDModes.SOLID_WHITE)));
 
         controller
                 .rightBumper()
-                .onTrue(intake.applyPower(-IntakeConfigsBeta.ROLL_IN_SPEED)
-                        .alongWith(indexer.applyPower(TEST_INDEXER_SPEED)));
+                .onTrue(intake.applyPower(-IntakeConfigsBeta.ROLLER_SPEED)
+                        .alongWith(indexer.applyPower(TEST_INDEXER_SPEED))
+                        .alongWith(feeder.applyPower(-FeederConfigsBeta.TEST_FEEDER_SPEED)
+                                .alongWith(shooter.applyPower(-0.1))));
 
         controller
                 .leftBumper()
@@ -315,23 +324,26 @@ public class RobotContainer {
                         .alongWith(AutoAimCommands.readyAim(drive, shooter, centerHubOpening.toTranslation2d()))
                         .alongWith(led.runPattern(LEDModes.WAVE)));
 
-        //        controller.leftBumper().whileTrue(shooter.shoot(60));
+        //        controller.leftBumper().whileTrue(shooter.shoot(44));
+
+        controller.povLeft().onTrue(hood.setHoodPosition(0));
+        controller.povRight().onTrue(hood.setHoodPosition(0.65));
 
         controller
                 .rightTrigger()
                 .whileTrue(indexer.applyPower(TEST_INDEXER_SPEED)
-                        .alongWith(intake.applyPower(IntakeConfigsBeta.ROLL_IN_SLOWER)
+                        .alongWith(intake.applyPower(IntakeConfigsBeta.ROLLER_SPEED)
                                 .alongWith(feeder.applyPower(FeederConfigsBeta.TEST_FEEDER_SPEED)
-                                        .alongWith(new WaitCommand(0.8)
+                                        .alongWith(new WaitCommand(1)
                                                 .andThen(linSlide.applyPower(
-                                                        LinSlideConfigsBeta.LINSLIDE_AUTO_SHOOT_SPEED))
-                                                    .alongWith(drive.applyRequest(SwerveRequest.SwerveDriveBrake::new))))));
+                                                        LinSlideConfigsBeta.LINSLIDE_AUTO_STOWING_SPEED))
+                                                .alongWith(drive.applyRequest(SwerveRequest.SwerveDriveBrake::new))))));
     }
 
     private void configureDebugBindings() {
         controller2.start().onTrue(Commands.runOnce(drive::seedFieldCentric, drive));
 
-        controller2.leftBumper().whileTrue(intake.applyPower(IntakeConfigsBeta.ROLL_IN_SPEED));
+        //        controller2.leftBumper().whileTrue(intake.applyPower(IntakeConfigsBeta.ROLL_IN_SPEED));
 
         controller2
                 .x()
@@ -357,16 +369,15 @@ public class RobotContainer {
         controller2
                 .rightTrigger()
                 .whileTrue(indexer.applyPower(TEST_INDEXER_SPEED)
-                        .alongWith(intake.applyPower(IntakeConfigsBeta.ROLL_IN_SLOWER)
-                                .alongWith(feeder.applyPower(0.7)
-                                        .alongWith(new WaitCommand(0.8)
-                                                .andThen(linSlide.applyPower(
-                                                        LinSlideConfigsBeta.LINSLIDE_AUTO_SHOOT_SPEED))))));
+                        //                        .alongWith(intake.applyPower(IntakeConfigsBeta.ROLL_IN_SLOWER)
+                        .alongWith(feeder.applyPower(0.7)
+                                .alongWith(new WaitCommand(0.8)
+                                        .andThen(linSlide.applyPower(LinSlideConfigsBeta.LINSLIDE_AUTO_SHOOT_SPEED)))));
 
-        controller2
-                .rightBumper()
-                .whileTrue(intake.applyPower(-IntakeConfigsBeta.ROLL_IN_SLOWER)
-                        .alongWith(indexer.applyPower(-TEST_INDEXER_SPEED)));
+        //        controller2
+        //                .rightBumper()
+        //                .whileTrue(intake.applyPower(-IntakeConfigsBeta.ROLL_IN_SLOWER)
+        //                        .alongWith(indexer.applyPower(-TEST_INDEXER_SPEED)));
     }
 
     private void configureSimBindings() {
@@ -425,7 +436,12 @@ public class RobotContainer {
         Translation2d currentPosition = currentPose.getTranslation();
         double distance = modifiedTarget.getDistance(currentPosition);
 
-        Logger.recordOutput("AutoAimCommands/distance", distance);
+        Logger.recordOutput("AutoAimCommands/Shooter Map/hub distance", distance);
+
+        Translation2d shuttleTranslation = AllianceFlipUtil.apply(new Translation2d(2.35, currentPose.getY()));
+        double shuttleDistance = shuttleTranslation.getDistance(currentPosition);
+
+        Logger.recordOutput("AutoAimCommands/Shuttle Map/ideal shuttle distance", shuttleDistance);
     }
 
     public void saveLog() {

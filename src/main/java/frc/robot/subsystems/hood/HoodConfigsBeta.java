@@ -7,22 +7,22 @@ import frc.robot.Robot;
 public class HoodConfigsBeta {
     static final int HOOD_MOTOR_ID = 44;
     static final int HOOD_CANCODER_ID = 45;
-    static final double MAGNET_OFFSET = 0.072754;
+    static final double MAGNET_OFFSET = 0.964355;
 
-    static final double ROTOR_TO_SENSOR = 16.0;
-    static final double SENSOR_TO_MECHANISM = 1.5;
+    static final double ROTOR_TO_SENSOR = 1;
+    static final double SENSOR_TO_MECHANISM = 20;
 
     public static final double TEST_HOOD_SPEED = 0.2;
 
     private static final Slot0Configs SLOT_0_CONFIGS = Robot.isReal()
             ? new Slot0Configs()
-                    .withKP(256)
+                    .withKP(32)
                     .withKI(0)
                     .withKD(0)
                     .withKG(0)
-                    .withKV(3)
-                    .withKA(0.5)
-                    .withKS(4)
+                    .withKV(0)
+                    .withKA(0)
+                    .withKS(0)
                     .withGravityType(GravityTypeValue.Elevator_Static)
             : new Slot0Configs()
                     .withKP(0)
@@ -42,21 +42,19 @@ public class HoodConfigsBeta {
                     .withMotionMagicJerk(0))
             .withFeedback(new FeedbackConfigs()
                     .withRotorToSensorRatio(ROTOR_TO_SENSOR)
-                    .withSensorToMechanismRatio(SENSOR_TO_MECHANISM)
-                    .withFeedbackRemoteSensorID(HOOD_CANCODER_ID)
-                    .withFeedbackSensorSource(FeedbackSensorSourceValue.FusedCANcoder))
+                    .withSensorToMechanismRatio(SENSOR_TO_MECHANISM))
             .withMotorOutput(new MotorOutputConfigs()
                     .withInverted(InvertedValue.Clockwise_Positive)
                     .withNeutralMode(NeutralModeValue.Brake))
             .withSoftwareLimitSwitch(new SoftwareLimitSwitchConfigs()
-                    .withReverseSoftLimitThreshold(-0.12793000042438507)
+                    .withReverseSoftLimitThreshold(0.015)
                     .withReverseSoftLimitEnable(true)
-                    .withForwardSoftLimitThreshold(0.2912600040435791)
+                    .withForwardSoftLimitThreshold(0.751006)
                     .withForwardSoftLimitEnable(true));
 
     static final CANcoderConfiguration HOOD_CANCODER_CONFIGS = new CANcoderConfiguration()
             .withMagnetSensor(new MagnetSensorConfigs()
-                    .withSensorDirection(SensorDirectionValue.Clockwise_Positive)
+                    .withSensorDirection(SensorDirectionValue.CounterClockwise_Positive)
                     .withMagnetOffset(MAGNET_OFFSET)
                     .withAbsoluteSensorDiscontinuityPoint(0));
 }

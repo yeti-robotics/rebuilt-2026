@@ -47,14 +47,26 @@ public class ShooterConfigsBeta {
             new InterpolatingTreeMap<>(InverseInterpolator.forDouble(), ShooterStateData.interpolator);
 
     static {
-        SHOOTER_MAP.put(
-                2.08, new ShooterStateData(HoodPositions.STOW.getPosition(), 23, 0.0)); // hood, rps, flight time
-        SHOOTER_MAP.put(3.38, new ShooterStateData(HoodPositions.STOW.getPosition(), 33, 0.0));
-        SHOOTER_MAP.put(4.00, new ShooterStateData(HoodPositions.STOW.getPosition(), 36, 0.0));
-        SHOOTER_MAP.put(4.31, new ShooterStateData(HoodPositions.STOW.getPosition(), 37, 0.0));
-        SHOOTER_MAP.put(2.58, new ShooterStateData(HoodPositions.STOW.getPosition(), 27, 0.0));
-        SHOOTER_MAP.put(3.74, new ShooterStateData(HoodPositions.STOW.getPosition(), 34, 0.0));
-        SHOOTER_MAP.put(4.46, new ShooterStateData(HoodPositions.STOW.getPosition(), 42, 0.0));
-        SHOOTER_MAP.put(1.43, new ShooterStateData(HoodPositions.STOW.getPosition(), 20, 0.0));
+        SHOOTER_MAP.put(1.74, new ShooterStateData(HoodPositions.STOW.getPosition(), 24, 0.0));
+        SHOOTER_MAP.put(2.13, new ShooterStateData(HoodPositions.STOW.getPosition(), 26, 0.0));
+        SHOOTER_MAP.put(2.43, new ShooterStateData(HoodPositions.STOW.getPosition(), 29, 0.0));
+        SHOOTER_MAP.put(2.78, new ShooterStateData(HoodPositions.STOW.getPosition(), 30, 0.0));
+        SHOOTER_MAP.put(3.15, new ShooterStateData(HoodPositions.STOW.getPosition(), 32, 0.0));
+        SHOOTER_MAP.put(3.78, new ShooterStateData(HoodPositions.STOW.getPosition(), 34, 0.0));
+        SHOOTER_MAP.put(4.15, new ShooterStateData(HoodPositions.STOW.getPosition(), 36, 0.0));
+        SHOOTER_MAP.put(4.30, new ShooterStateData(HoodPositions.STOW.getPosition(), 37, 0.0));
+        SHOOTER_MAP.put(4.36, new ShooterStateData(HoodPositions.STOW.getPosition(), 38.5, 0.0));
+    }
+
+    public static final InterpolatingTreeMap<Double, ShooterStateData> SHUTTLE_MAP =
+            new InterpolatingTreeMap<>(InverseInterpolator.forDouble(), ShooterStateData.interpolator);
+
+    static {
+        SHUTTLE_MAP.put(3.22, new ShooterStateData(HoodPositions.HOOD_UP.getPosition(), 18, 0.0));
+        SHUTTLE_MAP.put(3.70, new ShooterStateData(HoodPositions.HOOD_UP.getPosition(), 21, 0.0));
+        SHUTTLE_MAP.put(4.02, new ShooterStateData(HoodPositions.HOOD_UP.getPosition(), 24, 0.0));
+        SHUTTLE_MAP.put(5.56, new ShooterStateData(HoodPositions.HOOD_UP.getPosition(), 30, 0.0));
+        SHUTTLE_MAP.put(7.02, new ShooterStateData(HoodPositions.HOOD_UP.getPosition(), 39, 0.0));
+        SHUTTLE_MAP.put(8.55, new ShooterStateData(HoodPositions.HOOD_UP.getPosition(), 43, 0.0));
     }
 }
