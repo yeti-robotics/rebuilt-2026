@@ -322,7 +322,7 @@ public class RobotContainer {
                 .rightTrigger()
                 .whileTrue(indexer.applyPower(TEST_INDEXER_SPEED)
                         //                        .alongWith(intake.applyPower(IntakeConfigsBeta.ROLL_IN_SLOWER)
-                        .alongWith(feeder.applyPower(0.7)
+                        .alongWith(feeder.applyPower(0.7).alongWith(drive.applyRequest(SwerveRequest.SwerveDriveBrake::new))
                                 .alongWith(new WaitCommand(0.8)
                                         .andThen(linSlide.applyPower(LinSlideConfigsBeta.LINSLIDE_AUTO_SHOOT_SPEED)))));
 
