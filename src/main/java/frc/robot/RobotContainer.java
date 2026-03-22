@@ -288,7 +288,7 @@ public class RobotContainer {
                 .rightTrigger()
                 .whileTrue(indexer.applyPower(TEST_INDEXER_SPEED)
                         .alongWith(intake.applyPower(IntakeConfigsBeta.ROLLER_SPEED)
-                                .alongWith(swerveLockState ? drive.applyRequest(SwerveRequest.SwerveDriveBrake::new) : Commands.none())
+                                .alongWith(Commands.either(drive.applyRequest(SwerveRequest.SwerveDriveBrake::new), Commands.none(), () -> swerveLockState))
                                 .alongWith(feeder.applyPower(FeederConfigsBeta.TEST_FEEDER_SPEED)
                                         .alongWith(new WaitCommand(1)
                                                 .andThen(linSlide.applyPower(
