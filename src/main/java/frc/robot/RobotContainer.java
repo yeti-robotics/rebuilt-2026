@@ -93,6 +93,7 @@ public class RobotContainer {
     private final LoggedDashboardChooser<Command> autoChooser;
 
     private ClimberState climbState;
+    private boolean swerveLockState;
 
     private final SwerveRequest.FieldCentric driveRequest = currentMode == Constants.Mode.ALPHA
             ? new SwerveRequest.FieldCentric()
@@ -200,6 +201,8 @@ public class RobotContainer {
 
         climbState = ClimberState.DEFAULT;
 
+        swerveLockState = false;
+
         autoCommands = new AutoCommands(climber, drive, hood, indexer, feeder, intake, linSlide, shooter, led);
 
         // Set up auto routines
@@ -251,10 +254,9 @@ public class RobotContainer {
 
         controller.start().onTrue(Commands.runOnce(drive::seedFieldCentric, drive));
 
-        //        controller.y().whileTrue(climber.applyPower(ClimberConfigsBeta.CLIMBER_EXTEND_SPEED));
-        //        controller.a().whileTrue(climber.applyPower(ClimberConfigsBeta.CLIMBER_RETRACT_SPEED));
         controller.x().whileTrue(linSlide.applyPower(LinSlideConfigsBeta.DEPLOY_SPEED));
         controller.b().whileTrue(linSlide.applyPower(-LinSlideConfigsBeta.DEPLOY_SPEED));
+        controller.y().onTrue(Commands.runOnce(() -> swerveLockState = !swerveLockState));
 
         controller
                 .leftTrigger()
@@ -286,6 +288,7 @@ public class RobotContainer {
                 .rightTrigger()
                 .whileTrue(indexer.applyPower(TEST_INDEXER_SPEED)
                         .alongWith(intake.applyPower(IntakeConfigsBeta.ROLLER_SPEED)
+                                .alongWith(swerveLockState ? drive.applyRequest(SwerveRequest.SwerveDriveBrake::new) : Commands.none())
                                 .alongWith(feeder.applyPower(FeederConfigsBeta.TEST_FEEDER_SPEED)
                                         .alongWith(new WaitCommand(1)
                                                 .andThen(linSlide.applyPower(
@@ -322,7 +325,7 @@ public class RobotContainer {
                 .rightTrigger()
                 .whileTrue(indexer.applyPower(TEST_INDEXER_SPEED)
                         //                        .alongWith(intake.applyPower(IntakeConfigsBeta.ROLL_IN_SLOWER)
-                        .alongWith(feeder.applyPower(0.7).alongWith(drive.applyRequest(SwerveRequest.SwerveDriveBrake::new))
+                        .alongWith(feeder.applyPower(0.7)
                                 .alongWith(new WaitCommand(0.8)
                                         .andThen(linSlide.applyPower(LinSlideConfigsBeta.LINSLIDE_AUTO_SHOOT_SPEED)))));
 
@@ -394,6 +397,7 @@ public class RobotContainer {
         double shuttleDistance = shuttleTranslation.getDistance(currentPosition);
 
         Logger.recordOutput("AutoAimCommands/Shuttle Map/ideal shuttle distance", shuttleDistance);
+        Logger.recordOutput("Drive/Swerve Lock State", swerveLockState);
     }
 
     public void saveLog() {
