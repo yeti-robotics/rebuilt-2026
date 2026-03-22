@@ -287,15 +287,11 @@ public class RobotContainer {
         controller
                 .rightTrigger()
                 .whileTrue(indexer.applyPower(TEST_INDEXER_SPEED)
-                        .alongWith(intake.applyPower(IntakeConfigsBeta.ROLLER_SPEED)
-                                .alongWith(Commands.either(
-                                        drive.applyRequest(SwerveRequest.SwerveDriveBrake::new),
-                                        Commands.none(),
-                                        () -> swerveLockState))
+                        .alongWith(intake.applyPower(IntakeConfigsBeta.ROLLER_SPEED))
                                 .alongWith(feeder.applyPower(FeederConfigsBeta.TEST_FEEDER_SPEED)
                                         .alongWith(new WaitCommand(1)
                                                 .andThen(linSlide.applyPower(
-                                                        LinSlideConfigsBeta.LINSLIDE_AUTO_STOWING_SPEED))))));
+                                                        LinSlideConfigsBeta.LINSLIDE_AUTO_STOWING_SPEED)))));
     }
 
     private void configureDebugBindings() {
