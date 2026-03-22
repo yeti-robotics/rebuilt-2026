@@ -52,8 +52,8 @@
         "y": 6.220542168674699
       },
       "prevControl": {
-        "x": 7.23490727532097,
-        "y": 5.904636233951498
+        "x": 7.234905427473049,
+        "y": 5.90463576873543
       },
       "nextControl": null,
       "isLocked": false,
@@ -145,7 +145,7 @@
   },
   "goalEndState": {
     "velocity": 1.0,
-    "rotation": -72.69148939064938
+    "rotation": -72.691
   },
   "reversed": false,
   "folder": "Left Paths",

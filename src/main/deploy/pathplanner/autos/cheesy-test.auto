@@ -7,25 +7,25 @@
         {
           "type": "path",
           "data": {
-            "pathName": "cheesy_path1R"
+            "pathName": null
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "cheesy_path2R"
+            "pathName": null
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "cheesy_path3R"
+            "pathName": null
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "cheesy_path4R"
+            "pathName": null
           }
         }
       ]

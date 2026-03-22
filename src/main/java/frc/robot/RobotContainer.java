@@ -208,57 +208,10 @@ public class RobotContainer {
         // Set up simulatable mechanisms
         mechanisms = new Mechanisms();
 
-        //        autoChooser.addOption(
-        //                "Drive SysId (Quasistatic Forward)", drive.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
-        //        autoChooser.addOption(
-        //                "Drive SysId (Quasistatic Reverse)", drive.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
-        //        autoChooser.addOption("Drive SysId (Dynamic Forward)",
-        // drive.sysIdDynamic(SysIdRoutine.Direction.kForward));
-        //        autoChooser.addOption("Drive SysId (Dynamic Reverse)",
-        // drive.sysIdDynamic(SysIdRoutine.Direction.kReverse));
-        //
-        //        // Test
-        //        autoChooser.addOption("Climber Testing Path", autoCommands.climberTest());
-        //
-        //        // Left
         autoChooser.addOption("Left", autoCommands.oneCycleNeutralTowerLeft());
-
-        //        autoChooser.addOption("Citrus Trench Left", autoCommands.citrusAutoTrenchLeft());
-        //        autoChooser.addOption("Citrus Bump Left", autoCommands.citrusAutoBumpLeft());
-        //        autoChooser.addOption("Depot Center", autoCommands.oneCycleDepotShoot());
-
-        //        autoChooser.addOption("One Cycle Depot Tower Left", autoCommands.oneCycleDepotTowerLeft());
-        //        autoChooser.addOption("Two Cycle Neutral Depot Tower Left",
-        // autoCommands.twoCycleNeutralDepotTowerLeft());
-        //        autoChooser.addOption("Two Cycle Depot Neutral Tower Left",
-        // autoCommands.twoCycleDepotNeutralTowerLeft());
-        //        autoChooser.addOption("Two Cycle Neutral Neutral Tower Left",
-        // autoCommands.twoCycleNeutralTowerLeft());
-        //
-        //        // Center
-        //        autoChooser.addOption("One Cycle Neutral Left Tower Center",
-        // autoCommands.oneCycleNeutralLeftTowerCenter());
-        //        autoChooser.addOption("One Cycle Neutral Right Tower Center",
-        // autoCommands.oneCycleNeutralRightTowerCenter());
-        //        autoChooser.addOption("Two Cycle Depot Neutral Right Center",
-        // autoCommands.twoCycleDepotNeutralRightCenter());
-        //        autoChooser.addOption("Two Cycle Neutral Left Neutral Center",
-        // autoCommands.twoCycleNeutralNeutralLeftCenter());
-        //        autoChooser.addOption(
-        //                "Two Cycle Neutral Right Neutral Center", autoCommands.twoCycleNeutralNeutralRightCenter());
-        //        autoChooser.addOption("Two Cycle Depot Neutral Left Center",
-        // autoCommands.twoCycleDepotNeutralLeftCenter());
-        //
-        //        // Right
-        //        autoChooser.addOption("One Cycle Neutral Right Tower Right",
-        // autoCommands.oneCycleNeutralRightTowerRight());
-        //        autoChooser.addOption("One Cycle Outpost Tower Right", autoCommands.oneCycleOutpostTowerRight());
-        //        autoChooser.addOption("Two Cycle Outpost Neutral Tower Right",
-        // autoCommands.twoCycleOutpostNeutralTowerRight());
         autoChooser.addOption("Right", autoCommands.twoCycleNeutralOutpostTowerRight());
-        //        autoChooser.addOption("Two Cycle Neutral Neutral Tower Right",
-        // autoCommands.twoCycleNeutralTowerRight());
         autoChooser.addOption("Cheesy Left", autoCommands.cheesyLeft());
+        autoChooser.addOption("Cheesy Right", autoCommands.cheesyRight());
 
         // Configure the button bindings
         if (Robot.isReal()) {
