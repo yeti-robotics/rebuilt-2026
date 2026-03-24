@@ -2,6 +2,7 @@ package frc.robot.subsystems.intake;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import org.littletonrobotics.junction.Logger;
 
 public class Intake extends SubsystemBase {
@@ -30,7 +31,7 @@ public class Intake extends SubsystemBase {
         return setIntake(IntakeConfigsAlpha.OUTTAKE_VOLTAGE);
     }
 
-    public Command applyPower(double percent) {
+    public Command applyPower(double percent, CommandXboxController controller) {
         return runEnd(() -> io.applyPower(percent), () -> io.applyPower(0));
     }
 
