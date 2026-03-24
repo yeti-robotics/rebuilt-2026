@@ -22,6 +22,7 @@ public class IndexerIOAlpha implements IndexerIO {
     @Override
     public void updateInputs(IndexerIOInputs inputs) {
         inputs.rollerSpeed = indexerRoller.getVelocity().getValueAsDouble();
+        inputs.motorTemp = indexerRoller.getDeviceTemp().getValueAsDouble();
     }
 
     @Override

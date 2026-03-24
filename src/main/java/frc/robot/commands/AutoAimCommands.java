@@ -180,23 +180,7 @@ public class AutoAimCommands {
     }
 
     public static Command readyAim(CommandSwerveDrivetrain drive, Shooter shooter, Translation2d target) {
-
-        return Commands.defer(
-                () -> {
-                    Pose2d currentPose = drive.getState().Pose;
-                    Translation2d modifiedTarget = AllianceFlipUtil.apply(target);
-                    Translation2d currentPosition = currentPose.getTranslation();
-                    double distance = modifiedTarget.getDistance(currentPosition);
-
-                    ShooterStateData state = ShooterConfigsBeta.SHOOTER_MAP.get(distance);
-
-                    double targetRPS = state.rps;
-
-                    Logger.recordOutput("AutoAimCommands/Shooter Map/target rps", targetRPS);
-
-                    return shooter.shoot(targetRPS);
-                },
-                Set.of(shooter));
+        return new ReadyAimCommand(drive, shooter, target);
     }
 
     public static Command shuttleReadyAim(
