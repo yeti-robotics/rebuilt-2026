@@ -1,5 +1,6 @@
 package frc.robot.commands;
 
+import com.ctre.phoenix6.swerve.SwerveRequest;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -40,6 +41,8 @@ public class ReadyAimCommand extends Command {
         Logger.recordOutput("AutoAimCommands/Shooter Map/target rps", targetRPS);
 
         shooter.spinMotors(targetRPS);
+
+        drive.applyRequest(SwerveRequest.SwerveDriveBrake::new);
     }
 
     @Override
