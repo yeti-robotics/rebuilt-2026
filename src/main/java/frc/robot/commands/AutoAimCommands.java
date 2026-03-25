@@ -119,14 +119,14 @@ public class AutoAimCommands {
 
         return drive.runEnd(
                 () -> {
+                    Translation2d targetTranslation =
+                            new Translation2d(2.35, drive.getState().Pose.getY() >= 4.221 ? 5.958 : 1.931);
+
                     SwerveRequest.FieldCentricFacingAngle request = new SwerveRequest.FieldCentricFacingAngle()
                             .withHeadingPID(20, 0, 0)
                             .withVelocityX(-xVelSupplier.getAsDouble() * SPEED_MULTIPLIER)
                             .withVelocityY(-yVelSupplier.getAsDouble() * SPEED_MULTIPLIER)
-                            .withTargetDirection(calcDesiredHeading(
-                                    drive.getState().Pose,
-                                    new Translation2d(
-                                            2.35, drive.getState().Pose.getY())))
+                            .withTargetDirection(calcDesiredHeading(drive.getState().Pose, targetTranslation))
                             .withDriveRequestType(SwerveModule.DriveRequestType.Velocity);
 
                     drive.setControl(request);
@@ -183,8 +183,7 @@ public class AutoAimCommands {
         return new ReadyAimCommand(drive, shooter, target);
     }
 
-    public static Command shuttleReadyAim(
-            CommandSwerveDrivetrain drive, Shooter shooter, Translation2d target, Hood hood) {
+    public static Command shuttleReadyAim(CommandSwerveDrivetrain drive, Shooter shooter, Hood hood) {
 
         return Commands.defer(
                 () -> {

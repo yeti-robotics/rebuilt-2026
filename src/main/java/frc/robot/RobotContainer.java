@@ -9,6 +9,7 @@ package frc.robot;
 
 import static frc.robot.constants.Constants.currentMode;
 import static frc.robot.constants.FieldConstants.Hub.centerHubOpening;
+import static frc.robot.constants.FieldConstants.Shuttle.shuttleTargetZone;
 import static frc.robot.subsystems.indexer.IndexerConfigsBeta.TEST_INDEXER_SPEED;
 
 import com.ctre.phoenix6.swerve.SwerveModule;
@@ -274,12 +275,21 @@ public class RobotContainer {
 
         controller
                 .leftBumper()
-                .whileTrue(AutoAimCommands.autoAim(
-                                drive, controller::getLeftY, controller::getLeftX, centerHubOpening.toTranslation2d())
-                        .alongWith(AutoAimCommands.readyAim(drive, shooter, centerHubOpening.toTranslation2d()))
+                .whileTrue(Commands.either(
+                                AutoAimCommands.autoAim(
+                                                drive,
+                                                controller::getLeftY,
+                                                controller::getLeftX,
+                                                centerHubOpening.toTranslation2d())
+                                        .alongWith(AutoAimCommands.readyAim(
+                                                drive, shooter, centerHubOpening.toTranslation2d())),
+                                AutoAimCommands.shuttleAim(
+                                                drive, controller::getLeftY, controller::getLeftX, shuttleTargetZone)
+                                        .alongWith(AutoAimCommands.shuttleReadyAim(drive, shooter, hood)),
+                                () -> AllianceFlipUtil.apply(
+                                                drive.getState().Pose.getX())
+                                        < 4.9)
                         .alongWith(led.runPattern(LEDModes.WAVE)));
-
-        //        controller.leftBumper().whileTrue(shooter.shoot(44));
 
         controller.povLeft().onTrue(hood.setHoodPosition(0));
         controller.povRight().onTrue(hood.setHoodPosition(0.65));
@@ -355,10 +365,21 @@ public class RobotContainer {
 
         controller
                 .button(6)
-                .whileTrue(AutoAimCommands.autoAim(
-                                drive, controller::getLeftY, controller::getLeftX, centerHubOpening.toTranslation2d())
-                        .alongWith(shooter.shoot(100))
-                        .alongWith(feeder.index(3)));
+                .whileTrue(Commands.either(
+                                AutoAimCommands.autoAim(
+                                                drive,
+                                                controller::getLeftY,
+                                                controller::getLeftX,
+                                                centerHubOpening.toTranslation2d())
+                                        .alongWith(AutoAimCommands.readyAim(
+                                                drive, shooter, centerHubOpening.toTranslation2d())),
+                                AutoAimCommands.shuttleAim(
+                                                drive, controller::getLeftY, controller::getLeftX, shuttleTargetZone)
+                                        .alongWith(AutoAimCommands.shuttleReadyAim(drive, shooter, hood)),
+                                () -> AllianceFlipUtil.apply(
+                                                drive.getState().Pose.getX())
+                                        < 4.9)
+                        .alongWith(led.runPattern(LEDModes.WAVE)));
 
         controller.button(7).whileTrue(indexer.spinIndexer(80));
         controller.button(8).onTrue(Commands.runOnce(drive::seedFieldCentric));
