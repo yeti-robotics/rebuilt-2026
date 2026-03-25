@@ -277,7 +277,8 @@ public class RobotContainer {
                 .whileTrue(AutoAimCommands.autoAim(
                                 drive, controller::getLeftY, controller::getLeftX, centerHubOpening.toTranslation2d())
                         .alongWith(AutoAimCommands.readyAim(drive, shooter, centerHubOpening.toTranslation2d()))
-                        .alongWith(led.runPattern(LEDModes.WAVE)));
+                        .alongWith(led.runPattern(LEDModes.WAVE))
+                        .andThen(new WaitCommand(1).andThen(drive.applyRequest(SwerveRequest.SwerveDriveBrake::new))));
 
         //        controller.leftBumper().whileTrue(shooter.shoot(44));
 
@@ -357,8 +358,8 @@ public class RobotContainer {
                 .button(6)
                 .whileTrue(AutoAimCommands.autoAim(
                                 drive, controller::getLeftY, controller::getLeftX, centerHubOpening.toTranslation2d())
-                        .alongWith(shooter.shoot(100))
-                        .alongWith(feeder.index(3)));
+                        .alongWith(AutoAimCommands.readyAim(drive, shooter, centerHubOpening.toTranslation2d()))
+                        .alongWith(led.runPattern(LEDModes.WAVE)));
 
         controller.button(7).whileTrue(indexer.spinIndexer(80));
         controller.button(8).onTrue(Commands.runOnce(drive::seedFieldCentric));
