@@ -8,6 +8,7 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.path.PathPlannerPath;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -24,6 +25,7 @@ import frc.robot.subsystems.led.LEDModes;
 import frc.robot.subsystems.linslide.LinSlide;
 import frc.robot.subsystems.linslide.LinSlideConfigsBeta;
 import frc.robot.subsystems.shooter.Shooter;
+import frc.robot.util.AllianceFlipUtil;
 import frc.robot.util.PathPlannerUtils;
 import java.util.Optional;
 import org.littletonrobotics.junction.Logger;
@@ -147,7 +149,56 @@ public class AutoCommands {
     }
 
     // Autos
-    public Command oneCycleNeutralTowerLeft() {
+
+    public Command cheesyLeft() {
+        Optional<PathPlannerPath> cheesy1 = PathPlannerUtils.loadPathByName("cheesy_path1L");
+        Optional<PathPlannerPath> cheesy2 = PathPlannerUtils.loadPathByName("cheesy_path2L");
+        Optional<PathPlannerPath> cheesy3 = PathPlannerUtils.loadPathByName("cheesy_path3L");
+        Optional<PathPlannerPath> cheesy4 = PathPlannerUtils.loadPathByName("cheesy_path4L");
+
+        PathPlannerAuto auto;
+
+        Pose2d startingPose = AllianceFlipUtil.apply(cheesy1.get().getStartingHolonomicPose().get());
+
+        var cmd = cheesy1.isEmpty() || cheesy2.isEmpty() || cheesy3.isEmpty() || cheesy4.isEmpty()
+                ? Commands.none()
+                : Commands.sequence(
+                Commands.runOnce(() -> {
+                    drivetrain.resetPose(startingPose);
+                }),
+                followPathAndIntake(cheesy1, 0.5),
+                followPath(cheesy2),
+                shoot().withTimeout(7),
+                followPathAndIntake(cheesy3, 0.5));
+        auto = new PathPlannerAuto(cmd);
+        return auto;
+    }
+
+    public Command cheesyRight() {
+        Optional<PathPlannerPath> cheesy1 = PathPlannerUtils.loadPathByName("cheesy_path1R");
+        Optional<PathPlannerPath> cheesy2 = PathPlannerUtils.loadPathByName("cheesy_path2R");
+        Optional<PathPlannerPath> cheesy3 = PathPlannerUtils.loadPathByName("cheesy_path3R");
+        Optional<PathPlannerPath> cheesy4 = PathPlannerUtils.loadPathByName("cheesy_path4R");
+
+        PathPlannerAuto auto;
+
+        Pose2d startingPose = AllianceFlipUtil.apply(cheesy1.get().getStartingHolonomicPose().get());
+
+        var cmd = cheesy1.isEmpty() || cheesy2.isEmpty() || cheesy3.isEmpty() || cheesy4.isEmpty()
+                ? Commands.none()
+                : Commands.sequence(
+                Commands.runOnce(() -> {
+                    drivetrain.resetPose(startingPose);
+                }),
+                followPathAndIntake(cheesy1, 0.5),
+                followPath(cheesy2),
+                shoot().withTimeout(7),
+                followPathAndIntake(cheesy3, 0.5));
+        auto = new PathPlannerAuto(cmd);
+        return auto;
+    }
+
+    public Command cabLeft() {
         Optional<PathPlannerPath> startNeutral = PathPlannerUtils.loadPathByName("start-neutral_L-left");
         Optional<PathPlannerPath> neutralShoot = PathPlannerUtils.loadPathByName("neutral_L-shoot-left");
         Optional<PathPlannerPath> shootTower = PathPlannerUtils.loadPathByName("shoot-tower-left");
@@ -158,6 +209,28 @@ public class AutoCommands {
                 ? Commands.none()
                 : Commands.sequence(followPathAndIntake(startNeutral, 0.5), followPath(neutralShoot), shoot());
 
+        auto = new PathPlannerAuto(cmd);
+        return auto;
+    }
+
+    public Command cabRight() {
+        Optional<PathPlannerPath> startNeutral = PathPlannerUtils.loadPathByName("start-neutral_R-right");
+        Optional<PathPlannerPath> neutralShoot = PathPlannerUtils.loadPathByName("neutral_R-shoot-right");
+        Optional<PathPlannerPath> shootOutpost = PathPlannerUtils.loadPathByName("shoot-outpost-right");
+        Optional<PathPlannerPath> outpostShoot = PathPlannerUtils.loadPathByName("outpost-shoot-right");
+
+        PathPlannerAuto auto;
+
+        var cmd = startNeutral.isEmpty() || neutralShoot.isEmpty() || shootOutpost.isEmpty() || outpostShoot.isEmpty()
+                ? Commands.none()
+                : Commands.sequence(
+                followPathAndIntake(startNeutral, 0.5),
+                followPath(neutralShoot),
+                shoot().withTimeout(6),
+                AutoBuilder.followPath(shootOutpost.get()),
+                Commands.waitSeconds(1.5),
+                AutoBuilder.followPath(outpostShoot.get()),
+                shoot().withTimeout(6));
         auto = new PathPlannerAuto(cmd);
         return auto;
     }
@@ -416,44 +489,6 @@ public class AutoCommands {
         return auto;
     }
 
-    public Command cheesyLeft() {
-        Optional<PathPlannerPath> cheesy1 = PathPlannerUtils.loadPathByName("cheesy_path1L");
-        Optional<PathPlannerPath> cheesy2 = PathPlannerUtils.loadPathByName("cheesy_path2L");
-        Optional<PathPlannerPath> cheesy3 = PathPlannerUtils.loadPathByName("cheesy_path3L");
-        Optional<PathPlannerPath> cheesy4 = PathPlannerUtils.loadPathByName("cheesy_path4L");
-
-        PathPlannerAuto auto;
-
-        var cmd = cheesy1.isEmpty() || cheesy2.isEmpty() || cheesy3.isEmpty() || cheesy4.isEmpty()
-                ? Commands.none()
-                : Commands.sequence(
-                        followPathAndIntake(cheesy1, 0.5),
-                        followPath(cheesy2),
-                        shoot().withTimeout(7),
-                        followPathAndIntake(cheesy3, 0.5));
-        auto = new PathPlannerAuto(cmd);
-        return auto;
-    }
-
-    public Command cheesyRight() {
-        Optional<PathPlannerPath> cheesy1 = PathPlannerUtils.loadPathByName("cheesy_path1R");
-        Optional<PathPlannerPath> cheesy2 = PathPlannerUtils.loadPathByName("cheesy_path2R");
-        Optional<PathPlannerPath> cheesy3 = PathPlannerUtils.loadPathByName("cheesy_path3R");
-        Optional<PathPlannerPath> cheesy4 = PathPlannerUtils.loadPathByName("cheesy_path4R");
-
-        PathPlannerAuto auto;
-
-        var cmd = cheesy1.isEmpty() || cheesy2.isEmpty() || cheesy3.isEmpty() || cheesy4.isEmpty()
-                ? Commands.none()
-                : Commands.sequence(
-                        followPathAndIntake(cheesy1, 0.5),
-                        followPath(cheesy2),
-                        shoot().withTimeout(7),
-                        followPathAndIntake(cheesy3, 0.5));
-        auto = new PathPlannerAuto(cmd);
-        return auto;
-    }
-
     public Command twoCycleOutpostNeutralTowerRight() {
         Optional<PathPlannerPath> startOutpost = PathPlannerUtils.loadPathByName("start-outpost-right");
         Optional<PathPlannerPath> outpostShoot = PathPlannerUtils.loadPathByName("outpost-shoot-right");
@@ -478,28 +513,6 @@ public class AutoCommands {
                         followPathAndIntake(shootNeutral, 4),
                         followPath(neutralShoot).andThen(shoot()),
                         climbTower(shootTower));
-        auto = new PathPlannerAuto(cmd);
-        return auto;
-    }
-
-    public Command twoCycleNeutralOutpostTowerRight() {
-        Optional<PathPlannerPath> startNeutral = PathPlannerUtils.loadPathByName("start-neutral_R-right");
-        Optional<PathPlannerPath> neutralShoot = PathPlannerUtils.loadPathByName("neutral_R-shoot-right");
-        Optional<PathPlannerPath> shootOutpost = PathPlannerUtils.loadPathByName("shoot-outpost-right");
-        Optional<PathPlannerPath> outpostShoot = PathPlannerUtils.loadPathByName("outpost-shoot-right");
-
-        PathPlannerAuto auto;
-
-        var cmd = startNeutral.isEmpty() || neutralShoot.isEmpty() || shootOutpost.isEmpty() || outpostShoot.isEmpty()
-                ? Commands.none()
-                : Commands.sequence(
-                        followPathAndIntake(startNeutral, 0.5),
-                        followPath(neutralShoot),
-                        shoot().withTimeout(6),
-                        AutoBuilder.followPath(shootOutpost.get()),
-                        Commands.waitSeconds(1.5),
-                        AutoBuilder.followPath(outpostShoot.get()),
-                        shoot().withTimeout(6));
         auto = new PathPlannerAuto(cmd);
         return auto;
     }
