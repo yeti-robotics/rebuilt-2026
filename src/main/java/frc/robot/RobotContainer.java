@@ -348,6 +348,13 @@ public class RobotContainer {
         controller.button(3).whileTrue(intake.rollIn());
         controller.button(4).whileTrue(intake.rollOut());
 
+        controller.leftBumper()
+                .whileTrue(
+                Commands.startEnd(
+                        () -> controller.getHID().setRumble(GenericHID.RumbleType.kBothRumble, 1.0),
+                        () -> controller.getHID().setRumble(GenericHID.RumbleType.kBothRumble, 0.0)
+                ));
+
         controller
                 .button(5)
                 .onTrue(Commands.either(

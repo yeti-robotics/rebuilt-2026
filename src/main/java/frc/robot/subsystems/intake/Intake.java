@@ -31,7 +31,7 @@ public class Intake extends SubsystemBase {
         return setIntake(IntakeConfigsAlpha.OUTTAKE_VOLTAGE);
     }
 
-    public Command applyPower(double percent, CommandXboxController controller) {
+    public Command applyPower(double percent) {
         return runEnd(() -> io.applyPower(percent), () -> io.applyPower(0));
     }
 
