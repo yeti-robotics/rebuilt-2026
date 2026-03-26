@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj.RobotBase;
 public final class Constants {
     public static final int PRIMARY_CONTROLLER_PORT = 0;
     public static final int GIGA_PORT = 2;
+    public static final double VOLTAGE_FILTER_CONSTANT = 0.05;
 
     public static final Mode simMode = Mode.SIM;
     public static final String ALPHA_SERIAL_NUM = "032B4BBC";
