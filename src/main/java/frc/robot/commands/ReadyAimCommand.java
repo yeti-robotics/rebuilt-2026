@@ -1,6 +1,7 @@
 package frc.robot.commands;
 
 import com.ctre.phoenix6.swerve.SwerveRequest;
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -42,7 +43,17 @@ public class ReadyAimCommand extends Command {
 
         shooter.spinMotors(targetRPS);
 
-        drive.applyRequest(SwerveRequest.SwerveDriveBrake::new);
+        Translation2d difference = modifiedTarget.minus(currentPosition);
+        double targetAngle = Math.atan2(difference.getY(), difference.getX());
+        double currentAngle = currentPose.getRotation().getRadians();
+
+        double angleError = MathUtil.angleModulus(targetAngle - currentAngle);
+        double angleErrorDeg = Math.toDegrees(Math.abs(angleError));
+        Logger.recordOutput("AutoAimCommands/Angle Error Deg", angleErrorDeg);
+
+        if (angleErrorDeg <= 5) {
+            drive.applyRequest(SwerveRequest.SwerveDriveBrake::new);
+        }
     }
 
     @Override
