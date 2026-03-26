@@ -18,6 +18,7 @@ import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.*;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -55,7 +56,7 @@ import frc.robot.subsystems.linslide.LinSlideIO;
 import frc.robot.subsystems.linslide.LinSlideIOReal;
 import frc.robot.subsystems.powerdist.PowerDistributor;
 import frc.robot.subsystems.powerdist.PowerDistributorIO;
-import frc.robot.subsystems.powerdist.PowerDistributorPDH;
+import frc.robot.subsystems.powerdist.PowerDistributorReal;
 import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.subsystems.shooter.ShooterIO;
 import frc.robot.subsystems.shooter.ShooterIOReal;
@@ -134,7 +135,7 @@ public class RobotContainer {
                                 drive.getRotation3d()::toRotation2d,
                                 VisionConstants.sideLinearStdDevBaseline,
                                 VisionConstants.sideAngularStdDevBaseline));
-                powerDistributor = new PowerDistributor(new PowerDistributorPDH());
+                powerDistributor = new PowerDistributor(new PowerDistributorReal(1, PowerDistribution.ModuleType.kRev));
                 break;
 
             case BETA:
@@ -162,7 +163,7 @@ public class RobotContainer {
                                 drive.getRotation3d()::toRotation2d,
                                 VisionConstants.sideLinearStdDevBaseline,
                                 VisionConstants.sideAngularStdDevBaseline));
-                powerDistributor = new PowerDistributor(new PowerDistributorPDH());
+                powerDistributor = new PowerDistributor(new PowerDistributorReal(1, PowerDistribution.ModuleType.kRev));
                 break;
 
             case SIM:
