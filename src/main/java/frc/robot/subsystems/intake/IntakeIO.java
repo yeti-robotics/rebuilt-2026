@@ -9,6 +9,7 @@ public interface IntakeIO {
         public double primaryMotorVoltage = 0.0;
         public double secondaryMotorRPM = 0.0;
         public double secondaryMotorVoltage = 0.0;
+        public double referenceVelocity = 0.0;
     }
 
     public default void updateInputs(IntakeIOInputs inputs) {}

@@ -292,6 +292,7 @@ public class RobotContainer {
                                 .alongWith(new WaitCommand(1)
                                         .andThen(linSlide.applyPower(
                                                 LinSlideConfigsBeta.LINSLIDE_AUTO_STOWING_SPEED)))));
+
     }
 
     private void configureDebugBindings() {
@@ -380,6 +381,9 @@ public class RobotContainer {
     public void configureTriggers() {
         new Trigger(DriverStation::isDisabled).whileTrue(led.runPattern(LEDModes.BLUE_ALLIANCE_ACTIVE));
         new Trigger(() -> climbState == ClimberState.CLIMB).whileTrue(led.runPattern(LEDModes.RAINBOW));
+        intake.intakeStalling.onTrue(Commands.runOnce(() -> controller.getHID().setRumble(GenericHID.RumbleType.kBothRumble, 0.2)));
+        intake.intakeStalling.onFalse(Commands.runOnce(() -> controller.getHID().setRumble(GenericHID.RumbleType.kBothRumble, 0.0)));
+
     }
 
     public void updateLoggers() {

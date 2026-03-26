@@ -1,12 +1,15 @@
 package frc.robot.subsystems.intake;
 
+import edu.wpi.first.units.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import org.littletonrobotics.junction.Logger;
 
 public class Intake extends SubsystemBase {
     private IntakeIO io;
     private IntakeIOInputsAutoLogged inputs = new IntakeIOInputsAutoLogged();
+    public Trigger intakeStalling = new Trigger(() -> Units.RotationsPerSecond.of(inputs.primaryMotorRPM).isNear(Units.RotationsPerSecond.of(0.0), Units.RotationsPerSecond.of(0.1))).and(() -> !Units.MetersPerSecond.of(inputs.referenceVelocity).isNear(Units.MetersPerSecond.of(0), 0));
 
     @Override
     public void periodic() {
