@@ -53,6 +53,9 @@ import frc.robot.subsystems.linslide.LinSlide;
 import frc.robot.subsystems.linslide.LinSlideConfigsBeta;
 import frc.robot.subsystems.linslide.LinSlideIO;
 import frc.robot.subsystems.linslide.LinSlideIOReal;
+import frc.robot.subsystems.powerdist.PowerDistributor;
+import frc.robot.subsystems.powerdist.PowerDistributorIO;
+import frc.robot.subsystems.powerdist.PowerDistributorPDH;
 import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.subsystems.shooter.ShooterIO;
 import frc.robot.subsystems.shooter.ShooterIOReal;
@@ -83,6 +86,7 @@ public class RobotContainer {
     private final Hood hood;
     private final AutoCommands autoCommands;
     private final BatteryFuelGauge battery;
+    private final PowerDistributor powerDistributor;
 
     // Controller
     private final CommandXboxController controller =
@@ -130,6 +134,7 @@ public class RobotContainer {
                                 drive.getRotation3d()::toRotation2d,
                                 VisionConstants.sideLinearStdDevBaseline,
                                 VisionConstants.sideAngularStdDevBaseline));
+                powerDistributor = new PowerDistributor(new PowerDistributorPDH());
                 break;
 
             case BETA:
@@ -157,6 +162,7 @@ public class RobotContainer {
                                 drive.getRotation3d()::toRotation2d,
                                 VisionConstants.sideLinearStdDevBaseline,
                                 VisionConstants.sideAngularStdDevBaseline));
+                powerDistributor = new PowerDistributor(new PowerDistributorPDH());
                 break;
 
             case SIM:
@@ -176,6 +182,7 @@ public class RobotContainer {
                 feeder = new Feeder(new FeederIOReal());
                 hood = new Hood(new HoodIOBeta());
                 battery = new BatteryFuelGauge(0);
+                powerDistributor = new PowerDistributor(new PowerDistributorIO() {});
 
                 break;
 
@@ -191,6 +198,7 @@ public class RobotContainer {
                 shooter = new Shooter((new ShooterIO() {}));
                 hood = new Hood(new HoodIO() {});
                 battery = new BatteryFuelGauge(0);
+                powerDistributor = new PowerDistributor(new PowerDistributorIO() {});
 
                 break;
         }
