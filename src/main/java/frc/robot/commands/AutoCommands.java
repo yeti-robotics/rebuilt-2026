@@ -158,18 +158,19 @@ public class AutoCommands {
 
         PathPlannerAuto auto;
 
-        Pose2d startingPose = AllianceFlipUtil.apply(cheesy1.get().getStartingHolonomicPose().get());
+        Pose2d startingPose =
+                AllianceFlipUtil.apply(cheesy1.get().getStartingHolonomicPose().get());
 
         var cmd = cheesy1.isEmpty() || cheesy2.isEmpty() || cheesy3.isEmpty() || cheesy4.isEmpty()
                 ? Commands.none()
                 : Commands.sequence(
-                Commands.runOnce(() -> {
-                    drivetrain.resetPose(startingPose);
-                }),
-                followPathAndIntake(cheesy1, 0.5),
-                followPath(cheesy2),
-                shoot().withTimeout(7),
-                followPathAndIntake(cheesy3, 0.5));
+                        Commands.runOnce(() -> {
+                            drivetrain.resetPose(startingPose);
+                        }),
+                        followPathAndIntake(cheesy1, 0.5),
+                        followPath(cheesy2),
+                        shoot().withTimeout(7),
+                        followPathAndIntake(cheesy3, 0.5));
         auto = new PathPlannerAuto(cmd);
         return auto;
     }
@@ -182,18 +183,19 @@ public class AutoCommands {
 
         PathPlannerAuto auto;
 
-        Pose2d startingPose = AllianceFlipUtil.apply(cheesy1.get().getStartingHolonomicPose().get());
+        Pose2d startingPose =
+                AllianceFlipUtil.apply(cheesy1.get().getStartingHolonomicPose().get());
 
         var cmd = cheesy1.isEmpty() || cheesy2.isEmpty() || cheesy3.isEmpty() || cheesy4.isEmpty()
                 ? Commands.none()
                 : Commands.sequence(
-                Commands.runOnce(() -> {
-                    drivetrain.resetPose(startingPose);
-                }),
-                followPathAndIntake(cheesy1, 0.5),
-                followPath(cheesy2),
-                shoot().withTimeout(7),
-                followPathAndIntake(cheesy3, 0.5));
+                        Commands.runOnce(() -> {
+                            drivetrain.resetPose(startingPose);
+                        }),
+                        followPathAndIntake(cheesy1, 0.5),
+                        followPath(cheesy2),
+                        shoot().withTimeout(7),
+                        followPathAndIntake(cheesy3, 0.5));
         auto = new PathPlannerAuto(cmd);
         return auto;
     }
@@ -205,9 +207,14 @@ public class AutoCommands {
 
         PathPlannerAuto auto;
 
+        Pose2d startingPose =
+                AllianceFlipUtil.apply(startNeutral.get().getStartingHolonomicPose().get());
+
         var cmd = startNeutral.isEmpty() || neutralShoot.isEmpty() || shootTower.isEmpty()
                 ? Commands.none()
-                : Commands.sequence(followPathAndIntake(startNeutral, 0.5), followPath(neutralShoot), shoot());
+                : Commands.sequence(Commands.runOnce(() -> {
+            drivetrain.resetPose(startingPose);
+        }), followPathAndIntake(startNeutral, 0.5), followPath(neutralShoot), shoot());
 
         auto = new PathPlannerAuto(cmd);
         return auto;
@@ -221,16 +228,22 @@ public class AutoCommands {
 
         PathPlannerAuto auto;
 
+        Pose2d startingPose =
+                AllianceFlipUtil.apply(startNeutral.get().getStartingHolonomicPose().get());
+
         var cmd = startNeutral.isEmpty() || neutralShoot.isEmpty() || shootOutpost.isEmpty() || outpostShoot.isEmpty()
                 ? Commands.none()
                 : Commands.sequence(
-                followPathAndIntake(startNeutral, 0.5),
-                followPath(neutralShoot),
-                shoot().withTimeout(6),
-                AutoBuilder.followPath(shootOutpost.get()),
-                Commands.waitSeconds(1.5),
-                AutoBuilder.followPath(outpostShoot.get()),
-                shoot().withTimeout(6));
+                Commands.runOnce(() -> {
+                    drivetrain.resetPose(startingPose);
+                }),
+                        followPathAndIntake(startNeutral, 0.5),
+                        followPath(neutralShoot),
+                        shoot().withTimeout(6),
+                        AutoBuilder.followPath(shootOutpost.get()),
+                        Commands.waitSeconds(1.5),
+                        AutoBuilder.followPath(outpostShoot.get()),
+                        shoot().withTimeout(6));
         auto = new PathPlannerAuto(cmd);
         return auto;
     }
