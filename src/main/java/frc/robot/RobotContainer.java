@@ -211,8 +211,8 @@ public class RobotContainer {
         // Set up simulatable mechanisms
         mechanisms = new Mechanisms();
 
-        autoChooser.addOption("Left", autoCommands.oneCycleNeutralTowerLeft());
-        autoChooser.addOption("Right", autoCommands.twoCycleNeutralOutpostTowerRight());
+        autoChooser.addOption("Left", autoCommands.cabLeft());
+        autoChooser.addOption("Right", autoCommands.cabRight());
         autoChooser.addOption("Cheesy Left", autoCommands.cheesyLeft());
         autoChooser.addOption("Cheesy Right", autoCommands.cheesyRight());
 
