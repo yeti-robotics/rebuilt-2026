@@ -139,7 +139,7 @@ public class RobotContainer {
                 drive = TunerConstantsBeta.createDrivetrain();
                 linSlide = new LinSlide(new LinSlideIOReal());
                 intake = new Intake(new IntakeIOBeta());
-                indexer = new Indexer(new IndexerIOBeta());
+                indexer = new Indexer(new IndexerIOGamma());
                 climber = new Climber(new ClimberIOBeta());
                 shooter = new Shooter(new ShooterIOReal());
                 feeder = new Feeder(new FeederIOReal());
