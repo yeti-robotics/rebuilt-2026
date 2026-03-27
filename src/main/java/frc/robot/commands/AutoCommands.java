@@ -9,6 +9,8 @@ import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.path.PathPlannerPath;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -161,11 +163,22 @@ public class AutoCommands {
         Pose2d startingPose =
                 AllianceFlipUtil.apply(cheesy1.get().getStartingHolonomicPose().get());
 
+        Pose2d redAlliancePose = new Pose2d(
+                new Translation2d(
+                        startingPose.getTranslation().getX(),
+                        8 - startingPose.getTranslation().getY()),
+                startingPose.getRotation());
+
         var cmd = cheesy1.isEmpty() || cheesy2.isEmpty() || cheesy3.isEmpty() || cheesy4.isEmpty()
                 ? Commands.none()
                 : Commands.sequence(
                         Commands.runOnce(() -> {
-                            drivetrain.resetPose(startingPose);
+                            if (DriverStation.getAlliance().isPresent()
+                                    && DriverStation.getAlliance().get() == DriverStation.Alliance.Red) {
+                                drivetrain.resetPose(AllianceFlipUtil.apply(redAlliancePose));
+                            } else {
+                                drivetrain.resetPose(AllianceFlipUtil.apply(startingPose));
+                            }
                         }),
                         followPathAndIntake(cheesy1, 0.5),
                         followPath(cheesy2),
@@ -186,11 +199,22 @@ public class AutoCommands {
         Pose2d startingPose =
                 AllianceFlipUtil.apply(cheesy1.get().getStartingHolonomicPose().get());
 
+        Pose2d redAlliancePose = new Pose2d(
+                new Translation2d(
+                        startingPose.getTranslation().getX(),
+                        8 - startingPose.getTranslation().getY()),
+                startingPose.getRotation());
+
         var cmd = cheesy1.isEmpty() || cheesy2.isEmpty() || cheesy3.isEmpty() || cheesy4.isEmpty()
                 ? Commands.none()
                 : Commands.sequence(
                         Commands.runOnce(() -> {
-                            drivetrain.resetPose(startingPose);
+                            if (DriverStation.getAlliance().isPresent()
+                                    && DriverStation.getAlliance().get() == DriverStation.Alliance.Red) {
+                                drivetrain.resetPose(AllianceFlipUtil.apply(redAlliancePose));
+                            } else {
+                                drivetrain.resetPose(AllianceFlipUtil.apply(startingPose));
+                            }
                         }),
                         followPathAndIntake(cheesy1, 0.5),
                         followPath(cheesy2),
@@ -207,14 +231,28 @@ public class AutoCommands {
 
         PathPlannerAuto auto;
 
-        Pose2d startingPose =
-                AllianceFlipUtil.apply(startNeutral.get().getStartingHolonomicPose().get());
+        Pose2d startingPose = startNeutral.get().getStartingHolonomicPose().get();
+
+        Pose2d redAlliancePose = new Pose2d(
+                new Translation2d(
+                        startingPose.getTranslation().getX(),
+                        8 - startingPose.getTranslation().getY()),
+                startingPose.getRotation());
 
         var cmd = startNeutral.isEmpty() || neutralShoot.isEmpty() || shootTower.isEmpty()
                 ? Commands.none()
-                : Commands.sequence(Commands.runOnce(() -> {
-            drivetrain.resetPose(startingPose);
-        }), followPathAndIntake(startNeutral, 0.5), followPath(neutralShoot), shoot());
+                : Commands.sequence(
+                        Commands.runOnce(() -> {
+                            if (DriverStation.getAlliance().isPresent()
+                                    && DriverStation.getAlliance().get() == DriverStation.Alliance.Red) {
+                                drivetrain.resetPose(AllianceFlipUtil.apply(redAlliancePose));
+                            } else {
+                                drivetrain.resetPose(AllianceFlipUtil.apply(startingPose));
+                            }
+                        }),
+                        followPathAndIntake(startNeutral, 0.5),
+                        followPath(neutralShoot),
+                        shoot());
 
         auto = new PathPlannerAuto(cmd);
         return auto;
@@ -228,15 +266,26 @@ public class AutoCommands {
 
         PathPlannerAuto auto;
 
-        Pose2d startingPose =
-                AllianceFlipUtil.apply(startNeutral.get().getStartingHolonomicPose().get());
+        Pose2d startingPose = AllianceFlipUtil.apply(
+                startNeutral.get().getStartingHolonomicPose().get());
+
+        Pose2d redAlliancePose = new Pose2d(
+                new Translation2d(
+                        startingPose.getTranslation().getX(),
+                        8 - startingPose.getTranslation().getY()),
+                startingPose.getRotation());
 
         var cmd = startNeutral.isEmpty() || neutralShoot.isEmpty() || shootOutpost.isEmpty() || outpostShoot.isEmpty()
                 ? Commands.none()
                 : Commands.sequence(
-                Commands.runOnce(() -> {
-                    drivetrain.resetPose(startingPose);
-                }),
+                        Commands.runOnce(() -> {
+                            if (DriverStation.getAlliance().isPresent()
+                                    && DriverStation.getAlliance().get() == DriverStation.Alliance.Red) {
+                                drivetrain.resetPose(AllianceFlipUtil.apply(redAlliancePose));
+                            } else {
+                                drivetrain.resetPose(AllianceFlipUtil.apply(startingPose));
+                            }
+                        }),
                         followPathAndIntake(startNeutral, 0.5),
                         followPath(neutralShoot),
                         shoot().withTimeout(6),
