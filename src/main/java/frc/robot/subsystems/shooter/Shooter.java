@@ -6,7 +6,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.littletonrobotics.junction.Logger;
 
-public class ShooterSubsystem extends SubsystemBase {
+public class Shooter extends SubsystemBase {
     private ShooterIO io;
     private ShooterIOInputsAutoLogged inputs = new ShooterIOInputsAutoLogged();
 
@@ -20,7 +20,7 @@ public class ShooterSubsystem extends SubsystemBase {
         Logger.recordOutput("Shooter/Is At Speed", isAtSpeed());
     }
 
-    public ShooterSubsystem(ShooterIO io) {
+    public Shooter(ShooterIO io) {
         this.io = io;
     }
 
@@ -33,6 +33,11 @@ public class ShooterSubsystem extends SubsystemBase {
                 .andThen(runEnd(() -> io.spinMotors(velocity), () -> io.stopMotors()));
     }
 
+    public void spinMotors(double velocity) {
+        io.spinMotors(velocity);
+        this.targetSpeed = velocity;
+    }
+
     public Command shootForever(double velocity) {
         return runOnce(() -> this.targetSpeed = velocity).andThen(run(() -> io.applyPower(velocity)));
     }
@@ -43,6 +48,11 @@ public class ShooterSubsystem extends SubsystemBase {
 
     public Command stopFlywheels() {
         return runOnce(() -> io.stopMotors()).andThen(() -> this.targetSpeed = 0);
+    }
+
+    public void stopMotors() {
+        io.stopMotors();
+        this.targetSpeed = 0;
     }
 
     public Command applyPower(double power) {

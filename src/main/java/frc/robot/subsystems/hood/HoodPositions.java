@@ -6,7 +6,8 @@ import edu.wpi.first.units.measure.Angle;
 public enum HoodPositions {
     STOW(0.0),
     BUMP(0.0),
-    DEPLOY(1.0);
+    DEPLOY(1.0),
+    HOOD_UP(0.65);
 
     private final Angle position;
 

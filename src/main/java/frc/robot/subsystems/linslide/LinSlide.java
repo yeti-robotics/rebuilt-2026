@@ -7,11 +7,11 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.littletonrobotics.junction.Logger;
 
-public class LinSlideSubsystem extends SubsystemBase {
+public class LinSlide extends SubsystemBase {
     private LinSlideIO io;
     private LinSlideIOInputsAutoLogged inputs = new LinSlideIOInputsAutoLogged();
 
-    public LinSlideSubsystem(LinSlideIO io) {
+    public LinSlide(LinSlideIO io) {
         this.io = io;
     }
 
@@ -65,6 +65,10 @@ public class LinSlideSubsystem extends SubsystemBase {
     }
 
     public Command defaultMovement(double volts) {
-        return run(() -> io.applyVoltage(volts)).until(this::isBasicallyZeroRPM);
+        return run(() -> io.applyPower(volts)).until(this::isCloseToZero);
+    }
+
+    public Command setLinslidePosition(double position) {
+        return runOnce(() -> io.setPosition(position));
     }
 }

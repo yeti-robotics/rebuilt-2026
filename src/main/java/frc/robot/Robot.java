@@ -105,6 +105,7 @@ public class Robot extends LoggedRobot {
     @Override
     public void disabledInit() {
         Elastic.selectTab("Prematch");
+        robotContainer.saveLog();
         robotContainer.resetSimulationField();
     }
 
