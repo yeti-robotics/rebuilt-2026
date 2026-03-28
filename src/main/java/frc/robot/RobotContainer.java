@@ -242,6 +242,7 @@ public class RobotContainer {
     }
 
     private double filteredVoltage = 12.0;
+
     private double getFilteredVoltage() {
         double raw = RobotController.getBatteryVoltage();
         filteredVoltage = VOLTAGE_FILTER_CONSTANT * raw + (1 - VOLTAGE_FILTER_CONSTANT) * filteredVoltage;
@@ -411,16 +412,18 @@ public class RobotContainer {
         Translation2d currentPosition = currentPose.getTranslation();
         double distance = modifiedTarget.getDistance(currentPosition);
 
-        Logger.recordOutput("AutoAimCommands/Shooter Map/hub distance", distance);
+        Logger.recordOutput("AutoAimCommands/Shooter Map/Hub Distance", distance);
 
         Translation2d shuttleTranslation = AllianceFlipUtil.apply(new Translation2d(2.35, currentPose.getY()));
         double shuttleDistance = shuttleTranslation.getDistance(currentPosition);
 
-        Logger.recordOutput("AutoAimCommands/Shuttle Map/ideal shuttle distance", shuttleDistance);
+        Logger.recordOutput("AutoAimCommands/Shuttle Map/Ideal Shuttle Distance", shuttleDistance);
         Logger.recordOutput("Drive/Swerve Lock State", swerveLockState);
 
         Logger.recordOutput("Drive/Scalar Drive Speed", getScalarDriveSpeed());
         Logger.recordOutput("Drive/Filtered Voltage", getFilteredVoltage());
+
+        Logger.recordOutput("Drive/Brownout Voltage", RobotController.getBrownoutVoltage());
     }
 
     public void saveLog() {
