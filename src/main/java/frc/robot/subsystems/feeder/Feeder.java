@@ -18,16 +18,16 @@ public class Feeder extends SubsystemBase {
         this.io = io;
     }
 
-    public Command runMotors(double volts) {
-        return runEnd(() -> io.spinFeeder(volts), () -> io.spinFeeder(0));
+    public Command runMotors(double rps) {
+        return runEnd(() -> io.spinFeeder(rps), () -> io.spinFeeder(0));
     }
 
     public Command runMotorsUntilDetected(double volts) {
         return runEnd(() -> io.spinFeeder(volts), () -> io.spinFeeder(0)).until(() -> inputs.isDetected);
     }
 
-    public Command index(double volts) {
-        return runMotors(volts).onlyIf(() -> inputs.isDetected);
+    public Command feed(double rps) {
+        return runMotors(rps).onlyIf(() -> inputs.isDetected);
     }
 
     public Command applyPower(double power) {

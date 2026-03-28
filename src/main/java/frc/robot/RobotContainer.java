@@ -9,6 +9,7 @@ package frc.robot;
 
 import static frc.robot.constants.Constants.currentMode;
 import static frc.robot.constants.FieldConstants.Hub.centerHubOpening;
+import static frc.robot.subsystems.feeder.FeederConfigsBeta.FEEDER_SPEED;
 import static frc.robot.subsystems.indexer.IndexerConfigsBeta.TEST_INDEXER_SPEED;
 
 import com.ctre.phoenix6.swerve.SwerveModule;
@@ -32,7 +33,6 @@ import frc.robot.subsystems.climber.*;
 import frc.robot.subsystems.drive.*;
 import frc.robot.subsystems.drive.TunerConstantsAlpha;
 import frc.robot.subsystems.feeder.Feeder;
-import frc.robot.subsystems.feeder.FeederConfigsBeta;
 import frc.robot.subsystems.feeder.FeederIO;
 import frc.robot.subsystems.feeder.FeederIOReal;
 import frc.robot.subsystems.hood.Hood;
@@ -269,8 +269,7 @@ public class RobotContainer {
                 .rightBumper()
                 .onTrue(intake.applyPower(-IntakeConfigsBeta.ROLLER_SPEED)
                         .alongWith(indexer.applyPower(TEST_INDEXER_SPEED))
-                        .alongWith(feeder.applyPower(-FeederConfigsBeta.TEST_FEEDER_SPEED)
-                                .alongWith(shooter.applyPower(-0.1))));
+                        .alongWith(feeder.feed(FEEDER_SPEED).alongWith(shooter.applyPower(-0.1))));
 
         controller
                 .leftBumper()
@@ -288,7 +287,7 @@ public class RobotContainer {
                 .rightTrigger()
                 .whileTrue(indexer.applyPower(TEST_INDEXER_SPEED)
                         .alongWith(intake.applyPower(IntakeConfigsBeta.ROLLER_SPEED))
-                        .alongWith(feeder.applyPower(FeederConfigsBeta.TEST_FEEDER_SPEED)
+                        .alongWith(feeder.feed(-FEEDER_SPEED)
                                 .alongWith(new WaitCommand(1)
                                         .andThen(linSlide.applyPower(
                                                 LinSlideConfigsBeta.LINSLIDE_AUTO_STOWING_SPEED)))));
@@ -324,7 +323,7 @@ public class RobotContainer {
                 .rightTrigger()
                 .whileTrue(indexer.applyPower(TEST_INDEXER_SPEED)
                         //                        .alongWith(intake.applyPower(IntakeConfigsBeta.ROLL_IN_SLOWER)
-                        .alongWith(feeder.applyPower(0.7)
+                        .alongWith(feeder.feed(FEEDER_SPEED)
                                 .alongWith(new WaitCommand(0.8)
                                         .andThen(linSlide.applyPower(LinSlideConfigsBeta.LINSLIDE_AUTO_SHOOT_SPEED)))));
 
@@ -358,7 +357,7 @@ public class RobotContainer {
                 .whileTrue(AutoAimCommands.autoAim(
                                 drive, controller::getLeftY, controller::getLeftX, centerHubOpening.toTranslation2d())
                         .alongWith(shooter.shoot(100))
-                        .alongWith(feeder.index(3)));
+                        .alongWith(feeder.feed(3)));
 
         controller.button(7).whileTrue(indexer.spinIndexer(80));
         controller.button(8).onTrue(Commands.runOnce(drive::seedFieldCentric));

@@ -11,7 +11,7 @@ public interface FeederIO {
 
     public default void updateInputs(FeederIOInputs inputs) {}
 
-    public default void spinFeeder(double volts) {}
+    public default void spinFeeder(double rps) {}
 
     public default void applyPower(double power) {}
 }
