@@ -4,6 +4,7 @@ import com.ctre.phoenix6.configs.*;
 import com.ctre.phoenix6.signals.InvertedValue;
 import edu.wpi.first.math.interpolation.InterpolatingTreeMap;
 import edu.wpi.first.math.interpolation.InverseInterpolator;
+import frc.robot.subsystems.hood.HoodPositions;
 import frc.robot.util.ShooterStateData;
 
 public class ShooterConfigsGamma {
@@ -45,4 +46,15 @@ public class ShooterConfigsGamma {
 
     public static final InterpolatingTreeMap<Double, ShooterStateData> SHOOTER_MAP =
             new InterpolatingTreeMap<>(InverseInterpolator.forDouble(), ShooterStateData.interpolator);
+
+    static {
+        SHOOTER_MAP.put(3.33, new ShooterStateData(HoodPositions.STOW.getPosition(), 30, 0.0));
+    }
+
+    public static final InterpolatingTreeMap<Double, ShooterStateData> SHUTTLE_MAP =
+            new InterpolatingTreeMap<>(InverseInterpolator.forDouble(), ShooterStateData.interpolator);
+
+    static {
+        SHUTTLE_MAP.put(0.0, new ShooterStateData(HoodPositions.HOOD_UP.getPosition(), 0, 0.0));
+    }
 }
