@@ -5,6 +5,11 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.littletonrobotics.junction.AutoLog;
 import org.littletonrobotics.junction.Logger;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+
 public class BatteryFuelGauge extends SubsystemBase {
     interface BatteryFuelGaugeIO {
         @AutoLog
@@ -36,6 +41,10 @@ public class BatteryFuelGauge extends SubsystemBase {
     }
 
     public void saveLog() {
-        batteryGauge.saveLog("");
+        try {
+            File file = new File("D:\\logs\\BatteryData.csv");
+            FileWriter fw = new FileWriter(file, true);
+            BufferedWriter out = new BufferedWriter(fw);
+        } catch (IOException e) { e.printStackTrace(); }
     }
 }
