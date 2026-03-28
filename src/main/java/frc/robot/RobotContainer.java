@@ -7,6 +7,7 @@
 
 package frc.robot;
 
+import static frc.robot.constants.Constants.VOLTAGE_FILTER_CONSTANT;
 import static frc.robot.constants.Constants.currentMode;
 import static frc.robot.constants.FieldConstants.Hub.centerHubOpening;
 import static frc.robot.subsystems.indexer.IndexerConfigsBeta.TEST_INDEXER_SPEED;
@@ -16,9 +17,7 @@ import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.*;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.GenericHID;
-import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.*;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -53,6 +52,9 @@ import frc.robot.subsystems.linslide.LinSlide;
 import frc.robot.subsystems.linslide.LinSlideConfigsBeta;
 import frc.robot.subsystems.linslide.LinSlideIO;
 import frc.robot.subsystems.linslide.LinSlideIOReal;
+import frc.robot.subsystems.powerdist.PowerDistributor;
+import frc.robot.subsystems.powerdist.PowerDistributorIO;
+import frc.robot.subsystems.powerdist.PowerDistributorReal;
 import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.subsystems.shooter.ShooterIO;
 import frc.robot.subsystems.shooter.ShooterIOReal;
@@ -83,6 +85,7 @@ public class RobotContainer {
     private final Hood hood;
     private final AutoCommands autoCommands;
     private final BatteryFuelGauge battery;
+    private final PowerDistributor powerDistributor;
 
     // Controller
     private final CommandXboxController controller =
@@ -130,6 +133,7 @@ public class RobotContainer {
                                 drive.getRotation3d()::toRotation2d,
                                 VisionConstants.sideLinearStdDevBaseline,
                                 VisionConstants.sideAngularStdDevBaseline));
+                powerDistributor = new PowerDistributor(new PowerDistributorReal(1, PowerDistribution.ModuleType.kRev));
                 break;
 
             case BETA:
@@ -157,6 +161,7 @@ public class RobotContainer {
                                 drive.getRotation3d()::toRotation2d,
                                 VisionConstants.sideLinearStdDevBaseline,
                                 VisionConstants.sideAngularStdDevBaseline));
+                powerDistributor = new PowerDistributor(new PowerDistributorReal(1, PowerDistribution.ModuleType.kRev));
                 break;
 
             case SIM:
@@ -176,6 +181,7 @@ public class RobotContainer {
                 feeder = new Feeder(new FeederIOReal());
                 hood = new Hood(new HoodIOBeta());
                 battery = new BatteryFuelGauge(0);
+                powerDistributor = new PowerDistributor(new PowerDistributorIO() {});
 
                 break;
 
@@ -191,6 +197,7 @@ public class RobotContainer {
                 shooter = new Shooter((new ShooterIO() {}));
                 hood = new Hood(new HoodIO() {});
                 battery = new BatteryFuelGauge(0);
+                powerDistributor = new PowerDistributor(new PowerDistributorIO() {});
 
                 break;
         }
@@ -234,6 +241,21 @@ public class RobotContainer {
         Logger.recordOutput("Front Cam Transform", frontCameraPose);
     }
 
+    private double filteredVoltage = 12.0;
+
+    private double getFilteredVoltage() {
+        double raw = RobotController.getBatteryVoltage();
+        filteredVoltage = VOLTAGE_FILTER_CONSTANT * raw + (1 - VOLTAGE_FILTER_CONSTANT) * filteredVoltage;
+        return filteredVoltage;
+    }
+
+    private double getScalarDriveSpeed() {
+        double voltage = getFilteredVoltage();
+        if (voltage >= 12.0) return 1.0;
+        if (voltage < 10.5) return 0.6;
+        return 0.6 + (voltage - 10.5) / (12.0 - 10.5) * (0.4);
+    }
+
     /**
      * Use this method to define your button->command mappings. Buttons can be created by
      * instantiating a {@link GenericHID} or one of its subclasses ({@link
@@ -242,9 +264,9 @@ public class RobotContainer {
      */
     private void configureRealBindings() {
         drive.setDefaultCommand(drive.applyRequest(() -> driveRequest
-                .withVelocityX(-controller.getLeftY() * climbState.kSpeedAt12Volts.magnitude())
-                .withVelocityY(-controller.getLeftX() * climbState.kSpeedAt12Volts.magnitude())
-                .withRotationalRate(-controller.getRightX() * climbState.MaFxAngularRate)));
+                .withVelocityX(-controller.getLeftY() * climbState.kSpeedAt12Volts.magnitude() * getScalarDriveSpeed())
+                .withVelocityY(-controller.getLeftX() * climbState.kSpeedAt12Volts.magnitude() * getScalarDriveSpeed())
+                .withRotationalRate(-controller.getRightX() * climbState.MaFxAngularRate * getScalarDriveSpeed())));
 
         controller
                 .povUp()
@@ -390,13 +412,18 @@ public class RobotContainer {
         Translation2d currentPosition = currentPose.getTranslation();
         double distance = modifiedTarget.getDistance(currentPosition);
 
-        Logger.recordOutput("AutoAimCommands/Shooter Map/hub distance", distance);
+        Logger.recordOutput("AutoAimCommands/Shooter Map/Hub Distance", distance);
 
         Translation2d shuttleTranslation = AllianceFlipUtil.apply(new Translation2d(2.35, currentPose.getY()));
         double shuttleDistance = shuttleTranslation.getDistance(currentPosition);
 
-        Logger.recordOutput("AutoAimCommands/Shuttle Map/ideal shuttle distance", shuttleDistance);
+        Logger.recordOutput("AutoAimCommands/Shuttle Map/Ideal Shuttle Distance", shuttleDistance);
         Logger.recordOutput("Drive/Swerve Lock State", swerveLockState);
+
+        Logger.recordOutput("Drive/Scalar Drive Speed", getScalarDriveSpeed());
+        Logger.recordOutput("Drive/Filtered Voltage", getFilteredVoltage());
+
+        Logger.recordOutput("Drive/Brownout Voltage", RobotController.getBrownoutVoltage());
     }
 
     public void saveLog() {
