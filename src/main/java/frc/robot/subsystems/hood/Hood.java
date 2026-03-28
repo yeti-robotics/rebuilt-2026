@@ -6,13 +6,14 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.shooter.ShooterConfigsBeta;
 import org.littletonrobotics.junction.Logger;
 
-public class HoodSubsystem extends SubsystemBase {
+public class Hood extends SubsystemBase {
     private HoodIO io;
     private HoodIOInputsAutoLogged inputs = new HoodIOInputsAutoLogged();
 
-    public HoodSubsystem(HoodIO io) {
+    public Hood(HoodIO io) {
         this.io = io;
-        setDefaultCommand(stowHood().onlyIf(() -> getHoodPosition() > 0.1));
+        io.zero();
+        setDefaultCommand(setHoodPosition(0));
     }
 
     @Override
@@ -51,5 +52,9 @@ public class HoodSubsystem extends SubsystemBase {
 
     public Command moveToPosition(Angle position) {
         return runOnce(() -> this.moveTo(position));
+    }
+
+    public Command setHoodPosition(double position) {
+        return runOnce(() -> io.setPosition(position));
     }
 }

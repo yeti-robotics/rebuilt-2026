@@ -1,7 +1,7 @@
 {
-  "Keyboard 0 Settings": {
+  "System Joysticks": {
     "window": {
-      "visible": true
+      "visible": false
     }
   },
   "keyboardJoysticks": [
@@ -108,5 +108,6 @@
     {
       "guid": "Keyboard0"
     }
-  ]
+  ],
+  "useEnableDisableHotkeys": true
 }

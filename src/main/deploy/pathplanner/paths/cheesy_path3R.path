@@ -1,0 +1,144 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 3.1851069900142637,
+        "y": 1.5259999999999998
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 3.4050627974859653,
+        "y": 0.7108641024771183
+      },
+      "isLocked": false,
+      "linkedName": "cheesy-shootR"
+    },
+    {
+      "anchor": {
+        "x": 4.517788873038516,
+        "y": 0.569
+      },
+      "prevControl": {
+        "x": 3.742839268559985,
+        "y": 0.5858418013426272
+      },
+      "nextControl": {
+        "x": 5.112967271976452,
+        "y": 0.5560651248798552
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 5.772838801711839,
+        "y": 1.0599999999999996
+      },
+      "prevControl": {
+        "x": 5.837528285808581,
+        "y": 0.3871893625084004
+      },
+      "nextControl": {
+        "x": 5.704858169050736,
+        "y": 1.767040617751702
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 6.1480599144079875,
+        "y": 2.9749999999999996
+      },
+      "prevControl": {
+        "x": 6.268260992387476,
+        "y": 2.4504690221514114
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "cheesy-hairpin2R"
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.45,
+      "rotationDegrees": -179.656
+    },
+    {
+      "waypointRelativePos": 1.0,
+      "rotationDegrees": -179.54
+    },
+    {
+      "waypointRelativePos": 2.05,
+      "rotationDegrees": -90.0
+    },
+    {
+      "waypointRelativePos": 2.15,
+      "rotationDegrees": -90.0
+    },
+    {
+      "waypointRelativePos": 2.45,
+      "rotationDegrees": -75.141
+    }
+  ],
+  "constraintZones": [
+    {
+      "name": "Constraints Zone",
+      "minWaypointRelativePos": 2.05,
+      "maxWaypointRelativePos": 2.85,
+      "constraints": {
+        "maxVelocity": 0.9,
+        "maxAcceleration": 1.5,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0,
+        "nominalVoltage": 12.0,
+        "unlimited": false
+      }
+    }
+  ],
+  "pointTowardsZones": [],
+  "eventMarkers": [
+    {
+      "name": "popLintake",
+      "waypointRelativePos": 1.0,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "popLintake"
+        }
+      }
+    },
+    {
+      "name": "rollIn",
+      "waypointRelativePos": 1.0,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "rollIn"
+        }
+      }
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 5.0,
+    "maxAcceleration": 5.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 1.0,
+    "rotation": 75.619
+  },
+  "reversed": false,
+  "folder": "Right Paths",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": 89.284
+  },
+  "useDefaultConstraints": true
+}

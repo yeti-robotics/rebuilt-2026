@@ -1,6 +1,7 @@
 package frc.robot.subsystems.indexer;
 
 import static frc.robot.constants.Constants.currentMode;
+import static frc.robot.subsystems.indexer.IndexerConfigsAlpha.*;
 
 import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.MotionMagicVelocityVoltage;

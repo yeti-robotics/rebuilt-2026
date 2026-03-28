@@ -106,6 +106,7 @@ public class Robot extends LoggedRobot {
     public void disabledInit() {
         Elastic.selectTab("Prematch");
         robotContainer.resetSimulationField();
+        robotContainer.saveLog();
     }
 
     /** This function is called periodically when disabled. */

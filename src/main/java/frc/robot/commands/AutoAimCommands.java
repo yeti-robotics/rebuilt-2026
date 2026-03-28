@@ -16,9 +16,9 @@ import frc.robot.constants.Constants;
 import frc.robot.subsystems.drive.CommandSwerveDrivetrain;
 import frc.robot.subsystems.drive.TunerConstantsAlpha;
 import frc.robot.subsystems.drive.TunerConstantsBeta;
-import frc.robot.subsystems.hood.HoodSubsystem;
+import frc.robot.subsystems.hood.Hood;
+import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.subsystems.shooter.ShooterConfigsBeta;
-import frc.robot.subsystems.shooter.ShooterSubsystem;
 import frc.robot.util.AllianceFlipUtil;
 import frc.robot.util.ShooterStateData;
 import java.util.Set;
@@ -58,7 +58,6 @@ public class AutoAimCommands {
                             .getAngle()
                             .plus(Rotation2d.kPi)
                             .rotateBy(AllianceFlipUtil.apply(Rotation2d.k180deg));
-                    ; // remove if needed for real robot
                     Translation2d fieldRel = new Translation2d(rawXVelo, rawYVelo).rotateBy(targetHeading);
 
                     double angularVelo =
@@ -112,12 +111,35 @@ public class AutoAimCommands {
                 SwerveRequest.Idle::new);
     }
 
+    public static Command shuttleAim(
+            CommandSwerveDrivetrain drive,
+            DoubleSupplier xVelSupplier,
+            DoubleSupplier yVelSupplier,
+            Translation2d target) {
+
+        return drive.runEnd(
+                () -> {
+                    SwerveRequest.FieldCentricFacingAngle request = new SwerveRequest.FieldCentricFacingAngle()
+                            .withHeadingPID(20, 0, 0)
+                            .withVelocityX(-xVelSupplier.getAsDouble() * SPEED_MULTIPLIER)
+                            .withVelocityY(-yVelSupplier.getAsDouble() * SPEED_MULTIPLIER)
+                            .withTargetDirection(calcDesiredHeading(
+                                    drive.getState().Pose,
+                                    new Translation2d(
+                                            2.35, drive.getState().Pose.getY())))
+                            .withDriveRequestType(SwerveModule.DriveRequestType.Velocity);
+
+                    drive.setControl(request);
+                },
+                SwerveRequest.Idle::new);
+    }
+
     public static Command compensationAutoAim(
             CommandSwerveDrivetrain drive,
             DoubleSupplier xVelSupplier,
             DoubleSupplier yVelSupplier,
-            ShooterSubsystem shooter,
-            HoodSubsystem hood,
+            Shooter shooter,
+            Hood hood,
             Translation2d target) {
 
         Pose2d currentPose = drive.getState().Pose;
@@ -156,25 +178,31 @@ public class AutoAimCommands {
                 .alongWith(hood.moveToPosition(targetHoodAngle))
                 .alongWith(shooter.shoot(targetRPS));
     }
-    ;
 
-    public static Command readyAim(CommandSwerveDrivetrain drive, ShooterSubsystem shooter, Translation2d target) {
+    public static Command readyAim(CommandSwerveDrivetrain drive, Shooter shooter, Translation2d target) {
+        return new ReadyAimCommand(drive, shooter, target);
+    }
+
+    public static Command shuttleReadyAim(
+            CommandSwerveDrivetrain drive, Shooter shooter, Translation2d target, Hood hood) {
 
         return Commands.defer(
                 () -> {
                     Pose2d currentPose = drive.getState().Pose;
-                    Translation2d modifiedTarget = AllianceFlipUtil.apply(target);
+                    Translation2d modifiedTarget = new Translation2d(AllianceFlipUtil.apply(2.35), currentPose.getY());
                     Translation2d currentPosition = currentPose.getTranslation();
                     double distance = modifiedTarget.getDistance(currentPosition);
 
-                    ShooterStateData state = ShooterConfigsBeta.SHOOTER_MAP.get(distance);
+                    ShooterStateData state = ShooterConfigsBeta.SHUTTLE_MAP.get(distance);
 
                     double targetRPS = state.rps;
+                    Angle targetHoodPos = state.hoodPos;
 
-                    Logger.recordOutput("AutoAimCommands/target rps", targetRPS);
+                    Logger.recordOutput("AutoAimCommands/Shuttle Map/target rps", targetRPS);
+                    Logger.recordOutput("AutoAimCommands/Shuttle Map/target hood position", targetHoodPos);
 
-                    return shooter.shoot(targetRPS);
+                    return shooter.shoot(targetRPS).alongWith(hood.setHoodPosition((targetHoodPos.magnitude())));
                 },
-                Set.of(shooter));
+                Set.of(shooter, hood));
     }
 }

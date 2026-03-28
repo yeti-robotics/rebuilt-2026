@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.2923395149786017,
-        "y": 6.4092439372325245
+        "x": 2.758131241084165,
+        "y": 6.435121255349501
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.1471408394819123,
-        "y": 5.574351553126564
+        "x": 2.6129325655874758,
+        "y": 5.600228871243541
       },
       "isLocked": false,
       "linkedName": "shoot-left"
@@ -48,7 +48,7 @@
   "folder": "Left Paths",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 0.7161599454704586
+    "rotation": -10.954062643398347
   },
   "useDefaultConstraints": true
 }
