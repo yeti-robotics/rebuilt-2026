@@ -16,13 +16,14 @@ public class IndexerConfigsBeta {
             .withKG(0)
             .withKV(0)
             .withKA(0)
-            .withKS(2)
+            .withKS(0)
             .withGravityType(GravityTypeValue.Elevator_Static);
+
     static final TalonFXConfiguration TalonFXConfigs = new TalonFXConfiguration()
             .withSlot0(SLOT_0_CONFIGS)
             .withMotionMagic(new MotionMagicConfigs()
-                    .withMotionMagicAcceleration(2)
-                    .withMotionMagicCruiseVelocity(4)
+                    .withMotionMagicAcceleration(1)
+                    .withMotionMagicCruiseVelocity(2)
                     .withMotionMagicJerk(0));
 
     static final CANrangeConfiguration TOP_CANRANGE_CONFIGS = new CANrangeConfiguration()
