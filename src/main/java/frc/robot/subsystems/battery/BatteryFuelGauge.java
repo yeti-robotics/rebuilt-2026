@@ -41,10 +41,10 @@ public class BatteryFuelGauge extends SubsystemBase {
     }
 
     public void saveLog() {
-        try {
-            File file = new File("D:\\logs\\BatteryData.csv");
+        //try {
+          File file = new File("D:\\logs\\BatteryData.csv");
             FileWriter fw = new FileWriter(file, true);
             BufferedWriter out = new BufferedWriter(fw);
-        } catch (IOException e) { e.printStackTrace(); }
+        //} catch (IOException e) { e.printStackTrace(); }
     }
 }
