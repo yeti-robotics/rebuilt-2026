@@ -52,4 +52,9 @@ public class FeederIOReal implements FeederIO {
     public void applyPower(double percent) {
         feederMotor.setControl(dutyRequest.withOutput(percent));
     }
+
+    @Override
+    public void stopMotors() {
+        feederMotor.stopMotor();
+    }
 }

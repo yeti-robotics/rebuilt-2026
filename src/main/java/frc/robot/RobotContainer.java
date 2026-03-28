@@ -270,7 +270,7 @@ public class RobotContainer {
                 .rightBumper()
                 .onTrue(intake.applyPower(-IntakeConfigsBeta.ROLLER_SPEED)
                         .alongWith(indexer.applyPower(TEST_INDEXER_SPEED))
-                        .alongWith(feeder.feed(FEEDER_SPEED).alongWith(shooter.applyPower(-0.1))));
+                        .alongWith(feeder.feed(-FEEDER_SPEED).alongWith(shooter.applyPower(-0.1))));
 
         controller
                 .leftBumper()
@@ -287,7 +287,7 @@ public class RobotContainer {
                 .rightTrigger()
                 .whileTrue(indexer.applyPower(TEST_INDEXER_SPEED)
                         .alongWith(intake.applyPower(IntakeConfigsBeta.ROLLER_SPEED))
-                        .alongWith(feeder.feed(-FEEDER_SPEED)
+                        .alongWith(feeder.feed(FEEDER_SPEED)
                                 .alongWith(new WaitCommand(1)
                                         .andThen(linSlide.applyPower(
                                                 LinSlideConfigsBeta.LINSLIDE_AUTO_STOWING_SPEED)))));

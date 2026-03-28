@@ -14,4 +14,6 @@ public interface FeederIO {
     public default void spinFeeder(double rps) {}
 
     public default void applyPower(double power) {}
+
+    public default void stopMotors() {}
 }

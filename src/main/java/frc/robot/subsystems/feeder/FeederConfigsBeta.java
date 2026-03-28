@@ -10,10 +10,10 @@ public class FeederConfigsBeta {
     public static final int FEEDER_SPEED = 70;
 
     static final MotionMagicConfigs MOTION_MAGIC_CONFIGS =
-            new MotionMagicConfigs().withMotionMagicCruiseVelocity(1).withMotionMagicAcceleration(32);
+            new MotionMagicConfigs().withMotionMagicCruiseVelocity(1).withMotionMagicAcceleration(512);
 
     static final Slot0Configs SLOT_0_CONFIGS = new Slot0Configs()
-            .withKP(1)
+            .withKP(128)
             .withKI(0)
             .withKD(0)
             .withKS(5)
