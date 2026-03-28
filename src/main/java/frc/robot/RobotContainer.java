@@ -316,9 +316,15 @@ public class RobotContainer {
 
         controller2
                 .leftTrigger()
-                .whileTrue(AutoAimCommands.autoAim(
-                                drive, controller2::getLeftY, controller2::getLeftX, centerHubOpening.toTranslation2d())
-                        .alongWith(AutoAimCommands.readyAim(drive, shooter, centerHubOpening.toTranslation2d())));
+                .whileTrue(
+                        Commands.either(
+                        AutoAimCommands.autoAim(
+                                        drive, controller2::getLeftY, controller2::getLeftX, centerHubOpening.toTranslation2d())
+                                .alongWith(AutoAimCommands.readyAim(drive, shooter, centerHubOpening.toTranslation2d())),
+                        AutoAimCommands.shuttleAim(
+                                        drive, controller2::getLeftY, controller2::getLeftX, centerHubOpening.toTranslation2d())
+                                .alongWith(AutoAimCommands.shuttleReadyAim(drive, shooter, hood)),
+                                () -> AllianceFlipUtil.apply(drive.getState().Pose.getX()) < 4.9));
 
         controller2
                 .rightTrigger()
@@ -327,6 +333,7 @@ public class RobotContainer {
                         .alongWith(feeder.applyPower(0.7)
                                 .alongWith(new WaitCommand(0.8)
                                         .andThen(linSlide.applyPower(LinSlideConfigsBeta.LINSLIDE_AUTO_SHOOT_SPEED)))));
+
 
         //        controller2
         //                .rightBumper()
