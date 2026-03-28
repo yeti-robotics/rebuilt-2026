@@ -3,7 +3,7 @@ package frc.robot.subsystems.feeder;
 import static frc.robot.constants.Constants.currentMode;
 
 import com.ctre.phoenix6.controls.DutyCycleOut;
-import com.ctre.phoenix6.controls.MotionMagicVelocityVoltage;
+import com.ctre.phoenix6.controls.MotionMagicVelocityTorqueCurrentFOC;
 import com.ctre.phoenix6.hardware.CANrange;
 import com.ctre.phoenix6.hardware.TalonFX;
 import frc.robot.Robot;
@@ -14,7 +14,7 @@ public class FeederIOReal implements FeederIO {
     public final TalonFX feederMotor;
     public final CANrange feederSensor;
 
-    public final MotionMagicVelocityVoltage velocityVoltageRequest = new MotionMagicVelocityVoltage(0);
+    public final MotionMagicVelocityTorqueCurrentFOC velocityRequest = new MotionMagicVelocityTorqueCurrentFOC(0);
     public final DutyCycleOut dutyRequest = new DutyCycleOut(0);
 
     public FeederIOReal() {
@@ -44,12 +44,17 @@ public class FeederIOReal implements FeederIO {
     }
 
     @Override
-    public void spinFeeder(double volts) {
-        feederMotor.setControl(velocityVoltageRequest.withVelocity(volts));
+    public void spinFeeder(double rps) {
+        feederMotor.setControl(velocityRequest.withVelocity(rps));
     }
 
     @Override
     public void applyPower(double percent) {
         feederMotor.setControl(dutyRequest.withOutput(percent));
+    }
+
+    @Override
+    public void stopMotors() {
+        feederMotor.stopMotor();
     }
 }
