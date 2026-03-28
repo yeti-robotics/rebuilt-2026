@@ -1,6 +1,5 @@
 package frc.robot.subsystems.shooter;
 
-import static frc.robot.constants.Constants.currentMode;
 import static frc.robot.subsystems.shooter.ShooterConfigsAlpha.*;
 
 import com.ctre.phoenix6.controls.DutyCycleOut;
@@ -8,7 +7,6 @@ import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.MotionMagicVelocityTorqueCurrentFOC;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.MotorAlignmentValue;
-import edu.wpi.first.wpilibj.motorcontrol.Talon;
 import frc.robot.Robot;
 import frc.robot.constants.Constants;
 import frc.robot.util.sim.PhysicsSim;
@@ -28,6 +26,8 @@ public class ShooterIOGamma implements ShooterIO {
 
         secondMotor.setControl(new Follower(ShooterConfigsGamma.FIRST_SHOOTER_ID, MotorAlignmentValue.Opposed));
         thirdMotor.setControl(new Follower(ShooterConfigsGamma.FIRST_SHOOTER_ID, MotorAlignmentValue.Aligned));
+
+        firstMotor.getConfigurator().apply(ShooterConfigsGamma.TOP_MOTOR_CONFIGS);
 
         if (Robot.isSimulation()) {
             PhysicsSim.getInstance().addTalonFX(firstMotor);

@@ -4,7 +4,6 @@ import com.ctre.phoenix6.configs.*;
 import com.ctre.phoenix6.signals.InvertedValue;
 import edu.wpi.first.math.interpolation.InterpolatingTreeMap;
 import edu.wpi.first.math.interpolation.InverseInterpolator;
-import frc.robot.subsystems.hood.HoodPositions;
 import frc.robot.util.ShooterStateData;
 
 public class ShooterConfigsGamma {
@@ -17,16 +16,16 @@ public class ShooterConfigsGamma {
     static final double SENSOR_TO_MECHANISM = 1;
 
     public static final Slot0Configs SLOT_0_CONFIGS = new Slot0Configs()
-            .withKP(0)
+            .withKP(10)
             .withKI(0)
             .withKD(0)
-            .withKS(0)
-            .withKV(0)
-            .withKA(0);
+            .withKS(13)
+            .withKV(0.65)
+            .withKA(1);
 
     public static final MotionMagicConfigs MOTION_MAGIC_CONFIGS = new MotionMagicConfigs()
-            .withMotionMagicAcceleration(0)
-            .withMotionMagicCruiseVelocity(0)
+            .withMotionMagicCruiseVelocity(1)
+            .withMotionMagicAcceleration(128)
             .withMotionMagicJerk(0);
 
     static final TalonFXConfiguration TOP_MOTOR_CONFIGS = new TalonFXConfiguration()

@@ -55,6 +55,7 @@ import frc.robot.subsystems.linslide.LinSlideIO;
 import frc.robot.subsystems.linslide.LinSlideIOReal;
 import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.subsystems.shooter.ShooterIO;
+import frc.robot.subsystems.shooter.ShooterIOGamma;
 import frc.robot.subsystems.shooter.ShooterIOReal;
 import frc.robot.subsystems.vision.*;
 import frc.robot.util.AllianceFlipUtil;
@@ -141,7 +142,7 @@ public class RobotContainer {
                 intake = new Intake(new IntakeIOBeta());
                 indexer = new Indexer(new IndexerIOBeta());
                 climber = new Climber(new ClimberIOBeta());
-                shooter = new Shooter(new ShooterIOReal());
+                shooter = new Shooter(new ShooterIOGamma());
                 feeder = new Feeder(new FeederIOReal());
                 hood = new Hood(new HoodIOBeta());
                 battery = new BatteryFuelGauge(0);
