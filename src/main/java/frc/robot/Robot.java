@@ -97,10 +97,15 @@ public class Robot extends LoggedRobot {
         // Threads.setCurrentThreadPriority(false, 10);
     }
 
+    /** This function is called once when the robot is first started up. */
+    @Override
+    public void robotInit() {}
+
     /** This function is called once when the robot is disabled. */
     @Override
     public void disabledInit() {
         Elastic.selectTab("Prematch");
+        robotContainer.resetSimulationField();
         robotContainer.saveLog();
     }
 
@@ -155,12 +160,15 @@ public class Robot extends LoggedRobot {
 
     /** This function is called once when the robot is first started up. */
     @Override
-    public void simulationInit() {}
+    public void simulationInit() {
+        robotContainer.resetSimulationField();
+    }
 
     /** This function is called periodically whilst in simulation. */
     @Override
     public void simulationPeriodic() {
         PhysicsSim.getInstance().run();
         robotContainer.updateVisionSim();
+        robotContainer.updateSimulation();
     }
 }

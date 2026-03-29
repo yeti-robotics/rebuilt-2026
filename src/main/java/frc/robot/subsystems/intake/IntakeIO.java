@@ -16,4 +16,12 @@ public interface IntakeIO {
     public default void setIntakeMotor(double volts) {}
 
     public default void applyPower(double percent) {}
+
+    public default void setRunning(boolean runIntake) {}
+
+    public default boolean isFuelInsideIntake(boolean isFuelInsideIntake) {
+        return false;
+    }
+
+    public default void handoffFuel() {}
 }

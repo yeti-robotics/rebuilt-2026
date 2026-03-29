@@ -57,9 +57,11 @@ import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.subsystems.shooter.ShooterIO;
 import frc.robot.subsystems.shooter.ShooterIOGamma;
 import frc.robot.subsystems.shooter.ShooterIOReal;
+import frc.robot.subsystems.shooter.ShooterIOSim;
 import frc.robot.subsystems.vision.*;
 import frc.robot.util.AllianceFlipUtil;
 import frc.robot.util.sim.Mechanisms;
+import org.ironmaple.simulation.SimulatedArena;
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
@@ -84,6 +86,8 @@ public class RobotContainer {
     private final Hood hood;
     private final AutoCommands autoCommands;
     private final BatteryFuelGauge battery;
+    private ShooterIOSim shooterSim;
+    private IntakeIOAlphaSim intakeIOSim;
 
     // Controller
     private final CommandXboxController controller =
@@ -164,7 +168,9 @@ public class RobotContainer {
                 // Sim robot, instantiate physics sim IO implementations
                 drive = TunerConstantsAlpha.createDrivetrain();
                 linSlide = new LinSlide(new LinSlideIOReal());
-                intake = new Intake(new IntakeIOAlpha());
+                shooterSim = new ShooterIOSim(
+                        drive.getSimulation()::getSimulatedDriveTrainPose, () -> drive.getState().Speeds);
+                intake = new Intake(new IntakeIOAlphaSim(drive.getSimulation(), shooterSim));
                 indexer = new Indexer(new IndexerIOAlpha());
                 vision = new Vision(
                         drive,
@@ -177,6 +183,7 @@ public class RobotContainer {
                 feeder = new Feeder(new FeederIOReal());
                 hood = new Hood(new HoodIOBeta());
                 battery = new BatteryFuelGauge(0);
+                drive.resetPose(new Pose2d(3, 3, new Rotation2d()));
 
                 break;
 
@@ -366,8 +373,8 @@ public class RobotContainer {
                 .button(9)
                 .whileTrue(AutoAimCommands.autoAimWithOrbit(
                         drive, controller::getLeftY, controller::getLeftX, centerHubOpening.toTranslation2d()));
-
-        controller.button(10).onTrue(Commands.runOnce(() -> climbState = climbState.switchState()));
+        controller.button(10).whileTrue(intake.setRollerSim(3));
+        controller.button(11).whileTrue(intake.handoffFuel());
     }
 
     public void updateMechanisms() {
@@ -410,5 +417,21 @@ public class RobotContainer {
      */
     public Command getAutonomousCommand() {
         return autoChooser.get();
+    }
+
+    public void resetSimulationField() {
+        if (currentMode != Constants.Mode.SIM) return;
+
+        drive.getSimulation().setSimulationWorldPose(new Pose2d(8, 3, new Rotation2d()));
+        SimulatedArena.getInstance().resetFieldForAuto();
+    }
+
+    public void updateSimulation() {
+        if (currentMode != Constants.Mode.SIM) return;
+
+        updateVisionSim();
+        Logger.recordOutput(
+                "FieldSimulation/RobotPosition", drive.getSimulation().getSimulatedDriveTrainPose());
+        Logger.recordOutput("FieldSimulation/Fuel", SimulatedArena.getInstance().getGamePiecesArrayByType("Fuel"));
     }
 }
