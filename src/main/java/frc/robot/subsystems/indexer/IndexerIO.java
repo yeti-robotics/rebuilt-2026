@@ -7,6 +7,7 @@ public interface IndexerIO {
     public static class IndexerIOInputs {
         public double rollerSpeed = 0.0;
         public boolean isFull = false;
+        public double motorTemp = 0.0;
     }
 
     public default void updateInputs(IndexerIOInputs inputs) {}

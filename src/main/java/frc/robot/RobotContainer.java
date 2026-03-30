@@ -9,7 +9,6 @@ package frc.robot;
 
 import static frc.robot.constants.Constants.currentMode;
 import static frc.robot.constants.FieldConstants.Hub.centerHubOpening;
-import static frc.robot.constants.FieldConstants.Shuttle.shuttleTargetZone;
 import static frc.robot.subsystems.indexer.IndexerConfigsBeta.TEST_INDEXER_SPEED;
 
 import com.ctre.phoenix6.swerve.SwerveModule;
@@ -56,6 +55,7 @@ import frc.robot.subsystems.linslide.LinSlideIO;
 import frc.robot.subsystems.linslide.LinSlideIOReal;
 import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.subsystems.shooter.ShooterIO;
+import frc.robot.subsystems.shooter.ShooterIOGamma;
 import frc.robot.subsystems.shooter.ShooterIOReal;
 import frc.robot.subsystems.vision.*;
 import frc.robot.util.AllianceFlipUtil;
@@ -94,6 +94,7 @@ public class RobotContainer {
     private final LoggedDashboardChooser<Command> autoChooser;
 
     private ClimberState climbState;
+    private boolean swerveLockState;
 
     private final SwerveRequest.FieldCentric driveRequest = currentMode == Constants.Mode.ALPHA
             ? new SwerveRequest.FieldCentric()
@@ -141,7 +142,7 @@ public class RobotContainer {
                 intake = new Intake(new IntakeIOBeta());
                 indexer = new Indexer(new IndexerIOBeta());
                 climber = new Climber(new ClimberIOBeta());
-                shooter = new Shooter(new ShooterIOReal());
+                shooter = new Shooter(new ShooterIOGamma());
                 feeder = new Feeder(new FeederIOReal());
                 hood = new Hood(new HoodIOBeta());
                 battery = new BatteryFuelGauge(0);
@@ -201,6 +202,8 @@ public class RobotContainer {
 
         climbState = ClimberState.DEFAULT;
 
+        swerveLockState = false;
+
         autoCommands = new AutoCommands(climber, drive, hood, indexer, feeder, intake, linSlide, shooter, led);
 
         // Set up auto routines
@@ -209,57 +212,10 @@ public class RobotContainer {
         // Set up simulatable mechanisms
         mechanisms = new Mechanisms();
 
-        //        autoChooser.addOption(
-        //                "Drive SysId (Quasistatic Forward)", drive.sysIdQuasistatic(SysIdRoutine.Direction.kForward));
-        //        autoChooser.addOption(
-        //                "Drive SysId (Quasistatic Reverse)", drive.sysIdQuasistatic(SysIdRoutine.Direction.kReverse));
-        //        autoChooser.addOption("Drive SysId (Dynamic Forward)",
-        // drive.sysIdDynamic(SysIdRoutine.Direction.kForward));
-        //        autoChooser.addOption("Drive SysId (Dynamic Reverse)",
-        // drive.sysIdDynamic(SysIdRoutine.Direction.kReverse));
-        //
-        //        // Test
-        //        autoChooser.addOption("Climber Testing Path", autoCommands.climberTest());
-        //
-        //        // Left
         autoChooser.addOption("Left", autoCommands.oneCycleNeutralTowerLeft());
-
-        //        autoChooser.addOption("Citrus Trench Left", autoCommands.citrusAutoTrenchLeft());
-        //        autoChooser.addOption("Citrus Bump Left", autoCommands.citrusAutoBumpLeft());
-        //        autoChooser.addOption("Depot Center", autoCommands.oneCycleDepotShoot());
-
-        //        autoChooser.addOption("One Cycle Depot Tower Left", autoCommands.oneCycleDepotTowerLeft());
-        //        autoChooser.addOption("Two Cycle Neutral Depot Tower Left",
-        // autoCommands.twoCycleNeutralDepotTowerLeft());
-        //        autoChooser.addOption("Two Cycle Depot Neutral Tower Left",
-        // autoCommands.twoCycleDepotNeutralTowerLeft());
-        //        autoChooser.addOption("Two Cycle Neutral Neutral Tower Left",
-        // autoCommands.twoCycleNeutralTowerLeft());
-        //
-        //        // Center
-        //        autoChooser.addOption("One Cycle Neutral Left Tower Center",
-        // autoCommands.oneCycleNeutralLeftTowerCenter());
-        //        autoChooser.addOption("One Cycle Neutral Right Tower Center",
-        // autoCommands.oneCycleNeutralRightTowerCenter());
-        //        autoChooser.addOption("Two Cycle Depot Neutral Right Center",
-        // autoCommands.twoCycleDepotNeutralRightCenter());
-        //        autoChooser.addOption("Two Cycle Neutral Left Neutral Center",
-        // autoCommands.twoCycleNeutralNeutralLeftCenter());
-        //        autoChooser.addOption(
-        //                "Two Cycle Neutral Right Neutral Center", autoCommands.twoCycleNeutralNeutralRightCenter());
-        //        autoChooser.addOption("Two Cycle Depot Neutral Left Center",
-        // autoCommands.twoCycleDepotNeutralLeftCenter());
-        //
-        //        // Right
-        //        autoChooser.addOption("One Cycle Neutral Right Tower Right",
-        // autoCommands.oneCycleNeutralRightTowerRight());
-        //        autoChooser.addOption("One Cycle Outpost Tower Right", autoCommands.oneCycleOutpostTowerRight());
-        //        autoChooser.addOption("Two Cycle Outpost Neutral Tower Right",
-        // autoCommands.twoCycleOutpostNeutralTowerRight());
         autoChooser.addOption("Right", autoCommands.twoCycleNeutralOutpostTowerRight());
-        //        autoChooser.addOption("Two Cycle Neutral Neutral Tower Right",
-        // autoCommands.twoCycleNeutralTowerRight());
         autoChooser.addOption("Cheesy Left", autoCommands.cheesyLeft());
+        autoChooser.addOption("Cheesy Right", autoCommands.cheesyRight());
 
         // Configure the button bindings
         if (Robot.isReal()) {
@@ -299,10 +255,9 @@ public class RobotContainer {
 
         controller.start().onTrue(Commands.runOnce(drive::seedFieldCentric, drive));
 
-        //        controller.y().whileTrue(climber.applyPower(ClimberConfigsBeta.CLIMBER_EXTEND_SPEED));
-        //        controller.a().whileTrue(climber.applyPower(ClimberConfigsBeta.CLIMBER_RETRACT_SPEED));
         controller.x().whileTrue(linSlide.applyPower(LinSlideConfigsBeta.DEPLOY_SPEED));
         controller.b().whileTrue(linSlide.applyPower(-LinSlideConfigsBeta.DEPLOY_SPEED));
+        controller.y().onTrue(Commands.runOnce(() -> swerveLockState = !swerveLockState));
 
         controller
                 .leftTrigger()
@@ -320,22 +275,9 @@ public class RobotContainer {
 
         controller
                 .leftBumper()
-                .whileTrue(Commands.either(
-                                AutoAimCommands.autoAim(
-                                                drive,
-                                                controller::getLeftY,
-                                                controller::getLeftX,
-                                                centerHubOpening.toTranslation2d())
-                                        .alongWith(AutoAimCommands.readyAim(
-                                                drive, shooter, centerHubOpening.toTranslation2d())),
-                                AutoAimCommands.shuttleAim(
-                                                drive, controller::getLeftY, controller::getLeftX, shuttleTargetZone)
-                                        .alongWith(AutoAimCommands.shuttleReadyAim(
-                                                drive, shooter, shuttleTargetZone, hood)),
-                                () -> AllianceFlipUtil.apply(
-                                                drive.getState().Pose.getX())
-                                        < 4.9)
-                        .alongWith(led.runPattern(LEDModes.WAVE)));
+                .whileTrue(AutoAimCommands.autoAim(
+                                drive, controller::getLeftY, controller::getLeftX, centerHubOpening.toTranslation2d())
+                        .alongWith(shooter.shoot(30).alongWith(led.runPattern(LEDModes.WAVE))));
 
         //        controller.leftBumper().whileTrue(shooter.shoot(44));
 
@@ -345,11 +287,11 @@ public class RobotContainer {
         controller
                 .rightTrigger()
                 .whileTrue(indexer.applyPower(TEST_INDEXER_SPEED)
-                        .alongWith(intake.applyPower(IntakeConfigsBeta.ROLLER_SPEED)
-                                .alongWith(feeder.applyPower(FeederConfigsBeta.TEST_FEEDER_SPEED)
-                                        .alongWith(new WaitCommand(1)
-                                                .andThen(linSlide.applyPower(
-                                                        LinSlideConfigsBeta.LINSLIDE_AUTO_STOWING_SPEED))))));
+                        .alongWith(intake.applyPower(IntakeConfigsBeta.ROLLER_SPEED))
+                        .alongWith(feeder.applyPower(FeederConfigsBeta.TEST_FEEDER_SPEED)
+                                .alongWith(new WaitCommand(1)
+                                        .andThen(linSlide.applyPower(
+                                                LinSlideConfigsBeta.LINSLIDE_AUTO_STOWING_SPEED)))));
     }
 
     private void configureDebugBindings() {
@@ -454,6 +396,7 @@ public class RobotContainer {
         double shuttleDistance = shuttleTranslation.getDistance(currentPosition);
 
         Logger.recordOutput("AutoAimCommands/Shuttle Map/ideal shuttle distance", shuttleDistance);
+        Logger.recordOutput("Drive/Swerve Lock State", swerveLockState);
     }
 
     public void saveLog() {

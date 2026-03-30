@@ -435,6 +435,25 @@ public class AutoCommands {
         return auto;
     }
 
+    public Command cheesyRight() {
+        Optional<PathPlannerPath> cheesy1 = PathPlannerUtils.loadPathByName("cheesy_path1R");
+        Optional<PathPlannerPath> cheesy2 = PathPlannerUtils.loadPathByName("cheesy_path2R");
+        Optional<PathPlannerPath> cheesy3 = PathPlannerUtils.loadPathByName("cheesy_path3R");
+        Optional<PathPlannerPath> cheesy4 = PathPlannerUtils.loadPathByName("cheesy_path4R");
+
+        PathPlannerAuto auto;
+
+        var cmd = cheesy1.isEmpty() || cheesy2.isEmpty() || cheesy3.isEmpty() || cheesy4.isEmpty()
+                ? Commands.none()
+                : Commands.sequence(
+                        followPathAndIntake(cheesy1, 0.5),
+                        followPath(cheesy2),
+                        shoot().withTimeout(7),
+                        followPathAndIntake(cheesy3, 0.5));
+        auto = new PathPlannerAuto(cmd);
+        return auto;
+    }
+
     public Command twoCycleOutpostNeutralTowerRight() {
         Optional<PathPlannerPath> startOutpost = PathPlannerUtils.loadPathByName("start-outpost-right");
         Optional<PathPlannerPath> outpostShoot = PathPlannerUtils.loadPathByName("outpost-shoot-right");
