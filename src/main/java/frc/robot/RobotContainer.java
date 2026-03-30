@@ -55,6 +55,7 @@ import frc.robot.subsystems.linslide.LinSlideIO;
 import frc.robot.subsystems.linslide.LinSlideIOReal;
 import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.subsystems.shooter.ShooterIO;
+import frc.robot.subsystems.shooter.ShooterIOGamma;
 import frc.robot.subsystems.shooter.ShooterIOReal;
 import frc.robot.subsystems.shooter.ShooterIOSim;
 import frc.robot.subsystems.vision.*;
@@ -145,7 +146,7 @@ public class RobotContainer {
                 intake = new Intake(new IntakeIOBeta());
                 indexer = new Indexer(new IndexerIOBeta());
                 climber = new Climber(new ClimberIOBeta());
-                shooter = new Shooter(new ShooterIOReal());
+                shooter = new Shooter(new ShooterIOGamma());
                 feeder = new Feeder(new FeederIOReal());
                 hood = new Hood(new HoodIOBeta());
                 battery = new BatteryFuelGauge(0);
@@ -283,8 +284,7 @@ public class RobotContainer {
                 .leftBumper()
                 .whileTrue(AutoAimCommands.autoAim(
                                 drive, controller::getLeftY, controller::getLeftX, centerHubOpening.toTranslation2d())
-                        .alongWith(AutoAimCommands.readyAim(drive, shooter, centerHubOpening.toTranslation2d()))
-                        .alongWith(led.runPattern(LEDModes.WAVE)));
+                        .alongWith(shooter.shoot(30).alongWith(led.runPattern(LEDModes.WAVE))));
 
         //        controller.leftBumper().whileTrue(shooter.shoot(44));
 
