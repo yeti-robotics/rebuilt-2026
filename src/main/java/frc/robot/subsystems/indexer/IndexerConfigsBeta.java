@@ -7,7 +7,7 @@ import com.ctre.phoenix6.signals.UpdateModeValue;
 public class IndexerConfigsBeta {
     static final int BETA_ROLLER_ID = 60;
     static final int TOP_CANRANGE_ID = 23;
-    public static final double TEST_INDEXER_SPEED = -0.7;
+    public static final double TEST_INDEXER_SPEED = -1;
 
     public static final Slot0Configs SLOT_0_CONFIGS = new Slot0Configs()
             .withKP(0)
