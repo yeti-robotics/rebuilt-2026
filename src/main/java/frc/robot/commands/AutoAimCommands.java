@@ -179,8 +179,8 @@ public class AutoAimCommands {
                 .alongWith(shooter.shoot(targetRPS));
     }
 
-    public static Command readyAim(CommandSwerveDrivetrain drive, Shooter shooter, Translation2d target) {
-        return new ReadyAimCommand(drive, shooter, target);
+    public static Command readyAim(CommandSwerveDrivetrain drive, Shooter shooter, Hood hood, Translation2d target) {
+        return new ReadyAimCommand(drive, shooter, hood, target);
     }
 
     public static Command shuttleReadyAim(

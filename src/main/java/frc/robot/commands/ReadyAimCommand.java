@@ -4,6 +4,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.drive.CommandSwerveDrivetrain;
+import frc.robot.subsystems.hood.Hood;
 import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.subsystems.shooter.ShooterConfigsGamma;
 import frc.robot.util.AllianceFlipUtil;
@@ -13,12 +14,14 @@ import org.littletonrobotics.junction.Logger;
 public class ReadyAimCommand extends Command {
     private CommandSwerveDrivetrain drive;
     private Shooter shooter;
+    private Hood hood;
     private Translation2d target;
 
-    public ReadyAimCommand(CommandSwerveDrivetrain drive, Shooter shooter, Translation2d target) {
+    public ReadyAimCommand(CommandSwerveDrivetrain drive, Shooter shooter, Hood hood, Translation2d target) {
         this.drive = drive;
         this.shooter = shooter;
         this.target = target;
+        this.hood = hood;
     }
 
     @Override
@@ -40,6 +43,7 @@ public class ReadyAimCommand extends Command {
         Logger.recordOutput("AutoAimCommands/Shooter Map/target rps", targetRPS);
 
         shooter.spinMotors(targetRPS);
+        hood.setHoodPosition(state.hoodPos.magnitude());
     }
 
     @Override

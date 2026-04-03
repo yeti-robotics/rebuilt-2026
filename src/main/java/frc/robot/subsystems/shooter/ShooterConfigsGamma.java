@@ -4,6 +4,7 @@ import com.ctre.phoenix6.configs.*;
 import com.ctre.phoenix6.signals.InvertedValue;
 import edu.wpi.first.math.interpolation.InterpolatingTreeMap;
 import edu.wpi.first.math.interpolation.InverseInterpolator;
+import edu.wpi.first.units.Units;
 import frc.robot.subsystems.hood.HoodPositions;
 import frc.robot.util.ShooterStateData;
 
@@ -17,8 +18,8 @@ public class ShooterConfigsGamma {
     static final double SENSOR_TO_MECHANISM = 1;
 
     public static final Slot0Configs SLOT_0_CONFIGS = new Slot0Configs()
-            .withKP(9)
-            .withKI(2)
+            .withKP(10)
+            .withKI(8)
             .withKD(0)
             .withKS(5)
             .withKV(0.25)
@@ -48,7 +49,8 @@ public class ShooterConfigsGamma {
             new InterpolatingTreeMap<>(InverseInterpolator.forDouble(), ShooterStateData.interpolator);
 
     static {
-        SHOOTER_MAP.put(3.33, new ShooterStateData(HoodPositions.STOW.getPosition(), 30, 0.0));
+        SHOOTER_MAP.put(1.97, new ShooterStateData(HoodPositions.STOW.getPosition(), 25, 0.0));
+        SHOOTER_MAP.put(2.40, new ShooterStateData(Units.Rotations.of(0.25), 27, 0.0));
     }
 
     public static final InterpolatingTreeMap<Double, ShooterStateData> SHUTTLE_MAP =

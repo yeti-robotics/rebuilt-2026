@@ -269,10 +269,15 @@ public class RobotContainer {
         controller
                 .rightBumper()
                 .onTrue(intake.applyPower(-IntakeConfigsBeta.ROLLER_SPEED)
-                        .alongWith(indexer.applyPower(TEST_INDEXER_SPEED))
+                        .alongWith(indexer.applyPower(-TEST_INDEXER_SPEED))
                         .alongWith(feeder.feed(-FEEDER_SPEED).alongWith(shooter.applyPower(-0.1))));
 
-        controller.leftBumper().whileTrue(shooter.shoot(25).alongWith(led.runPattern(LEDModes.WAVE)));
+        controller
+                .leftBumper()
+                .whileTrue(AutoAimCommands.readyAim(drive, shooter, hood, centerHubOpening.toTranslation2d())
+                        .alongWith(AutoAimCommands.autoAim(
+                                drive, controller::getLeftY, controller::getLeftX, centerHubOpening.toTranslation2d()))
+                        .alongWith(led.runPattern(LEDModes.WAVE)));
 
         //        controller.leftBumper().whileTrue(shooter.shoot(44));
 
@@ -311,7 +316,7 @@ public class RobotContainer {
                 .leftTrigger()
                 .whileTrue(AutoAimCommands.autoAim(
                                 drive, controller2::getLeftY, controller2::getLeftX, centerHubOpening.toTranslation2d())
-                        .alongWith(AutoAimCommands.readyAim(drive, shooter, centerHubOpening.toTranslation2d())));
+                        .alongWith(AutoAimCommands.readyAim(drive, shooter, hood, centerHubOpening.toTranslation2d())));
 
         controller2
                 .rightTrigger()

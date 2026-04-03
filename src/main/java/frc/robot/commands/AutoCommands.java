@@ -112,7 +112,7 @@ public class AutoCommands {
                                 .until(linSlide::isCloseToZero),
                         Commands.waitSeconds(1)),
                 Commands.parallel(
-                        AutoAimCommands.readyAim(drivetrain, shooter, centerHubOpening.toTranslation2d()),
+                        AutoAimCommands.readyAim(drivetrain, shooter, hood, centerHubOpening.toTranslation2d()),
                         AutoAimCommands.autoAim(drivetrain, () -> 0.0, () -> 0.0, centerHubOpening.toTranslation2d()),
                         new WaitCommand(0.4).andThen(indexer.applyPower(TEST_INDEXER_SPEED)),
                         new WaitCommand(0.4).andThen(feeder.feed(FEEDER_SPEED)),
