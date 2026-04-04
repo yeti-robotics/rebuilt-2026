@@ -17,16 +17,16 @@ public class ShooterConfigsGamma {
     static final double SENSOR_TO_MECHANISM = 1;
 
     public static final Slot0Configs SLOT_0_CONFIGS = new Slot0Configs()
-            .withKP(10)
-            .withKI(0)
+            .withKP(9)
+            .withKI(2)
             .withKD(0)
-            .withKS(13)
-            .withKV(0.65)
-            .withKA(1);
+            .withKS(5)
+            .withKV(0.25)
+            .withKA(120);
 
     public static final MotionMagicConfigs MOTION_MAGIC_CONFIGS = new MotionMagicConfigs()
             .withMotionMagicCruiseVelocity(1)
-            .withMotionMagicAcceleration(128)
+            .withMotionMagicAcceleration(200)
             .withMotionMagicJerk(0);
 
     static final TalonFXConfiguration TOP_MOTOR_CONFIGS = new TalonFXConfiguration()

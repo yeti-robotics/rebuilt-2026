@@ -19,8 +19,8 @@ public class Indexer extends SubsystemBase {
         this.io = io;
     }
 
-    public Command spinIndexer(double volts) {
-        return run(() -> io.spinIndexerRoller(volts));
+    public Command spinIndexer(double rps) {
+        return runEnd(() -> io.spinIndexerRoller(rps), () -> io.stopMotors());
     }
 
     public Command applyPower(double power) {
@@ -29,9 +29,5 @@ public class Indexer extends SubsystemBase {
 
     public Command apply(double power) {
         return run(() -> io.applyPower(power));
-    }
-
-    public Command stop() {
-        return runOnce(() -> io.applyPower(0));
     }
 }
