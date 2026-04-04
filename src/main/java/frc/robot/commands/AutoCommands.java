@@ -1,7 +1,7 @@
 package frc.robot.commands;
 
 import static frc.robot.constants.FieldConstants.Hub.centerHubOpening;
-import static frc.robot.subsystems.feeder.FeederConfigsBeta.TEST_FEEDER_SPEED;
+import static frc.robot.subsystems.feeder.FeederConfigsBeta.FEEDER_SPEED;
 import static frc.robot.subsystems.indexer.IndexerConfigsBeta.TEST_INDEXER_SPEED;
 
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -115,7 +115,7 @@ public class AutoCommands {
                         AutoAimCommands.readyAim(drivetrain, shooter, centerHubOpening.toTranslation2d()),
                         AutoAimCommands.autoAim(drivetrain, () -> 0.0, () -> 0.0, centerHubOpening.toTranslation2d()),
                         new WaitCommand(0.4).andThen(indexer.applyPower(TEST_INDEXER_SPEED)),
-                        new WaitCommand(0.4).andThen(feeder.applyPower(TEST_FEEDER_SPEED)),
+                        new WaitCommand(0.4).andThen(feeder.feed(FEEDER_SPEED)),
                         new WaitCommand(0.4).andThen(intake.applyPower(IntakeConfigsBeta.ROLLER_SPEED))),
                 led.runPattern(LEDModes.WAVE));
     }
@@ -126,7 +126,7 @@ public class AutoCommands {
                 Commands.parallel(
                         shooter.shoot(20).withTimeout(2),
                         indexer.applyPower(TEST_INDEXER_SPEED).withTimeout(2),
-                        feeder.applyPower(TEST_FEEDER_SPEED).withTimeout(2)));
+                        feeder.feed(FEEDER_SPEED).withTimeout(2)));
     }
 
     // Test Commands
