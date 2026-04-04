@@ -183,26 +183,7 @@ public class AutoAimCommands {
         return new ReadyAimCommand(drive, shooter, target);
     }
 
-    public static Command shuttleReadyAim(
-            CommandSwerveDrivetrain drive, Shooter shooter, Translation2d target, Hood hood) {
-
-        return Commands.defer(
-                () -> {
-                    Pose2d currentPose = drive.getState().Pose;
-                    Translation2d modifiedTarget = new Translation2d(AllianceFlipUtil.apply(2.35), currentPose.getY());
-                    Translation2d currentPosition = currentPose.getTranslation();
-                    double distance = modifiedTarget.getDistance(currentPosition);
-
-                    ShooterStateData state = ShooterConfigsBeta.SHUTTLE_MAP.get(distance);
-
-                    double targetRPS = state.rps;
-                    Angle targetHoodPos = state.hoodPos;
-
-                    Logger.recordOutput("AutoAimCommands/Shuttle Map/target rps", targetRPS);
-                    Logger.recordOutput("AutoAimCommands/Shuttle Map/target hood position", targetHoodPos);
-
-                    return shooter.shoot(targetRPS).alongWith(hood.setHoodPosition((targetHoodPos.magnitude())));
-                },
-                Set.of(shooter, hood));
+    public static Command shuttleReadyAim(CommandSwerveDrivetrain drive, Shooter shooter, Hood hood) {
+        return new ShuttleReadyAimCommand(drive,shooter, hood);
     }
 }

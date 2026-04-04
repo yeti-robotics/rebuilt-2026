@@ -57,4 +57,9 @@ public class Hood extends SubsystemBase {
     public Command setHoodPosition(double position) {
         return runOnce(() -> io.setPosition(position));
     }
+
+    public void hoodPosition(double position) {
+        io.setPosition(position);
+    }
+
 }
