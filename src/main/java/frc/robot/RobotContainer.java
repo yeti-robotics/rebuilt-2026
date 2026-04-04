@@ -17,7 +17,6 @@ import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.*;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -47,8 +46,6 @@ import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.IntakeIO;
 import frc.robot.subsystems.intake.IntakeIOAlpha;
 import frc.robot.subsystems.intake.IntakeIOBeta;
-import frc.robot.subsystems.led.LED;
-import frc.robot.subsystems.led.LEDModes;
 import frc.robot.subsystems.linslide.LinSlide;
 import frc.robot.subsystems.linslide.LinSlideConfigsBeta;
 import frc.robot.subsystems.linslide.LinSlideIO;
@@ -72,7 +69,6 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 public class RobotContainer {
     // Subsystems
     private final CommandSwerveDrivetrain drive;
-    private final LED led;
     private final LinSlide linSlide;
     private final Mechanisms mechanisms;
     private final Intake intake;
@@ -198,13 +194,12 @@ public class RobotContainer {
 
         drive.setStateStdDevs(VecBuilder.fill(0.33333, 0.33333, Math.toRadians(0.5)));
 
-        led = new LED();
 
         climbState = ClimberState.DEFAULT;
 
         swerveLockState = false;
 
-        autoCommands = new AutoCommands(climber, drive, hood, indexer, feeder, intake, linSlide, shooter, led);
+        autoCommands = new AutoCommands(climber, drive, hood, indexer, feeder, intake, linSlide, shooter);
 
         // Set up auto routines
         autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
@@ -261,10 +256,10 @@ public class RobotContainer {
 
         controller
                 .leftTrigger()
-                .whileTrue(intake.applyPower(IntakeConfigsBeta.ROLLER_SPEED)
-                        .alongWith(linSlide.applyPower(LinSlideConfigsBeta.DEPLOY_SPEED)
-                                .until(linSlide::isDeployed))
-                        .alongWith(led.runPattern(LEDModes.SOLID_WHITE)));
+                .whileTrue(
+                        intake.applyPower(IntakeConfigsBeta.ROLLER_SPEED)
+                                .alongWith(linSlide.applyPower(LinSlideConfigsBeta.DEPLOY_SPEED)
+                                        .until(linSlide::isDeployed)));
 
         controller
                 .rightBumper()
@@ -276,8 +271,7 @@ public class RobotContainer {
                 .leftBumper()
                 .whileTrue(AutoAimCommands.readyAim(drive, shooter, hood, centerHubOpening.toTranslation2d())
                         .alongWith(AutoAimCommands.autoAim(
-                                drive, controller::getLeftY, controller::getLeftX, centerHubOpening.toTranslation2d()))
-                        .alongWith(led.runPattern(LEDModes.WAVE)));
+                                drive, controller::getLeftY, controller::getLeftX, centerHubOpening.toTranslation2d())));
 
         //        controller.leftBumper().whileTrue(shooter.shoot(44));
 
@@ -289,7 +283,9 @@ public class RobotContainer {
                 .whileTrue(indexer.applyPower(TEST_INDEXER_SPEED)
                         .alongWith(intake.applyPower(IntakeConfigsBeta.ROLLER_SPEED))
                         .alongWith(feeder.feed(FEEDER_SPEED)
-                                .alongWith(linSlide.applyPower(LinSlideConfigsBeta.LINSLIDE_AUTO_STOWING_SPEED))));
+                                .alongWith(new WaitCommand(0.3)
+                                        .andThen(linSlide.applyPower(
+                                                LinSlideConfigsBeta.LINSLIDE_AUTO_STOWING_SPEED)))));
     }
 
     private void configureDebugBindings() {
@@ -376,8 +372,7 @@ public class RobotContainer {
     }
 
     public void configureTriggers() {
-        new Trigger(DriverStation::isDisabled).whileTrue(led.runPattern(LEDModes.BLUE_ALLIANCE_ACTIVE));
-        new Trigger(() -> climbState == ClimberState.CLIMB).whileTrue(led.runPattern(LEDModes.RAINBOW));
+        new Trigger(feeder::isFeederRunning).onTrue(shooter.switchSlot(1)).onFalse(shooter.switchSlot(0));
     }
 
     public void updateLoggers() {

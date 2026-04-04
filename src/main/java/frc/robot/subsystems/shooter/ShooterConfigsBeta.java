@@ -19,7 +19,6 @@ public class ShooterConfigsBeta {
             .withKP(16)
             .withKI(0)
             .withKD(0)
-
             .withKS(8.5)
             .withKV(0.2)
             .withKA(1.5);

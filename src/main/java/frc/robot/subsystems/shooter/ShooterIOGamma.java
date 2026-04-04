@@ -62,6 +62,11 @@ public class ShooterIOGamma implements ShooterIO {
     }
 
     @Override
+    public void switchSlot(int slotNum) {
+        MOTION_MAGIC_REQUEST.Slot = slotNum;
+    }
+
+    @Override
     public boolean isAtSpeed(double speed) {
         return firstMotor.getVelocity().isNear(20, 2);
     }

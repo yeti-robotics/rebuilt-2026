@@ -43,7 +43,7 @@ public class ReadyAimCommand extends Command {
         Logger.recordOutput("AutoAimCommands/Shooter Map/target rps", targetRPS);
 
         shooter.spinMotors(targetRPS);
-        hood.setHoodPosition(state.hoodPos.magnitude());
+        hood.moveTo(state.hoodPos);
     }
 
     @Override

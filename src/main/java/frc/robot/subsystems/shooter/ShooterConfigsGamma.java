@@ -1,10 +1,11 @@
 package frc.robot.subsystems.shooter;
 
+import static edu.wpi.first.units.Units.Rotations;
+
 import com.ctre.phoenix6.configs.*;
 import com.ctre.phoenix6.signals.InvertedValue;
 import edu.wpi.first.math.interpolation.InterpolatingTreeMap;
 import edu.wpi.first.math.interpolation.InverseInterpolator;
-import edu.wpi.first.units.Units;
 import frc.robot.subsystems.hood.HoodPositions;
 import frc.robot.util.ShooterStateData;
 
@@ -18,12 +19,20 @@ public class ShooterConfigsGamma {
     static final double SENSOR_TO_MECHANISM = 1;
 
     public static final Slot0Configs SLOT_0_CONFIGS = new Slot0Configs()
-            .withKP(10)
-            .withKI(8)
+            .withKP(9)
+            .withKI(0)
             .withKD(0)
             .withKS(5)
-            .withKV(0.25)
-            .withKA(120);
+            .withKV(0.31)
+            .withKA(125);
+
+    public static final Slot1Configs SLOT_1_CONFIGS = new Slot1Configs()
+            .withKP(11.5)
+            .withKI(1)
+            .withKD(0)
+            .withKS(5)
+            .withKV(1.5)
+            .withKA(125);
 
     public static final MotionMagicConfigs MOTION_MAGIC_CONFIGS = new MotionMagicConfigs()
             .withMotionMagicCruiseVelocity(1)
@@ -35,6 +44,7 @@ public class ShooterConfigsGamma {
                     .withSensorToMechanismRatio(SENSOR_TO_MECHANISM)
                     .withRotorToSensorRatio(ROTOR_TO_SENSOR))
             .withSlot0(SLOT_0_CONFIGS)
+            .withSlot1(SLOT_1_CONFIGS)
             .withMotionMagic(MOTION_MAGIC_CONFIGS)
             .withMotorOutput(new MotorOutputConfigs().withInverted(InvertedValue.CounterClockwise_Positive));
 
@@ -49,8 +59,13 @@ public class ShooterConfigsGamma {
             new InterpolatingTreeMap<>(InverseInterpolator.forDouble(), ShooterStateData.interpolator);
 
     static {
-        SHOOTER_MAP.put(1.97, new ShooterStateData(HoodPositions.STOW.getPosition(), 25, 0.0));
-        SHOOTER_MAP.put(2.40, new ShooterStateData(Units.Rotations.of(0.25), 27, 0.0));
+        SHOOTER_MAP.put(1.913, new ShooterStateData(HoodPositions.STOW.getPosition(), 23.7, 0.0));
+        SHOOTER_MAP.put(2.015, new ShooterStateData(HoodPositions.STOW.getPosition(), 24.5, 0.0));
+        SHOOTER_MAP.put(2.61, new ShooterStateData(HoodPositions.STOW.getPosition(), 27, 0.0));
+        SHOOTER_MAP.put(2.889, new ShooterStateData(HoodPositions.STOW.getPosition(), 29, 0.0));
+        SHOOTER_MAP.put(3.225, new ShooterStateData(Rotations.of(0.2), 29.2, 0.0));
+        SHOOTER_MAP.put(3.655, new ShooterStateData(Rotations.of(0.5), 30.5, 0.0));
+        SHOOTER_MAP.put(3.773, new ShooterStateData(Rotations.of(0.4), 30.5, 0.0));
     }
 
     public static final InterpolatingTreeMap<Double, ShooterStateData> SHUTTLE_MAP =
