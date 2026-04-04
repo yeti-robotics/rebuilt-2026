@@ -19,9 +19,9 @@ import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.*;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.AutoAimCommands;
@@ -194,7 +194,6 @@ public class RobotContainer {
 
         drive.setStateStdDevs(VecBuilder.fill(0.33333, 0.33333, Math.toRadians(0.5)));
 
-
         climbState = ClimberState.DEFAULT;
 
         swerveLockState = false;
@@ -211,6 +210,8 @@ public class RobotContainer {
         autoChooser.addOption("Right", autoCommands.twoCycleNeutralOutpostTowerRight());
         autoChooser.addOption("Cheesy Left", autoCommands.cheesyLeft());
         autoChooser.addOption("Cheesy Right", autoCommands.cheesyRight());
+
+        SmartDashboard.putNumber("Shooter Velocity", 0);
 
         // Configure the button bindings
         if (Robot.isReal()) {
@@ -256,10 +257,9 @@ public class RobotContainer {
 
         controller
                 .leftTrigger()
-                .whileTrue(
-                        intake.applyPower(IntakeConfigsBeta.ROLLER_SPEED)
-                                .alongWith(linSlide.applyPower(LinSlideConfigsBeta.DEPLOY_SPEED)
-                                        .until(linSlide::isDeployed)));
+                .whileTrue(intake.applyPower(IntakeConfigsBeta.ROLLER_SPEED)
+                        .alongWith(linSlide.applyPower(LinSlideConfigsBeta.DEPLOY_SPEED)
+                                .until(linSlide::isDeployed)));
 
         controller
                 .rightBumper()
@@ -269,9 +269,12 @@ public class RobotContainer {
 
         controller
                 .leftBumper()
-                .whileTrue(AutoAimCommands.readyAim(drive, shooter, hood, centerHubOpening.toTranslation2d())
+                .whileTrue(shooter.shoot(0)
                         .alongWith(AutoAimCommands.autoAim(
-                                drive, controller::getLeftY, controller::getLeftX, centerHubOpening.toTranslation2d())));
+                                drive,
+                                controller::getLeftY,
+                                controller::getLeftX,
+                                centerHubOpening.toTranslation2d())));
 
         //        controller.leftBumper().whileTrue(shooter.shoot(44));
 
@@ -283,9 +286,7 @@ public class RobotContainer {
                 .whileTrue(indexer.applyPower(TEST_INDEXER_SPEED)
                         .alongWith(intake.applyPower(IntakeConfigsBeta.ROLLER_SPEED))
                         .alongWith(feeder.feed(FEEDER_SPEED)
-                                .alongWith(new WaitCommand(0.3)
-                                        .andThen(linSlide.applyPower(
-                                                LinSlideConfigsBeta.LINSLIDE_AUTO_STOWING_SPEED)))));
+                                .alongWith(linSlide.applyPower(LinSlideConfigsBeta.LINSLIDE_AUTO_SHOOT_SPEED))));
     }
 
     private void configureDebugBindings() {
@@ -319,8 +320,7 @@ public class RobotContainer {
                 .whileTrue(indexer.applyPower(TEST_INDEXER_SPEED)
                         //                        .alongWith(intake.applyPower(IntakeConfigsBeta.ROLL_IN_SLOWER)
                         .alongWith(feeder.feed(FEEDER_SPEED)
-                                .alongWith(new WaitCommand(0.8)
-                                        .andThen(linSlide.applyPower(LinSlideConfigsBeta.LINSLIDE_AUTO_SHOOT_SPEED)))));
+                                .alongWith(linSlide.applyPower(LinSlideConfigsBeta.LINSLIDE_AUTO_SHOOT_SPEED))));
 
         //        controller2
         //                .rightBumper()
@@ -372,7 +372,8 @@ public class RobotContainer {
     }
 
     public void configureTriggers() {
-        new Trigger(feeder::isFeederRunning).onTrue(shooter.switchSlot(1)).onFalse(shooter.switchSlot(0));
+        // Undecided whether to use
+        // new Trigger(feeder::isFeederRunning).onTrue(shooter.switchSlot(1)).onFalse(shooter.switchSlot(0));
     }
 
     public void updateLoggers() {

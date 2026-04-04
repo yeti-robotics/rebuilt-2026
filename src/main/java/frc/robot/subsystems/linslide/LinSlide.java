@@ -13,6 +13,7 @@ public class LinSlide extends SubsystemBase {
 
     public LinSlide(LinSlideIO io) {
         this.io = io;
+        setDefaultCommand(applyPower(LinSlideConfigsBeta.LINSLIDE_AUTO_SHOOT_SPEED));
     }
 
     @Override
