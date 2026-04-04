@@ -12,7 +12,9 @@ public interface IndexerIO {
 
     public default void updateInputs(IndexerIOInputs inputs) {}
 
-    public default void spinIndexerRoller(double volts) {}
+    public default void spinIndexerRoller(double rps) {}
 
     public default void applyPower(double power) {}
+
+    public default void stopMotors() {}
 }
