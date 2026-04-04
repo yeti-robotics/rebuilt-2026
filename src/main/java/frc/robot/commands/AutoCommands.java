@@ -19,8 +19,6 @@ import frc.robot.subsystems.hood.Hood;
 import frc.robot.subsystems.indexer.Indexer;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.IntakeConfigsBeta;
-import frc.robot.subsystems.led.LED;
-import frc.robot.subsystems.led.LEDModes;
 import frc.robot.subsystems.linslide.LinSlide;
 import frc.robot.subsystems.linslide.LinSlideConfigsBeta;
 import frc.robot.subsystems.shooter.Shooter;
@@ -37,7 +35,7 @@ public class AutoCommands {
     private final Intake intake;
     private final LinSlide linSlide;
     private final Shooter shooter;
-    private final LED led;
+    //    private final LED led;
 
     public AutoCommands(
             Climber climber,
@@ -47,8 +45,7 @@ public class AutoCommands {
             Feeder feeder,
             Intake intake,
             LinSlide linSlide,
-            Shooter shooter,
-            LED leds) {
+            Shooter shooter) {
         this.climber = climber;
         this.drivetrain = drivetrain;
         this.hood = hood;
@@ -57,7 +54,7 @@ public class AutoCommands {
         this.intake = intake;
         this.linSlide = linSlide;
         this.shooter = shooter;
-        this.led = leds;
+        //        this.led = leds;
 
         NamedCommands.registerCommand("rollIn", rollIn());
         NamedCommands.registerCommand("popLintake", popLintake());
@@ -116,8 +113,9 @@ public class AutoCommands {
                         AutoAimCommands.autoAim(drivetrain, () -> 0.0, () -> 0.0, centerHubOpening.toTranslation2d()),
                         new WaitCommand(0.4).andThen(indexer.applyPower(TEST_INDEXER_SPEED)),
                         new WaitCommand(0.4).andThen(feeder.feed(FEEDER_SPEED)),
-                        new WaitCommand(0.4).andThen(intake.applyPower(IntakeConfigsBeta.ROLLER_SPEED))),
-                led.runPattern(LEDModes.WAVE));
+                        new WaitCommand(0.4).andThen(intake.applyPower(IntakeConfigsBeta.ROLLER_SPEED)))
+                //                led.runPattern(LEDModes.WAVE)
+                );
     }
 
     public Command shootBumpFire() {

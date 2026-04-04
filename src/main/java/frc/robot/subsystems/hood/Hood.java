@@ -46,12 +46,12 @@ public class Hood extends SubsystemBase {
         return ShooterConfigsBeta.SHOOTER_MAP.get(distance).hoodPos;
     }
 
-    private void moveTo(Angle position) {
-        io.moveToPosition(position);
+    public void moveTo(Angle position) {
+        io.setPositionAngle(position);
     }
 
-    public Command moveToPosition(Angle position) {
-        return runOnce(() -> this.moveTo(position));
+    public Command moveToPosition(double position) {
+        return runOnce(() -> this.setHoodPosition(position));
     }
 
     public Command setHoodPosition(double position) {

@@ -175,7 +175,7 @@ public class AutoAimCommands {
                 .withDriveRequestType(SwerveModule.DriveRequestType.Velocity);
 
         return Commands.run(() -> drive.setControl(request))
-                .alongWith(hood.moveToPosition(targetHoodAngle))
+                .alongWith(hood.setHoodPosition(targetHoodAngle.magnitude()))
                 .alongWith(shooter.shoot(targetRPS));
     }
 

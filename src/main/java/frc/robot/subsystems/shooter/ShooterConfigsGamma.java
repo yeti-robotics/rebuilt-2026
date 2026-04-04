@@ -60,12 +60,6 @@ public class ShooterConfigsGamma {
 
     static {
         SHOOTER_MAP.put(1.913, new ShooterStateData(HoodPositions.STOW.getPosition(), 23.7, 0.0));
-        SHOOTER_MAP.put(2.015, new ShooterStateData(HoodPositions.STOW.getPosition(), 24.5, 0.0));
-        SHOOTER_MAP.put(2.61, new ShooterStateData(HoodPositions.STOW.getPosition(), 27, 0.0));
-        SHOOTER_MAP.put(2.889, new ShooterStateData(HoodPositions.STOW.getPosition(), 29, 0.0));
-        SHOOTER_MAP.put(3.225, new ShooterStateData(Rotations.of(0.2), 29.2, 0.0));
-        SHOOTER_MAP.put(3.655, new ShooterStateData(Rotations.of(0.5), 30.5, 0.0));
-        SHOOTER_MAP.put(3.773, new ShooterStateData(Rotations.of(0.4), 30.5, 0.0));
     }
 
     public static final InterpolatingTreeMap<Double, ShooterStateData> SHUTTLE_MAP =
