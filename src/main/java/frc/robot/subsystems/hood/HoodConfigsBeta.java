@@ -7,7 +7,7 @@ import frc.robot.Robot;
 public class HoodConfigsBeta {
     static final int HOOD_MOTOR_ID = 44;
     static final int HOOD_CANCODER_ID = 45;
-    static final double MAGNET_OFFSET = 0.964355;
+    static final double MAGNET_OFFSET = 0.822998;
 
     static final double ROTOR_TO_SENSOR = 1;
     static final double SENSOR_TO_MECHANISM = 20;
@@ -16,7 +16,7 @@ public class HoodConfigsBeta {
 
     private static final Slot0Configs SLOT_0_CONFIGS = Robot.isReal()
             ? new Slot0Configs()
-                    .withKP(32)
+                    .withKP(64)
                     .withKI(0)
                     .withKD(0)
                     .withKG(0)
@@ -36,10 +36,6 @@ public class HoodConfigsBeta {
 
     static final TalonFXConfiguration HOOD_MOTOR_CONFIGS = new TalonFXConfiguration()
             .withSlot0(SLOT_0_CONFIGS)
-            .withMotionMagic(new MotionMagicConfigs()
-                    .withMotionMagicAcceleration(8)
-                    .withMotionMagicCruiseVelocity(2)
-                    .withMotionMagicJerk(0))
             .withFeedback(new FeedbackConfigs()
                     .withRotorToSensorRatio(ROTOR_TO_SENSOR)
                     .withSensorToMechanismRatio(SENSOR_TO_MECHANISM))
@@ -47,14 +43,14 @@ public class HoodConfigsBeta {
                     .withInverted(InvertedValue.Clockwise_Positive)
                     .withNeutralMode(NeutralModeValue.Brake))
             .withSoftwareLimitSwitch(new SoftwareLimitSwitchConfigs()
-                    .withReverseSoftLimitThreshold(0.015)
+                    .withReverseSoftLimitThreshold(0.014999999664723873)
                     .withReverseSoftLimitEnable(true)
-                    .withForwardSoftLimitThreshold(0.751006)
+                    .withForwardSoftLimitThreshold(0.751006007194519)
                     .withForwardSoftLimitEnable(true));
 
     static final CANcoderConfiguration HOOD_CANCODER_CONFIGS = new CANcoderConfiguration()
             .withMagnetSensor(new MagnetSensorConfigs()
-                    .withSensorDirection(SensorDirectionValue.CounterClockwise_Positive)
+                    .withSensorDirection(SensorDirectionValue.Clockwise_Positive)
                     .withMagnetOffset(MAGNET_OFFSET)
                     .withAbsoluteSensorDiscontinuityPoint(0));
 }

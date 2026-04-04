@@ -26,8 +26,8 @@ public class IndexerIOAlpha implements IndexerIO {
     }
 
     @Override
-    public void spinIndexerRoller(double volts) {
-        indexerRoller.setControl(new MotionMagicVelocityVoltage(volts));
+    public void spinIndexerRoller(double rps) {
+        indexerRoller.setControl(new MotionMagicVelocityVoltage(rps));
     }
 
     @Override
