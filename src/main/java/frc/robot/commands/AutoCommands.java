@@ -180,6 +180,26 @@ public class AutoCommands {
         return auto;
     }
 
+    public Command dcmpLeft() {
+        Optional<PathPlannerPath> dcmp_1L = PathPlannerUtils.loadPathByName("dcmp_1L");
+        Optional<PathPlannerPath> dcmp_2L = PathPlannerUtils.loadPathByName("dcmp_2L");
+        Optional<PathPlannerPath> dcmp_3L = PathPlannerUtils.loadPathByName("dcmp_3L");
+
+        PathPlannerAuto auto;
+
+        var cmd = dcmp_1L.isEmpty() || dcmp_2L.isEmpty() || dcmp_3L.isEmpty()
+                ? Commands.none()
+                : Commands.sequence(
+                        followPath(dcmp_1L),
+                        shoot().withTimeout(2),
+                        followPath(dcmp_2L),
+                        shoot().withTimeout(2.5),
+                        followPath(dcmp_3L));
+
+        auto = new PathPlannerAuto(cmd);
+        return auto;
+    }
+
     public Command twoCycleNeutralDepotTowerLeft() {
         Optional<PathPlannerPath> startNeutral = PathPlannerUtils.loadPathByName("start-neutral_L-left");
         Optional<PathPlannerPath> neutralShoot = PathPlannerUtils.loadPathByName("neutral_L-shoot-left");

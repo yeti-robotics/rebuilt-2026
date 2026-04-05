@@ -58,7 +58,18 @@ public class ShooterConfigsGamma {
             new InterpolatingTreeMap<>(InverseInterpolator.forDouble(), ShooterStateData.interpolator);
 
     static {
-        SHOOTER_MAP.put(3.295, new ShooterStateData(Units.Rotations.of(0.2), 29, 0.0));
+        SHOOTER_MAP.put(2.084, new ShooterStateData(Units.Rotations.of(0), 22.5, 0.0));
+        SHOOTER_MAP.put(2.156, new ShooterStateData(Units.Rotations.of(0), 22.7, 0.0));
+        SHOOTER_MAP.put(2.194, new ShooterStateData(Units.Rotations.of(0), 23, 0.0));
+        SHOOTER_MAP.put(2.316, new ShooterStateData(Units.Rotations.of(0), 23.2, 0.0));
+        SHOOTER_MAP.put(2.357, new ShooterStateData(Units.Rotations.of(0), 23.5, 0.0));
+        SHOOTER_MAP.put(2.453, new ShooterStateData(Units.Rotations.of(0), 24, 0.0));
+        SHOOTER_MAP.put(2.595, new ShooterStateData(Units.Rotations.of(0), 24.5, 0.0));
+        SHOOTER_MAP.put(2.757, new ShooterStateData(Units.Rotations.of(0), 25.5, 0.0));
+        SHOOTER_MAP.put(2.814, new ShooterStateData(Units.Rotations.of(0), 25.6, 0.0));
+        SHOOTER_MAP.put(3.072, new ShooterStateData(Units.Rotations.of(0), 26.5, 0.0));
+        SHOOTER_MAP.put(3.122, new ShooterStateData(Units.Rotations.of(0), 27, 0.0));
+        SHOOTER_MAP.put(3.274, new ShooterStateData(Units.Rotations.of(0), 28, 0.0)); // Trench
     }
 
     public static final InterpolatingTreeMap<Double, ShooterStateData> SHUTTLE_MAP =

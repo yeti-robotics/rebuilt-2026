@@ -23,7 +23,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.AutoAimCommands;
 import frc.robot.commands.AutoCommands;
 import frc.robot.constants.Constants;
@@ -210,6 +209,7 @@ public class RobotContainer {
         autoChooser.addOption("Right", autoCommands.twoCycleNeutralOutpostTowerRight());
         autoChooser.addOption("Cheesy Left", autoCommands.cheesyLeft());
         autoChooser.addOption("Cheesy Right", autoCommands.cheesyRight());
+        autoChooser.addOption("DCMP L1", autoCommands.dcmpLeft());
 
         SmartDashboard.putNumber("Shooter Velocity", 0);
 
@@ -269,7 +269,7 @@ public class RobotContainer {
 
         controller
                 .leftBumper()
-                .whileTrue(shooter.shoot(0)
+                .whileTrue(AutoAimCommands.readyAim(drive, shooter, hood, centerHubOpening.toTranslation2d())
                         .alongWith(AutoAimCommands.autoAim(
                                 drive,
                                 controller::getLeftY,

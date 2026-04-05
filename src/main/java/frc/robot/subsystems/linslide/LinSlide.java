@@ -13,7 +13,6 @@ public class LinSlide extends SubsystemBase {
 
     public LinSlide(LinSlideIO io) {
         this.io = io;
-        setDefaultCommand(applyPower(LinSlideConfigsBeta.LINSLIDE_AUTO_SHOOT_SPEED));
     }
 
     @Override
@@ -58,7 +57,7 @@ public class LinSlide extends SubsystemBase {
     }
 
     public boolean isBasicallyZeroRPM() {
-        return Units.RotationsPerSecond.of(inputs.velocityRPM).isNear(Units.RotationsPerSecond.of(0), 0.1);
+        return Units.RotationsPerSecond.of(inputs.velocityRPM).isNear(Units.RotationsPerSecond.of(0), 0.2);
     }
 
     public boolean isCloseToZero() {
@@ -66,7 +65,7 @@ public class LinSlide extends SubsystemBase {
     }
 
     public Command defaultMovement(double volts) {
-        return run(() -> io.applyPower(volts)).until(this::isCloseToZero);
+        return run(() -> io.applyPower(volts)).until(this::isBasicallyZeroRPM).repeatedly();
     }
 
     public Command setLinslidePosition(double position) {
