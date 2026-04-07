@@ -50,5 +50,5 @@ public class VisionConstants {
     public static Transform3d frontCamTrans = new Transform3d(
             new Translation3d(0.4, 0, 0.33655), new Rotation3d(0, Math.toRadians(15), Math.toRadians(0)));
     public static Transform3d sideCamTrans = new Transform3d(
-            new Translation3d(0.1778, -0.32385, 0.41656), new Rotation3d(0, Math.toRadians(0), Math.toRadians(90)));
+            new Translation3d(0.3429, -0.0381, 0.5715), new Rotation3d(0, Math.toRadians(15), Math.toRadians(90)));
 }
