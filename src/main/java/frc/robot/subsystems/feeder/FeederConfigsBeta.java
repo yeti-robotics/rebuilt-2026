@@ -7,12 +7,22 @@ public class FeederConfigsBeta {
     static final int FEEDER_MOTOR_ID = 50;
     static final int FEEDER_CANRANGE_ID = 51;
     public static final double TEST_FEEDER_SPEED = 0.9;
+    public static final int FEEDER_SPEED = 95;
 
     static final MotionMagicConfigs MOTION_MAGIC_CONFIGS =
-            new MotionMagicConfigs().withMotionMagicCruiseVelocity(1).withMotionMagicAcceleration(2);
+            new MotionMagicConfigs().withMotionMagicCruiseVelocity(1).withMotionMagicAcceleration(256);
+
+    static final Slot0Configs SLOT_0_CONFIGS = new Slot0Configs()
+            .withKP(4)
+            .withKI(8)
+            .withKD(0)
+            .withKS(4)
+            .withKV(0.25)
+            .withKA(0.125)
+            .withKG(0);
 
     static final TalonFXConfiguration FEEDER_MOTOR_CONFIGS =
-            new TalonFXConfiguration().withMotionMagic(MOTION_MAGIC_CONFIGS);
+            new TalonFXConfiguration().withMotionMagic(MOTION_MAGIC_CONFIGS).withSlot0(SLOT_0_CONFIGS);
 
     static final CANrangeConfiguration CANRANGE_CONFIGS = new CANrangeConfiguration()
             .withToFParams(new ToFParamsConfigs().withUpdateMode(UpdateModeValue.ShortRange100Hz))
