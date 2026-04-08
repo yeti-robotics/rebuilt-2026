@@ -271,10 +271,8 @@ public class RobotContainer {
                 .leftBumper()
                 .whileTrue(AutoAimCommands.readyAim(drive, shooter, hood, centerHubOpening.toTranslation2d())
                         .alongWith(AutoAimCommands.autoAim(
-                                drive,
-                                controller::getLeftY,
-                                controller::getLeftX,
-                                centerHubOpening.toTranslation2d())));
+                                drive, controller::getLeftY, controller::getLeftX, centerHubOpening.toTranslation2d())))
+                .onFalse(hood.setHoodPosition(0));
 
         //        controller.leftBumper().whileTrue(shooter.shoot(44));
 

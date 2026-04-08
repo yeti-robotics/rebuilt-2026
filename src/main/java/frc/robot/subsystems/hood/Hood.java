@@ -13,7 +13,6 @@ public class Hood extends SubsystemBase {
     public Hood(HoodIO io) {
         this.io = io;
         io.zero();
-        //        setDefaultCommand(setHoodPosition(0));
     }
 
     @Override
@@ -47,11 +46,11 @@ public class Hood extends SubsystemBase {
     }
 
     public void moveTo(Angle position) {
-        io.setPositionAngle(position);
+        io.setPosition(position.magnitude());
     }
 
     public Command moveToPosition(double position) {
-        return runOnce(() -> this.setHoodPosition(position));
+        return this.setHoodPosition(position);
     }
 
     public Command setHoodPosition(double position) {

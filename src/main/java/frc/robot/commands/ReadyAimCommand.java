@@ -17,6 +17,7 @@ public class ReadyAimCommand extends Command {
     private Hood hood;
     private Translation2d target;
     double targetRPS;
+    double targetHood;
     ShooterStateData state = ShooterConfigsGamma.SHOOTER_MAP.get(0.0);
 
     public ReadyAimCommand(CommandSwerveDrivetrain drive, Shooter shooter, Hood hood, Translation2d target) {
@@ -36,8 +37,10 @@ public class ReadyAimCommand extends Command {
         state = ShooterConfigsGamma.SHOOTER_MAP.get(distance);
 
         targetRPS = state.rps;
+        targetHood = state.hoodPos.magnitude();
 
-        Logger.recordOutput("AutoAimCommands/Shooter Map/target rps", targetRPS);
+        Logger.recordOutput("AutoAimCommands/Shooter Map/Target RPS", targetRPS);
+        Logger.recordOutput("AutoAimCommands/Shooter Map/Target Hood", targetHood);
     }
 
     @Override

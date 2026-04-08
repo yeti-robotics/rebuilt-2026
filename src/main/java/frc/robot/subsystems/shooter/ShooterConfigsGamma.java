@@ -4,6 +4,7 @@ import com.ctre.phoenix6.configs.*;
 import com.ctre.phoenix6.signals.InvertedValue;
 import edu.wpi.first.math.interpolation.InterpolatingTreeMap;
 import edu.wpi.first.math.interpolation.InverseInterpolator;
+import edu.wpi.first.units.Units;
 import frc.robot.subsystems.hood.HoodPositions;
 import frc.robot.util.ShooterStateData;
 
@@ -57,9 +58,13 @@ public class ShooterConfigsGamma {
             new InterpolatingTreeMap<>(InverseInterpolator.forDouble(), ShooterStateData.interpolator);
 
     static {
-        SHOOTER_MAP.put(2.196, new ShooterStateData(HoodPositions.STOW.getPosition(), 29, 0.0));
-        SHOOTER_MAP.put(2.568, new ShooterStateData(HoodPositions.STOW.getPosition(), 32, 0.0));
-        SHOOTER_MAP.put(2.915, new ShooterStateData(HoodPositions.STOW.getPosition(), 33, 0.0));
+        SHOOTER_MAP.put(2.199, new ShooterStateData(HoodPositions.STOW.getPosition(), 28, 0.0));
+        SHOOTER_MAP.put(2.354, new ShooterStateData(HoodPositions.STOW.getPosition(), 29, 0.0));
+        SHOOTER_MAP.put(2.442, new ShooterStateData(Units.Rotations.of(0.1), 29, 0.0));
+        SHOOTER_MAP.put(2.522, new ShooterStateData(Units.Rotations.of(0.1), 29.5, 0.0));
+        SHOOTER_MAP.put(3.007, new ShooterStateData(Units.Rotations.of(0.2), 31.5, 0.0));
+        SHOOTER_MAP.put(3.195, new ShooterStateData(Units.Rotations.of(0.34), 31, 0.0));
+        SHOOTER_MAP.put(3.273, new ShooterStateData(Units.Rotations.of(0.4), 32, 0.0));
     }
 
     public static final InterpolatingTreeMap<Double, ShooterStateData> SHUTTLE_MAP =
