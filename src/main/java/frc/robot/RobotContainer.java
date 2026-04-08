@@ -283,10 +283,13 @@ public class RobotContainer {
 
         controller
                 .rightTrigger()
-                .whileTrue(indexer.applyPower(TEST_INDEXER_SPEED)
-                        .alongWith(intake.applyPower(IntakeConfigsBeta.ROLLER_SPEED))
-                        .alongWith(feeder.feed(FEEDER_SPEED)
-                                .alongWith(linSlide.applyPower(LinSlideConfigsBeta.LINSLIDE_AUTO_SHOOT_SPEED))));
+                .whileTrue(Commands.parallel(
+                        indexer.applyPower(TEST_INDEXER_SPEED),
+                        intake.applyPower(IntakeConfigsBeta.ROLLER_SPEED),
+                        feeder.feed(FEEDER_SPEED),
+                        linSlide.applyPower(LinSlideConfigsBeta.LINSLIDE_AUTO_SHOOT_SPEED),
+                        shooter.switchSlot(1)))
+                .onFalse(shooter.switchSlot(0));
     }
 
     private void configureDebugBindings() {
@@ -321,11 +324,6 @@ public class RobotContainer {
                         //                        .alongWith(intake.applyPower(IntakeConfigsBeta.ROLL_IN_SLOWER)
                         .alongWith(feeder.feed(FEEDER_SPEED)
                                 .alongWith(linSlide.applyPower(LinSlideConfigsBeta.LINSLIDE_AUTO_SHOOT_SPEED))));
-
-        //        controller2
-        //                .rightBumper()
-        //                .whileTrue(intake.applyPower(-IntakeConfigsBeta.ROLL_IN_SLOWER)
-        //                        .alongWith(indexer.applyPower(-TEST_INDEXER_SPEED)));
     }
 
     private void configureSimBindings() {
@@ -373,7 +371,6 @@ public class RobotContainer {
 
     public void configureTriggers() {
         // Undecided whether to use
-        // new Trigger(feeder::isFeederRunning).onTrue(shooter.switchSlot(1)).onFalse(shooter.switchSlot(0));
     }
 
     public void updateLoggers() {
