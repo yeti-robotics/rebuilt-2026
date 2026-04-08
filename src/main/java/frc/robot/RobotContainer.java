@@ -345,10 +345,12 @@ public class RobotContainer {
 
         controller
                 .button(6)
-                .whileTrue(AutoAimCommands.autoAim(
-                                drive, controller::getLeftY, controller::getLeftX, centerHubOpening.toTranslation2d())
-                        .alongWith(shooter.shoot(100))
-                        .alongWith(feeder.feed(3)));
+                .whileTrue(AutoAimCommands.readyAim(drive, shooter, hood, centerHubOpening.toTranslation2d())
+                        .alongWith(AutoAimCommands.autoAim(
+                                drive,
+                                controller::getLeftY,
+                                controller::getLeftX,
+                                centerHubOpening.toTranslation2d())));
 
         controller.button(7).whileTrue(indexer.spinIndexer(80));
         controller.button(8).onTrue(Commands.runOnce(drive::seedFieldCentric));

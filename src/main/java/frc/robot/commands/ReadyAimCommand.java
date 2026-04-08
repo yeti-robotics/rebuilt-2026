@@ -2,6 +2,8 @@ package frc.robot.commands;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.units.Units;
+import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.drive.CommandSwerveDrivetrain;
 import frc.robot.subsystems.hood.Hood;
@@ -17,7 +19,7 @@ public class ReadyAimCommand extends Command {
     private Hood hood;
     private Translation2d target;
     double targetRPS;
-    double targetHood;
+    Angle targetHood;
     ShooterStateData state = ShooterConfigsGamma.SHOOTER_MAP.get(0.0);
 
     public ReadyAimCommand(CommandSwerveDrivetrain drive, Shooter shooter, Hood hood, Translation2d target) {
@@ -37,8 +39,16 @@ public class ReadyAimCommand extends Command {
         state = ShooterConfigsGamma.SHOOTER_MAP.get(distance);
 
         targetRPS = state.rps;
-        targetHood = state.hoodPos.magnitude();
+        targetHood = state.hoodPos;
 
+        Logger.recordOutput("AutoAimCommands/Shooter Map/Trench Shot", false);
+        if ((AllianceFlipUtil.apply(currentPose.getX()) >= 3.600 && AllianceFlipUtil.apply(currentPose.getX()) <= 4.090)
+                && ((currentPose.getY() >= 7.180 && currentPose.getY() <= 7.527)
+                        || (currentPose.getY() <= 1.089 && currentPose.getY() >= 0.469))) {
+            targetRPS = 42;
+            targetHood = Units.Rotations.of(0.15);
+            Logger.recordOutput("AutoAimCommands/Shooter Map/Trench Shot", true);
+        }
         Logger.recordOutput("AutoAimCommands/Shooter Map/Target RPS", targetRPS);
         Logger.recordOutput("AutoAimCommands/Shooter Map/Target Hood", targetHood);
     }
@@ -46,7 +56,7 @@ public class ReadyAimCommand extends Command {
     @Override
     public void execute() {
         shooter.spinMotors(targetRPS);
-        hood.moveTo(state.hoodPos);
+        hood.moveTo(targetHood);
     }
 
     @Override
