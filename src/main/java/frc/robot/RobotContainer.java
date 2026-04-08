@@ -9,6 +9,7 @@ package frc.robot;
 
 import static frc.robot.constants.Constants.currentMode;
 import static frc.robot.constants.FieldConstants.Hub.centerHubOpening;
+import static frc.robot.subsystems.feeder.FeederConfigsBeta.FEEDER_SPEED;
 import static frc.robot.subsystems.indexer.IndexerConfigsBeta.TEST_INDEXER_SPEED;
 
 import com.ctre.phoenix6.swerve.SwerveModule;
@@ -32,7 +33,6 @@ import frc.robot.subsystems.climber.*;
 import frc.robot.subsystems.drive.*;
 import frc.robot.subsystems.drive.TunerConstantsAlpha;
 import frc.robot.subsystems.feeder.Feeder;
-import frc.robot.subsystems.feeder.FeederConfigsBeta;
 import frc.robot.subsystems.feeder.FeederIO;
 import frc.robot.subsystems.feeder.FeederIOReal;
 import frc.robot.subsystems.hood.Hood;
@@ -55,6 +55,7 @@ import frc.robot.subsystems.linslide.LinSlideIO;
 import frc.robot.subsystems.linslide.LinSlideIOReal;
 import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.subsystems.shooter.ShooterIO;
+import frc.robot.subsystems.shooter.ShooterIOGamma;
 import frc.robot.subsystems.shooter.ShooterIOReal;
 import frc.robot.subsystems.vision.*;
 import frc.robot.util.AllianceFlipUtil;
@@ -141,7 +142,7 @@ public class RobotContainer {
                 intake = new Intake(new IntakeIOBeta());
                 indexer = new Indexer(new IndexerIOBeta());
                 climber = new Climber(new ClimberIOBeta());
-                shooter = new Shooter(new ShooterIOReal());
+                shooter = new Shooter(new ShooterIOGamma());
                 feeder = new Feeder(new FeederIOReal());
                 hood = new Hood(new HoodIOBeta());
                 battery = new BatteryFuelGauge(0);
@@ -269,15 +270,9 @@ public class RobotContainer {
                 .rightBumper()
                 .onTrue(intake.applyPower(-IntakeConfigsBeta.ROLLER_SPEED)
                         .alongWith(indexer.applyPower(TEST_INDEXER_SPEED))
-                        .alongWith(feeder.applyPower(-FeederConfigsBeta.TEST_FEEDER_SPEED)
-                                .alongWith(shooter.applyPower(-0.1))));
+                        .alongWith(feeder.feed(-FEEDER_SPEED).alongWith(shooter.applyPower(-0.1))));
 
-        controller
-                .leftBumper()
-                .whileTrue(AutoAimCommands.autoAim(
-                                drive, controller::getLeftY, controller::getLeftX, centerHubOpening.toTranslation2d())
-                        .alongWith(AutoAimCommands.readyAim(drive, shooter, centerHubOpening.toTranslation2d()))
-                        .alongWith(led.runPattern(LEDModes.WAVE)));
+        controller.leftBumper().whileTrue(shooter.shoot(25).alongWith(led.runPattern(LEDModes.WAVE)));
 
         //        controller.leftBumper().whileTrue(shooter.shoot(44));
 
@@ -288,10 +283,8 @@ public class RobotContainer {
                 .rightTrigger()
                 .whileTrue(indexer.applyPower(TEST_INDEXER_SPEED)
                         .alongWith(intake.applyPower(IntakeConfigsBeta.ROLLER_SPEED))
-                        .alongWith(feeder.applyPower(FeederConfigsBeta.TEST_FEEDER_SPEED)
-                                .alongWith(new WaitCommand(1)
-                                        .andThen(linSlide.applyPower(
-                                                LinSlideConfigsBeta.LINSLIDE_AUTO_STOWING_SPEED)))));
+                        .alongWith(feeder.feed(FEEDER_SPEED)
+                                .alongWith(linSlide.applyPower(LinSlideConfigsBeta.LINSLIDE_AUTO_STOWING_SPEED))));
     }
 
     private void configureDebugBindings() {
@@ -324,7 +317,7 @@ public class RobotContainer {
                 .rightTrigger()
                 .whileTrue(indexer.applyPower(TEST_INDEXER_SPEED)
                         //                        .alongWith(intake.applyPower(IntakeConfigsBeta.ROLL_IN_SLOWER)
-                        .alongWith(feeder.applyPower(0.7)
+                        .alongWith(feeder.feed(FEEDER_SPEED)
                                 .alongWith(new WaitCommand(0.8)
                                         .andThen(linSlide.applyPower(LinSlideConfigsBeta.LINSLIDE_AUTO_SHOOT_SPEED)))));
 
@@ -358,7 +351,7 @@ public class RobotContainer {
                 .whileTrue(AutoAimCommands.autoAim(
                                 drive, controller::getLeftY, controller::getLeftX, centerHubOpening.toTranslation2d())
                         .alongWith(shooter.shoot(100))
-                        .alongWith(feeder.index(3)));
+                        .alongWith(feeder.feed(3)));
 
         controller.button(7).whileTrue(indexer.spinIndexer(80));
         controller.button(8).onTrue(Commands.runOnce(drive::seedFieldCentric));

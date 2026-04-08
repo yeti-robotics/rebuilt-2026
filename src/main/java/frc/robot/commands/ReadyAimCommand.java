@@ -5,7 +5,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.drive.CommandSwerveDrivetrain;
 import frc.robot.subsystems.shooter.Shooter;
-import frc.robot.subsystems.shooter.ShooterConfigsBeta;
+import frc.robot.subsystems.shooter.ShooterConfigsGamma;
 import frc.robot.util.AllianceFlipUtil;
 import frc.robot.util.ShooterStateData;
 import org.littletonrobotics.junction.Logger;
@@ -33,7 +33,7 @@ public class ReadyAimCommand extends Command {
         Translation2d currentPosition = currentPose.getTranslation();
         double distance = modifiedTarget.getDistance(currentPosition);
 
-        ShooterStateData state = ShooterConfigsBeta.SHOOTER_MAP.get(distance);
+        ShooterStateData state = ShooterConfigsGamma.SHOOTER_MAP.get(distance);
 
         double targetRPS = state.rps;
 
