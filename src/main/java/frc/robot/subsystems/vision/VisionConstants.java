@@ -25,7 +25,8 @@ public class VisionConstants {
 
     // Camera names, must match names configured on coprocessor
     public static String frontCam = "limelight-front";
-    public static String sideCam = "limelight-side";
+    public static String leftCam = "limelight-left";
+    public static String rightCam = "limelight-right";
 
     // Basic filtering thresholds
     public static double maxAmbiguity = 0.3;
@@ -36,12 +37,15 @@ public class VisionConstants {
     public static double frontLinearStdDevBaseline = 0.02; // Meters
     public static double frontAngularStdDevBaseline = 0.06; // Radians
 
-    public static double sideLinearStdDevBaseline = 0.04; // Meters
-    public static double sideAngularStdDevBaseline = 0.12; // Radians
+    public static double leftLinearStdDevBaseline = 0.04; // Meters
+    public static double leftAngularStdDevBaseline = 0.12; // Radians
+
+    public static double rightLinearStdDevBaseLine = 0.04; // Meters
+    public static double rightAngularStdDevBaseLine = 0.12; // Radians
 
     // Standard deviation multipliers for each camera
     // (Adjust to trust some cameras more than others)
-    public static double[] cameraStdDevFactors = new double[] {1.0, 1.0};
+    public static double[] cameraStdDevFactors = new double[] {1.0, 1.0, 1.0};
 
     // Multipliers to apply for MegaTag 2 observations
     public static double linearStdDevMegatag2Factor = 0.5; // More stable than full 3D solve
@@ -49,6 +53,9 @@ public class VisionConstants {
 
     public static Transform3d frontCamTrans = new Transform3d(
             new Translation3d(0.4, 0, 0.33655), new Rotation3d(0, Math.toRadians(15), Math.toRadians(0)));
-    public static Transform3d sideCamTrans = new Transform3d(
+    public static Transform3d leftCamTrans = new Transform3d(
             new Translation3d(0.3429, -0.0381, 0.5715), new Rotation3d(0, Math.toRadians(15), Math.toRadians(90)));
+    public static Transform3d rightCamTrans = new Transform3d(
+            new Translation3d(-0.32258, 0.00635, 0.4445),
+            new Rotation3d(Math.toRadians(180), Math.toRadians(15), Math.toRadians(-90)));
 }

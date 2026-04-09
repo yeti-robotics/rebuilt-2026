@@ -67,11 +67,11 @@
     },
     {
       "waypointRelativePos": 1.240938166311311,
-      "rotationDegrees": 74.0
+      "rotationDegrees": 70.85477020855924
     },
     {
       "waypointRelativePos": 1.79691653375864,
-      "rotationDegrees": 74.0
+      "rotationDegrees": 70.42653649237887
     },
     {
       "waypointRelativePos": 1.8997867803837942,
@@ -88,8 +88,8 @@
       "minWaypointRelativePos": 1.0938555030384947,
       "maxWaypointRelativePos": 1.8312655086848688,
       "constraints": {
-        "maxVelocity": 0.5,
-        "maxAcceleration": 1.0,
+        "maxVelocity": 2.0,
+        "maxAcceleration": 3.0,
         "maxAngularVelocity": 540.0,
         "maxAngularAcceleration": 720.0,
         "nominalVoltage": 12.0,
@@ -114,7 +114,7 @@
   "eventMarkers": [
     {
       "name": "popLintake",
-      "waypointRelativePos": 0.99751861042184,
+      "waypointRelativePos": 0.0,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",
@@ -125,7 +125,7 @@
     },
     {
       "name": "rollin",
-      "waypointRelativePos": 0.99751861042185,
+      "waypointRelativePos": 0.0,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",

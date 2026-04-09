@@ -34,7 +34,7 @@ public class Hood extends SubsystemBase {
     }
 
     public Command stowHood() {
-        return runOnce(() -> io.moveToPosition(HoodPositions.STOW.getPosition()));
+        return runOnce(() -> io.setPosition(HoodPositions.STOW.getPosition().magnitude()));
     }
 
     public Command applyPower(double power) {

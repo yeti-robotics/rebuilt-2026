@@ -48,28 +48,28 @@
     },
     {
       "anchor": {
-        "x": 6.691483594864478,
-        "y": 6.577446504992867
+        "x": 6.794992867332382,
+        "y": 6.655078459343795
       },
       "prevControl": {
-        "x": 6.91163707328882,
-        "y": 5.816916306799689
+        "x": 6.943541062748568,
+        "y": 5.877384965694349
       },
       "nextControl": {
-        "x": 6.406833095577745,
-        "y": 7.560784593437946
+        "x": 6.575035663338087,
+        "y": 7.806619115549216
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 2.642,
-        "y": 7.367
+        "x": 3.068659058487874,
+        "y": 5.930513552068473
       },
       "prevControl": {
-        "x": 4.388718972895862,
-        "y": 7.651650499286734
+        "x": -0.036619115549215486,
+        "y": 8.104208273894436
       },
       "nextControl": null,
       "isLocked": false,
@@ -124,13 +124,26 @@
         "nominalVoltage": 12.0,
         "unlimited": false
       }
+    },
+    {
+      "name": "Constraints Zone",
+      "minWaypointRelativePos": 1.1127616475354571,
+      "maxWaypointRelativePos": 2.6036461850101027,
+      "constraints": {
+        "maxVelocity": 2.0,
+        "maxAcceleration": 2.0,
+        "maxAngularVelocity": 650.0,
+        "maxAngularAcceleration": 1000.0,
+        "nominalVoltage": 12.0,
+        "unlimited": false
+      }
     }
   ],
   "pointTowardsZones": [],
   "eventMarkers": [
     {
       "name": "popLintake",
-      "waypointRelativePos": 0.7454422687373402,
+      "waypointRelativePos": 0.0,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",
@@ -141,7 +154,7 @@
     },
     {
       "name": "rollin",
-      "waypointRelativePos": 0.75,
+      "waypointRelativePos": 0.0,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",

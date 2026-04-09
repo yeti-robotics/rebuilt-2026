@@ -19,6 +19,7 @@ import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.*;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -117,10 +118,10 @@ public class RobotContainer {
                                 VisionConstants.frontLinearStdDevBaseline,
                                 VisionConstants.frontAngularStdDevBaseline),
                         new VisionIOLimelight(
-                                VisionConstants.sideCam,
+                                VisionConstants.leftCam,
                                 drive.getRotation3d()::toRotation2d,
-                                VisionConstants.sideLinearStdDevBaseline,
-                                VisionConstants.sideAngularStdDevBaseline));
+                                VisionConstants.leftLinearStdDevBaseline,
+                                VisionConstants.leftAngularStdDevBaseline));
                 break;
 
             case BETA:
@@ -143,10 +144,15 @@ public class RobotContainer {
                                 VisionConstants.frontLinearStdDevBaseline,
                                 VisionConstants.frontAngularStdDevBaseline),
                         new VisionIOLimelight(
-                                VisionConstants.sideCam,
+                                VisionConstants.leftCam,
                                 drive.getRotation3d()::toRotation2d,
-                                VisionConstants.sideLinearStdDevBaseline,
-                                VisionConstants.sideAngularStdDevBaseline));
+                                VisionConstants.leftLinearStdDevBaseline,
+                                VisionConstants.leftAngularStdDevBaseline),
+                        new VisionIOLimelight(
+                                VisionConstants.rightCam,
+                                drive.getRotation3d()::toRotation2d,
+                                VisionConstants.rightLinearStdDevBaseLine,
+                                VisionConstants.rightAngularStdDevBaseLine));
                 break;
 
             case SIM:
@@ -160,7 +166,9 @@ public class RobotContainer {
                         new VisionIOPhotonVisionSim(
                                 VisionConstants.frontCam, VisionConstants.frontCamTrans, () -> drive.getState().Pose),
                         new VisionIOPhotonVisionSim(
-                                VisionConstants.sideCam, VisionConstants.sideCamTrans, () -> drive.getState().Pose));
+                                VisionConstants.leftCam, VisionConstants.leftCamTrans, () -> drive.getState().Pose),
+                        new VisionIOPhotonVisionSim(
+                                VisionConstants.rightCam, VisionConstants.rightCamTrans, () -> drive.getState().Pose));
                 shooter = new Shooter(new ShooterIOReal());
                 feeder = new Feeder(new FeederIOReal());
                 hood = new Hood(new HoodIOBeta());
@@ -210,13 +218,17 @@ public class RobotContainer {
         }
 
         configureTriggers();
+
+        SmartDashboard.putNumber("Shooter Velocity", 0);
     }
 
     public void updateVisionSim() {
-        Pose3d sideCameraPose = new Pose3d(drive.getState().Pose).transformBy(VisionConstants.sideCamTrans);
+        Pose3d leftCameraPose = new Pose3d(drive.getState().Pose).transformBy(VisionConstants.leftCamTrans);
         Pose3d frontCameraPose = new Pose3d(drive.getState().Pose).transformBy(VisionConstants.frontCamTrans);
-        Logger.recordOutput("Side Cam Transform", sideCameraPose);
+        Pose3d rightCameraPose = new Pose3d(drive.getState().Pose).transformBy(VisionConstants.rightCamTrans);
+        Logger.recordOutput("Side Cam Transform", leftCameraPose);
         Logger.recordOutput("Front Cam Transform", frontCameraPose);
+        Logger.recordOutput("Other Side Cam Transform", rightCameraPose);
     }
 
     /**
@@ -234,7 +246,10 @@ public class RobotContainer {
         controller.start().onTrue(Commands.runOnce(drive::seedFieldCentric, drive));
 
         controller.x().whileTrue(linSlide.applyPower(LinSlideConfigsBeta.DEPLOY_SPEED));
-        controller.b().whileTrue(linSlide.applyPower(-LinSlideConfigsBeta.DEPLOY_SPEED));
+        controller
+                .b()
+                .whileTrue(linSlide.applyPower(-LinSlideConfigsBeta.DEPLOY_SPEED)
+                        .alongWith(intake.applyPower(IntakeConfigsBeta.ROLLER_SPEED)));
         controller.y().onTrue(Commands.runOnce(() -> swerveLockState = !swerveLockState));
 
         controller
@@ -245,9 +260,12 @@ public class RobotContainer {
 
         controller
                 .rightBumper()
-                .onTrue(intake.applyPower(-IntakeConfigsBeta.ROLLER_SPEED)
-                        .alongWith(indexer.applyPower(-TEST_INDEXER_SPEED))
-                        .alongWith(feeder.feed(-FEEDER_SPEED).alongWith(shooter.applyPower(-0.1))));
+                .onTrue(Commands.parallel(
+                        intake.applyPower(-IntakeConfigsBeta.ROLLER_SPEED),
+                        indexer.applyPower(-TEST_INDEXER_SPEED),
+                        feeder.feed(-FEEDER_SPEED),
+                        shooter.applyPower(-0.1),
+                        linSlide.applyPower(LinSlideConfigsBeta.DEPLOY_SPEED)));
 
         controller
                 .leftBumper()
