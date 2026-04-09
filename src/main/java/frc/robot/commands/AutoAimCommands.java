@@ -104,8 +104,7 @@ public class AutoAimCommands {
                             .withHeadingPID(20, 0, 0)
                             .withVelocityX(-xVelSupplier.getAsDouble() * SPEED_MULTIPLIER)
                             .withVelocityY(-yVelSupplier.getAsDouble() * SPEED_MULTIPLIER)
-                            .withTargetDirection(calcDesiredHeading(drive.getState().Pose, target)
-                                    .plus(new Rotation2d(Units.degreesToRadians(2.5))))
+                            .withTargetDirection(calcDesiredHeading(drive.getState().Pose, target))
                             .withDriveRequestType(SwerveModule.DriveRequestType.Velocity);
 
                     drive.setControl(request);
