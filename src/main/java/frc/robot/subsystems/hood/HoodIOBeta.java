@@ -55,4 +55,9 @@ public class HoodIOBeta implements HoodIO {
     public void setPosition(double position) {
         hoodMotor.setControl(positionVoltageRequest.withPosition(position));
     }
+
+    @Override
+    public void setPositionAngle(Angle position) {
+        hoodMotor.setControl(positionVoltageRequest.withPosition(position));
+    }
 }

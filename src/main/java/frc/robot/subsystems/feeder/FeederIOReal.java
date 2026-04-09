@@ -41,6 +41,7 @@ public class FeederIOReal implements FeederIO {
     public void updateInputs(FeederIOInputs inputs) {
         inputs.feederVoltage = feederMotor.getMotorVoltage().getValueAsDouble();
         inputs.isDetected = feederSensor.getIsDetected().getValue();
+        inputs.rotationsPerSecond = feederMotor.getRotorVelocity().getValueAsDouble();
     }
 
     @Override

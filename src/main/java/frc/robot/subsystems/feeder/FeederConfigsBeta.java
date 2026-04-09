@@ -7,13 +7,13 @@ public class FeederConfigsBeta {
     static final int FEEDER_MOTOR_ID = 50;
     static final int FEEDER_CANRANGE_ID = 51;
     public static final double TEST_FEEDER_SPEED = 0.9;
-    public static final int FEEDER_SPEED = 95;
+    public static final int FEEDER_SPEED = 60;
 
     static final MotionMagicConfigs MOTION_MAGIC_CONFIGS =
             new MotionMagicConfigs().withMotionMagicCruiseVelocity(1).withMotionMagicAcceleration(256);
 
     static final Slot0Configs SLOT_0_CONFIGS = new Slot0Configs()
-            .withKP(4)
+            .withKP(6)
             .withKI(8)
             .withKD(0)
             .withKS(4)
