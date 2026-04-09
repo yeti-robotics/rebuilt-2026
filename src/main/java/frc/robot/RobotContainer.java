@@ -19,7 +19,6 @@ import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.*;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -211,7 +210,6 @@ public class RobotContainer {
         autoChooser.addOption("Cheesy Right", autoCommands.cheesyRight());
         autoChooser.addOption("DCMP L1", autoCommands.dcmpLeft());
 
-
         // Configure the button bindings
         if (Robot.isReal()) {
             configureRealBindings();
@@ -272,8 +270,7 @@ public class RobotContainer {
                         .alongWith(AutoAimCommands.autoAim(
                                 drive, controller::getLeftY, controller::getLeftX, centerHubOpening.toTranslation2d()))
                         .alongWith(linSlide.applyPower(LinSlideConfigsBeta.LINSLIDE_AUTO_SHOOT_SPEED)))
-                        .onFalse(hood.setHoodPosition(0));
-
+                .onFalse(hood.setHoodPosition(0));
 
         controller.povLeft().onTrue(hood.setHoodPosition(0));
         controller.povRight().onTrue(hood.setHoodPosition(0.65));

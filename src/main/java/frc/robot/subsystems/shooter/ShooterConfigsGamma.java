@@ -59,8 +59,8 @@ public class ShooterConfigsGamma {
 
     static {
         SHOOTER_MAP.put(2.199, new ShooterStateData(HoodPositions.STOW.getPosition(), 28, 0.0));
-        SHOOTER_MAP.put(2.354, new ShooterStateData(HoodPositions.STOW.getPosition(), 29, 0.0));
-        SHOOTER_MAP.put(2.442, new ShooterStateData(Units.Rotations.of(0.1), 29, 0.0));
+        SHOOTER_MAP.put(2.354, new ShooterStateData(HoodPositions.STOW.getPosition(), 28.5, 0.0));
+        SHOOTER_MAP.put(2.442, new ShooterStateData(HoodPositions.STOW.getPosition(), 29, 0.0));
         SHOOTER_MAP.put(2.522, new ShooterStateData(Units.Rotations.of(0.1), 29.5, 0.0));
         SHOOTER_MAP.put(3.007, new ShooterStateData(Units.Rotations.of(0.2), 31.5, 0.0));
         SHOOTER_MAP.put(3.195, new ShooterStateData(Units.Rotations.of(0.34), 31, 0.0));
