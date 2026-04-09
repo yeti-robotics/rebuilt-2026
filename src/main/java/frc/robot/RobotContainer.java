@@ -118,10 +118,10 @@ public class RobotContainer {
                                 VisionConstants.frontLinearStdDevBaseline,
                                 VisionConstants.frontAngularStdDevBaseline),
                         new VisionIOLimelight(
-                                VisionConstants.sideCam,
+                                VisionConstants.leftCam,
                                 drive.getRotation3d()::toRotation2d,
-                                VisionConstants.sideLinearStdDevBaseline,
-                                VisionConstants.sideAngularStdDevBaseline));
+                                VisionConstants.leftLinearStdDevBaseline,
+                                VisionConstants.leftAngularStdDevBaseline));
                 break;
 
             case BETA:
@@ -144,10 +144,15 @@ public class RobotContainer {
                                 VisionConstants.frontLinearStdDevBaseline,
                                 VisionConstants.frontAngularStdDevBaseline),
                         new VisionIOLimelight(
-                                VisionConstants.sideCam,
+                                VisionConstants.leftCam,
                                 drive.getRotation3d()::toRotation2d,
-                                VisionConstants.sideLinearStdDevBaseline,
-                                VisionConstants.sideAngularStdDevBaseline));
+                                VisionConstants.leftLinearStdDevBaseline,
+                                VisionConstants.leftAngularStdDevBaseline),
+                        new VisionIOLimelight(
+                                VisionConstants.rightCam,
+                                drive.getRotation3d()::toRotation2d,
+                                VisionConstants.rightLinearStdDevBaseLine,
+                                VisionConstants.rightAngularStdDevBaseLine));
                 break;
 
             case SIM:
@@ -161,7 +166,9 @@ public class RobotContainer {
                         new VisionIOPhotonVisionSim(
                                 VisionConstants.frontCam, VisionConstants.frontCamTrans, () -> drive.getState().Pose),
                         new VisionIOPhotonVisionSim(
-                                VisionConstants.sideCam, VisionConstants.sideCamTrans, () -> drive.getState().Pose));
+                                VisionConstants.leftCam, VisionConstants.leftCamTrans, () -> drive.getState().Pose),
+                        new VisionIOPhotonVisionSim(
+                                VisionConstants.rightCam, VisionConstants.rightCamTrans, () -> drive.getState().Pose));
                 shooter = new Shooter(new ShooterIOReal());
                 feeder = new Feeder(new FeederIOReal());
                 hood = new Hood(new HoodIOBeta());
@@ -214,10 +221,12 @@ public class RobotContainer {
     }
 
     public void updateVisionSim() {
-        Pose3d sideCameraPose = new Pose3d(drive.getState().Pose).transformBy(VisionConstants.sideCamTrans);
+        Pose3d leftCameraPose = new Pose3d(drive.getState().Pose).transformBy(VisionConstants.leftCamTrans);
         Pose3d frontCameraPose = new Pose3d(drive.getState().Pose).transformBy(VisionConstants.frontCamTrans);
-        Logger.recordOutput("Side Cam Transform", sideCameraPose);
+        Pose3d rightCameraPose = new Pose3d(drive.getState().Pose).transformBy(VisionConstants.rightCamTrans);
+        Logger.recordOutput("Side Cam Transform", leftCameraPose);
         Logger.recordOutput("Front Cam Transform", frontCameraPose);
+        Logger.recordOutput("Other Side Cam Transform", rightCameraPose);
     }
 
     /**
