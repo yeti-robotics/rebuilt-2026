@@ -18,14 +18,11 @@ import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.*;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.AutoAimCommands;
 import frc.robot.commands.AutoCommands;
 import frc.robot.constants.Constants;
@@ -48,8 +45,6 @@ import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.IntakeIO;
 import frc.robot.subsystems.intake.IntakeIOAlpha;
 import frc.robot.subsystems.intake.IntakeIOBeta;
-import frc.robot.subsystems.led.LED;
-import frc.robot.subsystems.led.LEDModes;
 import frc.robot.subsystems.linslide.LinSlide;
 import frc.robot.subsystems.linslide.LinSlideConfigsBeta;
 import frc.robot.subsystems.linslide.LinSlideIO;
@@ -73,7 +68,6 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 public class RobotContainer {
     // Subsystems
     private final CommandSwerveDrivetrain drive;
-    private final LED led;
     private final LinSlide linSlide;
     private final Mechanisms mechanisms;
     private final Intake intake;
@@ -199,13 +193,11 @@ public class RobotContainer {
 
         drive.setStateStdDevs(VecBuilder.fill(0.33333, 0.33333, Math.toRadians(0.5)));
 
-        led = new LED();
-
         climbState = ClimberState.DEFAULT;
 
         swerveLockState = false;
 
-        autoCommands = new AutoCommands(climber, drive, hood, indexer, feeder, intake, linSlide, shooter, led);
+        autoCommands = new AutoCommands(climber, drive, hood, indexer, feeder, intake, linSlide, shooter);
 
         // Set up auto routines
         autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
@@ -217,6 +209,7 @@ public class RobotContainer {
         autoChooser.addOption("Right", autoCommands.twoCycleNeutralOutpostTowerRight());
         autoChooser.addOption("Cheesy Left", autoCommands.cheesyLeft());
         autoChooser.addOption("Cheesy Right", autoCommands.cheesyRight());
+        autoChooser.addOption("DCMP L1", autoCommands.dcmpLeft());
 
         // Configure the button bindings
         if (Robot.isReal()) {
@@ -264,13 +257,12 @@ public class RobotContainer {
                 .leftTrigger()
                 .whileTrue(intake.applyPower(IntakeConfigsBeta.ROLLER_SPEED)
                         .alongWith(linSlide.applyPower(LinSlideConfigsBeta.DEPLOY_SPEED)
-                                .until(linSlide::isDeployed))
-                        .alongWith(led.runPattern(LEDModes.SOLID_WHITE)));
+                                .until(linSlide::isDeployed)));
 
         controller
                 .rightBumper()
                 .onTrue(intake.applyPower(-IntakeConfigsBeta.ROLLER_SPEED)
-                        .alongWith(indexer.applyPower(TEST_INDEXER_SPEED))
+                        .alongWith(indexer.applyPower(-TEST_INDEXER_SPEED))
                         .alongWith(feeder.feed(-FEEDER_SPEED).alongWith(shooter.applyPower(-0.1))));
 
         controller
@@ -282,24 +274,25 @@ public class RobotContainer {
                                                 controller::getLeftX,
                                                 centerHubOpening.toTranslation2d())
                                         .alongWith(AutoAimCommands.readyAim(
-                                                drive, shooter, centerHubOpening.toTranslation2d())),
+                                                drive, shooter, hood, centerHubOpening.toTranslation2d())),
                                 AutoAimCommands.shuttleAim(
                                                 drive, controller::getLeftY, controller::getLeftX, shuttleTargetZone)
                                         .alongWith(AutoAimCommands.shuttleReadyAim(drive, shooter, hood)),
                                 () -> AllianceFlipUtil.apply(
                                                 drive.getState().Pose.getX())
-                                        < 4.9)
-                        .alongWith(led.runPattern(LEDModes.WAVE)));
+                                        < 4.9));
 
         controller.povLeft().onTrue(hood.setHoodPosition(0));
         controller.povRight().onTrue(hood.setHoodPosition(0.65));
 
         controller
                 .rightTrigger()
-                .whileTrue(indexer.applyPower(TEST_INDEXER_SPEED)
-                        .alongWith(intake.applyPower(IntakeConfigsBeta.ROLLER_SPEED))
-                        .alongWith(feeder.feed(FEEDER_SPEED)
-                                .alongWith(linSlide.applyPower(LinSlideConfigsBeta.LINSLIDE_AUTO_STOWING_SPEED))));
+                .whileTrue(Commands.parallel(
+                        indexer.applyPower(TEST_INDEXER_SPEED),
+                        intake.applyPower(IntakeConfigsBeta.ROLLER_SPEED),
+                        feeder.feed(FEEDER_SPEED),
+                        shooter.switchSlot(1)))
+                .onFalse(shooter.switchSlot(0));
     }
 
     private void configureDebugBindings() {
@@ -326,20 +319,14 @@ public class RobotContainer {
                 .leftTrigger()
                 .whileTrue(AutoAimCommands.autoAim(
                                 drive, controller2::getLeftY, controller2::getLeftX, centerHubOpening.toTranslation2d())
-                        .alongWith(AutoAimCommands.readyAim(drive, shooter, centerHubOpening.toTranslation2d())));
+                        .alongWith(AutoAimCommands.readyAim(drive, shooter, hood, centerHubOpening.toTranslation2d())));
 
         controller2
                 .rightTrigger()
                 .whileTrue(indexer.applyPower(TEST_INDEXER_SPEED)
                         //                        .alongWith(intake.applyPower(IntakeConfigsBeta.ROLL_IN_SLOWER)
                         .alongWith(feeder.feed(FEEDER_SPEED)
-                                .alongWith(new WaitCommand(0.8)
-                                        .andThen(linSlide.applyPower(LinSlideConfigsBeta.LINSLIDE_AUTO_SHOOT_SPEED)))));
-
-        //        controller2
-        //                .rightBumper()
-        //                .whileTrue(intake.applyPower(-IntakeConfigsBeta.ROLL_IN_SLOWER)
-        //                        .alongWith(indexer.applyPower(-TEST_INDEXER_SPEED)));
+                                .alongWith(linSlide.applyPower(LinSlideConfigsBeta.LINSLIDE_AUTO_SHOOT_SPEED))));
     }
 
     private void configureSimBindings() {
@@ -370,14 +357,13 @@ public class RobotContainer {
                                                 controller::getLeftX,
                                                 centerHubOpening.toTranslation2d())
                                         .alongWith(AutoAimCommands.readyAim(
-                                                drive, shooter, centerHubOpening.toTranslation2d())),
+                                                drive, shooter, hood, centerHubOpening.toTranslation2d())),
                                 AutoAimCommands.shuttleAim(
                                                 drive, controller::getLeftY, controller::getLeftX, shuttleTargetZone)
                                         .alongWith(AutoAimCommands.shuttleReadyAim(drive, shooter, hood)),
                                 () -> AllianceFlipUtil.apply(
                                                 drive.getState().Pose.getX())
-                                        < 4.9)
-                        .alongWith(led.runPattern(LEDModes.WAVE)));
+                                        < 4.9));
 
         controller.button(7).whileTrue(indexer.spinIndexer(80));
         controller.button(8).onTrue(Commands.runOnce(drive::seedFieldCentric));
@@ -397,8 +383,7 @@ public class RobotContainer {
     }
 
     public void configureTriggers() {
-        new Trigger(DriverStation::isDisabled).whileTrue(led.runPattern(LEDModes.BLUE_ALLIANCE_ACTIVE));
-        new Trigger(() -> climbState == ClimberState.CLIMB).whileTrue(led.runPattern(LEDModes.RAINBOW));
+        // Undecided whether to use
     }
 
     public void updateLoggers() {

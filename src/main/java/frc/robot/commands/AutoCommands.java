@@ -19,8 +19,6 @@ import frc.robot.subsystems.hood.Hood;
 import frc.robot.subsystems.indexer.Indexer;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.IntakeConfigsBeta;
-import frc.robot.subsystems.led.LED;
-import frc.robot.subsystems.led.LEDModes;
 import frc.robot.subsystems.linslide.LinSlide;
 import frc.robot.subsystems.linslide.LinSlideConfigsBeta;
 import frc.robot.subsystems.shooter.Shooter;
@@ -37,7 +35,7 @@ public class AutoCommands {
     private final Intake intake;
     private final LinSlide linSlide;
     private final Shooter shooter;
-    private final LED led;
+    //    private final LED led;
 
     public AutoCommands(
             Climber climber,
@@ -47,8 +45,7 @@ public class AutoCommands {
             Feeder feeder,
             Intake intake,
             LinSlide linSlide,
-            Shooter shooter,
-            LED leds) {
+            Shooter shooter) {
         this.climber = climber;
         this.drivetrain = drivetrain;
         this.hood = hood;
@@ -57,7 +54,7 @@ public class AutoCommands {
         this.intake = intake;
         this.linSlide = linSlide;
         this.shooter = shooter;
-        this.led = leds;
+        //        this.led = leds;
 
         NamedCommands.registerCommand("rollIn", rollIn());
         NamedCommands.registerCommand("popLintake", popLintake());
@@ -108,16 +105,17 @@ public class AutoCommands {
         return Commands.deadline(
                 Commands.sequence(
                         new WaitCommand(0.5),
-                        linSlide.applyPower(LinSlideConfigsBeta.LINSLIDE_AUTO_STOWING_SPEED)
+                        linSlide.applyPower(LinSlideConfigsBeta.LINSLIDE_AUTO_SHOOT_SPEED)
                                 .until(linSlide::isCloseToZero),
                         Commands.waitSeconds(1)),
                 Commands.parallel(
-                        AutoAimCommands.readyAim(drivetrain, shooter, centerHubOpening.toTranslation2d()),
+                        AutoAimCommands.readyAim(drivetrain, shooter, hood, centerHubOpening.toTranslation2d()),
                         AutoAimCommands.autoAim(drivetrain, () -> 0.0, () -> 0.0, centerHubOpening.toTranslation2d()),
                         new WaitCommand(0.4).andThen(indexer.applyPower(TEST_INDEXER_SPEED)),
                         new WaitCommand(0.4).andThen(feeder.feed(FEEDER_SPEED)),
-                        new WaitCommand(0.4).andThen(intake.applyPower(IntakeConfigsBeta.ROLLER_SPEED))),
-                led.runPattern(LEDModes.WAVE));
+                        new WaitCommand(0.4).andThen(intake.applyPower(IntakeConfigsBeta.ROLLER_SPEED)))
+                //                led.runPattern(LEDModes.WAVE)
+                );
     }
 
     public Command shootBumpFire() {
@@ -177,6 +175,26 @@ public class AutoCommands {
                         linSlide.runIntake(0.5, true),
                         shoot(),
                         climbTower(shootTower));
+
+        auto = new PathPlannerAuto(cmd);
+        return auto;
+    }
+
+    public Command dcmpLeft() {
+        Optional<PathPlannerPath> dcmp_1L = PathPlannerUtils.loadPathByName("dcmp_1L");
+        Optional<PathPlannerPath> dcmp_2L = PathPlannerUtils.loadPathByName("dcmp_2L");
+        Optional<PathPlannerPath> dcmp_3L = PathPlannerUtils.loadPathByName("dcmp_3L");
+
+        PathPlannerAuto auto;
+
+        var cmd = dcmp_1L.isEmpty() || dcmp_2L.isEmpty() || dcmp_3L.isEmpty()
+                ? Commands.none()
+                : Commands.sequence(
+                        followPath(dcmp_1L),
+                        shoot().withTimeout(2),
+                        followPath(dcmp_2L),
+                        shoot().withTimeout(2.5),
+                        followPath(dcmp_3L));
 
         auto = new PathPlannerAuto(cmd);
         return auto;

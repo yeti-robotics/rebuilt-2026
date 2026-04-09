@@ -3,6 +3,7 @@ package frc.robot.subsystems.shooter;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.littletonrobotics.junction.Logger;
 
@@ -65,5 +66,9 @@ public class Shooter extends SubsystemBase {
 
     public double getTargetSpeed() {
         return targetSpeed;
+    }
+
+    public Command switchSlot(int slotNum) {
+        return Commands.runOnce(() -> io.switchSlot(slotNum));
     }
 }
