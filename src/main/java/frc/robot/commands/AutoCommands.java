@@ -57,6 +57,28 @@ public class AutoCommands {
         NamedCommands.registerCommand("popLintake", popLintake());
     }
 
+
+    // Seeding Start Position of Auto
+    private Command seedStartPos(Optional<PathPlannerPath> firstPath) {
+        Pose2d startingPose =
+                AllianceFlipUtil.apply(firstPath.get().getStartingHolonomicPose().get());
+
+        Pose2d redAlliancePose = new Pose2d(
+                new Translation2d(
+                        startingPose.getTranslation().getX(),
+                        8 - startingPose.getTranslation().getY()),
+                startingPose.getRotation());
+
+        return Commands.runOnce(() -> {
+            if (DriverStation.getAlliance().isPresent()
+                    && DriverStation.getAlliance().get() == DriverStation.Alliance.Red) {
+                drivetrain.resetPose(AllianceFlipUtil.apply(redAlliancePose));
+            } else {
+                drivetrain.resetPose(AllianceFlipUtil.apply(startingPose));
+            }
+        });
+    }
+
     // Named Commands
     public Command popLintake() {
         return linSlide.applyPower(LinSlideConfigsBeta.DEPLOY_SPEED).until(linSlide::isDeployed);
@@ -129,26 +151,10 @@ public class AutoCommands {
 
         PathPlannerAuto auto;
 
-        Pose2d startingPose =
-                AllianceFlipUtil.apply(cheesy1.get().getStartingHolonomicPose().get());
-
-        Pose2d redAlliancePose = new Pose2d(
-                new Translation2d(
-                        startingPose.getTranslation().getX(),
-                        8 - startingPose.getTranslation().getY()),
-                startingPose.getRotation());
-
         var cmd = cheesy1.isEmpty() || cheesy2.isEmpty() || cheesy3.isEmpty() || cheesy4.isEmpty()
                 ? Commands.none()
                 : Commands.sequence(
-                        Commands.runOnce(() -> {
-                            if (DriverStation.getAlliance().isPresent()
-                                    && DriverStation.getAlliance().get() == DriverStation.Alliance.Red) {
-                                drivetrain.resetPose(AllianceFlipUtil.apply(redAlliancePose));
-                            } else {
-                                drivetrain.resetPose(AllianceFlipUtil.apply(startingPose));
-                            }
-                        }),
+                        seedStartPos(cheesy1),
                         followPathAndIntake(cheesy1, 0.5),
                         followPath(cheesy2),
                         shoot().withTimeout(7),
@@ -165,26 +171,10 @@ public class AutoCommands {
 
         PathPlannerAuto auto;
 
-        Pose2d startingPose =
-                AllianceFlipUtil.apply(cheesy1.get().getStartingHolonomicPose().get());
-
-        Pose2d redAlliancePose = new Pose2d(
-                new Translation2d(
-                        startingPose.getTranslation().getX(),
-                        8 - startingPose.getTranslation().getY()),
-                startingPose.getRotation());
-
         var cmd = cheesy1.isEmpty() || cheesy2.isEmpty() || cheesy3.isEmpty() || cheesy4.isEmpty()
                 ? Commands.none()
                 : Commands.sequence(
-                        Commands.runOnce(() -> {
-                            if (DriverStation.getAlliance().isPresent()
-                                    && DriverStation.getAlliance().get() == DriverStation.Alliance.Red) {
-                                drivetrain.resetPose(AllianceFlipUtil.apply(redAlliancePose));
-                            } else {
-                                drivetrain.resetPose(AllianceFlipUtil.apply(startingPose));
-                            }
-                        }),
+                        seedStartPos(cheesy1),
                         followPathAndIntake(cheesy1, 0.5),
                         followPath(cheesy2),
                         shoot().withTimeout(7),
@@ -200,25 +190,10 @@ public class AutoCommands {
 
         PathPlannerAuto auto;
 
-        Pose2d startingPose = startNeutral.get().getStartingHolonomicPose().get();
-
-        Pose2d redAlliancePose = new Pose2d(
-                new Translation2d(
-                        startingPose.getTranslation().getX(),
-                        8 - startingPose.getTranslation().getY()),
-                startingPose.getRotation());
-
         var cmd = startNeutral.isEmpty() || neutralShoot.isEmpty() || shootTower.isEmpty()
                 ? Commands.none()
                 : Commands.sequence(
-                        Commands.runOnce(() -> {
-                            if (DriverStation.getAlliance().isPresent()
-                                    && DriverStation.getAlliance().get() == DriverStation.Alliance.Red) {
-                                drivetrain.resetPose(AllianceFlipUtil.apply(redAlliancePose));
-                            } else {
-                                drivetrain.resetPose(AllianceFlipUtil.apply(startingPose));
-                            }
-                        }),
+                        seedStartPos(startNeutral),
                         followPathAndIntake(startNeutral, 0.5),
                         followPath(neutralShoot),
                         shoot());
@@ -235,26 +210,10 @@ public class AutoCommands {
 
         PathPlannerAuto auto;
 
-        Pose2d startingPose = AllianceFlipUtil.apply(
-                startNeutral.get().getStartingHolonomicPose().get());
-
-        Pose2d redAlliancePose = new Pose2d(
-                new Translation2d(
-                        startingPose.getTranslation().getX(),
-                        8 - startingPose.getTranslation().getY()),
-                startingPose.getRotation());
-
         var cmd = startNeutral.isEmpty() || neutralShoot.isEmpty() || shootOutpost.isEmpty() || outpostShoot.isEmpty()
                 ? Commands.none()
                 : Commands.sequence(
-                        Commands.runOnce(() -> {
-                            if (DriverStation.getAlliance().isPresent()
-                                    && DriverStation.getAlliance().get() == DriverStation.Alliance.Red) {
-                                drivetrain.resetPose(AllianceFlipUtil.apply(redAlliancePose));
-                            } else {
-                                drivetrain.resetPose(AllianceFlipUtil.apply(startingPose));
-                            }
-                        }),
+                        seedStartPos(startNeutral),
                         followPathAndIntake(startNeutral, 0.5),
                         followPath(neutralShoot),
                         shoot().withTimeout(6),
@@ -276,6 +235,7 @@ public class AutoCommands {
         var cmd = startDepot.isEmpty() || depotShoot.isEmpty() || shootTower.isEmpty()
                 ? Commands.none()
                 : Commands.sequence(
+                        seedStartPos(startDepot),
                         followPathAndIntake(startDepot, 0.5),
                         followPath(depotShoot),
                         linSlide.runIntake(0.5, true),
@@ -295,6 +255,7 @@ public class AutoCommands {
         var cmd = dcmp_1L.isEmpty() || dcmp_2L.isEmpty() || dcmp_3L.isEmpty()
                 ? Commands.none()
                 : Commands.sequence(
+                        seedStartPos(dcmp_1L),
                         followPath(dcmp_1L),
                         shoot().withTimeout(2),
                         followPath(dcmp_2L),
