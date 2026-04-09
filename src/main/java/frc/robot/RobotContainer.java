@@ -17,19 +17,15 @@ import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.*;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.AutoAimCommands;
 import frc.robot.commands.AutoCommands;
 import frc.robot.constants.Constants;
 import frc.robot.subsystems.battery.BatteryFuelGauge;
-import frc.robot.subsystems.climber.*;
 import frc.robot.subsystems.drive.*;
 import frc.robot.subsystems.drive.TunerConstantsAlpha;
 import frc.robot.subsystems.feeder.Feeder;
@@ -47,8 +43,6 @@ import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.IntakeIO;
 import frc.robot.subsystems.intake.IntakeIOAlpha;
 import frc.robot.subsystems.intake.IntakeIOBeta;
-import frc.robot.subsystems.led.LED;
-import frc.robot.subsystems.led.LEDModes;
 import frc.robot.subsystems.linslide.LinSlide;
 import frc.robot.subsystems.linslide.LinSlideConfigsBeta;
 import frc.robot.subsystems.linslide.LinSlideIO;
@@ -72,12 +66,10 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 public class RobotContainer {
     // Subsystems
     private final CommandSwerveDrivetrain drive;
-    private final LED led;
     private final LinSlide linSlide;
     private final Mechanisms mechanisms;
     private final Intake intake;
     private final Indexer indexer;
-    private final Climber climber;
     private final Shooter shooter;
     private final Feeder feeder;
     private final Vision vision;
@@ -93,7 +85,6 @@ public class RobotContainer {
     // Dashboard inputs
     private final LoggedDashboardChooser<Command> autoChooser;
 
-    private ClimberState climbState;
     private boolean swerveLockState;
 
     private final SwerveRequest.FieldCentric driveRequest = currentMode == Constants.Mode.ALPHA
@@ -114,7 +105,6 @@ public class RobotContainer {
                 linSlide = new LinSlide(new LinSlideIOReal());
                 intake = new Intake(new IntakeIOAlpha());
                 indexer = new Indexer(new IndexerIOAlpha());
-                climber = new Climber(new ClimberIO() {});
                 shooter = new Shooter(new ShooterIOReal());
                 feeder = new Feeder(new FeederIOReal());
                 hood = new Hood(new HoodIO() {});
@@ -141,7 +131,6 @@ public class RobotContainer {
                 linSlide = new LinSlide(new LinSlideIOReal());
                 intake = new Intake(new IntakeIOBeta());
                 indexer = new Indexer(new IndexerIOBeta());
-                climber = new Climber(new ClimberIOBeta());
                 shooter = new Shooter(new ShooterIOGamma());
                 feeder = new Feeder(new FeederIOReal());
                 hood = new Hood(new HoodIOBeta());
@@ -172,7 +161,6 @@ public class RobotContainer {
                                 VisionConstants.frontCam, VisionConstants.frontCamTrans, () -> drive.getState().Pose),
                         new VisionIOPhotonVisionSim(
                                 VisionConstants.sideCam, VisionConstants.sideCamTrans, () -> drive.getState().Pose));
-                climber = new Climber(new ClimberIOBeta());
                 shooter = new Shooter(new ShooterIOReal());
                 feeder = new Feeder(new FeederIOReal());
                 hood = new Hood(new HoodIOBeta());
@@ -186,7 +174,6 @@ public class RobotContainer {
                 linSlide = new LinSlide(new LinSlideIO() {});
                 intake = new Intake(new IntakeIO() {});
                 indexer = new Indexer(new IndexerIO() {});
-                climber = new Climber(new ClimberIO() {});
                 vision = new Vision(drive, new VisionIO() {}, new VisionIO() {});
                 feeder = new Feeder(new FeederIO() {});
                 shooter = new Shooter((new ShooterIO() {}));
@@ -198,13 +185,9 @@ public class RobotContainer {
 
         drive.setStateStdDevs(VecBuilder.fill(0.33333, 0.33333, Math.toRadians(0.5)));
 
-        led = new LED();
-
-        climbState = ClimberState.DEFAULT;
-
         swerveLockState = false;
 
-        autoCommands = new AutoCommands(climber, drive, hood, indexer, feeder, intake, linSlide, shooter, led);
+        autoCommands = new AutoCommands(drive, hood, indexer, feeder, intake, linSlide, shooter);
 
         // Set up auto routines
         autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
@@ -216,6 +199,7 @@ public class RobotContainer {
         autoChooser.addOption("Right", autoCommands.cabRight());
         autoChooser.addOption("Cheesy Left", autoCommands.cheesyLeft());
         autoChooser.addOption("Cheesy Right", autoCommands.cheesyRight());
+        autoChooser.addOption("DCMP L1", autoCommands.dcmpLeft());
 
         // Configure the button bindings
         if (Robot.isReal()) {
@@ -243,15 +227,9 @@ public class RobotContainer {
      */
     private void configureRealBindings() {
         drive.setDefaultCommand(drive.applyRequest(() -> driveRequest
-                .withVelocityX(-controller.getLeftY() * climbState.kSpeedAt12Volts.magnitude())
-                .withVelocityY(-controller.getLeftX() * climbState.kSpeedAt12Volts.magnitude())
-                .withRotationalRate(-controller.getRightX() * climbState.MaFxAngularRate)));
-
-        controller
-                .povUp()
-                .onTrue(Commands.runOnce(() -> climbState = climbState.switchState())
-                        .alongWith(linSlide.applyPower(-LinSlideConfigsBeta.DEPLOY_SPEED)
-                                .onlyIf(() -> climbState == ClimberState.CLIMB)));
+                .withVelocityX(-controller.getLeftY() * TunerConstantsBeta.kSpeedAt12Volts.magnitude())
+                .withVelocityY(-controller.getLeftX() * TunerConstantsBeta.kSpeedAt12Volts.magnitude())
+                .withRotationalRate(-controller.getRightX() * TunerConstantsBeta.MaFxAngularRate)));
 
         controller.start().onTrue(Commands.runOnce(drive::seedFieldCentric, drive));
 
@@ -263,28 +241,33 @@ public class RobotContainer {
                 .leftTrigger()
                 .whileTrue(intake.applyPower(IntakeConfigsBeta.ROLLER_SPEED)
                         .alongWith(linSlide.applyPower(LinSlideConfigsBeta.DEPLOY_SPEED)
-                                .until(linSlide::isDeployed))
-                        .alongWith(led.runPattern(LEDModes.SOLID_WHITE)));
+                                .until(linSlide::isDeployed)));
 
         controller
                 .rightBumper()
                 .onTrue(intake.applyPower(-IntakeConfigsBeta.ROLLER_SPEED)
-                        .alongWith(indexer.applyPower(TEST_INDEXER_SPEED))
+                        .alongWith(indexer.applyPower(-TEST_INDEXER_SPEED))
                         .alongWith(feeder.feed(-FEEDER_SPEED).alongWith(shooter.applyPower(-0.1))));
 
-        controller.leftBumper().whileTrue(shooter.shoot(25).alongWith(led.runPattern(LEDModes.WAVE)));
-
-        //        controller.leftBumper().whileTrue(shooter.shoot(44));
+        controller
+                .leftBumper()
+                .whileTrue(AutoAimCommands.readyAim(drive, shooter, hood, centerHubOpening.toTranslation2d())
+                        .alongWith(AutoAimCommands.autoAim(
+                                drive, controller::getLeftY, controller::getLeftX, centerHubOpening.toTranslation2d()))
+                        .alongWith(linSlide.applyPower(LinSlideConfigsBeta.LINSLIDE_AUTO_SHOOT_SPEED)))
+                .onFalse(hood.setHoodPosition(0));
 
         controller.povLeft().onTrue(hood.setHoodPosition(0));
         controller.povRight().onTrue(hood.setHoodPosition(0.65));
 
         controller
                 .rightTrigger()
-                .whileTrue(indexer.applyPower(TEST_INDEXER_SPEED)
-                        .alongWith(intake.applyPower(IntakeConfigsBeta.ROLLER_SPEED))
-                        .alongWith(feeder.feed(FEEDER_SPEED)
-                                .alongWith(linSlide.applyPower(LinSlideConfigsBeta.LINSLIDE_AUTO_STOWING_SPEED))));
+                .whileTrue(Commands.parallel(
+                        indexer.applyPower(TEST_INDEXER_SPEED),
+                        intake.applyPower(IntakeConfigsBeta.ROLLER_SPEED),
+                        feeder.feed(FEEDER_SPEED),
+                        shooter.switchSlot(1)))
+                .onFalse(shooter.switchSlot(0));
     }
 
     private void configureDebugBindings() {
@@ -301,42 +284,25 @@ public class RobotContainer {
                 .whileTrue(linSlide.applyPower(-LinSlideConfigsBeta.DEPLOY_SPEED))
                 .onFalse(linSlide.applyPower(LinSlideConfigsBeta.STOP));
 
-        controller2.povLeft().onTrue(climber.deploy(ClimberConfigsBeta.CLIMBER_EXTEND_SPEED));
-        controller2.povRight().onTrue(climber.climb(ClimberConfigsBeta.CLIMBER_RETRACT_SPEED));
-
-        controller2.povUp().whileTrue(climber.applyPower(ClimberConfigsBeta.TEST_CLIMBER_SPEED));
-        controller2.povDown().whileTrue(climber.applyPower(-ClimberConfigsBeta.TEST_CLIMBER_SPEED));
-
         controller2
                 .leftTrigger()
                 .whileTrue(AutoAimCommands.autoAim(
                                 drive, controller2::getLeftY, controller2::getLeftX, centerHubOpening.toTranslation2d())
-                        .alongWith(AutoAimCommands.readyAim(drive, shooter, centerHubOpening.toTranslation2d())));
+                        .alongWith(AutoAimCommands.readyAim(drive, shooter, hood, centerHubOpening.toTranslation2d())));
 
         controller2
                 .rightTrigger()
                 .whileTrue(indexer.applyPower(TEST_INDEXER_SPEED)
                         //                        .alongWith(intake.applyPower(IntakeConfigsBeta.ROLL_IN_SLOWER)
                         .alongWith(feeder.feed(FEEDER_SPEED)
-                                .alongWith(new WaitCommand(0.8)
-                                        .andThen(linSlide.applyPower(LinSlideConfigsBeta.LINSLIDE_AUTO_SHOOT_SPEED)))));
-
-        //        controller2
-        //                .rightBumper()
-        //                .whileTrue(intake.applyPower(-IntakeConfigsBeta.ROLL_IN_SLOWER)
-        //                        .alongWith(indexer.applyPower(-TEST_INDEXER_SPEED)));
+                                .alongWith(linSlide.applyPower(LinSlideConfigsBeta.LINSLIDE_AUTO_SHOOT_SPEED))));
     }
 
     private void configureSimBindings() {
         drive.setDefaultCommand(drive.applyRequest(() -> driveRequest
-                .withVelocityX(
-                        -controller.getLeftY() * climbState.kSpeedAt12Volts().magnitude())
-                .withVelocityY(
-                        -controller.getLeftX() * climbState.kSpeedAt12Volts().magnitude())
-                .withRotationalRate(-controller.getRightX() * climbState.MaFxAngularRate)));
-
-        controller.button(1).onTrue(climber.moveToPosition(ClimberPosition.L1.getHeight()));
-        controller.button(2).onTrue(climber.moveToPosition(ClimberPosition.BOTTOM.getHeight()));
+                .withVelocityX(-controller.getLeftY() * TunerConstantsBeta.kSpeedAt12Volts.magnitude())
+                .withVelocityY(-controller.getLeftX() * TunerConstantsBeta.kSpeedAt12Volts.magnitude())
+                .withRotationalRate(-controller.getRightX() * TunerConstantsBeta.MaFxAngularRate)));
 
         controller.button(3).whileTrue(intake.rollIn());
         controller.button(4).whileTrue(intake.rollOut());
@@ -348,10 +314,12 @@ public class RobotContainer {
 
         controller
                 .button(6)
-                .whileTrue(AutoAimCommands.autoAim(
-                                drive, controller::getLeftY, controller::getLeftX, centerHubOpening.toTranslation2d())
-                        .alongWith(shooter.shoot(100))
-                        .alongWith(feeder.feed(3)));
+                .whileTrue(AutoAimCommands.readyAim(drive, shooter, hood, centerHubOpening.toTranslation2d())
+                        .alongWith(AutoAimCommands.autoAim(
+                                drive,
+                                controller::getLeftY,
+                                controller::getLeftX,
+                                centerHubOpening.toTranslation2d())));
 
         controller.button(7).whileTrue(indexer.spinIndexer(80));
         controller.button(8).onTrue(Commands.runOnce(drive::seedFieldCentric));
@@ -359,25 +327,17 @@ public class RobotContainer {
                 .button(9)
                 .whileTrue(AutoAimCommands.autoAimWithOrbit(
                         drive, controller::getLeftY, controller::getLeftX, centerHubOpening.toTranslation2d()));
-
-        controller.button(10).onTrue(Commands.runOnce(() -> climbState = climbState.switchState()));
     }
 
     public void updateMechanisms() {
-        mechanisms.publishComponentPoses(climber.getCurrentPosition(), linSlide.getCurrentPosition(), true);
-        mechanisms.publishComponentPoses(climber.getTargetPosition(), linSlide.getTargetPosition(), false);
-        mechanisms.updateClimberMechanism(climber.getCurrentPosition());
         mechanisms.updateLinSlideMech(linSlide.getCurrentPosition());
     }
 
     public void configureTriggers() {
-        new Trigger(DriverStation::isDisabled).whileTrue(led.runPattern(LEDModes.BLUE_ALLIANCE_ACTIVE));
-        new Trigger(() -> climbState == ClimberState.CLIMB).whileTrue(led.runPattern(LEDModes.RAINBOW));
+        // Undecided whether to use
     }
 
     public void updateLoggers() {
-        Logger.recordOutput("Climber/ClimbMode", climbState.toString());
-
         Pose2d currentPose = drive.getState().Pose;
         Translation2d modifiedTarget = AllianceFlipUtil.apply(centerHubOpening.toTranslation2d());
         Translation2d currentPosition = currentPose.getTranslation();

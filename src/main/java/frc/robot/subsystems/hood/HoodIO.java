@@ -20,4 +20,6 @@ public interface HoodIO {
     default void zero() {}
 
     default void setPosition(double position) {}
+
+    default void setPositionAngle(Angle position) {}
 }

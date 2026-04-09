@@ -41,4 +41,8 @@ public class Feeder extends SubsystemBase {
     public boolean canRangeDetected() {
         return inputs.isDetected;
     }
+
+    public boolean isFeederRunning() {
+        return inputs.rotationsPerSecond > 10;
+    }
 }

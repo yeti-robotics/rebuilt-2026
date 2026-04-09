@@ -175,12 +175,12 @@ public class AutoAimCommands {
                 .withDriveRequestType(SwerveModule.DriveRequestType.Velocity);
 
         return Commands.run(() -> drive.setControl(request))
-                .alongWith(hood.moveToPosition(targetHoodAngle))
+                .alongWith(hood.setHoodPosition(targetHoodAngle.magnitude()))
                 .alongWith(shooter.shoot(targetRPS));
     }
 
-    public static Command readyAim(CommandSwerveDrivetrain drive, Shooter shooter, Translation2d target) {
-        return new ReadyAimCommand(drive, shooter, target);
+    public static Command readyAim(CommandSwerveDrivetrain drive, Shooter shooter, Hood hood, Translation2d target) {
+        return new ReadyAimCommand(drive, shooter, hood, target);
     }
 
     public static Command shuttleReadyAim(

@@ -25,6 +25,8 @@ public interface ShooterIO {
 
     public default void applyPower(double percent) {}
 
+    public default void switchSlot(int slotNum) {}
+
     public default boolean isAtSpeed(double speed) {
         return false;
     }
