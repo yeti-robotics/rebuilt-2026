@@ -268,19 +268,17 @@ public class RobotContainer {
         controller
                 .leftBumper()
                 .whileTrue(Commands.either(
-                                AutoAimCommands.autoAim(
-                                                drive,
-                                                controller::getLeftY,
-                                                controller::getLeftX,
-                                                centerHubOpening.toTranslation2d())
-                                        .alongWith(AutoAimCommands.readyAim(
-                                                drive, shooter, hood, centerHubOpening.toTranslation2d())),
-                                AutoAimCommands.shuttleAim(
-                                                drive, controller::getLeftY, controller::getLeftX, shuttleTargetZone)
-                                        .alongWith(AutoAimCommands.shuttleReadyAim(drive, shooter, hood)),
-                                () -> AllianceFlipUtil.apply(
-                                                drive.getState().Pose.getX())
-                                        < 4.9));
+                        AutoAimCommands.autoAim(
+                                        drive,
+                                        controller::getLeftY,
+                                        controller::getLeftX,
+                                        centerHubOpening.toTranslation2d())
+                                .alongWith(AutoAimCommands.readyAim(
+                                        drive, shooter, hood, centerHubOpening.toTranslation2d())),
+                        AutoAimCommands.shuttleAim(drive, controller::getLeftY, controller::getLeftX, shuttleTargetZone)
+                                .alongWith(AutoAimCommands.shuttleReadyAim(drive, shooter, hood)),
+                        () -> AllianceFlipUtil.apply(drive.getState().Pose.getX()) < 4.9))
+                .onFalse(hood.setHoodPosition(0));
 
         controller.povLeft().onTrue(hood.setHoodPosition(0));
         controller.povRight().onTrue(hood.setHoodPosition(0.65));
@@ -351,19 +349,16 @@ public class RobotContainer {
         controller
                 .button(6)
                 .whileTrue(Commands.either(
-                                AutoAimCommands.autoAim(
-                                                drive,
-                                                controller::getLeftY,
-                                                controller::getLeftX,
-                                                centerHubOpening.toTranslation2d())
-                                        .alongWith(AutoAimCommands.readyAim(
-                                                drive, shooter, hood, centerHubOpening.toTranslation2d())),
-                                AutoAimCommands.shuttleAim(
-                                                drive, controller::getLeftY, controller::getLeftX, shuttleTargetZone)
-                                        .alongWith(AutoAimCommands.shuttleReadyAim(drive, shooter, hood)),
-                                () -> AllianceFlipUtil.apply(
-                                                drive.getState().Pose.getX())
-                                        < 4.9));
+                        AutoAimCommands.autoAim(
+                                        drive,
+                                        controller::getLeftY,
+                                        controller::getLeftX,
+                                        centerHubOpening.toTranslation2d())
+                                .alongWith(AutoAimCommands.readyAim(
+                                        drive, shooter, hood, centerHubOpening.toTranslation2d())),
+                        AutoAimCommands.shuttleAim(drive, controller::getLeftY, controller::getLeftX, shuttleTargetZone)
+                                .alongWith(AutoAimCommands.shuttleReadyAim(drive, shooter, hood)),
+                        () -> AllianceFlipUtil.apply(drive.getState().Pose.getX()) < 4.9));
 
         controller.button(7).whileTrue(indexer.spinIndexer(80));
         controller.button(8).onTrue(Commands.runOnce(drive::seedFieldCentric));
