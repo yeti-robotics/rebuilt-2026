@@ -260,7 +260,7 @@ public class RobotContainer {
                                         centerHubOpening.toTranslation2d())
                                 .alongWith(AutoAimCommands.readyAim(
                                         drive, shooter, hood, centerHubOpening.toTranslation2d())),
-                        AutoAimCommands.shuttleAim(drive, controller::getLeftY, controller::getLeftX, shuttleTargetZone)
+                        AutoAimCommands.shuttleAim(drive, controller::getLeftY, controller::getLeftX)
                                 .alongWith(AutoAimCommands.shuttleReadyAim(drive, shooter, hood)),
                         () -> AllianceFlipUtil.apply(drive.getState().Pose.getX()) < 4.9))
                 .onFalse(hood.setHoodPosition(0));
@@ -330,7 +330,7 @@ public class RobotContainer {
                                         centerHubOpening.toTranslation2d())
                                 .alongWith(AutoAimCommands.readyAim(
                                         drive, shooter, hood, centerHubOpening.toTranslation2d())),
-                        AutoAimCommands.shuttleAim(drive, controller::getLeftY, controller::getLeftX, shuttleTargetZone)
+                        AutoAimCommands.shuttleAim(drive, controller::getLeftY, controller::getLeftX)
                                 .alongWith(AutoAimCommands.shuttleReadyAim(drive, shooter, hood)),
                         () -> AllianceFlipUtil.apply(drive.getState().Pose.getX()) < 4.9));
 
