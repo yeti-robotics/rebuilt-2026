@@ -211,7 +211,6 @@ public class RobotContainer {
         autoChooser.addOption("Cheesy Right", autoCommands.cheesyRight());
         autoChooser.addOption("DCMP L1", autoCommands.dcmpLeft());
 
-        SmartDashboard.putNumber("Shooter Velocity", 0);
 
         // Configure the button bindings
         if (Robot.isReal()) {
@@ -271,10 +270,10 @@ public class RobotContainer {
                 .leftBumper()
                 .whileTrue(AutoAimCommands.readyAim(drive, shooter, hood, centerHubOpening.toTranslation2d())
                         .alongWith(AutoAimCommands.autoAim(
-                                drive, controller::getLeftY, controller::getLeftX, centerHubOpening.toTranslation2d())))
-                .onFalse(hood.setHoodPosition(0));
+                                drive, controller::getLeftY, controller::getLeftX, centerHubOpening.toTranslation2d()))
+                        .alongWith(linSlide.applyPower(LinSlideConfigsBeta.LINSLIDE_AUTO_SHOOT_SPEED)))
+                        .onFalse(hood.setHoodPosition(0));
 
-        //        controller.leftBumper().whileTrue(shooter.shoot(44));
 
         controller.povLeft().onTrue(hood.setHoodPosition(0));
         controller.povRight().onTrue(hood.setHoodPosition(0.65));
@@ -285,7 +284,6 @@ public class RobotContainer {
                         indexer.applyPower(TEST_INDEXER_SPEED),
                         intake.applyPower(IntakeConfigsBeta.ROLLER_SPEED),
                         feeder.feed(FEEDER_SPEED),
-                        linSlide.applyPower(LinSlideConfigsBeta.LINSLIDE_AUTO_SHOOT_SPEED),
                         shooter.switchSlot(1)))
                 .onFalse(shooter.switchSlot(0));
     }

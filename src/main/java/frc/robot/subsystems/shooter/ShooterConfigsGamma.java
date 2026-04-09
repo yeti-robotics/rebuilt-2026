@@ -64,7 +64,7 @@ public class ShooterConfigsGamma {
         SHOOTER_MAP.put(2.522, new ShooterStateData(Units.Rotations.of(0.1), 29.5, 0.0));
         SHOOTER_MAP.put(3.007, new ShooterStateData(Units.Rotations.of(0.2), 31.5, 0.0));
         SHOOTER_MAP.put(3.195, new ShooterStateData(Units.Rotations.of(0.34), 31, 0.0));
-        SHOOTER_MAP.put(3.273, new ShooterStateData(Units.Rotations.of(0.4), 32, 0.0));
+        SHOOTER_MAP.put(3.362, new ShooterStateData(Units.Rotations.of(0.3), 30, 0.0));
     }
 
     public static final InterpolatingTreeMap<Double, ShooterStateData> SHUTTLE_MAP =

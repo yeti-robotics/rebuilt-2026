@@ -42,7 +42,7 @@ public class ReadyAimCommand extends Command {
         targetHood = state.hoodPos;
 
         Logger.recordOutput("AutoAimCommands/Shooter Map/Trench Shot", false);
-        if ((AllianceFlipUtil.apply(currentPose.getX()) >= 3.600 && AllianceFlipUtil.apply(currentPose.getX()) <= 4.090)
+        if ((AllianceFlipUtil.apply(currentPose.getX()) >= 3.600)
                 && ((currentPose.getY() >= 7.180 && currentPose.getY() <= 7.527)
                         || (currentPose.getY() <= 1.089 && currentPose.getY() >= 0.469))) {
             targetRPS = 42;
