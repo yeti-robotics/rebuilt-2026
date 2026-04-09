@@ -9,7 +9,6 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -104,8 +103,7 @@ public class AutoAimCommands {
                             .withHeadingPID(20, 0, 0)
                             .withVelocityX(-xVelSupplier.getAsDouble() * SPEED_MULTIPLIER)
                             .withVelocityY(-yVelSupplier.getAsDouble() * SPEED_MULTIPLIER)
-                            .withTargetDirection(calcDesiredHeading(drive.getState().Pose, target)
-                                    .plus(new Rotation2d(Units.degreesToRadians(2.5))))
+                            .withTargetDirection(calcDesiredHeading(drive.getState().Pose, target))
                             .withDriveRequestType(SwerveModule.DriveRequestType.Velocity);
 
                     drive.setControl(request);
