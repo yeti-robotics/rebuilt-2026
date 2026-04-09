@@ -11,8 +11,6 @@ import com.pathplanner.lib.path.PathPlannerPath;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
-import frc.robot.subsystems.climber.Climber;
-import frc.robot.subsystems.climber.ClimberConfigsBeta;
 import frc.robot.subsystems.drive.CommandSwerveDrivetrain;
 import frc.robot.subsystems.feeder.Feeder;
 import frc.robot.subsystems.hood.Hood;
@@ -89,8 +87,6 @@ public class AutoCommands {
         return AutoBuilder.followPath(path.get());
     }
 
-
-
     public Command shoot() {
         return Commands.deadline(
                 Commands.sequence(
@@ -118,7 +114,6 @@ public class AutoCommands {
     }
 
     // Test Commands
-
 
     // Autos
     public Command oneCycleNeutralTowerLeft() {
@@ -260,10 +255,7 @@ public class AutoCommands {
         var cmd = initNeutralL.isEmpty() || neutralLShoot.isEmpty() || shootTower.isEmpty()
                 ? Commands.none()
                 : Commands.sequence(
-                        shootBumpFire(),
-                        followPathAndIntake(initNeutralL, 2),
-                        followPath(neutralLShoot),
-                        shoot());
+                        shootBumpFire(), followPathAndIntake(initNeutralL, 2), followPath(neutralLShoot), shoot());
         auto = new PathPlannerAuto(cmd);
         return auto;
     }

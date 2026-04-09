@@ -227,10 +227,9 @@ public class RobotContainer {
      */
     private void configureRealBindings() {
         drive.setDefaultCommand(drive.applyRequest(() -> driveRequest
-                .withVelocityX(-controller.getLeftY())
-                .withVelocityY(-controller.getLeftX())
-                .withRotationalRate(-controller.getRightX())));
-
+                .withVelocityX(-controller.getLeftY() * TunerConstantsBeta.kSpeedAt12Volts.magnitude())
+                .withVelocityY(-controller.getLeftX() * TunerConstantsBeta.kSpeedAt12Volts.magnitude())
+                .withRotationalRate(-controller.getRightX() * TunerConstantsBeta.MaFxAngularRate)));
 
         controller.start().onTrue(Commands.runOnce(drive::seedFieldCentric, drive));
 
@@ -285,8 +284,6 @@ public class RobotContainer {
                 .whileTrue(linSlide.applyPower(-LinSlideConfigsBeta.DEPLOY_SPEED))
                 .onFalse(linSlide.applyPower(LinSlideConfigsBeta.STOP));
 
-
-
         controller2
                 .leftTrigger()
                 .whileTrue(AutoAimCommands.autoAim(
@@ -303,12 +300,9 @@ public class RobotContainer {
 
     private void configureSimBindings() {
         drive.setDefaultCommand(drive.applyRequest(() -> driveRequest
-                .withVelocityX(
-                        -controller.getLeftY())
-                .withVelocityY(
-                        -controller.getLeftX())
-                .withRotationalRate(-controller.getRightX())));
-
+                .withVelocityX(-controller.getLeftY() * TunerConstantsBeta.kSpeedAt12Volts.magnitude())
+                .withVelocityY(-controller.getLeftX() * TunerConstantsBeta.kSpeedAt12Volts.magnitude())
+                .withRotationalRate(-controller.getRightX() * TunerConstantsBeta.MaFxAngularRate)));
 
         controller.button(3).whileTrue(intake.rollIn());
         controller.button(4).whileTrue(intake.rollOut());
@@ -333,7 +327,6 @@ public class RobotContainer {
                 .button(9)
                 .whileTrue(AutoAimCommands.autoAimWithOrbit(
                         drive, controller::getLeftY, controller::getLeftX, centerHubOpening.toTranslation2d()));
-
     }
 
     public void updateMechanisms() {
