@@ -9,6 +9,7 @@ package frc.robot;
 
 import static frc.robot.constants.Constants.currentMode;
 import static frc.robot.constants.FieldConstants.Hub.centerHubOpening;
+import static frc.robot.constants.FieldConstants.Shuttle.shuttleTargetZone;
 import static frc.robot.subsystems.feeder.FeederConfigsBeta.FEEDER_SPEED;
 import static frc.robot.subsystems.indexer.IndexerConfigsBeta.TEST_INDEXER_SPEED;
 
@@ -269,10 +270,17 @@ public class RobotContainer {
 
         controller
                 .leftBumper()
-                .whileTrue(AutoAimCommands.readyAim(drive, shooter, hood, centerHubOpening.toTranslation2d())
-                        .alongWith(AutoAimCommands.autoAim(
-                                drive, controller::getLeftY, controller::getLeftX, centerHubOpening.toTranslation2d()))
-                        .alongWith(linSlide.applyPower(LinSlideConfigsBeta.LINSLIDE_AUTO_SHOOT_SPEED)))
+                .whileTrue(Commands.either(
+                        AutoAimCommands.autoAim(
+                                        drive,
+                                        controller::getLeftY,
+                                        controller::getLeftX,
+                                        centerHubOpening.toTranslation2d())
+                                .alongWith(AutoAimCommands.readyAim(
+                                        drive, shooter, hood, centerHubOpening.toTranslation2d())),
+                        AutoAimCommands.shuttleAim(drive, controller::getLeftY, controller::getLeftX)
+                                .alongWith(AutoAimCommands.shuttleReadyAim(drive, shooter, hood)),
+                        () -> AllianceFlipUtil.apply(drive.getState().Pose.getX()) < 4.9))
                 .onFalse(hood.setHoodPosition(0));
 
         controller.povLeft().onTrue(hood.setHoodPosition(0));
@@ -332,12 +340,17 @@ public class RobotContainer {
 
         controller
                 .button(6)
-                .whileTrue(AutoAimCommands.readyAim(drive, shooter, hood, centerHubOpening.toTranslation2d())
-                        .alongWith(AutoAimCommands.autoAim(
-                                drive,
-                                controller::getLeftY,
-                                controller::getLeftX,
-                                centerHubOpening.toTranslation2d())));
+                .whileTrue(Commands.either(
+                        AutoAimCommands.autoAim(
+                                        drive,
+                                        controller::getLeftY,
+                                        controller::getLeftX,
+                                        centerHubOpening.toTranslation2d())
+                                .alongWith(AutoAimCommands.readyAim(
+                                        drive, shooter, hood, centerHubOpening.toTranslation2d())),
+                        AutoAimCommands.shuttleAim(drive, controller::getLeftY, controller::getLeftX)
+                                .alongWith(AutoAimCommands.shuttleReadyAim(drive, shooter, hood)),
+                        () -> AllianceFlipUtil.apply(drive.getState().Pose.getX()) < 4.9));
 
         controller.button(7).whileTrue(indexer.spinIndexer(80));
         controller.button(8).onTrue(Commands.runOnce(drive::seedFieldCentric));
