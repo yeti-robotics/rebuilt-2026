@@ -423,10 +423,10 @@ public class AutoCommands {
     }
 
     public Command cheesyRight() {
-        Optional<PathPlannerPath> cheesy1 = PathPlannerUtils.loadPathByName("cheesy_path1R");
-        Optional<PathPlannerPath> cheesy2 = PathPlannerUtils.loadPathByName("cheesy_path2R");
-        Optional<PathPlannerPath> cheesy3 = PathPlannerUtils.loadPathByName("cheesy_path3R");
-        Optional<PathPlannerPath> cheesy4 = PathPlannerUtils.loadPathByName("cheesy_path4R");
+        Optional<PathPlannerPath> cheesy1 = PathPlannerUtils.loadPathByName("cheesy_path1right");
+        Optional<PathPlannerPath> cheesy2 = PathPlannerUtils.loadPathByName("cheesy_path2right");
+        Optional<PathPlannerPath> cheesy3 = PathPlannerUtils.loadPathByName("cheesy_path3right");
+        Optional<PathPlannerPath> cheesy4 = PathPlannerUtils.loadPathByName("cheesy_path4right");
 
         PathPlannerAuto auto;
 
@@ -435,9 +435,10 @@ public class AutoCommands {
                 : Commands.sequence(
                         followPathAndIntake(cheesy1, 0.5),
                         followPath(cheesy2),
-                        shoot().withTimeout(4),
+                        shoot().withTimeout(3.5),
                         hoodDown(),
-                        followPathAndIntake(cheesy3, 0.5));
+                        followPathAndIntake(cheesy3, 0.5),
+                        shoot());
         auto = new PathPlannerAuto(cmd);
         return auto;
     }
