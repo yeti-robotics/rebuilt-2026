@@ -44,6 +44,7 @@ public class ShooterIOGamma implements ShooterIO {
         inputs.secondMotorRPM = secondMotor.getVelocity().getValueAsDouble();
         inputs.bottomMotorVoltage = thirdMotor.getMotorVoltage().getValueAsDouble();
         inputs.bottomMotorRPM = thirdMotor.getVelocity().getValueAsDouble();
+        inputs.closedLoopSlot = MOTION_MAGIC_REQUEST.Slot;
     }
 
     @Override

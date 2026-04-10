@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.7840085592011405,
-        "y": 6.745649072753209
+        "x": 3.068659058487874,
+        "y": 5.930513552068473
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.0427817403708985,
-        "y": 7.547845934379457
+        "x": 2.6416833095577745,
+        "y": 7.094992867332382
       },
       "isLocked": false,
       "linkedName": "dcmp_L2_end"
@@ -20,12 +20,12 @@
         "y": 7.444336661911555
       },
       "prevControl": {
-        "x": 3.621677610465895,
-        "y": 7.458255780614517
+        "x": 2.6287446504992857,
+        "y": 7.560784593437946
       },
       "nextControl": {
-        "x": 4.776562054208274,
-        "y": 7.431398002853067
+        "x": 4.775228666529513,
+        "y": 7.403724787386953
       },
       "isLocked": false,
       "linkedName": null
@@ -36,12 +36,12 @@
         "y": 6.370427960057061
       },
       "prevControl": {
-        "x": 5.746961483594864,
-        "y": 7.8713124108416554
+        "x": 5.8892867332382295,
+        "y": 7.677232524964337
       },
       "nextControl": {
-        "x": 6.959021507523131,
-        "y": 5.803680605316963
+        "x": 6.949672748942054,
+        "y": 5.798302918190896
       },
       "isLocked": false,
       "linkedName": null
@@ -63,11 +63,11 @@
   "rotationTargets": [
     {
       "waypointRelativePos": 0.3,
-      "rotationDegrees": 0.0
+      "rotationDegrees": -176.67532132283944
     },
     {
       "waypointRelativePos": 1.5479744136460432,
-      "rotationDegrees": 0.0
+      "rotationDegrees": -179.9945472419454
     },
     {
       "waypointRelativePos": 1.9637526652451864,
@@ -78,24 +78,24 @@
   "pointTowardsZones": [],
   "eventMarkers": [
     {
-      "name": "popLintake",
-      "waypointRelativePos": 2.147197839297774,
-      "endWaypointRelativePos": null,
-      "command": {
-        "type": "named",
-        "data": {
-          "name": "popLintake"
-        }
-      }
-    },
-    {
       "name": "rollin",
-      "waypointRelativePos": 2.15,
+      "waypointRelativePos": 1.87,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",
         "data": {
           "name": "rollIn"
+        }
+      }
+    },
+    {
+      "name": "popLintake",
+      "waypointRelativePos": 1.8717083051992036,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "popLintake"
         }
       }
     }

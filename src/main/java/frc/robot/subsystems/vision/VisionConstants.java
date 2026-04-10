@@ -45,7 +45,7 @@ public class VisionConstants {
 
     // Standard deviation multipliers for each camera
     // (Adjust to trust some cameras more than others)
-    public static double[] cameraStdDevFactors = new double[]{1.0, 1.0, 1.0};
+    public static double[] cameraStdDevFactors = new double[] {1.0, 1.0, 1.0};
 
     // Multipliers to apply for MegaTag 2 observations
     public static double linearStdDevMegatag2Factor = 0.5; // More stable than full 3D solve
@@ -56,5 +56,6 @@ public class VisionConstants {
     public static Transform3d leftCamTrans = new Transform3d(
             new Translation3d(0.3429, -0.0381, 0.5715), new Rotation3d(0, Math.toRadians(15), Math.toRadians(90)));
     public static Transform3d rightCamTrans = new Transform3d(
-            new Translation3d(-0.32258, 0.00635, 0.4445), new Rotation3d(Math.toRadians(180), Math.toRadians(15), Math.toRadians(-90)));
+            new Translation3d(-0.32258, 0.00635, 0.4445),
+            new Rotation3d(Math.toRadians(180), Math.toRadians(15), Math.toRadians(-90)));
 }

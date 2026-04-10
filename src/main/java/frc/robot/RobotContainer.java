@@ -9,7 +9,6 @@ package frc.robot;
 
 import static frc.robot.constants.Constants.currentMode;
 import static frc.robot.constants.FieldConstants.Hub.centerHubOpening;
-import static frc.robot.constants.FieldConstants.Shuttle.shuttleTargetZone;
 import static frc.robot.subsystems.feeder.FeederConfigsBeta.FEEDER_SPEED;
 import static frc.robot.subsystems.indexer.IndexerConfigsBeta.TEST_INDEXER_SPEED;
 
@@ -20,6 +19,7 @@ import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.*;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -209,6 +209,8 @@ public class RobotContainer {
         autoChooser.addOption("Cheesy Right", autoCommands.cheesyRight());
         autoChooser.addOption("DCMP L1", autoCommands.dcmpLeft());
 
+        SmartDashboard.putNumber("Shooter Velocity", 0);
+
         // Configure the button bindings
         if (Robot.isReal()) {
             configureRealBindings();
@@ -244,7 +246,10 @@ public class RobotContainer {
         controller.start().onTrue(Commands.runOnce(drive::seedFieldCentric, drive));
 
         controller.x().whileTrue(linSlide.applyPower(LinSlideConfigsBeta.DEPLOY_SPEED));
-        controller.b().whileTrue(linSlide.applyPower(-LinSlideConfigsBeta.DEPLOY_SPEED));
+        controller
+                .b()
+                .whileTrue(linSlide.applyPower(-LinSlideConfigsBeta.DEPLOY_SPEED)
+                        .alongWith(intake.applyPower(IntakeConfigsBeta.ROLLER_SPEED)));
         controller.y().onTrue(Commands.runOnce(() -> swerveLockState = !swerveLockState));
 
         controller
@@ -255,23 +260,29 @@ public class RobotContainer {
 
         controller
                 .rightBumper()
-                .onTrue(intake.applyPower(-IntakeConfigsBeta.ROLLER_SPEED)
-                        .alongWith(indexer.applyPower(-TEST_INDEXER_SPEED))
-                        .alongWith(feeder.feed(-FEEDER_SPEED).alongWith(shooter.applyPower(-0.1))));
+                .onTrue(Commands.parallel(
+                        intake.applyPower(-IntakeConfigsBeta.ROLLER_SPEED),
+                        indexer.applyPower(-TEST_INDEXER_SPEED),
+                        feeder.feed(-FEEDER_SPEED),
+                        shooter.applyPower(-0.1),
+                        linSlide.applyPower(LinSlideConfigsBeta.DEPLOY_SPEED)));
 
         controller
                 .leftBumper()
                 .whileTrue(Commands.either(
-                        AutoAimCommands.autoAim(
-                                        drive,
-                                        controller::getLeftY,
-                                        controller::getLeftX,
-                                        centerHubOpening.toTranslation2d())
-                                .alongWith(AutoAimCommands.readyAim(
-                                        drive, shooter, hood, centerHubOpening.toTranslation2d())),
-                        AutoAimCommands.shuttleAim(drive, controller::getLeftY, controller::getLeftX)
-                                .alongWith(AutoAimCommands.shuttleReadyAim(drive, shooter, hood)),
-                        () -> AllianceFlipUtil.apply(drive.getState().Pose.getX()) < 4.9))
+                                AutoAimCommands.autoAim(
+                                                drive,
+                                                controller::getLeftY,
+                                                controller::getLeftX,
+                                                centerHubOpening.toTranslation2d())
+                                        .alongWith(AutoAimCommands.readyAim(
+                                                drive, shooter, hood, centerHubOpening.toTranslation2d())),
+                                AutoAimCommands.shuttleAim(drive, controller::getLeftY, controller::getLeftX)
+                                        .alongWith(AutoAimCommands.shuttleReadyAim(drive, shooter, hood)),
+                                () -> AllianceFlipUtil.apply(
+                                                drive.getState().Pose.getX())
+                                        < 4.9)
+                        .alongWith(linSlide.applyPower(LinSlideConfigsBeta.LINSLIDE_AUTO_SHOOT_SPEED)))
                 .onFalse(hood.setHoodPosition(0));
 
         controller.povLeft().onTrue(hood.setHoodPosition(0));

@@ -112,9 +112,7 @@ public class AutoAimCommands {
     }
 
     public static Command shuttleAim(
-            CommandSwerveDrivetrain drive,
-            DoubleSupplier xVelSupplier,
-            DoubleSupplier yVelSupplier) {
+            CommandSwerveDrivetrain drive, DoubleSupplier xVelSupplier, DoubleSupplier yVelSupplier) {
 
         return drive.runEnd(
                 () -> {
