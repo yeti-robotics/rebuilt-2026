@@ -3,25 +3,41 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 5.928102710413694,
-        "y": 5.024807417974323
+        "x": 2.4476034236804565,
+        "y": 5.374151212553495
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.523548493546224,
-        "y": 6.1394339239984195
+        "x": 2.9780884450784595,
+        "y": 5.231825962910128
       },
       "isLocked": false,
       "linkedName": "cheesy-hairpin2L"
     },
     {
       "anchor": {
-        "x": 3.0684096385542166,
-        "y": 5.3463253012048195
+        "x": 6.057489300998572,
+        "y": 5.2059486447931524
       },
       "prevControl": {
-        "x": 4.139325301204819,
-        "y": 5.455602409638555
+        "x": 5.081902388736009,
+        "y": 4.75130620024361
+      },
+      "nextControl": {
+        "x": 7.390171184022824,
+        "y": 5.82700427960057
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 2.9392724679029953,
+        "y": 5.568231098430813
+      },
+      "prevControl": {
+        "x": 4.010188130553598,
+        "y": 5.677508206864548
       },
       "nextControl": null,
       "isLocked": false,
@@ -30,8 +46,12 @@
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.2929460580912863,
-      "rotationDegrees": -55.249264738566346
+      "waypointRelativePos": 0.6,
+      "rotationDegrees": 37.06245646694634
+    },
+    {
+      "waypointRelativePos": 1.8,
+      "rotationDegrees": 49.283637071336145
     }
   ],
   "constraintZones": [],
@@ -53,7 +73,7 @@
   "folder": "Left Paths",
   "idealStartingState": {
     "velocity": 1.0,
-    "rotation": 75.61860540890947
+    "rotation": -59.452428251092975
   },
   "useDefaultConstraints": false
 }

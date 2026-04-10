@@ -4,60 +4,44 @@
     {
       "anchor": {
         "x": 3.1851069900142637,
-        "y": 0.7679885877318122
+        "y": 1.5259999999999998
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.185106990014264,
-        "y": 0.7679885877318124
+        "x": 3.4050627974859653,
+        "y": 0.7108641024771183
       },
       "isLocked": false,
       "linkedName": "cheesy-shootR"
     },
     {
       "anchor": {
-        "x": 6.1480599144079875,
-        "y": 0.7679885877318122
+        "x": 4.517788873038516,
+        "y": 0.569
       },
       "prevControl": {
-        "x": 5.59169757489301,
-        "y": 0.7291726105563499
+        "x": 3.742839268559985,
+        "y": 0.5858418013426272
       },
       "nextControl": {
-        "x": 7.044628522522731,
-        "y": 0.8305398859723738
+        "x": 5.112967271976452,
+        "y": 0.5560651248798552
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 7.273723252496433,
-        "y": 4.132039942938659
+        "x": 5.772838801711839,
+        "y": 1.0599999999999996
       },
       "prevControl": {
-        "x": 7.469195518898663,
-        "y": 3.8714102544023574
+        "x": 5.837528285808581,
+        "y": 0.3871893625084004
       },
       "nextControl": {
-        "x": 7.1184593437945765,
-        "y": 4.339058487874465
-      },
-      "isLocked": false,
-      "linkedName": null
-    },
-    {
-      "anchor": {
-        "x": 6.2774465049928665,
-        "y": 3.782696148359487
-      },
-      "prevControl": {
-        "x": 6.484465049928673,
-        "y": 4.559015691868759
-      },
-      "nextControl": {
-        "x": 6.082614217235696,
-        "y": 3.0520750692700984
+        "x": 5.704858169050736,
+        "y": 1.767040617751702
       },
       "isLocked": false,
       "linkedName": null
@@ -65,11 +49,11 @@
     {
       "anchor": {
         "x": 6.1480599144079875,
-        "y": 0.7679885877318122
+        "y": 2.9749999999999996
       },
       "prevControl": {
-        "x": 6.186875891583451,
-        "y": 1.0785164051355218
+        "x": 6.268260992387476,
+        "y": 2.4504690221514114
       },
       "nextControl": null,
       "isLocked": false,
@@ -78,34 +62,34 @@
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.6140350877192882,
-      "rotationDegrees": 90.0
+      "waypointRelativePos": 0.45,
+      "rotationDegrees": -179.656
     },
     {
-      "waypointRelativePos": 1.3205741626794227,
+      "waypointRelativePos": 1.0,
+      "rotationDegrees": -179.54
+    },
+    {
+      "waypointRelativePos": 2.05,
       "rotationDegrees": -90.0
     },
     {
-      "waypointRelativePos": 1.7969165337586428,
+      "waypointRelativePos": 2.15,
       "rotationDegrees": -90.0
     },
     {
-      "waypointRelativePos": 2.6560340244550704,
-      "rotationDegrees": 50.02146104220186
-    },
-    {
-      "waypointRelativePos": 3.2514619883041034,
-      "rotationDegrees": 90.0
+      "waypointRelativePos": 2.45,
+      "rotationDegrees": -75.141
     }
   ],
   "constraintZones": [
     {
       "name": "Constraints Zone",
-      "minWaypointRelativePos": 1.370121130551842,
-      "maxWaypointRelativePos": 3.5773889636608294,
+      "minWaypointRelativePos": 2.05,
+      "maxWaypointRelativePos": 2.85,
       "constraints": {
-        "maxVelocity": 2.0,
-        "maxAcceleration": 5.0,
+        "maxVelocity": 0.9,
+        "maxAcceleration": 1.5,
         "maxAngularVelocity": 540.0,
         "maxAngularAcceleration": 720.0,
         "nominalVoltage": 12.0,
@@ -114,7 +98,30 @@
     }
   ],
   "pointTowardsZones": [],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "popLintake",
+      "waypointRelativePos": 1.0,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "popLintake"
+        }
+      }
+    },
+    {
+      "name": "rollIn",
+      "waypointRelativePos": 1.0,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "rollIn"
+        }
+      }
+    }
+  ],
   "globalConstraints": {
     "maxVelocity": 5.0,
     "maxAcceleration": 5.0,
@@ -125,13 +132,13 @@
   },
   "goalEndState": {
     "velocity": 1.0,
-    "rotation": 90.0
+    "rotation": 75.619
   },
   "reversed": false,
   "folder": "Right Paths",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 89.28384005452958
+    "rotation": 89.284
   },
   "useDefaultConstraints": true
 }

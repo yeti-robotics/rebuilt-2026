@@ -7,7 +7,7 @@ import com.ctre.phoenix6.signals.UpdateModeValue;
 public class IndexerConfigsBeta {
     static final int BETA_ROLLER_ID = 60;
     static final int TOP_CANRANGE_ID = 23;
-    public static final double TEST_INDEXER_SPEED = -0.7;
+    public static final double TEST_INDEXER_SPEED = -1;
 
     public static final Slot0Configs SLOT_0_CONFIGS = new Slot0Configs()
             .withKP(0)
@@ -16,13 +16,14 @@ public class IndexerConfigsBeta {
             .withKG(0)
             .withKV(0)
             .withKA(0)
-            .withKS(2)
+            .withKS(0)
             .withGravityType(GravityTypeValue.Elevator_Static);
+
     static final TalonFXConfiguration TalonFXConfigs = new TalonFXConfiguration()
             .withSlot0(SLOT_0_CONFIGS)
             .withMotionMagic(new MotionMagicConfigs()
-                    .withMotionMagicAcceleration(2)
-                    .withMotionMagicCruiseVelocity(4)
+                    .withMotionMagicAcceleration(1)
+                    .withMotionMagicCruiseVelocity(2)
                     .withMotionMagicJerk(0));
 
     static final CANrangeConfiguration TOP_CANRANGE_CONFIGS = new CANrangeConfiguration()

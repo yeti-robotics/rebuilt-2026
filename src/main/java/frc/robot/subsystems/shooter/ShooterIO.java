@@ -8,10 +8,15 @@ public interface ShooterIO {
         public double topMotorVoltage = 0;
         public double topMotorRPM = 0;
 
+        public double secondMotorVoltage = 0;
+        public double secondMotorRPM = 0;
+
         public double bottomMotorVoltage = 0;
         public double bottomMotorRPM = 0;
 
         public double targetRPM = 0;
+
+        public int closedLoopSlot = 0;
     }
 
     public default void updateInputs(ShooterIOInputs inputs) {}
@@ -21,6 +26,8 @@ public interface ShooterIO {
     public default void stopMotors() {}
 
     public default void applyPower(double percent) {}
+
+    public default void switchSlot(int slotNum) {}
 
     public default boolean isAtSpeed(double speed) {
         return false;
