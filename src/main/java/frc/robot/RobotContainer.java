@@ -9,7 +9,6 @@ package frc.robot;
 
 import static frc.robot.constants.Constants.currentMode;
 import static frc.robot.constants.FieldConstants.Hub.centerHubOpening;
-import static frc.robot.constants.FieldConstants.Shuttle.shuttleTargetZone;
 import static frc.robot.subsystems.feeder.FeederConfigsBeta.FEEDER_SPEED;
 import static frc.robot.subsystems.indexer.IndexerConfigsBeta.TEST_INDEXER_SPEED;
 
@@ -210,6 +209,8 @@ public class RobotContainer {
         autoChooser.addOption("Cheesy Right", autoCommands.cheesyRight());
         autoChooser.addOption("DCMP L1", autoCommands.dcmpLeft());
 
+        SmartDashboard.putNumber("Shooter Velocity", 0);
+
         // Configure the button bindings
         if (Robot.isReal()) {
             configureRealBindings();
@@ -219,8 +220,6 @@ public class RobotContainer {
         }
 
         configureTriggers();
-
-        SmartDashboard.putNumber("Shooter Velocity", 0);
     }
 
     public void updateVisionSim() {
@@ -271,16 +270,19 @@ public class RobotContainer {
         controller
                 .leftBumper()
                 .whileTrue(Commands.either(
-                        AutoAimCommands.autoAim(
-                                        drive,
-                                        controller::getLeftY,
-                                        controller::getLeftX,
-                                        centerHubOpening.toTranslation2d())
-                                .alongWith(AutoAimCommands.readyAim(
-                                        drive, shooter, hood, centerHubOpening.toTranslation2d())),
-                        AutoAimCommands.shuttleAim(drive, controller::getLeftY, controller::getLeftX)
-                                .alongWith(AutoAimCommands.shuttleReadyAim(drive, shooter, hood)),
-                        () -> AllianceFlipUtil.apply(drive.getState().Pose.getX()) < 4.9))
+                                AutoAimCommands.autoAim(
+                                                drive,
+                                                controller::getLeftY,
+                                                controller::getLeftX,
+                                                centerHubOpening.toTranslation2d())
+                                        .alongWith(AutoAimCommands.readyAim(
+                                                drive, shooter, hood, centerHubOpening.toTranslation2d())),
+                                AutoAimCommands.shuttleAim(drive, controller::getLeftY, controller::getLeftX)
+                                        .alongWith(AutoAimCommands.shuttleReadyAim(drive, shooter, hood)),
+                                () -> AllianceFlipUtil.apply(
+                                                drive.getState().Pose.getX())
+                                        < 4.9)
+                        .alongWith(linSlide.applyPower(LinSlideConfigsBeta.LINSLIDE_AUTO_SHOOT_SPEED)))
                 .onFalse(hood.setHoodPosition(0));
 
         controller.povLeft().onTrue(hood.setHoodPosition(0));
