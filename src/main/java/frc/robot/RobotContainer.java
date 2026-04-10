@@ -9,6 +9,7 @@ package frc.robot;
 
 import static frc.robot.constants.Constants.currentMode;
 import static frc.robot.constants.FieldConstants.Hub.centerHubOpening;
+import static frc.robot.constants.FieldConstants.Shuttle.shuttleTargetZone;
 import static frc.robot.subsystems.feeder.FeederConfigsBeta.FEEDER_SPEED;
 import static frc.robot.subsystems.indexer.IndexerConfigsBeta.TEST_INDEXER_SPEED;
 
@@ -117,10 +118,10 @@ public class RobotContainer {
                                 VisionConstants.frontLinearStdDevBaseline,
                                 VisionConstants.frontAngularStdDevBaseline),
                         new VisionIOLimelight(
-                                VisionConstants.sideCam,
+                                VisionConstants.leftCam,
                                 drive.getRotation3d()::toRotation2d,
-                                VisionConstants.sideLinearStdDevBaseline,
-                                VisionConstants.sideAngularStdDevBaseline));
+                                VisionConstants.leftLinearStdDevBaseline,
+                                VisionConstants.leftAngularStdDevBaseline));
                 break;
 
             case BETA:
@@ -143,10 +144,15 @@ public class RobotContainer {
                                 VisionConstants.frontLinearStdDevBaseline,
                                 VisionConstants.frontAngularStdDevBaseline),
                         new VisionIOLimelight(
-                                VisionConstants.sideCam,
+                                VisionConstants.leftCam,
                                 drive.getRotation3d()::toRotation2d,
-                                VisionConstants.sideLinearStdDevBaseline,
-                                VisionConstants.sideAngularStdDevBaseline));
+                                VisionConstants.leftLinearStdDevBaseline,
+                                VisionConstants.leftAngularStdDevBaseline),
+                        new VisionIOLimelight(
+                                VisionConstants.rightCam,
+                                drive.getRotation3d()::toRotation2d,
+                                VisionConstants.rightLinearStdDevBaseLine,
+                                VisionConstants.rightAngularStdDevBaseLine));
                 break;
 
             case SIM:
@@ -160,7 +166,9 @@ public class RobotContainer {
                         new VisionIOPhotonVisionSim(
                                 VisionConstants.frontCam, VisionConstants.frontCamTrans, () -> drive.getState().Pose),
                         new VisionIOPhotonVisionSim(
-                                VisionConstants.sideCam, VisionConstants.sideCamTrans, () -> drive.getState().Pose));
+                                VisionConstants.leftCam, VisionConstants.leftCamTrans, () -> drive.getState().Pose),
+                        new VisionIOPhotonVisionSim(
+                                VisionConstants.rightCam, VisionConstants.rightCamTrans, () -> drive.getState().Pose));
                 shooter = new Shooter(new ShooterIOReal());
                 feeder = new Feeder(new FeederIOReal());
                 hood = new Hood(new HoodIOBeta());
@@ -213,10 +221,12 @@ public class RobotContainer {
     }
 
     public void updateVisionSim() {
-        Pose3d sideCameraPose = new Pose3d(drive.getState().Pose).transformBy(VisionConstants.sideCamTrans);
+        Pose3d leftCameraPose = new Pose3d(drive.getState().Pose).transformBy(VisionConstants.leftCamTrans);
         Pose3d frontCameraPose = new Pose3d(drive.getState().Pose).transformBy(VisionConstants.frontCamTrans);
-        Logger.recordOutput("Side Cam Transform", sideCameraPose);
+        Pose3d rightCameraPose = new Pose3d(drive.getState().Pose).transformBy(VisionConstants.rightCamTrans);
+        Logger.recordOutput("Side Cam Transform", leftCameraPose);
         Logger.recordOutput("Front Cam Transform", frontCameraPose);
+        Logger.recordOutput("Other Side Cam Transform", rightCameraPose);
     }
 
     /**
@@ -251,10 +261,17 @@ public class RobotContainer {
 
         controller
                 .leftBumper()
-                .whileTrue(AutoAimCommands.readyAim(drive, shooter, hood, centerHubOpening.toTranslation2d())
-                        .alongWith(AutoAimCommands.autoAim(
-                                drive, controller::getLeftY, controller::getLeftX, centerHubOpening.toTranslation2d()))
-                        .alongWith(linSlide.applyPower(LinSlideConfigsBeta.LINSLIDE_AUTO_SHOOT_SPEED)))
+                .whileTrue(Commands.either(
+                        AutoAimCommands.autoAim(
+                                        drive,
+                                        controller::getLeftY,
+                                        controller::getLeftX,
+                                        centerHubOpening.toTranslation2d())
+                                .alongWith(AutoAimCommands.readyAim(
+                                        drive, shooter, hood, centerHubOpening.toTranslation2d())),
+                        AutoAimCommands.shuttleAim(drive, controller::getLeftY, controller::getLeftX)
+                                .alongWith(AutoAimCommands.shuttleReadyAim(drive, shooter, hood)),
+                        () -> AllianceFlipUtil.apply(drive.getState().Pose.getX()) < 4.9))
                 .onFalse(hood.setHoodPosition(0));
 
         controller.povLeft().onTrue(hood.setHoodPosition(0));
@@ -314,12 +331,17 @@ public class RobotContainer {
 
         controller
                 .button(6)
-                .whileTrue(AutoAimCommands.readyAim(drive, shooter, hood, centerHubOpening.toTranslation2d())
-                        .alongWith(AutoAimCommands.autoAim(
-                                drive,
-                                controller::getLeftY,
-                                controller::getLeftX,
-                                centerHubOpening.toTranslation2d())));
+                .whileTrue(Commands.either(
+                        AutoAimCommands.autoAim(
+                                        drive,
+                                        controller::getLeftY,
+                                        controller::getLeftX,
+                                        centerHubOpening.toTranslation2d())
+                                .alongWith(AutoAimCommands.readyAim(
+                                        drive, shooter, hood, centerHubOpening.toTranslation2d())),
+                        AutoAimCommands.shuttleAim(drive, controller::getLeftY, controller::getLeftX)
+                                .alongWith(AutoAimCommands.shuttleReadyAim(drive, shooter, hood)),
+                        () -> AllianceFlipUtil.apply(drive.getState().Pose.getX()) < 4.9));
 
         controller.button(7).whileTrue(indexer.spinIndexer(80));
         controller.button(8).onTrue(Commands.runOnce(drive::seedFieldCentric));
