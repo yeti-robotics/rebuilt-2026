@@ -36,7 +36,7 @@ public class ReadyAimCommand extends Command {
         Translation2d currentPosition = currentPose.getTranslation();
         double distance = modifiedTarget.getDistance(currentPosition);
 
-        state = ShooterConfigsGamma.RED_SHOOTER_MAP.get(distance);  
+        state = ShooterConfigsGamma.RED_SHOOTER_MAP.get(distance);
 
         targetRPS = state.rps;
         targetHood = state.hoodPos;
