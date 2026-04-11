@@ -270,12 +270,11 @@ public class RobotContainer {
         controller
                 .leftBumper()
                 .whileTrue(Commands.either(
-                                AutoAimCommands.autoAimTeleop(
+                                AutoAimCommands.autoAim(
                                                 drive,
                                                 controller::getLeftY,
                                                 controller::getLeftX,
-                                                centerHubOpening.toTranslation2d(),
-                                                () -> controller.getRightTriggerAxis() > 0.2)
+                                                centerHubOpening.toTranslation2d())
                                         .alongWith(AutoAimCommands.readyAim(
                                                 drive, shooter, hood, centerHubOpening.toTranslation2d())),
                                 AutoAimCommands.shuttleAim(drive, controller::getLeftY, controller::getLeftX)
