@@ -60,6 +60,7 @@ public class ShooterConfigsGamma {
     static {
         RED_SHOOTER_MAP.put(1.945, new ShooterStateData(HoodPositions.STOW.getPosition(), 24, 0.0));
         RED_SHOOTER_MAP.put(2.199, new ShooterStateData(HoodPositions.STOW.getPosition(), 26, 0.0));
+        RED_SHOOTER_MAP.put(2.222, new ShooterStateData(HoodPositions.STOW.getPosition(), 26.25, 0.0));
         RED_SHOOTER_MAP.put(2.354, new ShooterStateData(HoodPositions.STOW.getPosition(), 26.5, 0.0));
         RED_SHOOTER_MAP.put(2.442, new ShooterStateData(HoodPositions.STOW.getPosition(), 27, 0.0));
         RED_SHOOTER_MAP.put(2.522, new ShooterStateData(Units.Rotations.of(0.1), 27.5, 0.0));
