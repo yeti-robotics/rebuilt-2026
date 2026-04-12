@@ -23,6 +23,7 @@ public class Shooter extends SubsystemBase {
 
     public Shooter(ShooterIO io) {
         this.io = io;
+        setDefaultCommand(shoot(2)); // TODO: TEST IN PHOENIX TUNER X!
     }
 
     public AngularVelocity getVelocity() {
