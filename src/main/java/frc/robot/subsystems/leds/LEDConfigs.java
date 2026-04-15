@@ -7,5 +7,5 @@ import com.ctre.phoenix6.signals.StripTypeValue;
 public class LEDConfigs {
     static final int CANDLE_ID = 0;
 
-    CANdleConfiguration candleConfigs = new CANdleConfiguration().withCANdleFeatures(new CANdleFeaturesConfigs());
+    CANdleConfiguration candleConfigs = new CANdleConfiguration().withLED(new com.ctre.phoenix6.configs.LEDConfigs().withStripType(StripTypeValue.GRB));
 }
