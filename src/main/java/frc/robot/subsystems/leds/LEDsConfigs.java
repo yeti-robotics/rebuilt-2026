@@ -11,7 +11,7 @@ public class LEDsConfigs {
 
     public static final CANdleConfiguration CANDLE_CONFIGS = new CANdleConfiguration()
             .withLED(new LEDConfigs()
-                    .withStripType(StripTypeValue.RGB)
+                    .withStripType(StripTypeValue.BRG)
                     .withLossOfSignalBehavior(LossOfSignalBehaviorValue.KeepRunning)
                     .withBrightnessScalar(1.0));
 }
