@@ -20,7 +20,7 @@ public class ReadyAimCommand extends Command {
     private Translation2d target;
     double targetRPS;
     Angle targetHood;
-    ShooterStateData state = ShooterConfigsGamma.SHOOTER_MAP.get(0.0);
+    ShooterStateData state = ShooterConfigsGamma.RED_SHOOTER_MAP.get(0.0);
 
     public ReadyAimCommand(CommandSwerveDrivetrain drive, Shooter shooter, Hood hood, Translation2d target) {
         this.drive = drive;
@@ -36,7 +36,7 @@ public class ReadyAimCommand extends Command {
         Translation2d currentPosition = currentPose.getTranslation();
         double distance = modifiedTarget.getDistance(currentPosition);
 
-        state = ShooterConfigsGamma.SHOOTER_MAP.get(distance);
+        state = ShooterConfigsGamma.RED_SHOOTER_MAP.get(distance);
 
         targetRPS = state.rps;
         targetHood = state.hoodPos;
