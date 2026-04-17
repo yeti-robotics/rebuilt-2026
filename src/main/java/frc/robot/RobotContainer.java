@@ -7,11 +7,13 @@
 
 package frc.robot;
 
+import static edu.wpi.first.wpilibj2.command.Commands.runOnce;
 import static frc.robot.constants.Constants.currentMode;
 import static frc.robot.constants.FieldConstants.Hub.centerHubOpening;
 import static frc.robot.subsystems.feeder.FeederConfigsBeta.FEEDER_SPEED;
 import static frc.robot.subsystems.indexer.IndexerConfigsBeta.TEST_INDEXER_SPEED;
 
+import com.ctre.phoenix6.signals.Animation0TypeValue;
 import com.ctre.phoenix6.swerve.SwerveModule;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -44,6 +46,7 @@ import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.IntakeIO;
 import frc.robot.subsystems.intake.IntakeIOAlpha;
 import frc.robot.subsystems.intake.IntakeIOBeta;
+import frc.robot.subsystems.leds.LEDs;
 import frc.robot.subsystems.linslide.LinSlide;
 import frc.robot.subsystems.linslide.LinSlideConfigsBeta;
 import frc.robot.subsystems.linslide.LinSlideIO;
@@ -77,6 +80,7 @@ public class RobotContainer {
     private final Hood hood;
     private final AutoCommands autoCommands;
     private final BatteryFuelGauge battery;
+    private final LEDs ledStrip;
 
     // Controller
     private final CommandXboxController controller =
@@ -191,6 +195,8 @@ public class RobotContainer {
                 break;
         }
 
+        ledStrip = new LEDs();
+
         drive.setStateStdDevs(VecBuilder.fill(0.33333, 0.33333, Math.toRadians(0.5)));
 
         swerveLockState = false;
@@ -243,20 +249,22 @@ public class RobotContainer {
                 .withVelocityY(-controller.getLeftX() * TunerConstantsBeta.kSpeedAt12Volts.magnitude())
                 .withRotationalRate(-controller.getRightX() * TunerConstantsBeta.MaFxAngularRate)));
 
-        controller.start().onTrue(Commands.runOnce(drive::seedFieldCentric, drive));
+        controller.start().onTrue(runOnce(drive::seedFieldCentric, drive));
 
         controller.x().whileTrue(linSlide.applyPower(LinSlideConfigsBeta.DEPLOY_SPEED));
         controller
                 .b()
                 .whileTrue(linSlide.applyPower(-LinSlideConfigsBeta.DEPLOY_SPEED)
                         .alongWith(intake.applyPower(IntakeConfigsBeta.ROLLER_SPEED)));
-        controller.y().onTrue(Commands.runOnce(() -> swerveLockState = !swerveLockState));
+        controller.y().onTrue(runOnce(() -> swerveLockState = !swerveLockState));
 
         controller
                 .leftTrigger()
                 .whileTrue(intake.applyPower(IntakeConfigsBeta.ROLLER_SPEED)
                         .alongWith(linSlide.applyPower(LinSlideConfigsBeta.DEPLOY_SPEED)
                                 .until(linSlide::isDeployed)));
+
+        controller.povUp().onTrue(runOnce(() -> ledStrip.setAnimation(Animation0TypeValue.Fire)));
 
         controller
                 .rightBumper()
@@ -299,7 +307,7 @@ public class RobotContainer {
     }
 
     private void configureDebugBindings() {
-        controller2.start().onTrue(Commands.runOnce(drive::seedFieldCentric, drive));
+        controller2.start().onTrue(runOnce(drive::seedFieldCentric, drive));
 
         //        controller2.leftBumper().whileTrue(intake.applyPower(IntakeConfigsBeta.ROLL_IN_SPEED));
 
@@ -355,7 +363,7 @@ public class RobotContainer {
                         () -> AllianceFlipUtil.apply(drive.getState().Pose.getX()) < 4.9));
 
         controller.button(7).whileTrue(indexer.spinIndexer(80));
-        controller.button(8).onTrue(Commands.runOnce(drive::seedFieldCentric));
+        controller.button(8).onTrue(runOnce(drive::seedFieldCentric));
         controller
                 .button(9)
                 .whileTrue(AutoAimCommands.autoAimWithOrbit(
