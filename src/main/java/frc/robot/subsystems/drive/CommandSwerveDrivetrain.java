@@ -376,9 +376,9 @@ public class CommandSwerveDrivetrain extends TunerConstantsAlpha.TunerSwerveDriv
         super.resetPose(pose);
     }
 
-    public SwerveDriveSimulation getSimulation() {
-        return mapleSimSwerveDrivetrain.mapleSimDrive;
-    }
+//    public SwerveDriveSimulation getSimulation() {
+//        return mapleSimSwerveDrivetrain.mapleSimDrive;
+//    }
 
     private CANcoder getCANcoder(int id) {
         return getModule(id).getEncoder();
