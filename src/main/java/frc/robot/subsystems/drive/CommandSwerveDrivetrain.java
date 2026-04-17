@@ -325,6 +325,16 @@ public class CommandSwerveDrivetrain extends TunerConstantsAlpha.TunerSwerveDriv
         Logger.recordOutput("Drive/TargetStates", getState().ModuleTargets);
         Logger.recordOutput("Drive/MeasuredStates", getState().ModuleStates);
         Logger.recordOutput("Drive/MeasuredSpeeds", getState().Speeds);
+        Logger.recordOutput("Drive/ChassisSpeeds", getChassisSpeeds());
+        Logger.recordOutput("Drive/Gyro/Connected", getPigeon2().isConnected());
+        Logger.recordOutput("Drive/Gyro/YawPosition", getState().Pose.getRotation());
+        Logger.recordOutput(
+                "Drive/Gyro/YawVelocityRadPerSec",
+                getPigeon2().getAngularVelocityZWorld().getValueAsDouble());
+        Logger.recordOutput("Odometry/Robot", getState().Pose);
+        Logger.recordOutput("Drive/OdometryPeriod", getState().OdometryPeriod);
+        Logger.recordOutput("SwerveStates/Measured", getState().ModuleStates);
+        Logger.recordOutput("SwerveChassisSpeeds/Measured", getChassisSpeeds());
         if (mapleSimSwerveDrivetrain != null)
             Logger.recordOutput(
                     "Drive/SimulationPose", mapleSimSwerveDrivetrain.mapleSimDrive.getSimulatedDriveTrainPose());

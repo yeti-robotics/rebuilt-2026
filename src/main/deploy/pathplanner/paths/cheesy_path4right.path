@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.5769900142653355,
-        "y": 5.309457917261056
+        "x": 2.654621968616262,
+        "y": 2.652
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.1074750356633385,
-        "y": 5.167132667617689
+        "x": 3.185106990014265,
+        "y": 2.5096747503566332
       },
       "isLocked": false,
-      "linkedName": "cheesy-hairpin2L"
+      "linkedName": "cheesy-hairpin2-right"
     },
     {
       "anchor": {
         "x": 6.057489300998572,
-        "y": 5.2059486447931524
+        "y": 2.7939999999999996
       },
       "prevControl": {
         "x": 5.081902388736009,
-        "y": 4.75130620024361
+        "y": 2.339357555450457
       },
       "nextControl": {
         "x": 7.390171184022824,
-        "y": 5.82700427960057
+        "y": 3.415055634807417
       },
       "isLocked": false,
       "linkedName": null
@@ -33,11 +33,11 @@
     {
       "anchor": {
         "x": 2.9392724679029953,
-        "y": 5.568231098430813
+        "y": 2.4320000000000004
       },
       "prevControl": {
         "x": 4.010188130553598,
-        "y": 5.677508206864548
+        "y": 2.5412771084337358
       },
       "nextControl": null,
       "isLocked": false,
@@ -67,13 +67,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -40.8043503082194
+    "rotation": 37.19542638841213
   },
   "reversed": false,
-  "folder": "Left Paths",
+  "folder": "Right Paths",
   "idealStartingState": {
     "velocity": 1.0,
-    "rotation": -59.452428251092975
+    "rotation": 32.5741329844371
   },
   "useDefaultConstraints": false
 }

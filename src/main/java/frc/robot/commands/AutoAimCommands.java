@@ -112,21 +112,18 @@ public class AutoAimCommands {
     }
 
     public static Command shuttleAim(
-            CommandSwerveDrivetrain drive,
-            DoubleSupplier xVelSupplier,
-            DoubleSupplier yVelSupplier,
-            Translation2d target) {
+            CommandSwerveDrivetrain drive, DoubleSupplier xVelSupplier, DoubleSupplier yVelSupplier) {
 
         return drive.runEnd(
                 () -> {
+                    Translation2d targetTranslation =
+                            new Translation2d(2.35, drive.getState().Pose.getY() >= 4.221 ? 5.958 : 1.931);
+
                     SwerveRequest.FieldCentricFacingAngle request = new SwerveRequest.FieldCentricFacingAngle()
                             .withHeadingPID(20, 0, 0)
                             .withVelocityX(-xVelSupplier.getAsDouble() * SPEED_MULTIPLIER)
                             .withVelocityY(-yVelSupplier.getAsDouble() * SPEED_MULTIPLIER)
-                            .withTargetDirection(calcDesiredHeading(
-                                    drive.getState().Pose,
-                                    new Translation2d(
-                                            2.35, drive.getState().Pose.getY())))
+                            .withTargetDirection(calcDesiredHeading(drive.getState().Pose, targetTranslation))
                             .withDriveRequestType(SwerveModule.DriveRequestType.Velocity);
 
                     drive.setControl(request);
@@ -175,16 +172,15 @@ public class AutoAimCommands {
                 .withDriveRequestType(SwerveModule.DriveRequestType.Velocity);
 
         return Commands.run(() -> drive.setControl(request))
-                .alongWith(hood.moveToPosition(targetHoodAngle))
+                .alongWith(hood.setHoodPosition(targetHoodAngle.magnitude()))
                 .alongWith(shooter.shoot(targetRPS));
     }
 
-    public static Command readyAim(CommandSwerveDrivetrain drive, Shooter shooter, Translation2d target) {
-        return new ReadyAimCommand(drive, shooter, target);
+    public static Command readyAim(CommandSwerveDrivetrain drive, Shooter shooter, Hood hood, Translation2d target) {
+        return new ReadyAimCommand(drive, shooter, hood, target);
     }
 
-    public static Command shuttleReadyAim(
-            CommandSwerveDrivetrain drive, Shooter shooter, Translation2d target, Hood hood) {
+    public static Command shuttleReadyAim(CommandSwerveDrivetrain drive, Shooter shooter, Hood hood) {
 
         return Commands.defer(
                 () -> {
