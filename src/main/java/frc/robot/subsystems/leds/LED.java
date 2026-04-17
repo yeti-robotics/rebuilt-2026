@@ -3,13 +3,17 @@ package frc.robot.subsystems.leds;
 import com.ctre.phoenix6.controls.*;
 import com.ctre.phoenix6.hardware.CANdle;
 import com.ctre.phoenix6.signals.Animation0TypeValue;
+import com.ctre.phoenix6.signals.AnimationDirectionValue;
+import com.ctre.phoenix6.sim.CANdleSimState;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.Constants;
 
-public class LEDs extends SubsystemBase {
+public class LED extends SubsystemBase {
     private final CANdle candle = new CANdle(LEDsConfigs.CANDLE_ID, Constants.rioBus);
+    private final CANdleSimState candleSim = candle.getSimState();
 
-    public LEDs() {
+    public LED() {
         candle.getConfigurator().apply(LEDsConfigs.CANDLE_CONFIGS);
     }
 
@@ -46,5 +50,18 @@ public class LEDs extends SubsystemBase {
                 candle.setControl(new TwinkleOffAnimation(0, 7));
                 break;
         }
+    }
+
+    public void setLEDs(int startIndex, int count, int r, int g, int b) {
+        candle.setControl(new ColorFlowAnimation(startIndex, startIndex + count - 1).withSlot(0).withDirection(AnimationDirectionValue.Forward));
+    }
+
+    public void clearLEDs() {
+        candle.setControl(new EmptyAnimation(0));
+    }
+
+    @Override
+    public void simulationPeriodic() {
+        candleSim.setSupplyVoltage(RobotController.getBatteryVoltage());
     }
 }

@@ -46,7 +46,8 @@ import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.IntakeIO;
 import frc.robot.subsystems.intake.IntakeIOAlpha;
 import frc.robot.subsystems.intake.IntakeIOBeta;
-import frc.robot.subsystems.leds.LEDs;
+import frc.robot.subsystems.leds.FlameLEDCommand;
+import frc.robot.subsystems.leds.LED;
 import frc.robot.subsystems.linslide.LinSlide;
 import frc.robot.subsystems.linslide.LinSlideConfigsBeta;
 import frc.robot.subsystems.linslide.LinSlideIO;
@@ -80,7 +81,7 @@ public class RobotContainer {
     private final Hood hood;
     private final AutoCommands autoCommands;
     private final BatteryFuelGauge battery;
-    private final LEDs ledStrip;
+    private final LED ledStrip;
 
     // Controller
     private final CommandXboxController controller =
@@ -195,7 +196,7 @@ public class RobotContainer {
                 break;
         }
 
-        ledStrip = new LEDs();
+        ledStrip = new LED();
 
         drive.setStateStdDevs(VecBuilder.fill(0.33333, 0.33333, Math.toRadians(0.5)));
 
@@ -366,8 +367,7 @@ public class RobotContainer {
         controller.button(8).onTrue(runOnce(drive::seedFieldCentric));
         controller
                 .button(9)
-                .whileTrue(AutoAimCommands.autoAimWithOrbit(
-                        drive, controller::getLeftY, controller::getLeftX, centerHubOpening.toTranslation2d()));
+                .whileTrue(new FlameLEDCommand(ledStrip, 0, 2, 0.1, 0.1, 1));
     }
 
     public void updateMechanisms() {
