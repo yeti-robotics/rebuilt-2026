@@ -265,7 +265,7 @@ public class RobotContainer {
                         .alongWith(linSlide.applyPower(LinSlideConfigsBeta.DEPLOY_SPEED)
                                 .until(linSlide::isDeployed)));
 
-        controller.povUp().onTrue(runOnce(() -> ledStrip.setAnimation(Animation0TypeValue.Fire)));
+        controller.povUp().whileTrue(new FlameLEDCommand(ledStrip, 0, 2, 0.1, 0.1, 1));
 
         controller
                 .rightBumper()
