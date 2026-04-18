@@ -55,6 +55,7 @@ import frc.robot.subsystems.shooter.ShooterIOReal;
 import frc.robot.subsystems.shooter.ShooterIOSim;
 import frc.robot.subsystems.vision.*;
 import frc.robot.util.AllianceFlipUtil;
+import frc.robot.util.sim.AIRobotInSimulation;
 import frc.robot.util.sim.Mechanisms;
 import org.ironmaple.simulation.SimulatedArena;
 import org.littletonrobotics.junction.Logger;
@@ -180,6 +181,7 @@ public class RobotContainer {
                 hood = new Hood(new HoodIOBeta());
                 battery = new BatteryFuelGauge(0);
                 drive.resetPose(new Pose2d(3, 3, new Rotation2d()));
+                AIRobotInSimulation.startOpponentRobotSimulations();
 
                 break;
 
