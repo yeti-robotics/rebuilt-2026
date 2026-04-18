@@ -8,21 +8,19 @@ public class MukieLEDCommand extends Command {
     private final int startIndex;
     private final int endIndex;
     private final int middleIndex;
-    private final double whiteLevel;
     private int loopCount;
     private int iterations;
 
     private final Color8Bit red = new Color8Bit(255, 0, 0);
     private final Color8Bit blue = new Color8Bit(0, 0, 255);
-    private final Color8Bit purple= new Color8Bit(106, 6, 124);
+    private final Color8Bit purple = new Color8Bit(106, 6, 124);
     private final Color8Bit empty = new Color8Bit(0, 0, 0);
 
-    public MukieLEDCommand(LED leds,  int startIndex, int endIndex, double whiteLevel) {
+    public MukieLEDCommand(LED leds, int startIndex, int endIndex) {
         this.leds = leds;
         this.startIndex = startIndex;
         this.endIndex = endIndex;
         middleIndex = (startIndex + endIndex) / 2;
-        this.whiteLevel = whiteLevel;
         loopCount = 0;
         iterations = 0;
     }
@@ -43,21 +41,21 @@ public class MukieLEDCommand extends Command {
                 leds.setColor(startIndex, endIndex, empty, 0);
                 leds.setColor(middleIndex, middleIndex, purple, 1);
             } else {
-                iterations++;
+                loopCount++;
                 purple();
             }
         }
     }
 
     private void moveToCenter() {
-        leds.setColor(startIndex, startIndex, empty, 0);
+        leds.setColor(startIndex, endIndex, empty, 0);
         leds.setColor(startIndex + loopCount, startIndex + loopCount, red, 1);
-        leds.setColor(endIndex, endIndex, empty, 0);
+        leds.setColor(startIndex, endIndex, empty, 0);
         leds.setColor(endIndex - loopCount, endIndex - loopCount, blue, 1);
     }
 
     private void purple() {
-        for (int i = startIndex; i <=  endIndex; i++) {
+        for (int i = startIndex; i <= endIndex; i++) {
             leds.setColor(i, i, purple, Math.max(0.7, Math.random()));
         }
     }

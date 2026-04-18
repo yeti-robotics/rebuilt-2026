@@ -18,7 +18,8 @@ public class LED extends SubsystemBase {
 
     public LED() {
         candle.getConfigurator().apply(LEDsConfigs.CANDLE_CONFIGS);
-        setDefaultCommand(runOnce(() -> candle.setControl(new LarsonAnimation(0, LEDsConfigs.LED_COUNT-1).withColor(new RGBWColor(84, 182, 229)))));
+        //        setDefaultCommand(runOnce(() -> candle.setControl(
+        //                new LarsonAnimation(0, LEDsConfigs.LED_COUNT - 1).withColor(new RGBWColor(84, 182, 229)))));
     }
 
     public void setAnimation(Animation0TypeValue type) {
@@ -69,7 +70,8 @@ public class LED extends SubsystemBase {
     }
 
     public void setColor(int start, int end, Color8Bit color, double brightness) {
-        candle.setControl(new SolidColor(start, end).withColor(new RGBWColor(color.red, color.green, color.blue).scaleBrightness(brightness)));
+        candle.setControl(new SolidColor(start, end)
+                .withColor(new RGBWColor(color.red, color.green, color.blue).scaleBrightness(brightness)));
     }
 
     public void clearLEDs() {

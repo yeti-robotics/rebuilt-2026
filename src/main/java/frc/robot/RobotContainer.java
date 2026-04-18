@@ -13,7 +13,6 @@ import static frc.robot.constants.FieldConstants.Hub.centerHubOpening;
 import static frc.robot.subsystems.feeder.FeederConfigsBeta.FEEDER_SPEED;
 import static frc.robot.subsystems.indexer.IndexerConfigsBeta.TEST_INDEXER_SPEED;
 
-import com.ctre.phoenix6.signals.Animation0TypeValue;
 import com.ctre.phoenix6.swerve.SwerveModule;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -51,6 +50,7 @@ import frc.robot.subsystems.intake.IntakeIOBeta;
 import frc.robot.subsystems.leds.FlameLEDCommand;
 import frc.robot.subsystems.leds.LED;
 import frc.robot.subsystems.leds.LEDsSolidColors;
+import frc.robot.subsystems.leds.MukieLEDCommand;
 import frc.robot.subsystems.linslide.LinSlide;
 import frc.robot.subsystems.linslide.LinSlideConfigsBeta;
 import frc.robot.subsystems.linslide.LinSlideIO;
@@ -356,19 +356,27 @@ public class RobotContainer {
 
     public void configureTriggers() {
         // Undecided whether to use
-        new Trigger(
-                controller.leftTrigger().whileTrue(
-                        Commands.either(
-                                ledStrip.setSolidColor(LEDsSolidColors.VIHAAN_RED.getColor()),
-                                ledStrip.setSolidColor(LEDsSolidColors.MUKIE_PURPLE.getColor()),
-                                () -> Units.RotationsPerSecond.of(intake.getRPM()).isNear(Units.RotationsPerSecond.of(0), Units.RotationsPerSecond.of(1)))));
+        new Trigger(controller
+                .leftTrigger()
+                .whileTrue(Commands.either(
+                        ledStrip.setSolidColor(LEDsSolidColors.VIHAAN_RED.getColor()),
+                        ledStrip.setSolidColor(LEDsSolidColors.MUKIE_PURPLE.getColor()),
+                        () -> Units.RotationsPerSecond.of(intake.getRPM())
+                                .isNear(Units.RotationsPerSecond.of(0), Units.RotationsPerSecond.of(1)))));
 
-        new Trigger(controller.leftBumper().whileTrue(ledStrip.setSolidColor(LEDsSolidColors.ANISH_GIRLYPOP_PINK.getColor())).and(controller.rightTrigger()));
+        new Trigger(controller
+                .leftBumper()
+                .whileTrue(ledStrip.setSolidColor(LEDsSolidColors.ANISH_GIRLYPOP_PINK.getColor()))
+                .and(controller.rightTrigger()));
 
-//        new Trigger(
-//                controller.rightTrigger().whileTrue(ledStrip.setSolidColor(LEDsSolidColors.NICK_ORANGE.getColor())));
-//        new Trigger(
-//                controller.rightBumper().whileTrue(runOnce(() -> ledStrip.setAnimation(Animation0TypeValue.Fire))));
+        new Trigger(controller.rightBumper().whileTrue(new MukieLEDCommand(ledStrip, 8, 40)));
+
+        //        new Trigger(
+        //
+        // controller.rightTrigger().whileTrue(ledStrip.setSolidColor(LEDsSolidColors.NICK_ORANGE.getColor())));
+        //        new Trigger(
+        //                controller.rightBumper().whileTrue(runOnce(() ->
+        // ledStrip.setAnimation(Animation0TypeValue.Fire))));
 
     }
 
