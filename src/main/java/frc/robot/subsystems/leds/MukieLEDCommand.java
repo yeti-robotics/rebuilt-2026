@@ -9,7 +9,7 @@ public class MukieLEDCommand extends Command {
     private final int endIndex;
     private final int middleIndex;
     private int loopCount;
-    private int iterations;
+    private int frameCount;
 
     private final Color8Bit red = new Color8Bit(255, 0, 0);
     private final Color8Bit blue = new Color8Bit(0, 0, 255);
@@ -22,7 +22,7 @@ public class MukieLEDCommand extends Command {
         this.endIndex = endIndex;
         middleIndex = (startIndex + endIndex) / 2;
         loopCount = 0;
-        iterations = 0;
+        frameCount = 0;
     }
 
     @Override
@@ -33,22 +33,22 @@ public class MukieLEDCommand extends Command {
 
     @Override
     public void execute() {
-        iterations++;
-        if (iterations % 25 == 0) {
-            if (loopCount++ < (endIndex - startIndex) / 2) {
+        frameCount++;
+        if (frameCount % 25 == 0) {
+            loopCount++;
+            if (loopCount < (endIndex - startIndex) / 2) {
                 moveToCenter();
-            } else if (loopCount++ == (endIndex - startIndex) / 2) {
-                leds.setColor(startIndex, endIndex, empty, 0);
+            } else if (loopCount == (endIndex - startIndex) / 2) {
+                leds.setColor(startIndex, endIndex, empty, 1);
                 leds.setColor(middleIndex, middleIndex, purple, 1);
             } else {
-                loopCount++;
                 purple();
             }
         }
     }
 
     private void moveToCenter() {
-        leds.setColor(startIndex, endIndex, empty, 0);
+        leds.setColor(startIndex, endIndex, empty, 1);
         leds.setColor(startIndex + loopCount, startIndex + loopCount, red, 1);
         leds.setColor(endIndex - loopCount, endIndex - loopCount, blue, 1);
     }
