@@ -22,6 +22,7 @@ import frc.robot.subsystems.shooter.ShooterConfigsBeta;
 import frc.robot.util.AllianceFlipUtil;
 import frc.robot.util.ShooterStateData;
 import java.util.Set;
+import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 import org.littletonrobotics.junction.Logger;
 
@@ -107,6 +108,33 @@ public class AutoAimCommands {
                             .withDriveRequestType(SwerveModule.DriveRequestType.Velocity);
 
                     drive.setControl(request);
+                },
+                SwerveRequest.Idle::new);
+    }
+
+    public static Command autoAimTeleop(
+            CommandSwerveDrivetrain drive,
+            DoubleSupplier xVelSupplier,
+            DoubleSupplier yVelSupplier,
+            Translation2d target,
+            BooleanSupplier shouldLock) {
+
+        SwerveRequest.SwerveDriveBrake brakeRequest = new SwerveRequest.SwerveDriveBrake();
+
+        return drive.runEnd(
+                () -> {
+                    SwerveRequest.FieldCentricFacingAngle aimRequest = new SwerveRequest.FieldCentricFacingAngle()
+                            .withHeadingPID(20, 0, 0)
+                            .withVelocityX(-xVelSupplier.getAsDouble() * SPEED_MULTIPLIER)
+                            .withVelocityY(-yVelSupplier.getAsDouble() * SPEED_MULTIPLIER)
+                            .withTargetDirection(calcDesiredHeading(drive.getState().Pose, target))
+                            .withDriveRequestType(SwerveModule.DriveRequestType.Velocity);
+
+                    if (shouldLock.getAsBoolean()) {
+                        drive.setControl(brakeRequest);
+                    } else {
+                        drive.setControl(aimRequest);
+                    }
                 },
                 SwerveRequest.Idle::new);
     }
