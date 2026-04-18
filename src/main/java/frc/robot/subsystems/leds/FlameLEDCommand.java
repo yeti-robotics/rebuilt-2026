@@ -21,9 +21,17 @@ public class FlameLEDCommand extends Command {
     private double[] flameBuffer;
     private int frameCount;
 
-    public FlameLEDCommand(LED leds, int ledStartIndex, int ledEndIndex,
-                           double sparking, double cooling, double brightness,
-                           Color8Bit baseColor, Color8Bit sparkColor, Color8Bit emberColor, double colorMix) {
+    public FlameLEDCommand(
+            LED leds,
+            int ledStartIndex,
+            int ledEndIndex,
+            double sparking,
+            double cooling,
+            double brightness,
+            Color8Bit baseColor,
+            Color8Bit sparkColor,
+            Color8Bit emberColor,
+            double colorMix) {
         this.leds = leds;
         this.ledStartIndex = ledStartIndex;
         this.ledEndIndex = ledEndIndex;
@@ -42,13 +50,19 @@ public class FlameLEDCommand extends Command {
     }
 
     // Simplified constructor with default colors (red/orange fire)
-    public FlameLEDCommand(LED leds, int ledStartIndex, int ledEndIndex,
-                           double sparking, double cooling, double brightness) {
-        this(leds, ledStartIndex, ledEndIndex, sparking, cooling, brightness,
-             new Color8Bit(255, 100, 0),    // Orange base
-             new Color8Bit(255, 255, 200),  // Yellow-white sparks
-             new Color8Bit(100, 0, 0),      // Dark red embers
-             0.5);
+    public FlameLEDCommand(
+            LED leds, int ledStartIndex, int ledEndIndex, double sparking, double cooling, double brightness) {
+        this(
+                leds,
+                ledStartIndex,
+                ledEndIndex,
+                sparking,
+                cooling,
+                brightness,
+                new Color8Bit(255, 100, 0), // Orange base
+                new Color8Bit(255, 255, 200), // Yellow-white sparks
+                new Color8Bit(100, 0, 0), // Dark red embers
+                0.5);
     }
 
     @Override
@@ -75,7 +89,7 @@ public class FlameLEDCommand extends Command {
         // Add new sparks at the bottom
         for (int i = 0; i < 3; i++) {
             if (Math.random() < sparking) {
-                int sparkIndex = (int)(Math.random() * Math.min(5, flameBuffer.length));
+                int sparkIndex = (int) (Math.random() * Math.min(5, flameBuffer.length));
                 flameBuffer[sparkIndex] = 1.0;
             }
         }
@@ -94,9 +108,9 @@ public class FlameLEDCommand extends Command {
             if (intensity > 0.01) {
                 // Mix colors based on intensity
                 Color8Bit color = mixColors(intensity);
-                int r = (int)(color.red * brightness);
-                int g = (int)(color.green * brightness);
-                int b = (int)(color.blue * brightness);
+                int r = (int) (color.red * brightness);
+                int g = (int) (color.green * brightness);
+                int b = (int) (color.blue * brightness);
                 leds.setLEDs(ledStartIndex + i, 1, r, g, b);
             }
         }
@@ -114,14 +128,11 @@ public class FlameLEDCommand extends Command {
     }
 
     private Color8Bit lerpColor(Color8Bit c1, Color8Bit c2, double t) {
-        int r = (int)(c1.red + (c2.red - c1.red) * t);
-        int g = (int)(c1.green + (c2.green - c1.green) * t);
-        int b = (int)(c1.blue + (c2.blue - c1.blue) * t);
+        int r = (int) (c1.red + (c2.red - c1.red) * t);
+        int g = (int) (c1.green + (c2.green - c1.green) * t);
+        int b = (int) (c1.blue + (c2.blue - c1.blue) * t);
         return new Color8Bit(
-            Math.max(0, Math.min(255, r)),
-            Math.max(0, Math.min(255, g)),
-            Math.max(0, Math.min(255, b))
-        );
+                Math.max(0, Math.min(255, r)), Math.max(0, Math.min(255, g)), Math.max(0, Math.min(255, b)));
     }
 
     @Override

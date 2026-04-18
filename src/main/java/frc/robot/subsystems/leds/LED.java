@@ -55,10 +55,10 @@ public class LED extends SubsystemBase {
 
     public void setLEDs(int startIndex, int count, int r, int g, int b) {
         candle.setControl(new ColorFlowAnimation(startIndex, startIndex + count - 1)
-            .withSlot(0)
-            .withColor(new RGBWColor(r, g, b, 0))
-            .withDirection(AnimationDirectionValue.Forward)
-            .withUpdateFreqHz(0));
+                .withSlot(0)
+                .withColor(new RGBWColor(r, g, b, 0))
+                .withDirection(AnimationDirectionValue.Forward)
+                .withUpdateFreqHz(0));
     }
 
     public void clearLEDs() {
