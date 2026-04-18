@@ -268,15 +268,14 @@ public class RobotContainer {
                         linSlide.applyPower(LinSlideConfigsBeta.DEPLOY_SPEED)));
 
         controller
-                .leftBumper()
+                .rightTrigger()
                 .whileTrue(Commands.either(
                                 Commands.parallel(
                                         Commands.parallel(
-                                                intake.applyPower(-IntakeConfigsBeta.ROLLER_SPEED),
-                                                indexer.applyPower(-TEST_INDEXER_SPEED),
-                                                feeder.feed(-FEEDER_SPEED),
-                                                shooter.applyPower(-0.1),
-                                                linSlide.applyPower(LinSlideConfigsBeta.DEPLOY_SPEED)),
+                                                indexer.applyPower(TEST_INDEXER_SPEED),
+                                                intake.applyPower(IntakeConfigsBeta.ROLLER_SPEED),
+                                                feeder.feed(FEEDER_SPEED),
+                                                shooter.switchSlot(1)),
                                         Commands.waitSeconds(0.5).andThen(
                                         AutoAimCommands.autoAim(
                                                         drive,
@@ -290,19 +289,10 @@ public class RobotContainer {
                         () -> AllianceFlipUtil.apply(drive.getState().Pose.getX()) < 4.9)
 
                         .alongWith(linSlide.applyPower(LinSlideConfigsBeta.LINSLIDE_AUTO_SHOOT_SPEED)))
-                .onFalse(hood.setHoodPosition(0));
+                .onFalse(hood.setHoodPosition(0).alongWith(shooter.switchSlot(0)));
 
         controller.povLeft().onTrue(hood.setHoodPosition(0));
         controller.povRight().onTrue(hood.setHoodPosition(0.65));
-
-        controller
-                .rightTrigger()
-                .whileTrue(Commands.parallel(
-                        indexer.applyPower(TEST_INDEXER_SPEED),
-                        intake.applyPower(IntakeConfigsBeta.ROLLER_SPEED),
-                        feeder.feed(FEEDER_SPEED),
-                        shooter.switchSlot(1)))
-                .onFalse(shooter.switchSlot(0));
     }
 
     private void configureDebugBindings() {
