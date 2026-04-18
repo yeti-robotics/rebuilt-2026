@@ -7,6 +7,7 @@ import com.ctre.phoenix6.signals.AnimationDirectionValue;
 import com.ctre.phoenix6.signals.RGBWColor;
 import com.ctre.phoenix6.sim.CANdleSimState;
 import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.util.Color8Bit;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.Constants;
 
@@ -59,6 +60,10 @@ public class LED extends SubsystemBase {
                 .withColor(new RGBWColor(r, g, b, 0))
                 .withDirection(AnimationDirectionValue.Forward)
                 .withUpdateFreqHz(0));
+    }
+
+    public void setColor(int start, int end, Color8Bit color) {
+        candle.setControl(new SolidColor(start, end).withColor(new RGBWColor(color.red, color.green, color.blue)));
     }
 
     public void clearLEDs() {
