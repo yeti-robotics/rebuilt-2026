@@ -421,5 +421,5 @@ public class RobotContainer {
         Logger.recordOutput(
                 "FieldSimulation/RobotPosition", drive.getSimulation().getSimulatedDriveTrainPose());
         Logger.recordOutput("FieldSimulation/Fuel", SimulatedArena.getInstance().getGamePiecesArrayByType("Fuel"));
-    } //adding comment to push
+    }
 }

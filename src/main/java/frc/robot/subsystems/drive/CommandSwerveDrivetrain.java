@@ -148,6 +148,8 @@ public class CommandSwerveDrivetrain extends TunerConstantsAlpha.TunerSwerveDriv
         return m_kinematics.toChassisSpeeds(getState().ModuleStates);
     }
 
+    private MapleSimSwerveDrivetrain mapleSimSwerveDrivetrain = null;
+
     public CommandSwerveDrivetrain(
             SwerveDrivetrainConstants drivetrainConstants, SwerveModuleConstants<?, ?, ?>... modules) {
         super(drivetrainConstants, MapleSimSwerveDrivetrain.regulateModuleConstantsForSimulation(modules));
@@ -340,7 +342,6 @@ public class CommandSwerveDrivetrain extends TunerConstantsAlpha.TunerSwerveDriv
                     "Drive/SimulationPose", mapleSimSwerveDrivetrain.mapleSimDrive.getSimulatedDriveTrainPose());
     }
 
-    private MapleSimSwerveDrivetrain mapleSimSwerveDrivetrain = null;
 
     private void startSimThread() {
         mapleSimSwerveDrivetrain = new MapleSimSwerveDrivetrain(
@@ -376,9 +377,9 @@ public class CommandSwerveDrivetrain extends TunerConstantsAlpha.TunerSwerveDriv
         super.resetPose(pose);
     }
 
-//    public SwerveDriveSimulation getSimulation() {
-//        return mapleSimSwerveDrivetrain.mapleSimDrive;
-//    }
+    public SwerveDriveSimulation getSimulation() {
+        return mapleSimSwerveDrivetrain.mapleSimDrive;
+    }
 
     private CANcoder getCANcoder(int id) {
         return getModule(id).getEncoder();
