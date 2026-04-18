@@ -13,6 +13,7 @@ import static frc.robot.constants.FieldConstants.Hub.centerHubOpening;
 import static frc.robot.subsystems.feeder.FeederConfigsBeta.FEEDER_SPEED;
 import static frc.robot.subsystems.indexer.IndexerConfigsBeta.TEST_INDEXER_SPEED;
 
+import com.ctre.phoenix6.signals.Animation0TypeValue;
 import com.ctre.phoenix6.swerve.SwerveModule;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -93,6 +94,8 @@ public class RobotContainer {
 
     // Dashboard inputs
     private final LoggedDashboardChooser<Command> autoChooser;
+
+    private boolean rightTriggerPressed = false;
 
     private boolean swerveLockState;
 
@@ -191,33 +194,33 @@ public class RobotContainer {
 
         // Set up simulatable mechanisms
         mechanisms = new Mechanisms();
+//
+//        autoChooser.addOption("Left", autoCommands.oneCycleNeutralTowerLeft());
+//        autoChooser.addOption("Right", autoCommands.twoCycleNeutralOutpostTowerRight());
+//        autoChooser.addOption("Cheesy Left", autoCommands.cheesyLeft());
+//        autoChooser.addOption("Cheesy Right", autoCommands.cheesyRight());
+//        autoChooser.addOption("DCMP L1", autoCommands.dcmpLeft());
 
-        autoChooser.addOption("Left", autoCommands.oneCycleNeutralTowerLeft());
-        autoChooser.addOption("Right", autoCommands.twoCycleNeutralOutpostTowerRight());
-        autoChooser.addOption("Cheesy Left", autoCommands.cheesyLeft());
-        autoChooser.addOption("Cheesy Right", autoCommands.cheesyRight());
-        autoChooser.addOption("DCMP L1", autoCommands.dcmpLeft());
-
-        SmartDashboard.putNumber("Shooter Velocity", 0);
+//        SmartDashboard.putNumber("Shooter Velocity", 0);
 
         // Configure the button bindings
-        if (Robot.isReal()) {
-            configureRealBindings();
-            configureDebugBindings();
-        } else if (Robot.isSimulation()) {
-            configureSimBindings();
-        }
+//        if (Robot.isReal()) {
+//            configureRealBindings();
+//            configureDebugBindings();
+//        } else if (Robot.isSimulation()) {
+//            configureSimBindings();
+//        }
 
         configureTriggers();
     }
 
     public void updateVisionSim() {
-        Pose3d leftCameraPose = new Pose3d(drive.getState().Pose).transformBy(VisionConstants.leftCamTrans);
-        Pose3d frontCameraPose = new Pose3d(drive.getState().Pose).transformBy(VisionConstants.frontCamTrans);
-        Pose3d rightCameraPose = new Pose3d(drive.getState().Pose).transformBy(VisionConstants.rightCamTrans);
-        Logger.recordOutput("Side Cam Transform", leftCameraPose);
-        Logger.recordOutput("Front Cam Transform", frontCameraPose);
-        Logger.recordOutput("Other Side Cam Transform", rightCameraPose);
+//        Pose3d leftCameraPose = new Pose3d(drive.getState().Pose).transformBy(VisionConstants.leftCamTrans);
+//        Pose3d frontCameraPose = new Pose3d(drive.getState().Pose).transformBy(VisionConstants.frontCamTrans);
+//        Pose3d rightCameraPose = new Pose3d(drive.getState().Pose).transformBy(VisionConstants.rightCamTrans);
+//        Logger.recordOutput("Side Cam Transform", leftCameraPose);
+//        Logger.recordOutput("Front Cam Transform", frontCameraPose);
+//        Logger.recordOutput("Other Side Cam Transform", rightCameraPose);
     }
 
     /**
@@ -227,66 +230,66 @@ public class RobotContainer {
      * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
      */
     private void configureRealBindings() {
-        drive.setDefaultCommand(drive.applyRequest(() -> driveRequest
-                .withVelocityX(-controller.getLeftY() * TunerConstantsBeta.kSpeedAt12Volts.magnitude())
-                .withVelocityY(-controller.getLeftX() * TunerConstantsBeta.kSpeedAt12Volts.magnitude())
-                .withRotationalRate(-controller.getRightX() * TunerConstantsBeta.MaFxAngularRate)));
-
-        controller.start().onTrue(runOnce(drive::seedFieldCentric, drive));
-
-        controller.x().whileTrue(linSlide.applyPower(LinSlideConfigsBeta.DEPLOY_SPEED));
-        controller
-                .b()
-                .whileTrue(linSlide.applyPower(-LinSlideConfigsBeta.DEPLOY_SPEED)
-                        .alongWith(intake.applyPower(IntakeConfigsBeta.ROLLER_SPEED)));
-        controller.y().onTrue(runOnce(() -> swerveLockState = !swerveLockState));
-
-        controller
-                .leftTrigger()
-                .whileTrue(intake.applyPower(IntakeConfigsBeta.ROLLER_SPEED)
-                        .alongWith(linSlide.applyPower(LinSlideConfigsBeta.DEPLOY_SPEED)
-                                .until(linSlide::isDeployed)));
-
-        controller.povUp().whileTrue(new FlameLEDCommand(ledStrip, 0, 2, 0.1, 0.1, 1));
-
-        controller
-                .rightBumper()
-                .onTrue(Commands.parallel(
-                        intake.applyPower(-IntakeConfigsBeta.ROLLER_SPEED),
-                        indexer.applyPower(-TEST_INDEXER_SPEED),
-                        feeder.feed(-FEEDER_SPEED),
-                        shooter.applyPower(-0.1),
-                        linSlide.applyPower(LinSlideConfigsBeta.DEPLOY_SPEED)));
-
-        controller
-                .leftBumper()
-                .whileTrue(Commands.either(
-                                AutoAimCommands.autoAim(
-                                                drive,
-                                                controller::getLeftY,
-                                                controller::getLeftX,
-                                                centerHubOpening.toTranslation2d())
-                                        .alongWith(AutoAimCommands.readyAim(
-                                                drive, shooter, hood, centerHubOpening.toTranslation2d())),
-                                AutoAimCommands.shuttleAim(drive, controller::getLeftY, controller::getLeftX)
-                                        .alongWith(AutoAimCommands.shuttleReadyAim(drive, shooter, hood)),
-                                () -> AllianceFlipUtil.apply(
-                                                drive.getState().Pose.getX())
-                                        < 4.9)
-                        .alongWith(linSlide.applyPower(LinSlideConfigsBeta.LINSLIDE_AUTO_SHOOT_SPEED)))
-                .onFalse(hood.setHoodPosition(0));
-
-        controller.povLeft().onTrue(hood.setHoodPosition(0));
-        controller.povRight().onTrue(hood.setHoodPosition(0.65));
-
-        controller
-                .rightTrigger()
-                .whileTrue(Commands.parallel(
-                        indexer.applyPower(TEST_INDEXER_SPEED),
-                        intake.applyPower(IntakeConfigsBeta.ROLLER_SPEED),
-                        feeder.feed(FEEDER_SPEED),
-                        shooter.switchSlot(1)))
-                .onFalse(shooter.switchSlot(0));
+        //        drive.setDefaultCommand(drive.applyRequest(() -> driveRequest
+        //                .withVelocityX(-controller.getLeftY() * TunerConstantsBeta.kSpeedAt12Volts.magnitude())
+        //                .withVelocityY(-controller.getLeftX() * TunerConstantsBeta.kSpeedAt12Volts.magnitude())
+        //                .withRotationalRate(-controller.getRightX() * TunerConstantsBeta.MaFxAngularRate)));
+        //
+        //        controller.start().onTrue(runOnce(drive::seedFieldCentric, drive));
+        //
+        //        controller.x().whileTrue(linSlide.applyPower(LinSlideConfigsBeta.DEPLOY_SPEED));
+        //        controller
+        //                .b()
+        //                .whileTrue(linSlide.applyPower(-LinSlideConfigsBeta.DEPLOY_SPEED)
+        //                        .alongWith(intake.applyPower(IntakeConfigsBeta.ROLLER_SPEED)));
+        //        controller.y().onTrue(runOnce(() -> swerveLockState = !swerveLockState));
+        //
+        //        controller
+        //                .leftTrigger()
+        //                .whileTrue(intake.applyPower(IntakeConfigsBeta.ROLLER_SPEED)
+        //                        .alongWith(linSlide.applyPower(LinSlideConfigsBeta.DEPLOY_SPEED)
+        //                                .until(linSlide::isDeployed)));
+        //
+        //        controller.povUp().whileTrue(new FlameLEDCommand(ledStrip, 0, 2, 0.1, 0.1, 1));
+        //
+        //        controller
+        //                .rightBumper()
+        //                .onTrue(Commands.parallel(
+        //                        intake.applyPower(-IntakeConfigsBeta.ROLLER_SPEED),
+        //                        indexer.applyPower(-TEST_INDEXER_SPEED),
+        //                        feeder.feed(-FEEDER_SPEED),
+        //                        shooter.applyPower(-0.1),
+        //                        linSlide.applyPower(LinSlideConfigsBeta.DEPLOY_SPEED)));
+        //
+        //        controller
+        //                .leftBumper()
+        //                .whileTrue(Commands.either(
+        //                                AutoAimCommands.autoAim(
+        //                                                drive,
+        //                                                controller::getLeftY,
+        //                                                controller::getLeftX,
+        //                                                centerHubOpening.toTranslation2d())
+        //                                        .alongWith(AutoAimCommands.readyAim(
+        //                                                drive, shooter, hood, centerHubOpening.toTranslation2d())),
+        //                                AutoAimCommands.shuttleAim(drive, controller::getLeftY, controller::getLeftX)
+        //                                        .alongWith(AutoAimCommands.shuttleReadyAim(drive, shooter, hood)),
+        //                                () -> AllianceFlipUtil.apply(
+        //                                                drive.getState().Pose.getX())
+        //                                        < 4.9)
+        //                        .alongWith(linSlide.applyPower(LinSlideConfigsBeta.LINSLIDE_AUTO_SHOOT_SPEED)))
+        //                .onFalse(hood.setHoodPosition(0));
+        //
+        //        controller.povLeft().onTrue(hood.setHoodPosition(0));
+        //        controller.povRight().onTrue(hood.setHoodPosition(0.65));
+        //
+        //        controller
+        //                .rightTrigger()
+        //                .whileTrue(Commands.parallel(
+        //                        indexer.applyPower(TEST_INDEXER_SPEED),
+        //                        intake.applyPower(IntakeConfigsBeta.ROLLER_SPEED),
+        //                        feeder.feed(FEEDER_SPEED),
+        //                        shooter.switchSlot(1)))
+        //                .onFalse(shooter.switchSlot(0));
     }
 
     private void configureDebugBindings() {
@@ -351,11 +354,12 @@ public class RobotContainer {
     }
 
     public void updateMechanisms() {
-        mechanisms.updateLinSlideMech(linSlide.getCurrentPosition());
+//        mechanisms.updateLinSlideMech(linSlide.getCurrentPosition());
     }
 
     public void configureTriggers() {
-        // Undecided whether to use
+        new Trigger(controller.rightTrigger().onChange(runOnce(() -> rightTriggerPressed = !rightTriggerPressed)));
+
         new Trigger(controller
                 .leftTrigger()
                 .whileTrue(Commands.either(
@@ -366,8 +370,13 @@ public class RobotContainer {
 
         new Trigger(controller
                 .leftBumper()
-                .whileTrue(ledStrip.setSolidColor(LEDsSolidColors.ANISH_GIRLYPOP_PINK.getColor()))
-                .and(controller.rightTrigger()));
+                .whileTrue(ledStrip.setSolidColor(LEDsSolidColors.ANISH_GIRLYPOP_PINK.getColor())
+                        .onlyIf(() -> !rightTriggerPressed)));
+
+        new Trigger(controller
+                .rightTrigger()
+                .whileTrue(runOnce(() -> ledStrip.setAnimation(Animation0TypeValue.Fire)))
+                .onFalse(runOnce(ledStrip::clearLEDs)));
 
         new Trigger(controller.rightBumper().whileTrue(new MukieLEDCommand(ledStrip, 8, 40)));
 
@@ -381,22 +390,24 @@ public class RobotContainer {
     }
 
     public void updateLoggers() {
-        Pose2d currentPose = drive.getState().Pose;
-        Translation2d modifiedTarget = AllianceFlipUtil.apply(centerHubOpening.toTranslation2d());
-        Translation2d currentPosition = currentPose.getTranslation();
-        double distance = modifiedTarget.getDistance(currentPosition);
+//        Pose2d currentPose = drive.getState().Pose;
+//        Translation2d modifiedTarget = AllianceFlipUtil.apply(centerHubOpening.toTranslation2d());
+//        Translation2d currentPosition = currentPose.getTranslation();
+//        double distance = modifiedTarget.getDistance(currentPosition);
+//
+//        Logger.recordOutput("AutoAimCommands/Shooter Map/hub distance", distance);
+//
+//        Translation2d shuttleTranslation = AllianceFlipUtil.apply(new Translation2d(2.35, currentPose.getY()));
+//        double shuttleDistance = shuttleTranslation.getDistance(currentPosition);
+//
+//        Logger.recordOutput("AutoAimCommands/Shuttle Map/ideal shuttle distance", shuttleDistance);
+//        Logger.recordOutput("Drive/Swerve Lock State", swerveLockState);
 
-        Logger.recordOutput("AutoAimCommands/Shooter Map/hub distance", distance);
-
-        Translation2d shuttleTranslation = AllianceFlipUtil.apply(new Translation2d(2.35, currentPose.getY()));
-        double shuttleDistance = shuttleTranslation.getDistance(currentPosition);
-
-        Logger.recordOutput("AutoAimCommands/Shuttle Map/ideal shuttle distance", shuttleDistance);
-        Logger.recordOutput("Drive/Swerve Lock State", swerveLockState);
+        Logger.recordOutput("LEDs/Right Trigger Pressed", rightTriggerPressed);
     }
 
     public void saveLog() {
-        battery.saveLog();
+//        battery.saveLog();
     }
 
     /**

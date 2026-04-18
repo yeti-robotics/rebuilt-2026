@@ -7,7 +7,7 @@ import com.ctre.phoenix6.signals.StripTypeValue;
 
 public class LEDsConfigs {
     public static final int CANDLE_ID = 25;
-    public static final int LED_COUNT = 18;
+    public static final int LED_COUNT = 24;
 
     public static final CANdleConfiguration CANDLE_CONFIGS = new CANdleConfiguration()
             .withLED(new LEDConfigs()

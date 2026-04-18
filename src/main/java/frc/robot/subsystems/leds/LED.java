@@ -28,31 +28,31 @@ public class LED extends SubsystemBase {
                 candle.setControl(new EmptyAnimation(0));
                 break;
             case ColorFlow:
-                candle.setControl(new ColorFlowAnimation(0, 7));
+                candle.setControl(new ColorFlowAnimation(7, LEDsConfigs.LED_COUNT - 1));
                 break;
             case Fire:
-                candle.setControl(new FireAnimation(0, 7));
+                candle.setControl(new FireAnimation(7, LEDsConfigs.LED_COUNT - 1));
                 break;
             case Larson:
-                candle.setControl(new LarsonAnimation(0, 7));
+                candle.setControl(new LarsonAnimation(7, LEDsConfigs.LED_COUNT - 1));
                 break;
             case Rainbow:
-                candle.setControl(new RainbowAnimation(0, 7));
+                candle.setControl(new RainbowAnimation(7, LEDsConfigs.LED_COUNT - 1));
                 break;
             case RgbFade:
-                candle.setControl(new RgbFadeAnimation(0, 7));
+                candle.setControl(new RgbFadeAnimation(7, LEDsConfigs.LED_COUNT - 1));
                 break;
             case SingleFade:
-                candle.setControl(new SingleFadeAnimation(0, 7));
+                candle.setControl(new SingleFadeAnimation(7, LEDsConfigs.LED_COUNT - 1));
                 break;
             case Strobe:
-                candle.setControl(new StrobeAnimation(0, 7));
+                candle.setControl(new StrobeAnimation(7, LEDsConfigs.LED_COUNT - 1));
                 break;
             case Twinkle:
-                candle.setControl(new TwinkleAnimation(0, 7));
+                candle.setControl(new TwinkleAnimation(7, LEDsConfigs.LED_COUNT - 1));
                 break;
             case TwinkleOff:
-                candle.setControl(new TwinkleOffAnimation(0, 7));
+                candle.setControl(new TwinkleOffAnimation(7, LEDsConfigs.LED_COUNT - 1));
                 break;
         }
     }
@@ -66,7 +66,11 @@ public class LED extends SubsystemBase {
     }
 
     public Command setSolidColor(SolidColor solidColorName) {
-        return runOnce(() -> candle.setControl(solidColorName));
+        return runOnce(() -> clearLEDs())
+                .andThen(runEnd(
+                        () -> candle.setControl(solidColorName),
+                        () -> candle.setControl(new LarsonAnimation(0, LEDsConfigs.LED_COUNT - 1)
+                                .withColor(new RGBWColor(84, 182, 229)))));
     }
 
     public void setColor(int start, int end, Color8Bit color, double brightness) {
@@ -76,6 +80,10 @@ public class LED extends SubsystemBase {
 
     public void clearLEDs() {
         candle.setControl(new EmptyAnimation(0));
+    }
+
+    public void clearColor() {
+        candle.setControl(new LarsonAnimation(0, LEDsConfigs.LED_COUNT - 1).withColor(new RGBWColor(84, 182, 229)));
     }
 
     @Override
