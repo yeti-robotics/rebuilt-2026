@@ -4,6 +4,7 @@ import com.ctre.phoenix6.controls.*;
 import com.ctre.phoenix6.hardware.CANdle;
 import com.ctre.phoenix6.signals.Animation0TypeValue;
 import com.ctre.phoenix6.signals.AnimationDirectionValue;
+import com.ctre.phoenix6.signals.RGBWColor;
 import com.ctre.phoenix6.sim.CANdleSimState;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -53,7 +54,11 @@ public class LED extends SubsystemBase {
     }
 
     public void setLEDs(int startIndex, int count, int r, int g, int b) {
-        candle.setControl(new ColorFlowAnimation(startIndex, startIndex + count - 1).withSlot(0).withDirection(AnimationDirectionValue.Forward));
+        candle.setControl(new ColorFlowAnimation(startIndex, startIndex + count - 1)
+            .withSlot(0)
+            .withColor(new RGBWColor(r, g, b, 0))
+            .withDirection(AnimationDirectionValue.Forward)
+            .withUpdateFreqHz(0));
     }
 
     public void clearLEDs() {
