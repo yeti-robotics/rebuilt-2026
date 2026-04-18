@@ -6,7 +6,7 @@ import com.ctre.phoenix6.signals.LossOfSignalBehaviorValue;
 import com.ctre.phoenix6.signals.StripTypeValue;
 
 public class LEDsConfigs {
-    public static final int CANDLE_ID = 0;
+    public static final int CANDLE_ID = 25;
     private final int LED_COUNT = 100;
 
     public static final CANdleConfiguration CANDLE_CONFIGS = new CANdleConfiguration()
