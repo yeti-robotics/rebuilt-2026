@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.constants.Constants;
 import frc.robot.util.Elastic;
+import frc.robot.util.sim.AIRobotInSimulation;
 import frc.robot.util.sim.PhysicsSim;
 import org.littletonrobotics.junction.LogFileUtil;
 import org.littletonrobotics.junction.LoggedRobot;
@@ -162,6 +163,7 @@ public class Robot extends LoggedRobot {
     @Override
     public void simulationInit() {
         robotContainer.resetSimulationField();
+        AIRobotInSimulation.startOpponentRobotSimulations();
     }
 
     /** This function is called periodically whilst in simulation. */
