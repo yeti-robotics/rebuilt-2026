@@ -2,7 +2,9 @@ package frc.robot.subsystems.leds;
 
 import com.ctre.phoenix6.configs.CANdleConfiguration;
 import com.ctre.phoenix6.configs.LEDConfigs;
+import com.ctre.phoenix6.controls.LarsonAnimation;
 import com.ctre.phoenix6.signals.LossOfSignalBehaviorValue;
+import com.ctre.phoenix6.signals.RGBWColor;
 import com.ctre.phoenix6.signals.StripTypeValue;
 
 public class LEDsConfigs {
@@ -14,4 +16,7 @@ public class LEDsConfigs {
                     .withStripType(StripTypeValue.BRG)
                     .withLossOfSignalBehavior(LossOfSignalBehaviorValue.DisableLEDs)
                     .withBrightnessScalar(1.0));
+
+    public static final LarsonAnimation defaultAnim =
+            new LarsonAnimation(0, LEDsConfigs.LED_COUNT - 1).withColor(new RGBWColor(84, 182, 229));
 }

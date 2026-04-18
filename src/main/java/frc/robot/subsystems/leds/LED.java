@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.util.Color8Bit;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.RobotContainer;
 import frc.robot.constants.Constants;
 
 public class LED extends SubsystemBase {
@@ -18,8 +19,8 @@ public class LED extends SubsystemBase {
 
     public LED() {
         candle.getConfigurator().apply(LEDsConfigs.CANDLE_CONFIGS);
-        setDefaultCommand(runOnce(() -> candle.setControl(
-                new LarsonAnimation(0, LEDsConfigs.LED_COUNT - 1).withColor(new RGBWColor(84, 182, 229)))));
+        setDefaultCommand(runOnce(() -> candle.setControl(LEDsConfigs.defaultAnim))
+                .onlyIf(() -> !RobotContainer.rightTriggerPressed));
     }
 
     public void setAnimation(Animation0TypeValue type) {

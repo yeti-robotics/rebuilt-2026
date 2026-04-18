@@ -46,10 +46,7 @@ import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.IntakeIO;
 import frc.robot.subsystems.intake.IntakeIOAlpha;
 import frc.robot.subsystems.intake.IntakeIOBeta;
-import frc.robot.subsystems.leds.FlameLEDCommand;
-import frc.robot.subsystems.leds.LED;
-import frc.robot.subsystems.leds.LEDsSolidColors;
-import frc.robot.subsystems.leds.MukieLEDCommand;
+import frc.robot.subsystems.leds.*;
 import frc.robot.subsystems.linslide.LinSlide;
 import frc.robot.subsystems.linslide.LinSlideConfigsBeta;
 import frc.robot.subsystems.linslide.LinSlideIO;
@@ -93,7 +90,7 @@ public class RobotContainer {
     // Dashboard inputs
     private final LoggedDashboardChooser<Command> autoChooser;
 
-    private boolean rightTriggerPressed = false;
+    public static boolean rightTriggerPressed = false;
 
     private boolean swerveLockState;
 
@@ -370,21 +367,19 @@ public class RobotContainer {
         // for revving flywheels
         new Trigger(controller
                 .leftBumper()
-                .whileTrue(ledStrip.setSolidColor(LEDsSolidColors.ANISH_GIRLYPOP_PINK.getColor())
+                .whileTrue(ledStrip.setSolidColor(LEDsSolidColors.VIVEK_LIME.getColor())
                         .until(() -> rightTriggerPressed)));
 
+        new Trigger(controller.povUp().whileTrue(ledStrip.setSolidColor(LEDsSolidColors.DANYA_GREEN.getColor())));
+
         // while shooting
-        new Trigger(controller
-                .rightTrigger()
-                .whileTrue(runOnce(ledStrip::clearSolidColor)
-                        .andThen(runOnce(ledStrip::clearLEDs))
-                        .andThen(run(() -> ledStrip.setAnimation(Animation0TypeValue.Fire)))));
+        new Trigger(controller.rightTrigger().whileTrue(run(() -> ledStrip.setAnimation(Animation0TypeValue.Rainbow))));
 
         // Brennen's thingy
         new Trigger(controller
                 .rightBumper()
                 .whileTrue(runOnce(ledStrip::clearSolidColor)
-                        .andThen(ledStrip::clearLEDs)
+                        .andThen(runOnce(ledStrip::clearLEDs))
                         .andThen(new MukieLEDCommand(ledStrip, 8, 40))));
     }
 
