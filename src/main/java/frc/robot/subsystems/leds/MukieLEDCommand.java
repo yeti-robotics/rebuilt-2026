@@ -50,7 +50,6 @@ public class MukieLEDCommand extends Command {
     private void moveToCenter() {
         leds.setColor(startIndex, endIndex, empty, 0);
         leds.setColor(startIndex + loopCount, startIndex + loopCount, red, 1);
-        leds.setColor(startIndex, endIndex, empty, 0);
         leds.setColor(endIndex - loopCount, endIndex - loopCount, blue, 1);
     }
 
