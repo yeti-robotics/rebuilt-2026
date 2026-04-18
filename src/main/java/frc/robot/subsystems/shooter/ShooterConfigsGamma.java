@@ -26,11 +26,11 @@ public class ShooterConfigsGamma {
             .withKA(125);
 
     public static final Slot1Configs SLOT_1_CONFIGS = new Slot1Configs()
-            .withKP(11.5)
+            .withKP(7.9)
             .withKI(1)
             .withKD(0)
             .withKS(5)
-            .withKV(1.5)
+            .withKV(1.1)
             .withKA(125);
 
     public static final MotionMagicConfigs MOTION_MAGIC_CONFIGS = new MotionMagicConfigs()
