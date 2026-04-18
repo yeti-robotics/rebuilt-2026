@@ -7,6 +7,7 @@ import com.ctre.phoenix6.signals.AnimationDirectionValue;
 import com.ctre.phoenix6.signals.RGBWColor;
 import com.ctre.phoenix6.sim.CANdleSimState;
 import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.constants.Constants;
 
@@ -16,6 +17,7 @@ public class LED extends SubsystemBase {
 
     public LED() {
         candle.getConfigurator().apply(LEDsConfigs.CANDLE_CONFIGS);
+        setDefaultCommand(runOnce(() -> candle.setControl(new LarsonAnimation(0, LEDsConfigs.LED_COUNT-1).withColor(new RGBWColor(84, 182, 229)))));
     }
 
     public void setAnimation(Animation0TypeValue type) {
@@ -59,6 +61,10 @@ public class LED extends SubsystemBase {
                 .withColor(new RGBWColor(r, g, b, 0))
                 .withDirection(AnimationDirectionValue.Forward)
                 .withUpdateFreqHz(0));
+    }
+
+    public Command setSolidColor(SolidColor solidColorName) {
+        return runOnce(() -> candle.setControl(solidColorName));
     }
 
     public void clearLEDs() {

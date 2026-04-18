@@ -19,12 +19,14 @@ import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.*;
+import edu.wpi.first.units.Units;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.AutoAimCommands;
 import frc.robot.commands.AutoCommands;
 import frc.robot.constants.Constants;
@@ -48,6 +50,7 @@ import frc.robot.subsystems.intake.IntakeIOAlpha;
 import frc.robot.subsystems.intake.IntakeIOBeta;
 import frc.robot.subsystems.leds.FlameLEDCommand;
 import frc.robot.subsystems.leds.LED;
+import frc.robot.subsystems.leds.LEDsSolidColors;
 import frc.robot.subsystems.linslide.LinSlide;
 import frc.robot.subsystems.linslide.LinSlideConfigsBeta;
 import frc.robot.subsystems.linslide.LinSlideIO;
@@ -158,27 +161,6 @@ public class RobotContainer {
                                 drive.getRotation3d()::toRotation2d,
                                 VisionConstants.rightLinearStdDevBaseLine,
                                 VisionConstants.rightAngularStdDevBaseLine));
-                break;
-
-            case SIM:
-                // Sim robot, instantiate physics sim IO implementations
-                drive = TunerConstantsAlpha.createDrivetrain();
-                linSlide = new LinSlide(new LinSlideIOReal());
-                intake = new Intake(new IntakeIOAlpha());
-                indexer = new Indexer(new IndexerIOAlpha());
-                vision = new Vision(
-                        drive,
-                        new VisionIOPhotonVisionSim(
-                                VisionConstants.frontCam, VisionConstants.frontCamTrans, () -> drive.getState().Pose),
-                        new VisionIOPhotonVisionSim(
-                                VisionConstants.leftCam, VisionConstants.leftCamTrans, () -> drive.getState().Pose),
-                        new VisionIOPhotonVisionSim(
-                                VisionConstants.rightCam, VisionConstants.rightCamTrans, () -> drive.getState().Pose));
-                shooter = new Shooter(new ShooterIOReal());
-                feeder = new Feeder(new FeederIOReal());
-                hood = new Hood(new HoodIOBeta());
-                battery = new BatteryFuelGauge(0);
-
                 break;
 
             default:
@@ -365,9 +347,7 @@ public class RobotContainer {
 
         controller.button(7).whileTrue(indexer.spinIndexer(80));
         controller.button(8).onTrue(runOnce(drive::seedFieldCentric));
-        controller
-                .button(9)
-                .whileTrue(new FlameLEDCommand(ledStrip, 0, 2, 0.1, 0.1, 1));
+        controller.button(9).whileTrue(new FlameLEDCommand(ledStrip, 0, 2, 0.1, 0.1, 1));
     }
 
     public void updateMechanisms() {
@@ -376,6 +356,20 @@ public class RobotContainer {
 
     public void configureTriggers() {
         // Undecided whether to use
+        new Trigger(
+                controller.leftTrigger().whileTrue(
+                        Commands.either(
+                                ledStrip.setSolidColor(LEDsSolidColors.VIHAAN_RED.getColor()),
+                                ledStrip.setSolidColor(LEDsSolidColors.MUKIE_PURPLE.getColor()),
+                                () -> Units.RotationsPerSecond.of(intake.getRPM()).isNear(Units.RotationsPerSecond.of(0), Units.RotationsPerSecond.of(1)))));
+
+        new Trigger(controller.leftBumper().whileTrue(ledStrip.setSolidColor(LEDsSolidColors.ANISH_GIRLYPOP_PINK.getColor())).and(controller.rightTrigger()));
+
+//        new Trigger(
+//                controller.rightTrigger().whileTrue(ledStrip.setSolidColor(LEDsSolidColors.NICK_ORANGE.getColor())));
+//        new Trigger(
+//                controller.rightBumper().whileTrue(runOnce(() -> ledStrip.setAnimation(Animation0TypeValue.Fire))));
+
     }
 
     public void updateLoggers() {
