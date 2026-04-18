@@ -68,8 +68,8 @@ public class LED extends SubsystemBase {
         return runOnce(() -> candle.setControl(solidColorName));
     }
 
-    public void setColor(int start, int end, Color8Bit color) {
-        candle.setControl(new SolidColor(start, end).withColor(new RGBWColor(color.red, color.green, color.blue)));
+    public void setColor(int start, int end, Color8Bit color, double brightness) {
+        candle.setControl(new SolidColor(start, end).withColor(new RGBWColor(color.red, color.green, color.blue).scaleBrightness(brightness)));
     }
 
     public void clearLEDs() {

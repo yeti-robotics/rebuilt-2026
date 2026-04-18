@@ -10,10 +10,12 @@ public class MukieLEDCommand extends Command {
     private final int middleIndex;
     private final double whiteLevel;
     private int loopCount;
+    private int iterations;
 
-    private final Color8Bit red;
-    private final Color8Bit blue;
-    private final Color8Bit purple;
+    private final Color8Bit red = new Color8Bit(255, 0, 0);
+    private final Color8Bit blue = new Color8Bit(0, 0, 255);
+    private final Color8Bit purple= new Color8Bit(106, 6, 124);
+    private final Color8Bit empty = new Color8Bit(0, 0, 0);
 
     public MukieLEDCommand(LED leds,  int startIndex, int endIndex, double whiteLevel) {
         this.leds = leds;
@@ -22,54 +24,51 @@ public class MukieLEDCommand extends Command {
         middleIndex = (startIndex + endIndex) / 2;
         this.whiteLevel = whiteLevel;
         loopCount = 0;
-
-        red = new Color8Bit(255, 0, 0);
-        blue = new Color8Bit(0, 0, 255);
-        purple = new Color8Bit(255, 0, 255);
+        iterations = 0;
     }
 
     @Override
     public void initialize() {
-        leds.setColor(startIndex, startIndex, red);
-        leds.setColor(endIndex, endIndex, blue);
+        leds.setColor(startIndex, startIndex, red, 1);
+        leds.setColor(endIndex, endIndex, blue, 1);
     }
 
     @Override
     public void execute() {
-        if (loopCount < (endIndex -  startIndex) / 2 ) {
-            // move red and blue
-        } else if (loopCount == (endIndex - startIndex) / 2) {
-            // create one purple
-        } else {
-            // randomize purple and white
+        iterations++;
+        if (iterations % 25 == 0) {
+            if (loopCount++ < (endIndex - startIndex) / 2) {
+                moveToCenter();
+            } else if (loopCount++ == (endIndex - startIndex) / 2) {
+                leds.setColor(startIndex, endIndex, empty, 0);
+                leds.setColor(middleIndex, middleIndex, purple, 1);
+            } else {
+                iterations++;
+                purple();
+            }
         }
     }
 
-    private void initialUpdater() {
+    private void moveToCenter() {
+        leds.setColor(startIndex, startIndex, empty, 0);
+        leds.setColor(startIndex + loopCount, startIndex + loopCount, red, 1);
+        leds.setColor(endIndex, endIndex, empty, 0);
+        leds.setColor(endIndex - loopCount, endIndex - loopCount, blue, 1);
+    }
 
+    private void purple() {
+        for (int i = startIndex; i <=  endIndex; i++) {
+            leds.setColor(i, i, purple, Math.max(0.7, Math.random()));
+        }
+    }
+
+    @Override
+    public boolean isFinished() {
+        return false;
+    }
+
+    @Override
+    public void end(boolean interrupted) {
+        leds.clearLEDs();
     }
 }
-
-/*
-lets assume leds 0-7
-8 leds
-0 is red
-7 is blue
-at 0
-1 is red and 6 is blue at 1
-2 is red and 5 is blue at 2
-3 is red and 4 is blue at 3
-so at 4 it should be purple
-which is 8 / 2
-************
-assume leds 3-9
-7 leds
-3 is red
-9 is blue
-that would be at 0
-4 is red and 8 is blue at 1
-5 is red and 7 is blue at 2
-6 is red and 6 is blue at 3
-so 3 should be purple
-which is 7 / 2 w int divisiom
- */
