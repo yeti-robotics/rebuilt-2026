@@ -52,7 +52,7 @@ public class MukieLEDCommand extends Command {
 
     private void moveToCenter() {
         leds.setColor(startIndex, endIndex, empty, 1);
-        // leds.setColor(startIndex + loopCount, startIndex + loopCount, red, 1);
+        leds.setColor(startIndex + loopCount, startIndex + loopCount, red, 1);
         leds.setColor(endIndex - loopCount, endIndex - loopCount, blue, 1);
     }
 
@@ -70,5 +70,7 @@ public class MukieLEDCommand extends Command {
     @Override
     public void end(boolean interrupted) {
         leds.clearLEDs();
+        loopCount = 0;
+        frameCount = 0;
     }
 }

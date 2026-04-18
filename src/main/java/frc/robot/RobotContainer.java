@@ -377,7 +377,8 @@ public class RobotContainer {
                         () -> AllianceFlipUtil.apply(drive.getState().Pose.getX()) < 4.9)));
 
         MukieLEDCommand mukieLED =
-                new MukieLEDCommand(ledStrip, LEDsConfigs.LED_START_COUNT, LEDsConfigs.LED_COUNT - 1);
+                new MukieLEDCommand(ledStrip, LEDsConfigs.LED_START_COUNT, LEDsConfigs.LED_COUNT - 4);
+        mukieLED.addRequirements(ledStrip);
         // Brennen's thingy
         new Trigger(controller.povUp().whileTrue(mukieLED));
     }
