@@ -270,18 +270,25 @@ public class RobotContainer {
         controller
                 .leftBumper()
                 .whileTrue(Commands.either(
-                                AutoAimCommands.autoAim(
-                                                drive,
-                                                controller::getLeftY,
-                                                controller::getLeftX,
-                                                centerHubOpening.toTranslation2d())
-                                        .alongWith(AutoAimCommands.readyAim(
-                                                drive, shooter, hood, centerHubOpening.toTranslation2d())),
-                                AutoAimCommands.shuttleAim(drive, controller::getLeftY, controller::getLeftX)
-                                        .alongWith(AutoAimCommands.shuttleReadyAim(drive, shooter, hood)),
-                                () -> AllianceFlipUtil.apply(
-                                                drive.getState().Pose.getX())
-                                        < 4.9)
+                                Commands.parallel(
+                                        Commands.parallel(
+                                                intake.applyPower(-IntakeConfigsBeta.ROLLER_SPEED),
+                                                indexer.applyPower(-TEST_INDEXER_SPEED),
+                                                feeder.feed(-FEEDER_SPEED),
+                                                shooter.applyPower(-0.1),
+                                                linSlide.applyPower(LinSlideConfigsBeta.DEPLOY_SPEED)),
+                                        Commands.waitSeconds(0.5).andThen(
+                                        AutoAimCommands.autoAim(
+                                                        drive,
+                                                        controller::getLeftY,
+                                                        controller::getLeftX,
+                                                        centerHubOpening.toTranslation2d())
+                                                .alongWith(AutoAimCommands.readyAim(
+                                                        drive, shooter, hood, centerHubOpening.toTranslation2d())))),
+                                        AutoAimCommands.shuttleAim(drive, controller::getLeftY, controller::getLeftX)
+                                                .alongWith(AutoAimCommands.shuttleReadyAim(drive, shooter, hood)),
+                        () -> AllianceFlipUtil.apply(drive.getState().Pose.getX()) < 4.9)
+
                         .alongWith(linSlide.applyPower(LinSlideConfigsBeta.LINSLIDE_AUTO_SHOOT_SPEED)))
                 .onFalse(hood.setHoodPosition(0));
 
