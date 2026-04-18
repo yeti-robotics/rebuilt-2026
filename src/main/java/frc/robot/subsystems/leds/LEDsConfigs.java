@@ -10,6 +10,7 @@ import com.ctre.phoenix6.signals.StripTypeValue;
 public class LEDsConfigs {
     public static final int CANDLE_ID = 25;
     public static final int LED_COUNT = 24;
+    public static final int LED_START_COUNT = 8;
 
     public static final CANdleConfiguration CANDLE_CONFIGS = new CANdleConfiguration()
             .withLED(new LEDConfigs()
@@ -18,5 +19,5 @@ public class LEDsConfigs {
                     .withBrightnessScalar(1.0));
 
     public static final LarsonAnimation defaultAnim =
-            new LarsonAnimation(0, LEDsConfigs.LED_COUNT - 1).withColor(new RGBWColor(84, 182, 229));
+            new LarsonAnimation(LED_START_COUNT, LEDsConfigs.LED_COUNT - 1).withColor(new RGBWColor(84, 182, 229));
 }

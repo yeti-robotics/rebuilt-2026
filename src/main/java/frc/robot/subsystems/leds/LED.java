@@ -18,7 +18,7 @@ public class LED extends SubsystemBase {
 
     public LED() {
         candle.getConfigurator().apply(LEDsConfigs.CANDLE_CONFIGS);
-        // setDefaultCommand(runOnce(() -> candle.setControl(LEDsConfigs.defaultAnim)));
+        setDefaultCommand(runOnce(() -> candle.setControl(LEDsConfigs.defaultAnim)));
     }
 
     public void setAnimation(Animation0TypeValue type) {
@@ -27,31 +27,31 @@ public class LED extends SubsystemBase {
                 candle.setControl(new EmptyAnimation(0));
                 break;
             case ColorFlow:
-                candle.setControl(new ColorFlowAnimation(7, LEDsConfigs.LED_COUNT - 1));
+                candle.setControl(new ColorFlowAnimation(LEDsConfigs.LED_START_COUNT, LEDsConfigs.LED_COUNT - 1));
                 break;
             case Fire:
-                candle.setControl(new FireAnimation(7, LEDsConfigs.LED_COUNT - 1));
+                candle.setControl(new FireAnimation(LEDsConfigs.LED_START_COUNT, LEDsConfigs.LED_COUNT - 1));
                 break;
             case Larson:
-                candle.setControl(new LarsonAnimation(7, LEDsConfigs.LED_COUNT - 1));
+                candle.setControl(new LarsonAnimation(LEDsConfigs.LED_START_COUNT, LEDsConfigs.LED_COUNT - 1));
                 break;
             case Rainbow:
-                candle.setControl(new RainbowAnimation(7, LEDsConfigs.LED_COUNT - 1));
+                candle.setControl(new RainbowAnimation(LEDsConfigs.LED_START_COUNT, LEDsConfigs.LED_COUNT - 1));
                 break;
             case RgbFade:
-                candle.setControl(new RgbFadeAnimation(7, LEDsConfigs.LED_COUNT - 1));
+                candle.setControl(new RgbFadeAnimation(LEDsConfigs.LED_START_COUNT, LEDsConfigs.LED_COUNT - 1));
                 break;
             case SingleFade:
-                candle.setControl(new SingleFadeAnimation(7, LEDsConfigs.LED_COUNT - 1));
+                candle.setControl(new SingleFadeAnimation(LEDsConfigs.LED_START_COUNT, LEDsConfigs.LED_COUNT - 1));
                 break;
             case Strobe:
-                candle.setControl(new StrobeAnimation(7, LEDsConfigs.LED_COUNT - 1));
+                candle.setControl(new StrobeAnimation(LEDsConfigs.LED_START_COUNT, LEDsConfigs.LED_COUNT - 1));
                 break;
             case Twinkle:
-                candle.setControl(new TwinkleAnimation(7, LEDsConfigs.LED_COUNT - 1));
+                candle.setControl(new TwinkleAnimation(LEDsConfigs.LED_START_COUNT, LEDsConfigs.LED_COUNT - 1));
                 break;
             case TwinkleOff:
-                candle.setControl(new TwinkleOffAnimation(7, LEDsConfigs.LED_COUNT - 1));
+                candle.setControl(new TwinkleOffAnimation(LEDsConfigs.LED_START_COUNT, LEDsConfigs.LED_COUNT - 1));
                 break;
         }
     }

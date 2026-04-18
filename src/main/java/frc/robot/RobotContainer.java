@@ -365,7 +365,7 @@ public class RobotContainer {
         // for revving flywheels
         new Trigger(controller
                 .leftBumper()
-                .whileTrue(ledStrip.setSolidColor(LEDsSolidColors.VIVEK_LIME.getColor())
+                .whileTrue(ledStrip.setSolidColor(LEDsSolidColors.BHANU_MAROON.getColor())
                         .until(() -> rightTriggerPressed)));
 
         // while shooting
@@ -376,12 +376,10 @@ public class RobotContainer {
                         runEnd(() -> ledStrip.setAnimation(Animation0TypeValue.Rainbow), ledStrip::clearLEDs, ledStrip),
                         () -> AllianceFlipUtil.apply(drive.getState().Pose.getX()) < 4.9)));
 
-        new Trigger(controller
-                .rightTrigger()
-                .whileTrue(ledStrip.setSolidColor(LEDsSolidColors.BRENNEN_MIDNIGHT.getColor())));
-
+        MukieLEDCommand mukieLED =
+                new MukieLEDCommand(ledStrip, LEDsConfigs.LED_START_COUNT, LEDsConfigs.LED_COUNT - 1);
         // Brennen's thingy
-        new Trigger(controller.povUp().whileTrue(new MukieLEDCommand(ledStrip, 8, 40)));
+        new Trigger(controller.povUp().whileTrue(mukieLED));
     }
 
     public void updateLoggers() {
