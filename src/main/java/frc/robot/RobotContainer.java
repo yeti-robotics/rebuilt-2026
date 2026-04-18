@@ -13,6 +13,7 @@ import static frc.robot.constants.FieldConstants.Hub.centerHubOpening;
 import static frc.robot.subsystems.feeder.FeederConfigsBeta.FEEDER_SPEED;
 import static frc.robot.subsystems.indexer.IndexerConfigsBeta.TEST_INDEXER_SPEED;
 
+import com.ctre.phoenix6.signals.Animation0TypeValue;
 import com.ctre.phoenix6.swerve.SwerveModule;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -354,7 +355,8 @@ public class RobotContainer {
     }
 
     public void configureTriggers() {
-        // Undecided whether to use
+        boolean rightTriggerPressed = controller.rightTrigger().getAsBoolean();
+
         new Trigger(controller
                 .leftTrigger()
                 .whileTrue(Commands.either(
@@ -365,7 +367,12 @@ public class RobotContainer {
 
         new Trigger(controller
                 .leftBumper()
-                .whileTrue(ledStrip.setSolidColor(LEDsSolidColors.ANISH_GIRLYPOP_PINK.getColor())));
+                .whileTrue(ledStrip.setSolidColor(LEDsSolidColors.MUKIE_PURPLE.getColor())));
+
+        new Trigger(controller
+                .rightTrigger()
+                .whileTrue(runOnce(() -> ledStrip.setAnimation(Animation0TypeValue.Fire)))
+                .onFalse(runOnce(ledStrip::clearLEDs)));
 
         //        new Trigger(
         //
