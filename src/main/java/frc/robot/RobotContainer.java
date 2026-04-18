@@ -51,6 +51,7 @@ import frc.robot.subsystems.intake.IntakeIOBeta;
 import frc.robot.subsystems.leds.FlameLEDCommand;
 import frc.robot.subsystems.leds.LED;
 import frc.robot.subsystems.leds.LEDsSolidColors;
+import frc.robot.subsystems.leds.MukieLEDCommand;
 import frc.robot.subsystems.linslide.LinSlide;
 import frc.robot.subsystems.linslide.LinSlideConfigsBeta;
 import frc.robot.subsystems.linslide.LinSlideIO;
@@ -374,12 +375,13 @@ public class RobotContainer {
                 .whileTrue(runOnce(() -> ledStrip.setAnimation(Animation0TypeValue.Fire)))
                 .onFalse(runOnce(ledStrip::clearLEDs)));
 
-        //        new Trigger(
-        //
-        // controller.rightTrigger().whileTrue(ledStrip.setSolidColor(LEDsSolidColors.NICK_ORANGE.getColor())));
-        //        new Trigger(
-        //                controller.rightBumper().whileTrue(runOnce(() ->
-        // ledStrip.setAnimation(Animation0TypeValue.Fire))));
+        new Trigger(controller.rightBumper().whileTrue(new MukieLEDCommand(ledStrip, 8, 40)));
+
+
+//        new Trigger(
+//                controller.rightTrigger().whileTrue(ledStrip.setSolidColor(LEDsSolidColors.NICK_ORANGE.getColor())));
+//        new Trigger(
+//                controller.rightBumper().whileTrue(runOnce(() -> ledStrip.setAnimation(Animation0TypeValue.Fire))));
 
     }
 
