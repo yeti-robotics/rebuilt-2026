@@ -66,7 +66,11 @@ public class LED extends SubsystemBase {
     }
 
     public Command setSolidColor(SolidColor solidColorName) {
-        return runEnd(() -> candle.setControl(solidColorName), this::clearColor);
+        return runOnce(() -> clearLEDs())
+                .andThen(runEnd(
+                        () -> candle.setControl(solidColorName),
+                        () -> candle.setControl(new LarsonAnimation(0, LEDsConfigs.LED_COUNT - 1)
+                                .withColor(new RGBWColor(84, 182, 229)))));
     }
 
     public void setColor(int start, int end, Color8Bit color, double brightness) {
