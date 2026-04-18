@@ -27,6 +27,8 @@ public class MukieLEDCommand extends Command {
 
     @Override
     public void initialize() {
+        leds.clearLEDs();
+        leds.clearSolidColor();
         leds.setColor(startIndex, startIndex, red, 1);
         leds.setColor(endIndex, endIndex, blue, 1);
     }
@@ -41,9 +43,10 @@ public class MukieLEDCommand extends Command {
             } else if (loopCount == (endIndex - startIndex) / 2) {
                 leds.setColor(startIndex, endIndex, empty, 1);
                 leds.setColor(middleIndex, middleIndex, purple, 1);
-            } else {
-                purple();
             }
+        }
+        if (loopCount >(endIndex - startIndex) / 2) {
+            purple();
         }
     }
 
@@ -51,6 +54,7 @@ public class MukieLEDCommand extends Command {
         leds.setColor(startIndex, endIndex, empty, 1);
         leds.setColor(startIndex + loopCount, startIndex + loopCount, red, 1);
         leds.setColor(endIndex - loopCount, endIndex - loopCount, blue, 1);
+
     }
 
     private void purple() {
