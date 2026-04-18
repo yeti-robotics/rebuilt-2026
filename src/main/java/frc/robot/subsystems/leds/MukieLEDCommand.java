@@ -45,16 +45,15 @@ public class MukieLEDCommand extends Command {
                 leds.setColor(middleIndex, middleIndex, purple, 1);
             }
         }
-        if (loopCount >(endIndex - startIndex) / 2) {
+        if (loopCount > (endIndex - startIndex) / 2) {
             purple();
         }
     }
 
     private void moveToCenter() {
         leds.setColor(startIndex, endIndex, empty, 1);
-        leds.setColor(startIndex + loopCount, startIndex + loopCount, red, 1);
+        // leds.setColor(startIndex + loopCount, startIndex + loopCount, red, 1);
         leds.setColor(endIndex - loopCount, endIndex - loopCount, blue, 1);
-
     }
 
     private void purple() {
