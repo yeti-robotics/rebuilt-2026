@@ -5,7 +5,7 @@ import com.ctre.phoenix6.signals.RGBWColor;
 
 public enum LEDsSolidColors {
     BHANU_MAROON(new SolidColor(7, LEDsConfigs.LED_COUNT - 1).withColor(new RGBWColor(120, 10, 7))),
-    ANISH_GIRLYPOP_PINK(new SolidColor(7, LEDsConfigs.LED_COUNT - 1).withColor(new RGBWColor(255, 30, 173))),
+    ANISH_GIRLYPOP_PINK(new SolidColor(7, LEDsConfigs.LED_COUNT - 1).withColor(new RGBWColor(255, 4, 27))),
     VIHAAN_RED(new SolidColor(7, LEDsConfigs.LED_COUNT - 1).withColor(new RGBWColor(255, 0, 0))),
     NICK_ORANGE(new SolidColor(7, LEDsConfigs.LED_COUNT - 1).withColor(new RGBWColor(255, 56, 2))),
     DANYA_GREEN(new SolidColor(7, LEDsConfigs.LED_COUNT - 1).withColor(new RGBWColor(144, 238, 144))),

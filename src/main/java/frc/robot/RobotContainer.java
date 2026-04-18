@@ -18,11 +18,9 @@ import com.ctre.phoenix6.swerve.SwerveModule;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.math.VecBuilder;
-import edu.wpi.first.math.geometry.*;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -43,7 +41,6 @@ import frc.robot.subsystems.indexer.*;
 import frc.robot.subsystems.indexer.Indexer;
 import frc.robot.subsystems.indexer.IndexerIO;
 import frc.robot.subsystems.indexer.IndexerIOAlpha;
-import frc.robot.subsystems.intake.*;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.IntakeIO;
 import frc.robot.subsystems.intake.IntakeIOAlpha;
@@ -194,33 +191,33 @@ public class RobotContainer {
 
         // Set up simulatable mechanisms
         mechanisms = new Mechanisms();
-//
-//        autoChooser.addOption("Left", autoCommands.oneCycleNeutralTowerLeft());
-//        autoChooser.addOption("Right", autoCommands.twoCycleNeutralOutpostTowerRight());
-//        autoChooser.addOption("Cheesy Left", autoCommands.cheesyLeft());
-//        autoChooser.addOption("Cheesy Right", autoCommands.cheesyRight());
-//        autoChooser.addOption("DCMP L1", autoCommands.dcmpLeft());
+        //
+        //        autoChooser.addOption("Left", autoCommands.oneCycleNeutralTowerLeft());
+        //        autoChooser.addOption("Right", autoCommands.twoCycleNeutralOutpostTowerRight());
+        //        autoChooser.addOption("Cheesy Left", autoCommands.cheesyLeft());
+        //        autoChooser.addOption("Cheesy Right", autoCommands.cheesyRight());
+        //        autoChooser.addOption("DCMP L1", autoCommands.dcmpLeft());
 
-//        SmartDashboard.putNumber("Shooter Velocity", 0);
+        //        SmartDashboard.putNumber("Shooter Velocity", 0);
 
         // Configure the button bindings
-//        if (Robot.isReal()) {
-//            configureRealBindings();
-//            configureDebugBindings();
-//        } else if (Robot.isSimulation()) {
-//            configureSimBindings();
-//        }
+        //        if (Robot.isReal()) {
+        //            configureRealBindings();
+        //            configureDebugBindings();
+        //        } else if (Robot.isSimulation()) {
+        //            configureSimBindings();
+        //        }
 
         configureTriggers();
     }
 
     public void updateVisionSim() {
-//        Pose3d leftCameraPose = new Pose3d(drive.getState().Pose).transformBy(VisionConstants.leftCamTrans);
-//        Pose3d frontCameraPose = new Pose3d(drive.getState().Pose).transformBy(VisionConstants.frontCamTrans);
-//        Pose3d rightCameraPose = new Pose3d(drive.getState().Pose).transformBy(VisionConstants.rightCamTrans);
-//        Logger.recordOutput("Side Cam Transform", leftCameraPose);
-//        Logger.recordOutput("Front Cam Transform", frontCameraPose);
-//        Logger.recordOutput("Other Side Cam Transform", rightCameraPose);
+        //        Pose3d leftCameraPose = new Pose3d(drive.getState().Pose).transformBy(VisionConstants.leftCamTrans);
+        //        Pose3d frontCameraPose = new Pose3d(drive.getState().Pose).transformBy(VisionConstants.frontCamTrans);
+        //        Pose3d rightCameraPose = new Pose3d(drive.getState().Pose).transformBy(VisionConstants.rightCamTrans);
+        //        Logger.recordOutput("Side Cam Transform", leftCameraPose);
+        //        Logger.recordOutput("Front Cam Transform", frontCameraPose);
+        //        Logger.recordOutput("Other Side Cam Transform", rightCameraPose);
     }
 
     /**
@@ -354,60 +351,55 @@ public class RobotContainer {
     }
 
     public void updateMechanisms() {
-//        mechanisms.updateLinSlideMech(linSlide.getCurrentPosition());
+        //        mechanisms.updateLinSlideMech(linSlide.getCurrentPosition());
     }
 
     public void configureTriggers() {
         new Trigger(controller.rightTrigger().onChange(runOnce(() -> rightTriggerPressed = !rightTriggerPressed)));
 
+        // for intake roller
         new Trigger(controller
                 .leftTrigger()
-                .whileTrue(Commands.either(
+                .onTrue(Commands.either(
                         ledStrip.setSolidColor(LEDsSolidColors.VIHAAN_RED.getColor()),
                         ledStrip.setSolidColor(LEDsSolidColors.MUKIE_PURPLE.getColor()),
                         () -> Units.RotationsPerSecond.of(intake.getRPM())
                                 .isNear(Units.RotationsPerSecond.of(0), Units.RotationsPerSecond.of(1)))));
 
+        // for revving flywheels
         new Trigger(controller
                 .leftBumper()
-                .whileTrue(ledStrip.setSolidColor(LEDsSolidColors.ANISH_GIRLYPOP_PINK.getColor())
-                        .onlyIf(() -> !rightTriggerPressed)));
+                .onTrue(ledStrip.setSolidColor(LEDsSolidColors.ANISH_GIRLYPOP_PINK.getColor())
+                        .until(() -> rightTriggerPressed)));
 
-        new Trigger(controller
-                .rightTrigger()
-                .whileTrue(runOnce(() -> ledStrip.setAnimation(Animation0TypeValue.Fire)))
-                .onFalse(runOnce(ledStrip::clearLEDs)));
+        // while shooting
+        new Trigger(
+                controller.rightTrigger().whileTrue(runOnce(() -> ledStrip.setAnimation(Animation0TypeValue.Fire))));
 
+        // Brennen's thingy
         new Trigger(controller.rightBumper().whileTrue(new MukieLEDCommand(ledStrip, 8, 40)));
-
-        //        new Trigger(
-        //
-        // controller.rightTrigger().whileTrue(ledStrip.setSolidColor(LEDsSolidColors.NICK_ORANGE.getColor())));
-        //        new Trigger(
-        //                controller.rightBumper().whileTrue(runOnce(() ->
-        // ledStrip.setAnimation(Animation0TypeValue.Fire))));
-
     }
 
     public void updateLoggers() {
-//        Pose2d currentPose = drive.getState().Pose;
-//        Translation2d modifiedTarget = AllianceFlipUtil.apply(centerHubOpening.toTranslation2d());
-//        Translation2d currentPosition = currentPose.getTranslation();
-//        double distance = modifiedTarget.getDistance(currentPosition);
-//
-//        Logger.recordOutput("AutoAimCommands/Shooter Map/hub distance", distance);
-//
-//        Translation2d shuttleTranslation = AllianceFlipUtil.apply(new Translation2d(2.35, currentPose.getY()));
-//        double shuttleDistance = shuttleTranslation.getDistance(currentPosition);
-//
-//        Logger.recordOutput("AutoAimCommands/Shuttle Map/ideal shuttle distance", shuttleDistance);
-//        Logger.recordOutput("Drive/Swerve Lock State", swerveLockState);
+        //        Pose2d currentPose = drive.getState().Pose;
+        //        Translation2d modifiedTarget = AllianceFlipUtil.apply(centerHubOpening.toTranslation2d());
+        //        Translation2d currentPosition = currentPose.getTranslation();
+        //        double distance = modifiedTarget.getDistance(currentPosition);
+        //
+        //        Logger.recordOutput("AutoAimCommands/Shooter Map/hub distance", distance);
+        //
+        //        Translation2d shuttleTranslation = AllianceFlipUtil.apply(new Translation2d(2.35,
+        // currentPose.getY()));
+        //        double shuttleDistance = shuttleTranslation.getDistance(currentPosition);
+        //
+        //        Logger.recordOutput("AutoAimCommands/Shuttle Map/ideal shuttle distance", shuttleDistance);
+        //        Logger.recordOutput("Drive/Swerve Lock State", swerveLockState);
 
         Logger.recordOutput("LEDs/Right Trigger Pressed", rightTriggerPressed);
     }
 
     public void saveLog() {
-//        battery.saveLog();
+        //        battery.saveLog();
     }
 
     /**
