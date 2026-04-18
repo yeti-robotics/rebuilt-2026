@@ -7,6 +7,7 @@
 
 package frc.robot;
 
+import static edu.wpi.first.wpilibj2.command.Commands.run;
 import static edu.wpi.first.wpilibj2.command.Commands.runOnce;
 import static frc.robot.constants.Constants.currentMode;
 import static frc.robot.constants.FieldConstants.Hub.centerHubOpening;
@@ -360,7 +361,7 @@ public class RobotContainer {
         // for intake roller
         new Trigger(controller
                 .leftTrigger()
-                .onTrue(Commands.either(
+                .whileTrue(Commands.either(
                         ledStrip.setSolidColor(LEDsSolidColors.VIHAAN_RED.getColor()),
                         ledStrip.setSolidColor(LEDsSolidColors.MUKIE_PURPLE.getColor()),
                         () -> Units.RotationsPerSecond.of(intake.getRPM())
@@ -369,15 +370,22 @@ public class RobotContainer {
         // for revving flywheels
         new Trigger(controller
                 .leftBumper()
-                .onTrue(ledStrip.setSolidColor(LEDsSolidColors.ANISH_GIRLYPOP_PINK.getColor())
+                .whileTrue(ledStrip.setSolidColor(LEDsSolidColors.ANISH_GIRLYPOP_PINK.getColor())
                         .until(() -> rightTriggerPressed)));
 
         // while shooting
-        new Trigger(
-                controller.rightTrigger().whileTrue(runOnce(() -> ledStrip.setAnimation(Animation0TypeValue.Fire))));
+        new Trigger(controller
+                .rightTrigger()
+                .whileTrue(runOnce(ledStrip::clearSolidColor)
+                        .andThen(runOnce(ledStrip::clearLEDs))
+                        .andThen(run(() -> ledStrip.setAnimation(Animation0TypeValue.Fire)))));
 
         // Brennen's thingy
-        new Trigger(controller.rightBumper().whileTrue(new MukieLEDCommand(ledStrip, 8, 40)));
+        new Trigger(controller
+                .rightBumper()
+                .whileTrue(runOnce(ledStrip::clearSolidColor)
+                        .andThen(ledStrip::clearLEDs)
+                        .andThen(new MukieLEDCommand(ledStrip, 8, 40))));
     }
 
     public void updateLoggers() {
