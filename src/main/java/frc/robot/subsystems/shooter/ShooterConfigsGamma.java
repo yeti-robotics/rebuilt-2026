@@ -58,17 +58,17 @@ public class ShooterConfigsGamma {
             new InterpolatingTreeMap<>(InverseInterpolator.forDouble(), ShooterStateData.interpolator);
 
     static {
-        RED_SHOOTER_MAP.put(1.945, new ShooterStateData(HoodPositions.STOW.getPosition(), 24, 0.0));
-        RED_SHOOTER_MAP.put(2.199, new ShooterStateData(HoodPositions.STOW.getPosition(), 26, 0.0));
-        RED_SHOOTER_MAP.put(2.222, new ShooterStateData(HoodPositions.STOW.getPosition(), 26.25, 0.0));
-        RED_SHOOTER_MAP.put(2.354, new ShooterStateData(HoodPositions.STOW.getPosition(), 26.5, 0.0));
-        RED_SHOOTER_MAP.put(2.442, new ShooterStateData(HoodPositions.STOW.getPosition(), 27, 0.0));
-        RED_SHOOTER_MAP.put(2.522, new ShooterStateData(Units.Rotations.of(0.1), 27.5, 0.0));
-        RED_SHOOTER_MAP.put(2.657, new ShooterStateData(Units.Rotations.of(0.12), 27.8, 0.0));
-        RED_SHOOTER_MAP.put(2.706, new ShooterStateData(Units.Rotations.of(0.149), 27.5, 0.0));
-        RED_SHOOTER_MAP.put(2.882, new ShooterStateData(Units.Rotations.of(0.3), 27.5, 0.0));
-        RED_SHOOTER_MAP.put(3.105, new ShooterStateData(Units.Rotations.of(0.280), 28.5, 0.0));
-        RED_SHOOTER_MAP.put(3.362, new ShooterStateData(Units.Rotations.of(0.3), 29, 0.0));
+        RED_SHOOTER_MAP.put(1.945, new ShooterStateData(HoodPositions.STOW.getPosition(), 23.5, 0.0));
+        RED_SHOOTER_MAP.put(2.199, new ShooterStateData(HoodPositions.STOW.getPosition(), 25.5, 0.0));
+        RED_SHOOTER_MAP.put(2.222, new ShooterStateData(HoodPositions.STOW.getPosition(), 25.75, 0.0));
+        RED_SHOOTER_MAP.put(2.354, new ShooterStateData(HoodPositions.STOW.getPosition(), 26, 0.0));
+        RED_SHOOTER_MAP.put(2.442, new ShooterStateData(HoodPositions.STOW.getPosition(), 26.5, 0.0));
+        RED_SHOOTER_MAP.put(2.522, new ShooterStateData(Units.Rotations.of(0.1), 27, 0.0));
+        RED_SHOOTER_MAP.put(2.657, new ShooterStateData(Units.Rotations.of(0.12), 27.3, 0.0));
+        RED_SHOOTER_MAP.put(2.706, new ShooterStateData(Units.Rotations.of(0.149), 27, 0.0));
+        RED_SHOOTER_MAP.put(2.882, new ShooterStateData(Units.Rotations.of(0.3), 27, 0.0));
+        RED_SHOOTER_MAP.put(3.105, new ShooterStateData(Units.Rotations.of(0.280), 28, 0.0));
+        RED_SHOOTER_MAP.put(3.362, new ShooterStateData(Units.Rotations.of(0.3), 28.5, 0.0));
     }
 
     public static final InterpolatingTreeMap<Double, ShooterStateData> BLUE_SHOOTER_MAP =

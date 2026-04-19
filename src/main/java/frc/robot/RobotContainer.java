@@ -293,7 +293,7 @@ public class RobotContainer {
                 .whileTrue(Commands.parallel(
                         indexer.applyPower(TEST_INDEXER_SPEED),
                         intake.applyPower(IntakeConfigsBeta.ROLLER_SPEED),
-                        feeder.feed(FEEDER_SPEED),
+                        feeder.applyPower(1),
                         shooter.switchSlot(1)))
                 .onFalse(shooter.switchSlot(0));
     }
