@@ -183,6 +183,7 @@ public class RobotContainer {
                 battery = new BatteryFuelGauge(0);
                 drive.resetPose(new Pose2d(3, 3, new Rotation2d()));
 
+
                 break;
 
             default:
