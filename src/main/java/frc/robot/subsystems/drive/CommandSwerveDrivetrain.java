@@ -342,7 +342,6 @@ public class CommandSwerveDrivetrain extends TunerConstantsAlpha.TunerSwerveDriv
                     "Drive/SimulationPose", mapleSimSwerveDrivetrain.mapleSimDrive.getSimulatedDriveTrainPose());
     }
 
-
     private void startSimThread() {
         mapleSimSwerveDrivetrain = new MapleSimSwerveDrivetrain(
                 Seconds.of(kSimLoopPeriod),

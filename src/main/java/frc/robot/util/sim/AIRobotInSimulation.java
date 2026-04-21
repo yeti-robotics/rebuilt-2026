@@ -47,19 +47,19 @@ import org.ironmaple.utils.FieldMirroringUtils;
 public class AIRobotInSimulation extends SubsystemBase {
     /* If an opponent robot is not requested to be on the field, it is placed ("queens") outside the field at predefined positions. */
     public static final Pose2d[] ROBOT_QUEENING_POSITIONS = new Pose2d[] {
-            new Pose2d(-6, 0, new Rotation2d()),
-            new Pose2d(-5, 0, new Rotation2d()),
-            new Pose2d(-4, 0, new Rotation2d()),
-            new Pose2d(-3, 0, new Rotation2d()),
-            new Pose2d(-2, 0, new Rotation2d())
+        new Pose2d(-6, 0, new Rotation2d()),
+        new Pose2d(-5, 0, new Rotation2d()),
+        new Pose2d(-4, 0, new Rotation2d()),
+        new Pose2d(-3, 0, new Rotation2d()),
+        new Pose2d(-2, 0, new Rotation2d())
     };
     /* The robots will be teleported to these positions when teleop begins. */
     public static final Pose2d[] ROBOTS_STARTING_POSITIONS = new Pose2d[] {
-            new Pose2d(15, 6, Rotation2d.fromDegrees(180)),
-            new Pose2d(15, 4, Rotation2d.fromDegrees(180)),
-            new Pose2d(15, 2, Rotation2d.fromDegrees(180)),
-            new Pose2d(1.6, 6, new Rotation2d()),
-            new Pose2d(1.6, 4, new Rotation2d())
+        new Pose2d(15, 6, Rotation2d.fromDegrees(180)),
+        new Pose2d(15, 4, Rotation2d.fromDegrees(180)),
+        new Pose2d(15, 2, Rotation2d.fromDegrees(180)),
+        new Pose2d(1.6, 6, new Rotation2d()),
+        new Pose2d(1.6, 4, new Rotation2d())
     };
     /* Store instances of AI robots in a static array. */
     public static final AIRobotInSimulation[] instances = new AIRobotInSimulation[5];
@@ -95,9 +95,9 @@ public class AIRobotInSimulation extends SubsystemBase {
             instances[0] = new AIRobotInSimulation(0);
             // Builds the behavior chooser for the first AI robot
             instances[0].buildBehaviorChooser(
-                    PathPlannerPath.fromPathFile("opponent robot cycle path 0"),
+                    PathPlannerPath.fromPathFile("dcmp_1L"),
                     Commands.none(),
-                    PathPlannerPath.fromPathFile("opponent robot cycle path 0 backwards"),
+                    PathPlannerPath.fromPathFile("dcmp_2L"),
                     Commands.none(),
                     new XboxController(2));
 
@@ -105,33 +105,33 @@ public class AIRobotInSimulation extends SubsystemBase {
 
             instances[1] = new AIRobotInSimulation(1);
             instances[1].buildBehaviorChooser(
-                    PathPlannerPath.fromPathFile("opponent robot cycle path 1"),
+                    PathPlannerPath.fromPathFile("dcmp_1L"),
                     instances[1].shootAtSpeaker(),
-                    PathPlannerPath.fromPathFile("opponent robot cycle path 1 backwards"),
+                    PathPlannerPath.fromPathFile("dcmp_2L"),
                     Commands.none(),
                     new XboxController(3));
 
             instances[2] = new AIRobotInSimulation(2);
             instances[2].buildBehaviorChooser(
-                    PathPlannerPath.fromPathFile("opponent robot cycle path 2"),
+                    PathPlannerPath.fromPathFile("dcmp_1L"),
                     instances[2].shootAtSpeaker(),
-                    PathPlannerPath.fromPathFile("opponent robot cycle path 2 backwards"),
+                    PathPlannerPath.fromPathFile("dcmp_2L"),
                     Commands.none(),
                     new XboxController(4));
 
             instances[3] = new AIRobotInSimulation(3);
             instances[3].buildBehaviorChooser(
-                    PathPlannerPath.fromPathFile("opponent robot cycle path 3"),
+                    PathPlannerPath.fromPathFile("dcmp_1L"),
                     instances[3].feedShotLow(),
-                    PathPlannerPath.fromPathFile("opponent robot cycle path 3 backwards"),
+                    PathPlannerPath.fromPathFile("dcmp_2L"),
                     Commands.none(),
                     new XboxController(5));
 
             instances[4] = new AIRobotInSimulation(4);
             instances[4].buildBehaviorChooser(
-                    PathPlannerPath.fromPathFile("opponent robot cycle path 4"),
+                    PathPlannerPath.fromPathFile("dcmp_1L"),
                     instances[4].feedShotHigh(),
-                    PathPlannerPath.fromPathFile("opponent robot cycle path 4 backwards"),
+                    PathPlannerPath.fromPathFile("dcmp_2L"),
                     Commands.none(),
                     new XboxController(6));
         } catch (Exception e) {
@@ -185,8 +185,8 @@ public class AIRobotInSimulation extends SubsystemBase {
         behaviorChooser.onChange((CommandScheduler.getInstance()::schedule));
 
         // Schedule the command when teleop mode is enabled
-        RobotModeTriggers.teleop()
-                .onTrue(Commands.runOnce(() -> CommandScheduler.getInstance().schedule(Commands.runOnce(behaviorChooser::getSelected))));
+        RobotModeTriggers.teleop().onTrue(Commands.runOnce(() -> CommandScheduler.getInstance()
+                .schedule(Commands.runOnce(behaviorChooser::getSelected))));
 
         // Disable the robot when the user robot is disabled
         RobotModeTriggers.disabled().onTrue(disable.get());
@@ -238,7 +238,7 @@ public class AIRobotInSimulation extends SubsystemBase {
                         .orElse(DriverStation.Alliance.Blue)
                         .equals(DriverStation.Alliance.Red),
                 this // AIRobotInSimulation is a subsystem, so the command uses it as a requirement
-        );
+                );
     }
 
     /**
@@ -251,7 +251,7 @@ public class AIRobotInSimulation extends SubsystemBase {
                 -joystick.getLeftY() * driveSimulation.maxLinearVelocity().in(MetersPerSecond), // Forward/Backward
                 -joystick.getLeftX() * driveSimulation.maxLinearVelocity().in(MetersPerSecond), // Left/Right
                 -joystick.getRightX() * driveSimulation.maxAngularVelocity().in(RadiansPerSecond) // Rotation
-        );
+                );
 
         // Obtain the driver station facing for the opponent alliance
         // Used in defense practice, where two tabs of AScope show the driver stations of both alliances
@@ -292,17 +292,17 @@ public class AIRobotInSimulation extends SubsystemBase {
     private Command shootAtSpeaker() {
         return Commands.runOnce(() -> SimulatedArena.getInstance()
                 .addGamePieceProjectile(new NoteOnFly(
-                        this.driveSimulation
-                                .getActualPoseInSimulationWorld()
-                                .getTranslation(),
-                        new Translation2d(0.3, 0),
-                        this.driveSimulation.getActualSpeedsFieldRelative(),
-                        this.driveSimulation
-                                .getActualPoseInSimulationWorld()
-                                .getRotation(),
-                        Meters.of(0.5),
-                        MetersPerSecond.of(10),
-                        Degrees.of(60))
+                                this.driveSimulation
+                                        .getActualPoseInSimulationWorld()
+                                        .getTranslation(),
+                                new Translation2d(0.3, 0),
+                                this.driveSimulation.getActualSpeedsFieldRelative(),
+                                this.driveSimulation
+                                        .getActualPoseInSimulationWorld()
+                                        .getRotation(),
+                                Meters.of(0.5),
+                                MetersPerSecond.of(10),
+                                Degrees.of(60))
                         .asSpeakerShotNote(() -> {})));
     }
 
@@ -310,17 +310,17 @@ public class AIRobotInSimulation extends SubsystemBase {
     private Command feedShotLow() {
         return Commands.runOnce(() -> SimulatedArena.getInstance()
                 .addGamePieceProjectile(new NoteOnFly(
-                        this.driveSimulation
-                                .getActualPoseInSimulationWorld()
-                                .getTranslation(),
-                        new Translation2d(0.3, 0),
-                        this.driveSimulation.getActualSpeedsFieldRelative(),
-                        this.driveSimulation
-                                .getActualPoseInSimulationWorld()
-                                .getRotation(),
-                        Meters.of(0.5),
-                        MetersPerSecond.of(10),
-                        Degrees.of(20))
+                                this.driveSimulation
+                                        .getActualPoseInSimulationWorld()
+                                        .getTranslation(),
+                                new Translation2d(0.3, 0),
+                                this.driveSimulation.getActualSpeedsFieldRelative(),
+                                this.driveSimulation
+                                        .getActualPoseInSimulationWorld()
+                                        .getRotation(),
+                                Meters.of(0.5),
+                                MetersPerSecond.of(10),
+                                Degrees.of(20))
                         .enableBecomeNoteOnFieldAfterTouchGround()));
     }
 
@@ -328,17 +328,17 @@ public class AIRobotInSimulation extends SubsystemBase {
     private Command feedShotHigh() {
         return Commands.runOnce(() -> SimulatedArena.getInstance()
                 .addGamePieceProjectile(new NoteOnFly(
-                        this.driveSimulation
-                                .getActualPoseInSimulationWorld()
-                                .getTranslation(),
-                        new Translation2d(0.3, 0),
-                        this.driveSimulation.getActualSpeedsFieldRelative(),
-                        this.driveSimulation
-                                .getActualPoseInSimulationWorld()
-                                .getRotation(),
-                        Meters.of(0.5),
-                        MetersPerSecond.of(10),
-                        Degrees.of(55))
+                                this.driveSimulation
+                                        .getActualPoseInSimulationWorld()
+                                        .getTranslation(),
+                                new Translation2d(0.3, 0),
+                                this.driveSimulation.getActualSpeedsFieldRelative(),
+                                this.driveSimulation
+                                        .getActualPoseInSimulationWorld()
+                                        .getRotation(),
+                                Meters.of(0.5),
+                                MetersPerSecond.of(10),
+                                Degrees.of(55))
                         .enableBecomeNoteOnFieldAfterTouchGround()));
     }
 }
