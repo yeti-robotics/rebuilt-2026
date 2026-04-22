@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.5731777777777776,
-        "y": 0.6244444444444435
+        "x": 3.5417471590909093,
+        "y": 0.4791477272727298
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.118866666666666,
-        "y": 0.6341888888888865
+        "x": 4.087436047979796,
+        "y": 0.4888921717171728
       },
       "isLocked": false,
       "linkedName": "disruptor-startR"
@@ -163,6 +163,19 @@
         "nominalVoltage": 12.0,
         "unlimited": false
       }
+    },
+    {
+      "name": "Constraints Zone",
+      "minWaypointRelativePos": 6.711681296421336,
+      "maxWaypointRelativePos": 7.0,
+      "constraints": {
+        "maxVelocity": 2.0,
+        "maxAcceleration": 5.0,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0,
+        "nominalVoltage": 12.0,
+        "unlimited": false
+      }
     }
   ],
   "pointTowardsZones": [],
@@ -196,7 +209,7 @@
   "folder": "Right Paths",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -179.12309225856933
+    "rotation": -89.36340642403653
   },
   "useDefaultConstraints": true
 }
