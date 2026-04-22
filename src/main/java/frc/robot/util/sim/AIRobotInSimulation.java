@@ -95,9 +95,9 @@ public class AIRobotInSimulation extends SubsystemBase {
             instances[0] = new AIRobotInSimulation(0);
             // Builds the behavior chooser for the first AI robot
             instances[0].buildBehaviorChooser(
-                    PathPlannerPath.fromPathFile("dcmp_1L"),
+                    PathPlannerPath.fromPathFile("cheesy_path1L"),
                     Commands.none(),
-                    PathPlannerPath.fromPathFile("dcmp_2L"),
+                    PathPlannerPath.fromPathFile("cheesy_path2L"),
                     Commands.none(),
                     new XboxController(2));
 
@@ -139,7 +139,7 @@ public class AIRobotInSimulation extends SubsystemBase {
         }
     }
 
-    private final SelfControlledSwerveDriveSimulation driveSimulation;
+    public final SelfControlledSwerveDriveSimulation driveSimulation;
     private final Pose2d queeningPose;
     private final int id;
 
@@ -171,12 +171,12 @@ public class AIRobotInSimulation extends SubsystemBase {
                                 new ChassisSpeeds(), new Translation2d(), false, false)))
                         .ignoringDisable(true);
 
-        // The option to disable the robot
-        behaviorChooser.setDefaultOption("Disable", disable.get());
-
         // The option for the robot to automatically cycle around the field
-        behaviorChooser.addOption(
+        behaviorChooser.setDefaultOption(
                 "Auto Cycle", getAutoCycleCommand(segment0, toRunAtEndOfSegment0, segment1, toRunAtEndOfSegment1));
+
+        // The option to disable the robot
+        behaviorChooser.addOption("Disable", disable.get());
 
         // The option for manual joystick control of the robot
         behaviorChooser.addOption("Joystick Drive", joystickDrive(joystick));
@@ -185,11 +185,29 @@ public class AIRobotInSimulation extends SubsystemBase {
         behaviorChooser.onChange((CommandScheduler.getInstance()::schedule));
 
         // Schedule the command when teleop mode is enabled
-        RobotModeTriggers.teleop().onTrue(Commands.runOnce(() -> CommandScheduler.getInstance()
-                .schedule(Commands.runOnce(behaviorChooser::getSelected))));
+        RobotModeTriggers.teleop().onTrue(Commands.runOnce(() -> {
+            Command selectedCommand = behaviorChooser.getSelected();
+            if (selectedCommand != null) {
+                CommandScheduler.getInstance().schedule(selectedCommand);
+            }
+        }));
+        
+        // Schedule the command when autonomous mode is enabled
+        RobotModeTriggers.autonomous().onTrue(Commands.runOnce(() -> {
+            Command selectedCommand = behaviorChooser.getSelected();
+            if (selectedCommand != null) {
+                System.out.println("AIRobot " + id + ": Scheduling command for autonomous mode: " + selectedCommand.getName());
+                CommandScheduler.getInstance().schedule(selectedCommand);
+            } else {
+                System.out.println("AIRobot " + id + ": No command selected for autonomous mode");
+            }
+        }));
 
         // Disable the robot when the user robot is disabled
-        RobotModeTriggers.disabled().onTrue(disable.get());
+        RobotModeTriggers.disabled().onTrue(Commands.runOnce(() -> {
+            System.out.println("AIRobot " + id + ": Disabling robot due to disabled mode");
+            disable.get().schedule();
+        }));
 
         // Display the behavior chooser on the dashboard for the user to select the desired robot behavior
         SmartDashboard.putData("AIRobotBehaviors/Opponent Robot " + id + " Behavior", behaviorChooser);

@@ -164,9 +164,6 @@ public class Robot extends LoggedRobot {
     public void simulationInit() {
         robotContainer.resetSimulationField();
         AIRobotInSimulation.startOpponentRobotSimulations();
-        Logger.recordOutput("FieldSimulation/OpponentRobotPositions", AIRobotInSimulation.getOpponentRobotPoses());
-        Logger.recordOutput(
-                "FieldSimulation/AlliancePartnerRobotPositions", AIRobotInSimulation.getAlliancePartnerRobotPoses());
     }
 
     /** This function is called periodically whilst in simulation. */

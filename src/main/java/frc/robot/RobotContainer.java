@@ -163,7 +163,6 @@ public class RobotContainer {
             case SIM:
                 // Sim robot, instantiate physics sim IO implementations
                 drive = TunerConstantsAlpha.createDrivetrain();
-                AIRobotInSimulation.startOpponentRobotSimulations();
                 linSlide = new LinSlide(new LinSlideIOReal());
                 shooterSim = new ShooterIOSim(
                         drive.getSimulation()::getSimulatedDriveTrainPose, () -> drive.getState().Speeds);
@@ -182,7 +181,6 @@ public class RobotContainer {
                 hood = new Hood(new HoodIOBeta());
                 battery = new BatteryFuelGauge(0);
                 drive.resetPose(new Pose2d(3, 3, new Rotation2d()));
-
 
                 break;
 
@@ -423,6 +421,9 @@ public class RobotContainer {
         updateVisionSim();
         Logger.recordOutput(
                 "FieldSimulation/RobotPosition", drive.getSimulation().getSimulatedDriveTrainPose());
+        Logger.recordOutput("FieldSimulation/OpponentRobotPositions", AIRobotInSimulation.getOpponentRobotPoses());
+        Logger.recordOutput(
+                "FieldSimulation/AlliancePartnerRobotPositions", AIRobotInSimulation.getAlliancePartnerRobotPoses());
         Logger.recordOutput("FieldSimulation/Fuel", SimulatedArena.getInstance().getGamePiecesArrayByType("Fuel"));
     }
 }
