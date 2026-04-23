@@ -7,11 +7,14 @@ public interface FeederIO {
     public static class FeederIOInputs {
         public double feederVoltage = 0;
         public boolean isDetected = false;
+        public double rotationsPerSecond = 0;
     }
 
     public default void updateInputs(FeederIOInputs inputs) {}
 
-    public default void spinFeeder(double volts) {}
+    public default void spinFeeder(double rps) {}
 
     public default void applyPower(double power) {}
+
+    public default void stopMotors() {}
 }

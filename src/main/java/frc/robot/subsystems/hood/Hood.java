@@ -13,7 +13,6 @@ public class Hood extends SubsystemBase {
     public Hood(HoodIO io) {
         this.io = io;
         io.zero();
-        setDefaultCommand(setHoodPosition(0));
     }
 
     @Override
@@ -35,7 +34,7 @@ public class Hood extends SubsystemBase {
     }
 
     public Command stowHood() {
-        return runOnce(() -> io.moveToPosition(HoodPositions.STOW.getPosition()));
+        return runOnce(() -> io.setPosition(HoodPositions.STOW.getPosition().magnitude()));
     }
 
     public Command applyPower(double power) {
@@ -46,12 +45,12 @@ public class Hood extends SubsystemBase {
         return ShooterConfigsBeta.SHOOTER_MAP.get(distance).hoodPos;
     }
 
-    private void moveTo(Angle position) {
-        io.moveToPosition(position);
+    public void moveTo(Angle position) {
+        io.setPosition(position.magnitude());
     }
 
-    public Command moveToPosition(Angle position) {
-        return runOnce(() -> this.moveTo(position));
+    public Command moveToPosition(double position) {
+        return this.setHoodPosition(position);
     }
 
     public Command setHoodPosition(double position) {

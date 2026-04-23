@@ -44,6 +44,7 @@ public class ShooterIOGamma implements ShooterIO {
         inputs.secondMotorRPM = secondMotor.getVelocity().getValueAsDouble();
         inputs.bottomMotorVoltage = thirdMotor.getMotorVoltage().getValueAsDouble();
         inputs.bottomMotorRPM = thirdMotor.getVelocity().getValueAsDouble();
+        inputs.closedLoopSlot = MOTION_MAGIC_REQUEST.Slot;
     }
 
     @Override
@@ -62,7 +63,12 @@ public class ShooterIOGamma implements ShooterIO {
     }
 
     @Override
+    public void switchSlot(int slotNum) {
+        MOTION_MAGIC_REQUEST.Slot = slotNum;
+    }
+
+    @Override
     public boolean isAtSpeed(double speed) {
-        return firstMotor.getVelocity().isNear(20, 2);
+        return firstMotor.getVelocity().isNear(speed, 2);
     }
 }
