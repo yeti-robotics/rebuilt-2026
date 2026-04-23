@@ -51,6 +51,7 @@ public class ReadyAimCommand extends Command {
         }
         Logger.recordOutput("AutoAimCommands/Shooter Map/Target RPS", targetRPS);
         Logger.recordOutput("AutoAimCommands/Shooter Map/Target Hood", targetHood);
+        addRequirements(shooter);
     }
 
     @Override
