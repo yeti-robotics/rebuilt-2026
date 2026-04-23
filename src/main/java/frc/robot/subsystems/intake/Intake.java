@@ -9,7 +9,8 @@ import org.littletonrobotics.junction.Logger;
 public class Intake extends SubsystemBase {
     private IntakeIO io;
     private IntakeIOInputsAutoLogged inputs = new IntakeIOInputsAutoLogged();
-    public Trigger intakeStalling = new Trigger(() -> Units.RotationsPerSecond.of(inputs.primaryMotorRPM).isNear(Units.RotationsPerSecond.of(0.0), Units.RotationsPerSecond.of(0.1))).and(() -> !Units.MetersPerSecond.of(inputs.referenceVelocity).isNear(Units.MetersPerSecond.of(0), 0));
+    public Trigger intakeStalling = new Trigger(() -> Units.RotationsPerSecond.of(inputs.primaryMotorRPM).isNear(Units.RotationsPerSecond.of(0.0), Units.RotationsPerSecond.of(0.1)))
+            .and(() -> !Units.Amps.of(inputs.supplyCurrent).isNear(Units.Amps.of(0), Units.Amps.of(10)));
 
     @Override
     public void periodic() {
