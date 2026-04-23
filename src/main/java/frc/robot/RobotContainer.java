@@ -19,6 +19,7 @@ import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.units.Units;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -380,7 +381,8 @@ public class RobotContainer {
                 new MukieLEDCommand(ledStrip, LEDsConfigs.LED_START_COUNT, LEDsConfigs.LED_COUNT - 4);
         mukieLED.addRequirements(ledStrip);
         // Brennen's thingy
-        new Trigger(controller.povUp().whileTrue(mukieLED));
+
+        new Trigger(DriverStation::isDisabled).onTrue(mukieLED);
     }
 
     public void updateLoggers() {
