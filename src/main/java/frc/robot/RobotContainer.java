@@ -7,22 +7,25 @@
 
 package frc.robot;
 
+import static edu.wpi.first.wpilibj2.command.Commands.*;
 import static frc.robot.constants.Constants.currentMode;
 import static frc.robot.constants.FieldConstants.Hub.centerHubOpening;
 import static frc.robot.subsystems.feeder.FeederConfigsBeta.FEEDER_SPEED;
 import static frc.robot.subsystems.indexer.IndexerConfigsBeta.TEST_INDEXER_SPEED;
 
+import com.ctre.phoenix6.signals.Animation0TypeValue;
 import com.ctre.phoenix6.swerve.SwerveModule;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.math.VecBuilder;
-import edu.wpi.first.math.geometry.*;
+import edu.wpi.first.units.Units;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.AutoAimCommands;
 import frc.robot.commands.AutoCommands;
 import frc.robot.constants.Constants;
@@ -40,10 +43,7 @@ import frc.robot.subsystems.indexer.Indexer;
 import frc.robot.subsystems.indexer.IndexerIO;
 import frc.robot.subsystems.indexer.IndexerIOAlpha;
 import frc.robot.subsystems.intake.*;
-import frc.robot.subsystems.intake.Intake;
-import frc.robot.subsystems.intake.IntakeIO;
-import frc.robot.subsystems.intake.IntakeIOAlpha;
-import frc.robot.subsystems.intake.IntakeIOBeta;
+import frc.robot.subsystems.leds.*;
 import frc.robot.subsystems.linslide.LinSlide;
 import frc.robot.subsystems.linslide.LinSlideConfigsBeta;
 import frc.robot.subsystems.linslide.LinSlideIO;
@@ -77,6 +77,7 @@ public class RobotContainer {
     private final Hood hood;
     private final AutoCommands autoCommands;
     private final BatteryFuelGauge battery;
+    private final LED ledStrip;
 
     // Controller
     private final CommandXboxController controller =
@@ -85,6 +86,8 @@ public class RobotContainer {
 
     // Dashboard inputs
     private final LoggedDashboardChooser<Command> autoChooser;
+
+    public static boolean rightTriggerPressed = false;
 
     private boolean swerveLockState;
 
@@ -155,27 +158,6 @@ public class RobotContainer {
                                 VisionConstants.rightAngularStdDevBaseLine));
                 break;
 
-            case SIM:
-                // Sim robot, instantiate physics sim IO implementations
-                drive = TunerConstantsAlpha.createDrivetrain();
-                linSlide = new LinSlide(new LinSlideIOReal());
-                intake = new Intake(new IntakeIOAlpha());
-                indexer = new Indexer(new IndexerIOAlpha());
-                vision = new Vision(
-                        drive,
-                        new VisionIOPhotonVisionSim(
-                                VisionConstants.frontCam, VisionConstants.frontCamTrans, () -> drive.getState().Pose),
-                        new VisionIOPhotonVisionSim(
-                                VisionConstants.leftCam, VisionConstants.leftCamTrans, () -> drive.getState().Pose),
-                        new VisionIOPhotonVisionSim(
-                                VisionConstants.rightCam, VisionConstants.rightCamTrans, () -> drive.getState().Pose));
-                shooter = new Shooter(new ShooterIOReal());
-                feeder = new Feeder(new FeederIOReal());
-                hood = new Hood(new HoodIOBeta());
-                battery = new BatteryFuelGauge(0);
-
-                break;
-
             default:
                 // Replayed robot, disable IO implementations
                 drive = TunerConstantsAlpha.createDrivetrain();
@@ -191,6 +173,8 @@ public class RobotContainer {
                 break;
         }
 
+        ledStrip = new LED();
+
         drive.setStateStdDevs(VecBuilder.fill(0.33333, 0.33333, Math.toRadians(0.5)));
 
         swerveLockState = false;
@@ -202,33 +186,33 @@ public class RobotContainer {
 
         // Set up simulatable mechanisms
         mechanisms = new Mechanisms();
+        //
+        //        autoChooser.addOption("Left", autoCommands.oneCycleNeutralTowerLeft());
+        //        autoChooser.addOption("Right", autoCommands.twoCycleNeutralOutpostTowerRight());
+        //        autoChooser.addOption("Cheesy Left", autoCommands.cheesyLeft());
+        //        autoChooser.addOption("Cheesy Right", autoCommands.cheesyRight());
+        //        autoChooser.addOption("DCMP L1", autoCommands.dcmpLeft());
 
-        autoChooser.addOption("Left", autoCommands.oneCycleNeutralTowerLeft());
-        autoChooser.addOption("Right", autoCommands.twoCycleNeutralOutpostTowerRight());
-        autoChooser.addOption("Cheesy Left", autoCommands.cheesyLeft());
-        autoChooser.addOption("Cheesy Right", autoCommands.cheesyRight());
-        autoChooser.addOption("DCMP L1", autoCommands.dcmpLeft());
-
-        SmartDashboard.putNumber("Shooter Velocity", 0);
+        //        SmartDashboard.putNumber("Shooter Velocity", 0);
 
         // Configure the button bindings
-        if (Robot.isReal()) {
-            configureRealBindings();
-            configureDebugBindings();
-        } else if (Robot.isSimulation()) {
-            configureSimBindings();
-        }
+        //        if (Robot.isReal()) {
+        //            configureRealBindings();
+        //            configureDebugBindings();
+        //        } else if (Robot.isSimulation()) {
+        //            configureSimBindings();
+        //        }
 
         configureTriggers();
     }
 
     public void updateVisionSim() {
-        Pose3d leftCameraPose = new Pose3d(drive.getState().Pose).transformBy(VisionConstants.leftCamTrans);
-        Pose3d frontCameraPose = new Pose3d(drive.getState().Pose).transformBy(VisionConstants.frontCamTrans);
-        Pose3d rightCameraPose = new Pose3d(drive.getState().Pose).transformBy(VisionConstants.rightCamTrans);
-        Logger.recordOutput("Side Cam Transform", leftCameraPose);
-        Logger.recordOutput("Front Cam Transform", frontCameraPose);
-        Logger.recordOutput("Other Side Cam Transform", rightCameraPose);
+        //        Pose3d leftCameraPose = new Pose3d(drive.getState().Pose).transformBy(VisionConstants.leftCamTrans);
+        //        Pose3d frontCameraPose = new Pose3d(drive.getState().Pose).transformBy(VisionConstants.frontCamTrans);
+        //        Pose3d rightCameraPose = new Pose3d(drive.getState().Pose).transformBy(VisionConstants.rightCamTrans);
+        //        Logger.recordOutput("Side Cam Transform", leftCameraPose);
+        //        Logger.recordOutput("Front Cam Transform", frontCameraPose);
+        //        Logger.recordOutput("Other Side Cam Transform", rightCameraPose);
     }
 
     /**
@@ -243,14 +227,14 @@ public class RobotContainer {
                 .withVelocityY(-controller.getLeftX() * TunerConstantsBeta.kSpeedAt12Volts.magnitude())
                 .withRotationalRate(-controller.getRightX() * TunerConstantsBeta.MaFxAngularRate)));
 
-        controller.start().onTrue(Commands.runOnce(drive::seedFieldCentric, drive));
+        controller.start().onTrue(runOnce(drive::seedFieldCentric, drive));
 
         controller.x().whileTrue(linSlide.applyPower(LinSlideConfigsBeta.DEPLOY_SPEED));
         controller
                 .b()
                 .whileTrue(linSlide.applyPower(-LinSlideConfigsBeta.DEPLOY_SPEED)
                         .alongWith(intake.applyPower(IntakeConfigsBeta.ROLLER_SPEED)));
-        controller.y().onTrue(Commands.runOnce(() -> swerveLockState = !swerveLockState));
+        controller.y().onTrue(runOnce(() -> swerveLockState = !swerveLockState));
 
         controller
                 .leftTrigger()
@@ -299,7 +283,7 @@ public class RobotContainer {
     }
 
     private void configureDebugBindings() {
-        controller2.start().onTrue(Commands.runOnce(drive::seedFieldCentric, drive));
+        controller2.start().onTrue(runOnce(drive::seedFieldCentric, drive));
 
         //        controller2.leftBumper().whileTrue(intake.applyPower(IntakeConfigsBeta.ROLL_IN_SPEED));
 
@@ -355,38 +339,72 @@ public class RobotContainer {
                         () -> AllianceFlipUtil.apply(drive.getState().Pose.getX()) < 4.9));
 
         controller.button(7).whileTrue(indexer.spinIndexer(80));
-        controller.button(8).onTrue(Commands.runOnce(drive::seedFieldCentric));
-        controller
-                .button(9)
-                .whileTrue(AutoAimCommands.autoAimWithOrbit(
-                        drive, controller::getLeftY, controller::getLeftX, centerHubOpening.toTranslation2d()));
+        controller.button(8).onTrue(runOnce(drive::seedFieldCentric));
+        controller.button(9).whileTrue(new FlameLEDCommand(ledStrip, 0, 2, 0.1, 0.1, 1));
     }
 
     public void updateMechanisms() {
-        mechanisms.updateLinSlideMech(linSlide.getCurrentPosition());
+        //        mechanisms.updateLinSlideMech(linSlide.getCurrentPosition());
     }
 
     public void configureTriggers() {
-        // Undecided whether to use
+        new Trigger(controller.rightTrigger().onChange(runOnce(() -> rightTriggerPressed = !rightTriggerPressed)));
+
+        // for intake roller
+        new Trigger(controller
+                .leftTrigger()
+                .whileTrue(Commands.either(
+                        ledStrip.setSolidColor(LEDsSolidColors.VIHAAN_RED.getColor()),
+                        ledStrip.setSolidColor(LEDsSolidColors.MUKIE_PURPLE.getColor()),
+                        () -> Units.RotationsPerSecond.of(intake.getRPM())
+                                .isNear(Units.RotationsPerSecond.of(0), Units.RotationsPerSecond.of(1)))));
+
+        new Trigger(controller.x().whileTrue(ledStrip.setSolidColor(LEDsSolidColors.AMIT_TEAL.getColor())));
+
+        new Trigger(controller.b().whileTrue(ledStrip.setSolidColor(LEDsSolidColors.NICK_ORANGE.getColor())));
+
+        // for revving flywheels
+        new Trigger(controller
+                .leftBumper()
+                .whileTrue(ledStrip.setSolidColor(LEDsSolidColors.BHANU_MAROON.getColor())
+                        .until(() -> rightTriggerPressed)));
+
+        // while shooting
+        new Trigger(controller
+                .rightTrigger()
+                .whileTrue(Commands.either(
+                        runEnd(() -> ledStrip.setAnimation(Animation0TypeValue.Fire), ledStrip::clearLEDs, ledStrip),
+                        runEnd(() -> ledStrip.setAnimation(Animation0TypeValue.Rainbow), ledStrip::clearLEDs, ledStrip),
+                        () -> AllianceFlipUtil.apply(drive.getState().Pose.getX()) < 4.9)));
+
+        MukieLEDCommand mukieLED =
+                new MukieLEDCommand(ledStrip, LEDsConfigs.LED_START_COUNT, LEDsConfigs.LED_COUNT - 4);
+        mukieLED.addRequirements(ledStrip);
+        // Brennen's thingy
+
+        new Trigger(DriverStation::isDisabled).onTrue(mukieLED);
     }
 
     public void updateLoggers() {
-        Pose2d currentPose = drive.getState().Pose;
-        Translation2d modifiedTarget = AllianceFlipUtil.apply(centerHubOpening.toTranslation2d());
-        Translation2d currentPosition = currentPose.getTranslation();
-        double distance = modifiedTarget.getDistance(currentPosition);
+        //        Pose2d currentPose = drive.getState().Pose;
+        //        Translation2d modifiedTarget = AllianceFlipUtil.apply(centerHubOpening.toTranslation2d());
+        //        Translation2d currentPosition = currentPose.getTranslation();
+        //        double distance = modifiedTarget.getDistance(currentPosition);
+        //
+        //        Logger.recordOutput("AutoAimCommands/Shooter Map/hub distance", distance);
+        //
+        //        Translation2d shuttleTranslation = AllianceFlipUtil.apply(new Translation2d(2.35,
+        // currentPose.getY()));
+        //        double shuttleDistance = shuttleTranslation.getDistance(currentPosition);
+        //
+        //        Logger.recordOutput("AutoAimCommands/Shuttle Map/ideal shuttle distance", shuttleDistance);
+        //        Logger.recordOutput("Drive/Swerve Lock State", swerveLockState);
 
-        Logger.recordOutput("AutoAimCommands/Shooter Map/hub distance", distance);
-
-        Translation2d shuttleTranslation = AllianceFlipUtil.apply(new Translation2d(2.35, currentPose.getY()));
-        double shuttleDistance = shuttleTranslation.getDistance(currentPosition);
-
-        Logger.recordOutput("AutoAimCommands/Shuttle Map/ideal shuttle distance", shuttleDistance);
-        Logger.recordOutput("Drive/Swerve Lock State", swerveLockState);
+        Logger.recordOutput("LEDs/Right Trigger Pressed", rightTriggerPressed);
     }
 
     public void saveLog() {
-        battery.saveLog();
+        //        battery.saveLog();
     }
 
     /**
