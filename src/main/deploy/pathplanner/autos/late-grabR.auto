@@ -13,13 +13,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "late-grab1R"
+            "pathName": "late_grab1R"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "late-grab2R"
+            "pathName": "late_grab2R"
           }
         }
       ]

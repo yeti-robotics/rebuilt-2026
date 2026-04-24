@@ -208,6 +208,8 @@ public class RobotContainer {
         autoChooser.addOption("Cheesy Left", autoCommands.cheesyLeft());
         autoChooser.addOption("Cheesy Right", autoCommands.cheesyRight());
         autoChooser.addOption("DCMP L1", autoCommands.dcmpLeft());
+        autoChooser.addOption("Late Grab Right", autoCommands.late_grabRight());
+        autoChooser.addOption("Wraparound Right", autoCommands.wraparoundRight());
 
         SmartDashboard.putNumber("Shooter Velocity", 0);
 

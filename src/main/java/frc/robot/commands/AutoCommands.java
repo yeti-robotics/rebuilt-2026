@@ -150,6 +150,41 @@ public class AutoCommands {
         return auto;
     }
 
+    public Command late_grabRight() {
+        Optional <PathPlannerPath> late_grab1R = PathPlannerUtils.loadPathByName("late_grab1R");
+        Optional <PathPlannerPath> late_grab2R = PathPlannerUtils.loadPathByName("late_grab2R");
+
+        PathPlannerAuto auto;
+
+        var cmd = late_grab1R.isEmpty() || late_grab2R.isEmpty()
+                ? Commands.none()
+                :Commands.sequence(
+                        Commands.waitSeconds(1.5),
+                        followPath(late_grab1R),
+                        Commands.waitSeconds(2),
+                        followPath(late_grab2R),
+                        shoot().withTimeout(2));
+
+        auto = new PathPlannerAuto(cmd);
+        return auto;
+    }
+
+    public Command wraparoundRight() {
+        Optional <PathPlannerPath> wraparoundRight = PathPlannerUtils.loadPathByName("wraparoundRight");
+
+        PathPlannerAuto auto;
+
+        var cmd = wraparoundRight.isEmpty()
+                ? Commands.none()
+                :Commands.sequence(
+                Commands.waitSeconds(1.5),
+                followPath(wraparoundRight),
+                shoot().withTimeout(2));
+
+        auto = new PathPlannerAuto(cmd);
+        return auto;
+    }
+
     public Command dcmpLeft() {
         Optional<PathPlannerPath> dcmp_1L = PathPlannerUtils.loadPathByName("dcmp_1L");
         Optional<PathPlannerPath> dcmp_2L = PathPlannerUtils.loadPathByName("dcmp_2L");
