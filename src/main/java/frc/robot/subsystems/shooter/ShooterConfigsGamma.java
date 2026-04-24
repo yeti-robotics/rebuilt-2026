@@ -26,11 +26,11 @@ public class ShooterConfigsGamma {
             .withKA(125);
 
     public static final Slot1Configs SLOT_1_CONFIGS = new Slot1Configs()
-            .withKP(7.9)
+            .withKP(6)
             .withKI(1)
             .withKD(0)
             .withKS(5)
-            .withKV(1.1)
+            .withKV(1.4)
             .withKA(125);
 
     public static final MotionMagicConfigs MOTION_MAGIC_CONFIGS = new MotionMagicConfigs()
@@ -66,7 +66,7 @@ public class ShooterConfigsGamma {
         RED_SHOOTER_MAP.put(2.522, new ShooterStateData(Units.Rotations.of(0.1), 27, 0.0));
         RED_SHOOTER_MAP.put(2.657, new ShooterStateData(Units.Rotations.of(0.12), 27.3, 0.0));
         RED_SHOOTER_MAP.put(2.706, new ShooterStateData(Units.Rotations.of(0.149), 27, 0.0));
-        RED_SHOOTER_MAP.put(2.882, new ShooterStateData(Units.Rotations.of(0.3), 27, 0.0));
+        RED_SHOOTER_MAP.put(2.882, new ShooterStateData(Units.Rotations.of(0.3), 26.8, 0.0));
         RED_SHOOTER_MAP.put(3.105, new ShooterStateData(Units.Rotations.of(0.280), 28, 0.0));
         RED_SHOOTER_MAP.put(3.362, new ShooterStateData(Units.Rotations.of(0.3), 28.5, 0.0));
     }
