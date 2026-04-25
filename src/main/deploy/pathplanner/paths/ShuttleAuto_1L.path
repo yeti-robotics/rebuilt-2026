@@ -8,35 +8,56 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.0772764900662253,
-        "y": 5.428907284768211
+        "x": 2.6416833095577745,
+        "y": 4.351997146932953
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 0.7632284768211921,
-        "y": 5.973402317880795
+        "x": 0.7267617689015686,
+        "y": 5.4647218259629105
       },
       "prevControl": {
-        "x": 1.808658940397351,
-        "y": 5.566846026490066
+        "x": 0.8979614150340081,
+        "y": 4.883356360971502
+      },
+      "nextControl": {
+        "x": 0.10570613409415108,
+        "y": 7.573723252496434
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 2.0465049928673325,
+        "y": 6.875035663338089
+      },
+      "prevControl": {
+        "x": 1.580713266761769,
+        "y": 7.224379457917262
       },
       "nextControl": null,
       "isLocked": false,
       "linkedName": "CMP_Depot_Left"
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.9552238805969997,
+      "rotationDegrees": -50.66471083635978
+    }
+  ],
   "constraintZones": [
     {
       "name": "Constraints Zone",
-      "minWaypointRelativePos": 0.788692579505306,
-      "maxWaypointRelativePos": 1.0,
+      "minWaypointRelativePos": 0.5671843349088648,
+      "maxWaypointRelativePos": 2.0,
       "constraints": {
         "maxVelocity": 1.5,
-        "maxAcceleration": 5.0,
+        "maxAcceleration": 1.5,
         "maxAngularVelocity": 540.0,
         "maxAngularAcceleration": 720.0,
         "nominalVoltage": 12.0,
@@ -48,7 +69,7 @@
   "eventMarkers": [
     {
       "name": "popLintake",
-      "waypointRelativePos": 0.2982332155477001,
+      "waypointRelativePos": 0.6,
       "endWaypointRelativePos": null,
       "command": {
         "type": "parallel",
@@ -81,7 +102,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -9.926245506651792
+    "rotation": -48.70462744207713
   },
   "reversed": false,
   "folder": "Champs",

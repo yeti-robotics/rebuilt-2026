@@ -136,7 +136,7 @@ public class AutoCommands {
 
     // Autos
 
-    public Command cmpShuttleAuto() {
+    public Command cmpShuttleTrenchAuto() {
         Optional<PathPlannerPath> startDepot = PathPlannerUtils.loadPathByName("ShuttleAuto_1L");
         Optional<PathPlannerPath> depotNeutral = PathPlannerUtils.loadPathByName("ShuttleAuto_2L");
 
@@ -147,6 +147,7 @@ public class AutoCommands {
                 : Commands.sequence(
                         followPathAndIntake(startDepot, 0),
                         shoot().withTimeout(2),
+                        hoodDown(),
                         followPath(depotNeutral),
                         shuttleCycle(),
                         shuttleCycle(),
@@ -206,7 +207,8 @@ public class AutoCommands {
                         followPath(late_grab1R),
                         Commands.waitSeconds(2),
                         followPath(late_grab2R),
-                        shoot().withTimeout(2));
+                        shoot().withTimeout(2),
+                        hoodDown());
 
         auto = new PathPlannerAuto(cmd);
         return auto;
@@ -219,7 +221,8 @@ public class AutoCommands {
 
         var cmd = wraparoundR.isEmpty()
                 ? Commands.none()
-                : Commands.sequence(Commands.waitSeconds(1.5), followPath(wraparoundR), shoot().withTimeout(2));
+                : Commands.sequence(
+                        Commands.waitSeconds(1.5), followPath(wraparoundR), shoot().withTimeout(2), hoodDown());
 
         auto = new PathPlannerAuto(cmd);
         return auto;

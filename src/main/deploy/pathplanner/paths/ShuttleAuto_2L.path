@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 0.7632284768211921,
-        "y": 5.973402317880795
+        "x": 2.0465049928673325,
+        "y": 6.875035663338089
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.598120860927152,
-        "y": 7.505248344370861
+        "x": 3.068659058487874,
+        "y": 7.703109843081313
       },
       "isLocked": false,
       "linkedName": "CMP_Depot_Left"
@@ -48,12 +48,12 @@
     },
     {
       "anchor": {
-        "x": 7.798104304635762,
-        "y": 4.216498344370861
+        "x": 8.192368045649072,
+        "y": 3.8473894436519256
       },
       "prevControl": {
-        "x": 8.240960264900663,
-        "y": 6.067781456953643
+        "x": 8.635224005913972,
+        "y": 5.698672556234707
       },
       "nextControl": null,
       "isLocked": false,
@@ -72,6 +72,10 @@
     {
       "waypointRelativePos": 2.353510895883787,
       "rotationDegrees": 122.4407891112635
+    },
+    {
+      "waypointRelativePos": 2.6737739872068196,
+      "rotationDegrees": 112.07124190223433
     }
   ],
   "constraintZones": [],
@@ -112,13 +116,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 90.0
+    "rotation": -178.80651057601796
   },
   "reversed": false,
   "folder": "Champs",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -9.926245506651792
+    "rotation": -48.70462744207713
   },
   "useDefaultConstraints": true
 }

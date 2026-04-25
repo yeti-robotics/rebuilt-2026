@@ -1,7 +1,6 @@
 package frc.robot.commands;
 
 import static frc.robot.constants.Constants.currentMode;
-import static frc.robot.constants.FieldConstants.Hub.centerHubOpening;
 
 import com.ctre.phoenix6.swerve.SwerveModule;
 import com.ctre.phoenix6.swerve.SwerveRequest;
@@ -152,23 +151,6 @@ public class AutoAimCommands {
                             .withHeadingPID(20, 0, 0)
                             .withVelocityX(-xVelSupplier.getAsDouble() * SPEED_MULTIPLIER)
                             .withVelocityY(-yVelSupplier.getAsDouble() * SPEED_MULTIPLIER)
-                            .withTargetDirection(calcDesiredHeading(drive.getState().Pose, targetTranslation))
-                            .withDriveRequestType(SwerveModule.DriveRequestType.Velocity);
-
-                    drive.setControl(request);
-                },
-                SwerveRequest.Idle::new);
-    }
-
-    public static Command intakeAimAuto(CommandSwerveDrivetrain drive) {
-        return drive.runEnd(
-                () -> {
-                    Translation2d targetTranslation = AllianceFlipUtil.apply(centerHubOpening.toTranslation2d());
-
-                    SwerveRequest.FieldCentricFacingAngle request = new SwerveRequest.FieldCentricFacingAngle()
-                            .withHeadingPID(20, 0, 0)
-                            .withVelocityX(0)
-                            .withVelocityY(0)
                             .withTargetDirection(calcDesiredHeading(drive.getState().Pose, targetTranslation))
                             .withDriveRequestType(SwerveModule.DriveRequestType.Velocity);
 
