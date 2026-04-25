@@ -209,6 +209,8 @@ public class RobotContainer {
         autoChooser.addOption("Cheesy Right", autoCommands.cheesyRight());
         autoChooser.addOption("DCMP L1", autoCommands.dcmpLeft());
 
+        autoChooser.addOption("CMP Shuttle", autoCommands.cmpShuttleAuto());
+
         SmartDashboard.putNumber("Shooter Velocity", 0);
 
         // Configure the button bindings
