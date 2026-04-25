@@ -7,7 +7,6 @@ import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.MotionMagicVelocityTorqueCurrentFOC;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.MotorAlignmentValue;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Robot;
 import frc.robot.constants.Constants;
 import frc.robot.util.sim.PhysicsSim;
@@ -50,7 +49,7 @@ public class ShooterIOGamma implements ShooterIO {
 
     @Override
     public void spinMotors(double velocity) {
-        firstMotor.setControl(MOTION_MAGIC_REQUEST.withVelocity(SmartDashboard.getNumber("Shooter Velocity", 0)));
+        firstMotor.setControl(MOTION_MAGIC_REQUEST.withVelocity(velocity));
     }
 
     @Override
