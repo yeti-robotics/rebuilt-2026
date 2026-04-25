@@ -1,0 +1,124 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 0.7632284768211921,
+        "y": 5.973402317880795
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 1.598120860927152,
+        "y": 7.505248344370861
+      },
+      "isLocked": false,
+      "linkedName": "CMP_Depot_Left"
+    },
+    {
+      "anchor": {
+        "x": 4.436754966887417,
+        "y": 7.410869205298013
+      },
+      "prevControl": {
+        "x": 3.1941147736470863,
+        "y": 7.366089378514579
+      },
+      "nextControl": {
+        "x": 5.2426076158940385,
+        "y": 7.43990894039735
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 6.5566556291390725,
+        "y": 7.236630794701986
+      },
+      "prevControl": {
+        "x": 6.1355794701986754,
+        "y": 7.389089403973509
+      },
+      "nextControl": {
+        "x": 7.125771549872053,
+        "y": 7.0305715820228025
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 7.783584437086093,
+        "y": 4.514155629139072
+      },
+      "prevControl": {
+        "x": 8.226440397350993,
+        "y": 6.365438741721854
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "CMP_NZ1_Left"
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.5,
+      "rotationDegrees": 0.0
+    },
+    {
+      "waypointRelativePos": 1.32929782082324,
+      "rotationDegrees": 0.0
+    },
+    {
+      "waypointRelativePos": 2.353510895883787,
+      "rotationDegrees": 122.4407891112635
+    }
+  ],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [
+    {
+      "name": "popLintake",
+      "waypointRelativePos": 1.7512367491166088,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "popLintake"
+              }
+            },
+            {
+              "type": "named",
+              "data": {
+                "name": "rollIn"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 5.0,
+    "maxAcceleration": 5.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 90.0
+  },
+  "reversed": false,
+  "folder": "Champs",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": -9.926245506651792
+  },
+  "useDefaultConstraints": true
+}
