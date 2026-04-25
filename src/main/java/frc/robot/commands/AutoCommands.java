@@ -132,7 +132,7 @@ public class AutoCommands {
         return Commands.sequence(
                 shuttle().withTimeout(2),
                 autoAim().withTimeout(0.254),
-                intake().withTimeout(5)
+                intake().withTimeout(4)
         );
     }
 
