@@ -129,11 +129,7 @@ public class AutoCommands {
     }
 
     public Command shuttleCycle() {
-        return Commands.sequence(
-                shuttle().withTimeout(2),
-                autoAim().withTimeout(0.254),
-                intake().withTimeout(5)
-        );
+        return Commands.sequence(shuttle().withTimeout(2), autoAim().withTimeout(0.254), intake().withTimeout(5));
     }
 
     // Test Commands
@@ -149,19 +145,18 @@ public class AutoCommands {
         var cmd = startDepot.isEmpty() || depotNeutral.isEmpty()
                 ? Commands.none()
                 : Commands.sequence(
-                followPathAndIntake(startDepot, 0),
-                shoot().withTimeout(2),
-                followPath(depotNeutral),
-                shuttleCycle(),
-                shuttleCycle(),
-                shuttleCycle(),
-                shuttleCycle());
+                        followPathAndIntake(startDepot, 0),
+                        shoot().withTimeout(2),
+                        followPath(depotNeutral),
+                        shuttleCycle(),
+                        shuttleCycle(),
+                        shuttleCycle(),
+                        shuttleCycle());
 
         auto = new PathPlannerAuto(cmd);
 
         return auto;
     }
-
 
     public Command oneCycleNeutralTowerLeft() {
         Optional<PathPlannerPath> startNeutral = PathPlannerUtils.loadPathByName("start-neutral_L-left");
@@ -224,10 +219,7 @@ public class AutoCommands {
 
         var cmd = wraparoundR.isEmpty()
                 ? Commands.none()
-                : Commands.sequence(
-                        Commands.waitSeconds(1.5),
-                        followPath(wraparoundR),
-                        shoot().withTimeout(2));
+                : Commands.sequence(Commands.waitSeconds(1.5), followPath(wraparoundR), shoot().withTimeout(2));
 
         auto = new PathPlannerAuto(cmd);
         return auto;
@@ -251,7 +243,6 @@ public class AutoCommands {
 
         auto = new PathPlannerAuto(cmd);
         return auto;
-
     }
 
     public Command dcmpLeft() {

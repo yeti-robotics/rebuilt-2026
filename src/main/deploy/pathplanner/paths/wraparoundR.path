@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.5675142045454553,
-        "y": 0.7625852272727298
+        "x": 3.5473894436519258,
+        "y": 0.6852840909090923
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.567514204545455,
-        "y": 0.7625852272727298
+        "x": 4.547389443651926,
+        "y": 0.6852840909090923
       },
       "isLocked": false,
       "linkedName": "disruptor-startR"
@@ -156,7 +156,7 @@
   "folder": "Champs",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 90.4582562218859
+    "rotation": 179.6179109047595
   },
   "useDefaultConstraints": true
 }

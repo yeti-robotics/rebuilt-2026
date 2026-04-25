@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.5417471590909093,
-        "y": 0.4791477272727298
+        "x": 3.5473894436519258,
+        "y": 0.6852840909090923
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.087436047979796,
-        "y": 0.4888921717171728
+        "x": 4.093078332540813,
+        "y": 0.6950285353535353
       },
       "isLocked": false,
       "linkedName": "disruptor-startR"
@@ -17,15 +17,15 @@
     {
       "anchor": {
         "x": 8.27,
-        "y": 0.6852840909090923
+        "y": 0.832681883024252
       },
       "prevControl": {
         "x": 8.02239085320711,
-        "y": 0.520211326380499
+        "y": 0.6676091184956587
       },
       "nextControl": {
         "x": 8.541711840228247,
-        "y": 0.8664253177279236
+        "y": 1.0138231098430834
       },
       "isLocked": false,
       "linkedName": null
@@ -52,24 +52,24 @@
         "y": 3.7515625000000012
       },
       "prevControl": {
-        "x": 7.127178117403142,
-        "y": 4.458595572872143
+        "x": 6.882429318876126,
+        "y": 4.141316412884782
       },
       "nextControl": {
-        "x": 6.730299572039942,
-        "y": 3.329843081312412
+        "x": 6.87262482168331,
+        "y": 3.148701854493581
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 5.8865482954545465,
-        "y": 2.617812500000001
+        "x": 5.9927960057061345,
+        "y": 2.7734807417974334
       },
       "prevControl": {
-        "x": 6.523281027104137,
-        "y": 2.851112696148359
+        "x": 7.0667047075606275,
+        "y": 2.838174037089873
       },
       "nextControl": null,
       "isLocked": false,
@@ -79,7 +79,7 @@
   "rotationTargets": [
     {
       "waypointRelativePos": 0.40938166311300234,
-      "rotationDegrees": -90.0
+      "rotationDegrees": -179.87041279944256
     },
     {
       "waypointRelativePos": 1.3134328358208947,
@@ -117,34 +117,44 @@
   "eventMarkers": [
     {
       "name": "popLintake",
-      "waypointRelativePos": 0.3,
+      "waypointRelativePos": 0.0,
       "endWaypointRelativePos": null,
-      "command": null
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "popLintake"
+        }
+      }
     },
     {
       "name": "rollin",
-      "waypointRelativePos": 0.7,
+      "waypointRelativePos": 0.30249831195140225,
       "endWaypointRelativePos": null,
-      "command": null
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "rollIn"
+        }
+      }
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 5.0,
-    "maxAcceleration": 5.0,
+    "maxVelocity": 10.0,
+    "maxAcceleration": 12.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,
     "unlimited": false
   },
   "goalEndState": {
-    "velocity": 2.0,
-    "rotation": 41.986999999999995
+    "velocity": 0.0,
+    "rotation": 38.4180553448219
   },
   "reversed": false,
   "folder": "Champs",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -89.36340642403653
+    "rotation": 179.6179109047595
   },
-  "useDefaultConstraints": true
+  "useDefaultConstraints": false
 }
