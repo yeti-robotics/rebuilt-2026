@@ -98,7 +98,7 @@ public class AutoCommands {
                 linSlide.applyPower(LinSlideConfigsBeta.LINSLIDE_AUTO_SHOOT_SPEED),
                 shooter.switchSlot(0),
                 new WaitCommand(0.4).andThen(indexer.applyPower(TEST_INDEXER_SPEED)),
-                new WaitCommand(0.4).andThen(feeder.feed(FEEDER_SPEED)),
+                new WaitCommand(0.4).andThen(feeder.applyPower(1)),
                 new WaitCommand(0.4).andThen(intake.applyPower(IntakeConfigsBeta.ROLLER_SPEED)),
                 new WaitCommand(0.4).andThen(shooter.switchSlot(1)));
     }
