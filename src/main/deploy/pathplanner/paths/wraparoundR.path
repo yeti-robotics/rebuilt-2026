@@ -21,7 +21,7 @@
       },
       "prevControl": {
         "x": 5.91314236623233,
-        "y": 0.2686373914981851
+        "y": 0.2686373914981852
       },
       "nextControl": {
         "x": 5.7340228245363765,
@@ -153,7 +153,7 @@
     "rotation": 0.0
   },
   "reversed": false,
-  "folder": "Right Paths",
+  "folder": "Champs",
   "idealStartingState": {
     "velocity": 0,
     "rotation": 90.4582562218859

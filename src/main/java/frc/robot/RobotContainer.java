@@ -211,6 +211,8 @@ public class RobotContainer {
         autoChooser.addOption("Late Grab Right", autoCommands.late_grabRight());
         autoChooser.addOption("Wraparound Right", autoCommands.wraparoundRight());
 
+        autoChooser.addOption("Eater Right", autoCommands.eaterRight());
+
         autoChooser.addOption("CMP Shuttle", autoCommands.cmpShuttleAuto());
 
         SmartDashboard.putNumber("Shooter Velocity", 0);

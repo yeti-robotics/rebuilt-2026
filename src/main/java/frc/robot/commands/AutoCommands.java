@@ -243,7 +243,11 @@ public class AutoCommands {
                 : Commands.sequence(
                         shoot().withTimeout(1.5),
                         followPath(eaterR),
-                        shuttle().withTimeout(4));
+                        autoAim(),
+                        shuttleCycle(),
+                        shuttleCycle(),
+                        shuttleCycle(),
+                        shuttleCycle());
 
         auto = new PathPlannerAuto(cmd);
         return auto;
