@@ -211,6 +211,8 @@ public class RobotContainer {
         autoChooser.addOption("Late Grab Right", autoCommands.late_grabRight());
         autoChooser.addOption("Wraparound Right", autoCommands.wraparoundRight());
 
+        autoChooser.addOption("CMP Shuttle", autoCommands.cmpShuttleAuto());
+
         SmartDashboard.putNumber("Shooter Velocity", 0);
 
         // Configure the button bindings
@@ -295,7 +297,7 @@ public class RobotContainer {
                 .whileTrue(Commands.parallel(
                         indexer.applyPower(TEST_INDEXER_SPEED),
                         intake.applyPower(IntakeConfigsBeta.ROLLER_SPEED),
-                        feeder.feed(FEEDER_SPEED),
+                        feeder.applyPower(1),
                         shooter.switchSlot(1)))
                 .onFalse(shooter.switchSlot(0));
     }

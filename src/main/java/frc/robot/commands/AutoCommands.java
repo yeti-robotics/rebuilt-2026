@@ -103,6 +103,22 @@ public class AutoCommands {
                 new WaitCommand(0.4).andThen(shooter.switchSlot(1)));
     }
 
+    public Command shuttle() {
+        return Commands.parallel(
+                AutoAimCommands.shuttleReadyAim(drivetrain, shooter, hood),
+                AutoAimCommands.shuttleAim(drivetrain, () -> 0.0, () -> 0.0),
+                linSlide.applyPower(LinSlideConfigsBeta.LINSLIDE_AUTO_SHOOT_SPEED),
+                shooter.switchSlot(0),
+                new WaitCommand(0.4).andThen(indexer.applyPower(TEST_INDEXER_SPEED)),
+                new WaitCommand(0.4).andThen(feeder.feed(FEEDER_SPEED)),
+                new WaitCommand(0.4).andThen(intake.applyPower(IntakeConfigsBeta.ROLLER_SPEED)),
+                new WaitCommand(0.4).andThen(shooter.switchSlot(1)));
+    }
+
+    public Command autoAim() {
+        return AutoAimCommands.autoAim(drivetrain, () -> 0.0, () -> 0.0, centerHubOpening.toTranslation2d());
+    }
+
     public Command shootBumpFire() {
         return Commands.sequence(
                 shooter.revUpFlywheels(20).until(shooter::isAtSpeed),
@@ -112,9 +128,41 @@ public class AutoCommands {
                         feeder.feed(FEEDER_SPEED).withTimeout(2)));
     }
 
+    public Command shuttleCycle() {
+        return Commands.sequence(
+                shuttle().withTimeout(2),
+                autoAim().withTimeout(0.254),
+                intake().withTimeout(5)
+        );
+    }
+
     // Test Commands
 
     // Autos
+
+    public Command cmpShuttleAuto() {
+        Optional<PathPlannerPath> startDepot = PathPlannerUtils.loadPathByName("ShuttleAuto_1L");
+        Optional<PathPlannerPath> depotNeutral = PathPlannerUtils.loadPathByName("ShuttleAuto_2L");
+
+        PathPlannerAuto auto;
+
+        var cmd = startDepot.isEmpty() || depotNeutral.isEmpty()
+                ? Commands.none()
+                : Commands.sequence(
+                followPathAndIntake(startDepot, 0),
+                shoot().withTimeout(2),
+                followPath(depotNeutral),
+                shuttleCycle(),
+                shuttleCycle(),
+                shuttleCycle(),
+                shuttleCycle());
+
+        auto = new PathPlannerAuto(cmd);
+
+        return auto;
+    }
+
+
     public Command oneCycleNeutralTowerLeft() {
         Optional<PathPlannerPath> startNeutral = PathPlannerUtils.loadPathByName("start-neutral_L-left");
         Optional<PathPlannerPath> neutralShoot = PathPlannerUtils.loadPathByName("neutral_L-shoot-left");
