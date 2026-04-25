@@ -103,10 +103,22 @@ public class AutoCommands {
                 new WaitCommand(0.4).andThen(shooter.switchSlot(1)));
     }
 
-    public Command shuttle() {
+    public Command shuttleLeft() {
         return Commands.parallel(
                 AutoAimCommands.shuttleReadyAim(drivetrain, shooter, hood),
-                AutoAimCommands.shuttleAim(drivetrain, () -> 0.0, () -> 0.0),
+                AutoAimCommands.leftShuttleAimAuto(drivetrain),
+                linSlide.applyPower(LinSlideConfigsBeta.LINSLIDE_AUTO_SHOOT_SPEED),
+                shooter.switchSlot(0),
+                new WaitCommand(0.4).andThen(indexer.applyPower(TEST_INDEXER_SPEED)),
+                new WaitCommand(0.4).andThen(feeder.feed(FEEDER_SPEED)),
+                new WaitCommand(0.4).andThen(intake.applyPower(IntakeConfigsBeta.ROLLER_SPEED)),
+                new WaitCommand(0.4).andThen(shooter.switchSlot(1)));
+    }
+
+    public Command shuttleRight() {
+        return Commands.parallel(
+                AutoAimCommands.shuttleReadyAim(drivetrain, shooter, hood),
+                AutoAimCommands.rightShuttleAimAuto(drivetrain),
                 linSlide.applyPower(LinSlideConfigsBeta.LINSLIDE_AUTO_SHOOT_SPEED),
                 shooter.switchSlot(0),
                 new WaitCommand(0.4).andThen(indexer.applyPower(TEST_INDEXER_SPEED)),
@@ -128,15 +140,25 @@ public class AutoCommands {
                         feeder.feed(FEEDER_SPEED).withTimeout(2)));
     }
 
-    public Command shuttleCycle() {
-        return Commands.sequence(shuttle().withTimeout(2), autoAim().withTimeout(0.254), intake().withTimeout(5));
+    public Command shuttleCycleLeft() {
+        return Commands.sequence(
+                shuttleLeft().withTimeout(2),
+                autoAim().withTimeout(0.254),
+                intake().withTimeout(5));
+    }
+
+    public Command shuttleCycleRight() {
+        return Commands.sequence(
+                shuttleRight().withTimeout(2),
+                autoAim().withTimeout(0.254),
+                intake().withTimeout(5));
     }
 
     // Test Commands
 
     // Autos
 
-    public Command cmpShuttleTrenchAuto() {
+    public Command shuttleLeftAuto() {
         Optional<PathPlannerPath> startDepot = PathPlannerUtils.loadPathByName("ShuttleAuto_1L");
         Optional<PathPlannerPath> depotNeutral = PathPlannerUtils.loadPathByName("ShuttleAuto_2L");
 
@@ -149,10 +171,33 @@ public class AutoCommands {
                         shoot().withTimeout(2),
                         hoodDown(),
                         followPath(depotNeutral),
-                        shuttleCycle(),
-                        shuttleCycle(),
-                        shuttleCycle(),
-                        shuttleCycle());
+                        shuttleCycleLeft(),
+                        shuttleCycleLeft(),
+                        shuttleCycleLeft(),
+                        shuttleCycleLeft());
+
+        auto = new PathPlannerAuto(cmd);
+
+        return auto;
+    }
+
+    public Command shuttleRightAuto() {
+        Optional<PathPlannerPath> startDepot = PathPlannerUtils.loadPathByName("ShuttleAuto_1L");
+        Optional<PathPlannerPath> depotNeutral = PathPlannerUtils.loadPathByName("ShuttleAuto_2L");
+
+        PathPlannerAuto auto;
+
+        var cmd = startDepot.isEmpty() || depotNeutral.isEmpty()
+                ? Commands.none()
+                : Commands.sequence(
+                followPathAndIntake(startDepot, 0),
+                shoot().withTimeout(2),
+                hoodDown(),
+                followPath(depotNeutral),
+                shuttleCycleRight(),
+                shuttleCycleRight(),
+                shuttleCycleRight(),
+                shuttleCycleRight());
 
         auto = new PathPlannerAuto(cmd);
 
@@ -223,26 +268,6 @@ public class AutoCommands {
                 ? Commands.none()
                 : Commands.sequence(
                         Commands.waitSeconds(1.5), followPath(wraparoundR), shoot().withTimeout(2), hoodDown());
-
-        auto = new PathPlannerAuto(cmd);
-        return auto;
-    }
-
-    public Command eaterRight() {
-        Optional<PathPlannerPath> eaterR = PathPlannerUtils.loadPathByName("eaterR");
-
-        PathPlannerAuto auto;
-
-        var cmd = eaterR.isEmpty()
-                ? Commands.none()
-                : Commands.sequence(
-                        shoot().withTimeout(1.5),
-                        followPath(eaterR),
-                        autoAim(),
-                        shuttleCycle(),
-                        shuttleCycle(),
-                        shuttleCycle(),
-                        shuttleCycle());
 
         auto = new PathPlannerAuto(cmd);
         return auto;

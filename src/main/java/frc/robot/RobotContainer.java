@@ -203,7 +203,8 @@ public class RobotContainer {
         autoChooser.addOption("Right", autoCommands.cheesyRight());
         autoChooser.addOption("Late Grab Right", autoCommands.late_grabRight());
         autoChooser.addOption("Wraparound Right", autoCommands.wraparoundRight());
-        autoChooser.addOption("Camper Shuttle", autoCommands.cmpShuttleTrenchAuto());
+        autoChooser.addOption("Camper Shuttle Left", autoCommands.shuttleLeftAuto());
+        autoChooser.addOption("Camper Shuttle Right", autoCommands.shuttleRightAuto());
 
         SmartDashboard.putNumber("Shooter Velocity", 0);
 
