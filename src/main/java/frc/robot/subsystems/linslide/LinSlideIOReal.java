@@ -50,6 +50,7 @@ public class LinSlideIOReal implements LinSlideIO {
         inputs.isDeployed = linSlideMotor.getPosition().getValueAsDouble() >= 1.59;
         inputs.isStowed = linSlideMotor.getPosition().getValueAsDouble() <= 0.1;
         inputs.velocityRPM = linSlideMotor.getVelocity().getValueAsDouble();
+        inputs.supplyCurrent = linSlideMotor.getSupplyCurrent().getValueAsDouble();
     }
 
     @Override

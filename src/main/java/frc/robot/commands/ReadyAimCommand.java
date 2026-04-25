@@ -20,7 +20,7 @@ public class ReadyAimCommand extends Command {
     private Translation2d target;
     double targetRPS;
     Angle targetHood;
-    ShooterStateData state = ShooterConfigsGamma.RED_SHOOTER_MAP.get(0.0);
+    ShooterStateData state = ShooterConfigsGamma.SHOOTER_MAP.get(0.0);
 
     public ReadyAimCommand(CommandSwerveDrivetrain drive, Shooter shooter, Hood hood, Translation2d target) {
         this.drive = drive;
@@ -31,12 +31,13 @@ public class ReadyAimCommand extends Command {
 
     @Override
     public void initialize() {
+        super.initialize();
         Pose2d currentPose = drive.getState().Pose;
         Translation2d modifiedTarget = AllianceFlipUtil.apply(target);
         Translation2d currentPosition = currentPose.getTranslation();
         double distance = modifiedTarget.getDistance(currentPosition);
 
-        state = ShooterConfigsGamma.RED_SHOOTER_MAP.get(distance);
+        state = ShooterConfigsGamma.SHOOTER_MAP.get(distance);
 
         targetRPS = state.rps;
         targetHood = state.hoodPos;
@@ -49,8 +50,8 @@ public class ReadyAimCommand extends Command {
             targetHood = Units.Rotations.of(0.15);
             Logger.recordOutput("AutoAimCommands/Shooter Map/Trench Shot", true);
         }
-        Logger.recordOutput("AutoAimCommands/Shooter Map/Target RPS", targetRPS);
         Logger.recordOutput("AutoAimCommands/Shooter Map/Target Hood", targetHood);
+        Logger.recordOutput("AutoAimCommands/Shooter Map/Target RPS", targetRPS);
     }
 
     @Override
