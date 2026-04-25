@@ -68,6 +68,6 @@ public class ShooterConfigsBeta {
         SHUTTLE_MAP.put(5.56, new ShooterStateData(HoodPositions.HOOD_UP.getPosition(), 30, 0.0));
         SHUTTLE_MAP.put(7.02, new ShooterStateData(HoodPositions.HOOD_UP.getPosition(), 39, 0.0));
         SHUTTLE_MAP.put(8.55, new ShooterStateData(HoodPositions.HOOD_UP.getPosition(), 43, 0.0));
-        SHUTTLE_MAP.put(11.55, new ShooterStateData(HoodPositions.HOOD_UP.getPosition(), 50, 0.0));
+        SHUTTLE_MAP.put(11.55, new ShooterStateData(HoodPositions.HOOD_UP.getPosition(), 45, 0.0));
     }
 }
