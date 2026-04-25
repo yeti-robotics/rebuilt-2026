@@ -194,9 +194,10 @@ public class AutoCommands {
                 ? Commands.none()
                 : Commands.sequence(
                         shoot().withTimeout(1.5),
-                        followPath(eaterR),
+                        followPath(eaterR)
                         );
         )
+
     }
 
     public Command dcmpLeft() {
