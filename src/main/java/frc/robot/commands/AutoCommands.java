@@ -141,8 +141,8 @@ public class AutoCommands {
     // Autos
 
     public Command cmpShuttleAuto() {
-        Optional<PathPlannerPath> startDepot = PathPlannerUtils.loadPathByName("start-neutral_L-left");
-        Optional<PathPlannerPath> depotNeutral = PathPlannerUtils.loadPathByName("neutral_L-shoot-left");
+        Optional<PathPlannerPath> startDepot = PathPlannerUtils.loadPathByName("ShuttleAuto_1L");
+        Optional<PathPlannerPath> depotNeutral = PathPlannerUtils.loadPathByName("ShuttleAuto_2L");
 
         PathPlannerAuto auto;
 
