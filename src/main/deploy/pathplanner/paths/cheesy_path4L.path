@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.4476034236804565,
-        "y": 5.374151212553495
+        "x": 2.6158059914407983,
+        "y": 5.270641940085593
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.9780884450784595,
-        "y": 5.231825962910128
+        "x": 3.1462910128388013,
+        "y": 5.128316690442226
       },
       "isLocked": false,
       "linkedName": "cheesy-hairpin2L"
@@ -73,7 +73,7 @@
   "folder": "Left Paths",
   "idealStartingState": {
     "velocity": 1.0,
-    "rotation": -59.452428251092975
+    "rotation": -32.249974164183634
   },
   "useDefaultConstraints": false
 }

@@ -86,8 +86,6 @@ public class RobotContainer {
     // Dashboard inputs
     private final LoggedDashboardChooser<Command> autoChooser;
 
-    private boolean swerveLockState;
-
     private final SwerveRequest.FieldCentric driveRequest = currentMode == Constants.Mode.ALPHA
             ? new SwerveRequest.FieldCentric()
                     .withDeadband(TunerConstantsAlpha.MAX_VELOCITY_METERS_PER_SECOND * 0.1)
@@ -193,8 +191,6 @@ public class RobotContainer {
 
         drive.setStateStdDevs(VecBuilder.fill(0.33333, 0.33333, Math.toRadians(0.5)));
 
-        swerveLockState = false;
-
         autoCommands = new AutoCommands(drive, hood, indexer, feeder, intake, linSlide, shooter);
 
         // Set up auto routines
@@ -256,8 +252,6 @@ public class RobotContainer {
                 .b()
                 .whileTrue(linSlide.applyPower(-LinSlideConfigsBeta.DEPLOY_SPEED)
                         .alongWith(intake.applyPower(IntakeConfigsBeta.ROLLER_SPEED)));
-        controller.y().onTrue(Commands.runOnce(() -> swerveLockState = !swerveLockState));
-
         controller
                 .leftTrigger()
                 .whileTrue(intake.applyPower(IntakeConfigsBeta.ROLLER_SPEED)
@@ -388,7 +382,6 @@ public class RobotContainer {
         double shuttleDistance = shuttleTranslation.getDistance(currentPosition);
 
         Logger.recordOutput("AutoAimCommands/Shuttle Map/ideal shuttle distance", shuttleDistance);
-        Logger.recordOutput("Drive/Swerve Lock State", swerveLockState);
     }
 
     public void saveLog() {
