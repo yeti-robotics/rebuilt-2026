@@ -151,14 +151,14 @@ public class AutoCommands {
     }
 
     public Command late_grabRight() {
-        Optional <PathPlannerPath> late_grab1R = PathPlannerUtils.loadPathByName("late_grab1R");
-        Optional <PathPlannerPath> late_grab2R = PathPlannerUtils.loadPathByName("late_grab2R");
+        Optional<PathPlannerPath> late_grab1R = PathPlannerUtils.loadPathByName("late_grab1R");
+        Optional<PathPlannerPath> late_grab2R = PathPlannerUtils.loadPathByName("late_grab2R");
 
         PathPlannerAuto auto;
 
         var cmd = late_grab1R.isEmpty() || late_grab2R.isEmpty()
                 ? Commands.none()
-                :Commands.sequence(
+                : Commands.sequence(
                         Commands.waitSeconds(1.5),
                         followPath(late_grab1R),
                         Commands.waitSeconds(2),
@@ -170,19 +170,33 @@ public class AutoCommands {
     }
 
     public Command wraparoundRight() {
-        Optional <PathPlannerPath> wraparoundRight = PathPlannerUtils.loadPathByName("wraparoundRight");
+        Optional<PathPlannerPath> wraparoundR = PathPlannerUtils.loadPathByName("wraparoundR");
 
         PathPlannerAuto auto;
 
-        var cmd = wraparoundRight.isEmpty()
+        var cmd = wraparoundR.isEmpty()
                 ? Commands.none()
-                :Commands.sequence(
-                Commands.waitSeconds(1.5),
-                followPath(wraparoundRight),
-                shoot().withTimeout(2));
+                : Commands.sequence(
+                        Commands.waitSeconds(1.5),
+                        followPath(wraparoundR),
+                        shoot().withTimeout(2));
 
         auto = new PathPlannerAuto(cmd);
         return auto;
+    }
+
+    public Command eaterRight() {
+        Optional<PathPlannerPath> eaterR = PathPlannerUtils.loadPathByName("eaterR");
+
+        PathPlannerAuto auto;
+
+        var cmd = eaterR.isEmpty()
+                ? Commands.none()
+                : Commands.sequence(
+                        shoot().withTimeout(1.5),
+                        followPath(eaterR),
+                        );
+        )
     }
 
     public Command dcmpLeft() {
