@@ -1,7 +1,6 @@
 package frc.robot.subsystems.shooter;
 
 import static frc.robot.constants.Constants.currentMode;
-import static frc.robot.subsystems.shooter.ShooterConfigsAlpha.*;
 
 import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.Follower;

@@ -1,7 +1,6 @@
 package frc.robot.subsystems.drive;
 
 import static edu.wpi.first.units.Units.*;
-import static frc.robot.constants.Constants.*;
 
 import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.configs.*;
@@ -14,6 +13,7 @@ import com.ctre.phoenix6.swerve.SwerveModuleConstants.DriveMotorArrangement;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants.SteerFeedbackType;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants.SteerMotorArrangement;
 import edu.wpi.first.math.Matrix;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.units.measure.*;
@@ -41,6 +41,19 @@ public class TunerConstantsAlpha {
             .withKS(0.22332)
             .withKV(0.021196)
             .withKA(0.0015388);
+
+    private static final double ROBOT_MASS_KG = 74.088; // placeholder Value
+    private static final double ROBOT_MOI = 6.883; // Placeholder value
+    private static final double WHEEL_COF = 1.2; // Placeholder value
+
+    public static Translation2d[] getModuleTranslations() {
+        return new Translation2d[] {
+            new Translation2d(TunerConstantsAlpha.FrontLeft.LocationX, TunerConstantsAlpha.FrontLeft.LocationY),
+            new Translation2d(TunerConstantsAlpha.FrontRight.LocationX, TunerConstantsAlpha.FrontRight.LocationY),
+            new Translation2d(TunerConstantsAlpha.BackLeft.LocationX, TunerConstantsAlpha.BackLeft.LocationY),
+            new Translation2d(TunerConstantsAlpha.BackRight.LocationX, TunerConstantsAlpha.BackRight.LocationY)
+        };
+    }
 
     // The closed-loop output type to use for the steer motors;
     // This affects the PID/FF gains for the steer motors
@@ -83,20 +96,11 @@ public class TunerConstantsAlpha {
 
     // Theoretical free speed (m/s) at 12 V applied output;
     // This needs to be tuned to your individual robot
-    public static LinearVelocity kSpeedAt12Volts = MetersPerSecond.of(8.5);
+    public static final LinearVelocity kSpeedAt12Volts = MetersPerSecond.of(6.08);
     public static double MAX_VELOCITY_METERS_PER_SECOND =
             kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
     public static double MaFxAngularRate =
             RotationsPerSecond.of(1).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
-
-    /* Setting up bindings for necessary control of the swerve drive platform */
-    public final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
-            .withDeadband(MAX_VELOCITY_METERS_PER_SECOND * 0.1)
-            .withRotationalDeadband(MaFxAngularRate * 0.1) // Add a 10% deadband
-            .withDriveRequestType(
-                    SwerveModule.DriveRequestType.OpenLoopVoltage); // Use open-loop control for drive motors
-    public final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
-    public final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
 
     //  protected static final Telemetry logger = new Telemetry(MAX_VELOCITY_METERS_PER_SECOND);
     //
@@ -104,7 +108,7 @@ public class TunerConstantsAlpha {
     // This may need to be tuned to your individual robot
     private static final double kCoupleRatio = 4.5;
 
-    private static final double kDriveGearRatio = currentMode == Mode.BETA ? 6.2 : 5.684210526315789;
+    private static final double kDriveGearRatio = 5.684210526315789;
     private static final double kSteerGearRatio = 12.1;
     private static final Distance kWheelRadius = Inches.of(2.16535);
 
@@ -239,7 +243,6 @@ public class TunerConstantsAlpha {
                     kInvertRightSide,
                     kBackRightSteerMotorInverted,
                     kBackRightEncoderInverted);
-
     //    /**
     //     * Creates a CommandSwerveDrivetrain instance. This should only be called once in your robot
     //     * program,.

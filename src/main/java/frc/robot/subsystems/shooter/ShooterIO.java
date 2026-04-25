@@ -32,4 +32,6 @@ public interface ShooterIO {
     public default boolean isAtSpeed(double speed) {
         return false;
     }
+
+    public default void shootFuel() {}
 }
