@@ -4,6 +4,8 @@ import static frc.robot.constants.FieldConstants.Hub.centerHubOpening;
 import static frc.robot.subsystems.feeder.FeederConfigsBeta.FEEDER_SPEED;
 import static frc.robot.subsystems.indexer.IndexerConfigsBeta.TEST_INDEXER_SPEED;
 
+import com.ctre.phoenix6.swerve.SwerveModule;
+import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
@@ -142,16 +144,30 @@ public class AutoCommands {
 
     public Command shuttleCycleLeft() {
         return Commands.sequence(
+                drivetrain
+                        .run(() -> new SwerveRequest.FieldCentric().withVelocityX(-0.5))
+                        .withTimeout(0.5),
+                popLintake(),
+                drivetrain
+                        .run(() -> new SwerveRequest.FieldCentric().withVelocityX(0.5))
+                        .withTimeout(0.5),
+                rollIn().withTimeout(5),
                 shuttleLeft().withTimeout(2),
-                autoAim().withTimeout(0.254),
-                intake().withTimeout(5));
+                autoAim().withTimeout(0.254));
     }
 
     public Command shuttleCycleRight() {
         return Commands.sequence(
+                drivetrain
+                        .run(() -> new SwerveRequest.FieldCentric().withVelocityX(-0.5).withDriveRequestType(SwerveModule.DriveRequestType.OpenLoopVoltage))
+                        .withTimeout(0.5),
+                popLintake(),
+                drivetrain
+                        .run(() -> new SwerveRequest.FieldCentric().withVelocityX(0.5).withDriveRequestType(SwerveModule.DriveRequestType.OpenLoopVoltage))
+                        .withTimeout(0.5),
+                rollIn().withTimeout(5),
                 shuttleRight().withTimeout(2),
-                autoAim().withTimeout(0.254),
-                intake().withTimeout(5));
+                autoAim().withTimeout(0.254));
     }
 
     // Test Commands
@@ -190,14 +206,14 @@ public class AutoCommands {
         var cmd = startDepot.isEmpty() || depotNeutral.isEmpty()
                 ? Commands.none()
                 : Commands.sequence(
-                followPathAndIntake(startDepot, 0),
-                shoot().withTimeout(2),
-                hoodDown(),
-                followPath(depotNeutral),
-                shuttleCycleRight(),
-                shuttleCycleRight(),
-                shuttleCycleRight(),
-                shuttleCycleRight());
+                        followPathAndIntake(startDepot, 0),
+                        shoot().withTimeout(2),
+                        hoodDown(),
+                        followPath(depotNeutral),
+                        shuttleCycleRight(),
+                        shuttleCycleRight(),
+                        shuttleCycleRight(),
+                        shuttleCycleRight());
 
         auto = new PathPlannerAuto(cmd);
 
@@ -213,14 +229,14 @@ public class AutoCommands {
         var cmd = startDepot.isEmpty() || depotBumpNeutral.isEmpty()
                 ? Commands.none()
                 : Commands.sequence(
-                followPathAndIntake(startDepot, 0),
-                shoot().withTimeout(2),
-                hoodDown(),
-                followPath(depotBumpNeutral),
-                shuttleCycleLeft(),
-                shuttleCycleLeft(),
-                shuttleCycleLeft(),
-                shuttleCycleLeft());
+                        followPathAndIntake(startDepot, 0),
+                        shoot().withTimeout(2),
+                        hoodDown(),
+                        followPath(depotBumpNeutral),
+                        shuttleCycleLeft(),
+                        shuttleCycleLeft(),
+                        shuttleCycleLeft(),
+                        shuttleCycleLeft());
 
         auto = new PathPlannerAuto(cmd);
 
