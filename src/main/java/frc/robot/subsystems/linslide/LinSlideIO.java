@@ -8,6 +8,7 @@ public interface LinSlideIO {
         public double positionRotation = 0.0;
         public double targetPositionRotation = 0.0;
         public double velocityRPM = 0.0;
+        public double supplyCurrent = 0.0;
         public boolean isDeployed = false;
         public boolean isStowed = true;
     }

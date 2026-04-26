@@ -37,7 +37,9 @@ public class LinSlide extends SubsystemBase {
     }
 
     public Command applyPower(double power) {
-        return runEnd(() -> io.applyPower(power), () -> io.applyPower(0));
+        return runEnd(() -> io.applyPower(power), () -> io.applyPower(0))
+                .until(() -> Units.RotationsPerSecond.of(inputs.velocityRPM).isNear(Units.RotationsPerSecond.of(0), 0.1)
+                        && inputs.supplyCurrent > 10);
     }
 
     public Command zero() {
@@ -57,7 +59,7 @@ public class LinSlide extends SubsystemBase {
     }
 
     public boolean isBasicallyZeroRPM() {
-        return Units.RotationsPerSecond.of(inputs.velocityRPM).isNear(Units.RotationsPerSecond.of(0), 0.1);
+        return Units.RotationsPerSecond.of(inputs.velocityRPM).isNear(Units.RotationsPerSecond.of(0), 0.2);
     }
 
     public boolean isCloseToZero() {
@@ -65,7 +67,7 @@ public class LinSlide extends SubsystemBase {
     }
 
     public Command defaultMovement(double volts) {
-        return run(() -> io.applyPower(volts)).until(this::isCloseToZero);
+        return run(() -> io.applyPower(volts)).until(this::isBasicallyZeroRPM).repeatedly();
     }
 
     public Command setLinslidePosition(double position) {

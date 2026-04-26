@@ -13,8 +13,7 @@ public class LinSlideConfigsBeta {
     public static final double DEPLOY_SPEED = 0.35;
     public static final double STOP = 0;
 
-    public static final double LINSLIDE_AUTO_SHOOT_SPEED = -0.1;
-    public static final double LINSLIDE_AUTO_STOWING_SPEED = -0.7;
+    public static final double LINSLIDE_AUTO_SHOOT_SPEED = -0.15;
 
     private static final Slot0Configs SLOT_0_CONFIGS = Robot.isReal()
             ? new Slot0Configs()
@@ -49,12 +48,11 @@ public class LinSlideConfigsBeta {
                     .withInverted(InvertedValue.Clockwise_Positive)
                     .withNeutralMode(NeutralModeValue.Brake))
             .withSoftwareLimitSwitch(new SoftwareLimitSwitchConfigs()
-                    .withReverseSoftLimitEnable(true)
+                    .withReverseSoftLimitEnable(false)
                     .withForwardSoftLimitEnable(true)
-                    .withForwardSoftLimitThreshold(1.569336)
-                    .withReverseSoftLimitThreshold(0.01))
+                    .withForwardSoftLimitThreshold(1.45))
             .withCurrentLimits(new CurrentLimitsConfigs()
-                    .withStatorCurrentLimit(50)
+                    .withStatorCurrentLimit(80)
                     .withSupplyCurrentLimit(70)
                     .withStatorCurrentLimitEnable(true)
                     .withSupplyCurrentLimitEnable(true)
