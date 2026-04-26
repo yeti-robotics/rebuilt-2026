@@ -4,8 +4,6 @@ import static frc.robot.constants.FieldConstants.Hub.centerHubOpening;
 import static frc.robot.subsystems.feeder.FeederConfigsBeta.FEEDER_SPEED;
 import static frc.robot.subsystems.indexer.IndexerConfigsBeta.TEST_INDEXER_SPEED;
 
-import com.ctre.phoenix6.swerve.SwerveModule;
-import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
@@ -109,7 +107,6 @@ public class AutoCommands {
         return Commands.parallel(
                 AutoAimCommands.shuttleReadyAim(drivetrain, shooter, hood),
                 AutoAimCommands.leftShuttleAimAuto(drivetrain),
-                linSlide.applyPower(LinSlideConfigsBeta.LINSLIDE_AUTO_SHOOT_SPEED),
                 shooter.switchSlot(0),
                 new WaitCommand(0.4).andThen(indexer.applyPower(TEST_INDEXER_SPEED)),
                 new WaitCommand(0.4).andThen(feeder.feed(FEEDER_SPEED)),
@@ -121,7 +118,6 @@ public class AutoCommands {
         return Commands.parallel(
                 AutoAimCommands.shuttleReadyAim(drivetrain, shooter, hood),
                 AutoAimCommands.rightShuttleAimAuto(drivetrain),
-                linSlide.applyPower(LinSlideConfigsBeta.LINSLIDE_AUTO_SHOOT_SPEED),
                 shooter.switchSlot(0),
                 new WaitCommand(0.4).andThen(indexer.applyPower(TEST_INDEXER_SPEED)),
                 new WaitCommand(0.4).andThen(feeder.feed(FEEDER_SPEED)),
@@ -129,51 +125,7 @@ public class AutoCommands {
                 new WaitCommand(0.4).andThen(shooter.switchSlot(1)));
     }
 
-    public Command autoAim() {
-        return AutoAimCommands.autoAim(drivetrain, () -> 0.0, () -> 0.0, centerHubOpening.toTranslation2d());
-    }
-
-    public Command shootBumpFire() {
-        return Commands.sequence(
-                shooter.revUpFlywheels(20).until(shooter::isAtSpeed),
-                Commands.parallel(
-                        shooter.shoot(20).withTimeout(2),
-                        indexer.applyPower(TEST_INDEXER_SPEED).withTimeout(2),
-                        feeder.feed(FEEDER_SPEED).withTimeout(2)));
-    }
-
-    public Command shuttleCycleLeft() {
-        return Commands.sequence(
-                drivetrain
-                        .run(() -> new SwerveRequest.FieldCentric().withVelocityX(-0.5))
-                        .withTimeout(0.5),
-                popLintake(),
-                drivetrain
-                        .run(() -> new SwerveRequest.FieldCentric().withVelocityX(0.5))
-                        .withTimeout(0.5),
-                rollIn().withTimeout(5),
-                shuttleLeft().withTimeout(2),
-                autoAim().withTimeout(0.254));
-    }
-
-    public Command shuttleCycleRight() {
-        return Commands.sequence(
-                drivetrain
-                        .run(() -> new SwerveRequest.FieldCentric().withVelocityX(-0.5).withDriveRequestType(SwerveModule.DriveRequestType.OpenLoopVoltage))
-                        .withTimeout(0.5),
-                popLintake(),
-                drivetrain
-                        .run(() -> new SwerveRequest.FieldCentric().withVelocityX(0.5).withDriveRequestType(SwerveModule.DriveRequestType.OpenLoopVoltage))
-                        .withTimeout(0.5),
-                rollIn().withTimeout(5),
-                shuttleRight().withTimeout(2),
-                autoAim().withTimeout(0.254));
-    }
-
-    // Test Commands
-
     // Autos
-
     public Command shuttleLeftAuto() {
         Optional<PathPlannerPath> startDepot = PathPlannerUtils.loadPathByName("ShuttleAuto_1L");
         Optional<PathPlannerPath> depotNeutral = PathPlannerUtils.loadPathByName("ShuttleAuto_2L");
@@ -187,10 +139,7 @@ public class AutoCommands {
                         shoot().withTimeout(2),
                         hoodDown(),
                         followPath(depotNeutral),
-                        shuttleCycleLeft(),
-                        shuttleCycleLeft(),
-                        shuttleCycleLeft(),
-                        shuttleCycleLeft());
+                        shuttleLeft());
 
         auto = new PathPlannerAuto(cmd);
 
@@ -210,10 +159,7 @@ public class AutoCommands {
                         shoot().withTimeout(2),
                         hoodDown(),
                         followPath(depotNeutral),
-                        shuttleCycleRight(),
-                        shuttleCycleRight(),
-                        shuttleCycleRight(),
-                        shuttleCycleRight());
+                        shuttleRight());
 
         auto = new PathPlannerAuto(cmd);
 
@@ -233,10 +179,7 @@ public class AutoCommands {
                         shoot().withTimeout(2),
                         hoodDown(),
                         followPath(depotBumpNeutral),
-                        shuttleCycleLeft(),
-                        shuttleCycleLeft(),
-                        shuttleCycleLeft(),
-                        shuttleCycleLeft());
+                        shuttleLeft());
 
         auto = new PathPlannerAuto(cmd);
 
@@ -252,52 +195,14 @@ public class AutoCommands {
         var cmd = startDepot.isEmpty() || depotBumpNeutral.isEmpty()
                 ? Commands.none()
                 : Commands.sequence(
-                followPathAndIntake(startDepot, 0),
-                shoot().withTimeout(2),
-                hoodDown(),
-                followPath(depotBumpNeutral),
-                shuttleCycleRight(),
-                shuttleCycleRight(),
-                shuttleCycleRight(),
-                shuttleCycleRight());
+                        followPathAndIntake(startDepot, 0),
+                        shoot().withTimeout(2),
+                        hoodDown(),
+                        followPath(depotBumpNeutral),
+                        shuttleRight());
 
         auto = new PathPlannerAuto(cmd);
 
-        return auto;
-    }
-
-    public Command oneCycleNeutralTowerLeft() {
-        Optional<PathPlannerPath> startNeutral = PathPlannerUtils.loadPathByName("start-neutral_L-left");
-        Optional<PathPlannerPath> neutralShoot = PathPlannerUtils.loadPathByName("neutral_L-shoot-left");
-        Optional<PathPlannerPath> shootTower = PathPlannerUtils.loadPathByName("shoot-tower-left");
-
-        PathPlannerAuto auto;
-
-        var cmd = startNeutral.isEmpty() || neutralShoot.isEmpty() || shootTower.isEmpty()
-                ? Commands.none()
-                : Commands.sequence(
-                        followPathAndIntake(startNeutral, 0.5), followPath(neutralShoot), shoot(), hoodDown());
-
-        auto = new PathPlannerAuto(cmd);
-        return auto;
-    }
-
-    public Command oneCycleDepotTowerLeft() {
-        Optional<PathPlannerPath> startDepot = PathPlannerUtils.loadPathByName("start-depot-left");
-        Optional<PathPlannerPath> depotShoot = PathPlannerUtils.loadPathByName("depot-shoot-left");
-        Optional<PathPlannerPath> shootTower = PathPlannerUtils.loadPathByName("shoot-tower-left");
-
-        PathPlannerAuto auto;
-
-        var cmd = startDepot.isEmpty() || depotShoot.isEmpty() || shootTower.isEmpty()
-                ? Commands.none()
-                : Commands.sequence(
-                        followPathAndIntake(startDepot, 0.5),
-                        followPath(depotShoot),
-                        linSlide.runIntake(0.5, true),
-                        shoot());
-
-        auto = new PathPlannerAuto(cmd);
         return auto;
     }
 
@@ -331,257 +236,6 @@ public class AutoCommands {
                 : Commands.sequence(
                         Commands.waitSeconds(1.5), followPath(wraparoundR), shoot().withTimeout(2), hoodDown());
 
-        auto = new PathPlannerAuto(cmd);
-        return auto;
-    }
-
-    public Command dcmpLeft() {
-        Optional<PathPlannerPath> dcmp_1L = PathPlannerUtils.loadPathByName("dcmp_1L");
-        Optional<PathPlannerPath> dcmp_2L = PathPlannerUtils.loadPathByName("dcmp_2L");
-        Optional<PathPlannerPath> dcmp_3L = PathPlannerUtils.loadPathByName("dcmp_3L");
-
-        PathPlannerAuto auto;
-
-        var cmd = dcmp_1L.isEmpty() || dcmp_2L.isEmpty() || dcmp_3L.isEmpty()
-                ? Commands.none()
-                : Commands.sequence(
-                        followPath(dcmp_1L),
-                        shoot().withTimeout(2),
-                        hoodDown(),
-                        followPath(dcmp_2L),
-                        shoot().withTimeout(2.5),
-                        hoodDown(),
-                        followPath(dcmp_3L));
-
-        auto = new PathPlannerAuto(cmd);
-        return auto;
-    }
-
-    public Command twoCycleNeutralDepotTowerLeft() {
-        Optional<PathPlannerPath> startNeutral = PathPlannerUtils.loadPathByName("start-neutral_L-left");
-        Optional<PathPlannerPath> neutralShoot = PathPlannerUtils.loadPathByName("neutral_L-shoot-left");
-        Optional<PathPlannerPath> shootDepot = PathPlannerUtils.loadPathByName("shoot-depot-left");
-        Optional<PathPlannerPath> depotShoot = PathPlannerUtils.loadPathByName("depot-shoot-left");
-
-        PathPlannerAuto auto;
-
-        var cmd = shootDepot.isEmpty() || depotShoot.isEmpty() || startNeutral.isEmpty() || neutralShoot.isEmpty()
-                ? Commands.none()
-                : Commands.sequence(
-                        followPathAndIntake(startNeutral, 0.5),
-                        followPath(neutralShoot),
-                        shoot(),
-                        hoodDown(),
-                        followPathAndIntake(shootDepot, 0.2),
-                        followPath(depotShoot),
-                        shoot(),
-                        hoodDown());
-
-        auto = new PathPlannerAuto(cmd);
-        return auto;
-    }
-
-    public Command twoCycleDepotNeutralTowerLeft() {
-        Optional<PathPlannerPath> shootNeutral = PathPlannerUtils.loadPathByName("shoot-neutral_L-left");
-        Optional<PathPlannerPath> neutralShoot = PathPlannerUtils.loadPathByName("neutral_L-shoot-left");
-        Optional<PathPlannerPath> startDepot = PathPlannerUtils.loadPathByName("start-depot-left");
-        Optional<PathPlannerPath> depotShoot = PathPlannerUtils.loadPathByName("depot-shoot-left");
-        Optional<PathPlannerPath> shootTower = PathPlannerUtils.loadPathByName("shoot-tower-left");
-
-        PathPlannerAuto auto;
-
-        var cmd = startDepot.isEmpty()
-                        || depotShoot.isEmpty()
-                        || shootTower.isEmpty()
-                        || shootNeutral.isEmpty()
-                        || neutralShoot.isEmpty()
-                ? Commands.none()
-                : Commands.sequence(
-                        shoot(),
-                        followPathAndIntake(startDepot, 2),
-                        followPath(depotShoot),
-                        shoot(),
-                        followPathAndIntake(shootNeutral, 4),
-                        followPath(neutralShoot),
-                        shoot());
-
-        auto = new PathPlannerAuto(cmd);
-        return auto;
-    }
-
-    public Command twoCycleNeutralTowerLeft() {
-        Optional<PathPlannerPath> startNeutral = PathPlannerUtils.loadPathByName("start-neutral_L-left");
-        Optional<PathPlannerPath> neutralShoot = PathPlannerUtils.loadPathByName("neutral_L-shoot-left");
-        Optional<PathPlannerPath> shootNeutralFarther = PathPlannerUtils.loadPathByName("shoot-neutral_L-farther-left");
-        Optional<PathPlannerPath> neutralShootFarther = PathPlannerUtils.loadPathByName("neutral_L-shoot-farther-left");
-
-        PathPlannerAuto auto;
-
-        var cmd = startNeutral.isEmpty()
-                        || neutralShoot.isEmpty()
-                        || shootNeutralFarther.isEmpty()
-                        || neutralShootFarther.isEmpty()
-                ? Commands.none().andThen(Commands.print("Command is Empty"))
-                : Commands.sequence(
-                        followPathAndIntake(startNeutral, 0.5),
-                        followPath(neutralShoot),
-                        shoot(),
-                        followPathAndIntake(shootNeutralFarther, 0.5),
-                        followPath(neutralShootFarther),
-                        shoot());
-
-        auto = new PathPlannerAuto(cmd);
-        return auto;
-    }
-
-    public Command oneCycleNeutralLeftTowerCenter() {
-        Optional<PathPlannerPath> initNeutralL = PathPlannerUtils.loadPathByName("init-neutral_L-bump-center");
-        Optional<PathPlannerPath> neutralLShoot = PathPlannerUtils.loadPathByName("neutral_L-shoot-center");
-        Optional<PathPlannerPath> shootTower = PathPlannerUtils.loadPathByName("shoot-tower_L-center");
-
-        PathPlannerAuto auto;
-
-        var cmd = initNeutralL.isEmpty() || neutralLShoot.isEmpty() || shootTower.isEmpty()
-                ? Commands.none()
-                : Commands.sequence(
-                        shootBumpFire(), followPathAndIntake(initNeutralL, 2), followPath(neutralLShoot), shoot());
-        auto = new PathPlannerAuto(cmd);
-        return auto;
-    }
-
-    public Command oneCycleNeutralRightTowerCenter() {
-        Optional<PathPlannerPath> initNeutralR = PathPlannerUtils.loadPathByName("init-neutral_R-center");
-        Optional<PathPlannerPath> neutralRShoot = PathPlannerUtils.loadPathByName("neutral_R-shoot-center");
-        Optional<PathPlannerPath> shootTower = PathPlannerUtils.loadPathByName("shoot-tower_L-center");
-
-        PathPlannerAuto auto;
-
-        var cmd = initNeutralR.isEmpty() || neutralRShoot.isEmpty() || shootTower.isEmpty()
-                ? Commands.none()
-                : Commands.sequence(
-                        shoot(),
-                        followPathAndIntake(initNeutralR, 4),
-                        AutoBuilder.followPath(neutralRShoot.get()),
-                        shoot().withTimeout(2),
-                        AutoBuilder.followPath(shootTower.get()));
-        auto = new PathPlannerAuto(cmd);
-        return auto;
-    }
-
-    public Command twoCycleDepotNeutralLeftCenter() {
-        Optional<PathPlannerPath> initDepot = PathPlannerUtils.loadPathByName("init-depot-center");
-        Optional<PathPlannerPath> depotShoot = PathPlannerUtils.loadPathByName("depot-shoot-center");
-        Optional<PathPlannerPath> shootNeutralL = PathPlannerUtils.loadPathByName("shoot-neutral_L-center");
-        Optional<PathPlannerPath> neutralLShoot = PathPlannerUtils.loadPathByName("neutral_L-shoot-center");
-
-        PathPlannerAuto auto;
-
-        var cmd = initDepot.isEmpty() || depotShoot.isEmpty() || shootNeutralL.isEmpty() || neutralLShoot.isEmpty()
-                ? Commands.none()
-                : Commands.sequence(
-                        followPathAndIntake(initDepot, 2),
-                        AutoBuilder.followPath(depotShoot.get())
-                                .andThen(shoot().andThen(linSlide.runIntake(-0.4, false))),
-                        followPathAndIntake(shootNeutralL, 4),
-                        AutoBuilder.followPath(neutralLShoot.get()),
-                        shoot().withTimeout(2));
-        auto = new PathPlannerAuto(cmd);
-        return auto;
-    }
-
-    public Command twoCycleDepotNeutralRightCenter() {
-        Optional<PathPlannerPath> initDepot = PathPlannerUtils.loadPathByName("init-depot-center");
-        Optional<PathPlannerPath> depotShoot = PathPlannerUtils.loadPathByName("depot-shoot-center");
-        Optional<PathPlannerPath> shootNeutralR = PathPlannerUtils.loadPathByName("shoot-neutral_R-center");
-        Optional<PathPlannerPath> neutralRShoot = PathPlannerUtils.loadPathByName("neutral_R-shoot-center");
-
-        PathPlannerAuto auto;
-
-        var cmd = initDepot.isEmpty() || depotShoot.isEmpty() || shootNeutralR.isEmpty() || neutralRShoot.isEmpty()
-                ? Commands.none()
-                : Commands.sequence(
-                        followPathAndIntake(initDepot, 2),
-                        AutoBuilder.followPath(depotShoot.get())
-                                .andThen(shoot().andThen(linSlide.runIntake(-0.4, false))),
-                        followPathAndIntake(shootNeutralR, 4),
-                        AutoBuilder.followPath(neutralRShoot.get()),
-                        shoot().withTimeout(2));
-        auto = new PathPlannerAuto(cmd);
-        return auto;
-    }
-
-    public Command twoCycleNeutralNeutralLeftCenter() {
-        Optional<PathPlannerPath> initNeutralL = PathPlannerUtils.loadPathByName("init-neutral_L-center");
-        Optional<PathPlannerPath> neutralLShoot = PathPlannerUtils.loadPathByName("neutral_L-shoot-center");
-        Optional<PathPlannerPath> shootNeutralL = PathPlannerUtils.loadPathByName("shoot-neutral_L-center");
-
-        PathPlannerAuto auto;
-
-        var cmd = initNeutralL.isEmpty() || neutralLShoot.isEmpty() || shootNeutralL.isEmpty()
-                ? Commands.none()
-                : Commands.sequence(
-                        shoot(),
-                        followPathAndIntake(initNeutralL, 4),
-                        AutoBuilder.followPath(neutralLShoot.get()),
-                        shoot().withTimeout(2),
-                        followPathAndIntake(shootNeutralL, 4),
-                        AutoBuilder.followPath(neutralLShoot.get()),
-                        shoot().withTimeout(2));
-        auto = new PathPlannerAuto(cmd);
-        return auto;
-    }
-
-    public Command twoCycleNeutralNeutralRightCenter() {
-        Optional<PathPlannerPath> initNeutralR = PathPlannerUtils.loadPathByName("init-neutral_R-enter");
-        Optional<PathPlannerPath> neutralRShoot = PathPlannerUtils.loadPathByName("neutral_R-shoot-center");
-        Optional<PathPlannerPath> shootNeutralR = PathPlannerUtils.loadPathByName("shoot-neutral_R-center");
-
-        PathPlannerAuto auto;
-
-        var cmd = initNeutralR.isEmpty() || neutralRShoot.isEmpty() || shootNeutralR.isEmpty()
-                ? Commands.none()
-                : Commands.sequence(
-                        shoot(),
-                        cycleNeutralRight(initNeutralR, neutralRShoot),
-                        cycleNeutralRight(shootNeutralR, neutralRShoot));
-        auto = new PathPlannerAuto(cmd);
-        return auto;
-    }
-
-    public Command oneCycleNeutralRightTowerRight() {
-        Optional<PathPlannerPath> startNeutral = PathPlannerUtils.loadPathByName("start-neutral_R-right");
-        Optional<PathPlannerPath> neutralShoot = PathPlannerUtils.loadPathByName("neutral_R-shoot-right");
-        Optional<PathPlannerPath> shootTower = PathPlannerUtils.loadPathByName("shoot-tower-right");
-
-        PathPlannerAuto auto;
-
-        var cmd = startNeutral.isEmpty() || neutralShoot.isEmpty() || shootTower.isEmpty()
-                ? Commands.none()
-                : Commands.sequence(
-                        shoot(),
-                        followPathAndIntake(startNeutral, 4),
-                        followPath(neutralShoot).andThen(shoot()));
-        auto = new PathPlannerAuto(cmd);
-        return auto;
-    }
-
-    public Command oneCycleOutpostTowerRight() {
-        Optional<PathPlannerPath> startOutpost = PathPlannerUtils.loadPathByName("start-outpost-right");
-        Optional<PathPlannerPath> outpostShoot = PathPlannerUtils.loadPathByName("outpost-shoot-right");
-        Optional<PathPlannerPath> shootTower = PathPlannerUtils.loadPathByName("shoot-tower-right");
-
-        PathPlannerAuto auto;
-
-        var cmd = startOutpost.isEmpty() || outpostShoot.isEmpty() || shootTower.isEmpty()
-                ? Commands.none()
-                : Commands.sequence(
-                        shoot(),
-                        linSlide.runIntake(0.5, true),
-                        AutoBuilder.followPath(startOutpost.get()),
-                        (Commands.waitSeconds(3)),
-                        AutoBuilder.followPath(outpostShoot.get()),
-                        shoot(),
-                        linSlide.runIntake(-0.5, false));
         auto = new PathPlannerAuto(cmd);
         return auto;
     }
@@ -624,77 +278,6 @@ public class AutoCommands {
                         hoodDown(),
                         followPathAndIntake(cheesy3, 0.5),
                         shoot());
-        auto = new PathPlannerAuto(cmd);
-        return auto;
-    }
-
-    public Command twoCycleOutpostNeutralTowerRight() {
-        Optional<PathPlannerPath> startOutpost = PathPlannerUtils.loadPathByName("start-outpost-right");
-        Optional<PathPlannerPath> outpostShoot = PathPlannerUtils.loadPathByName("outpost-shoot-right");
-        Optional<PathPlannerPath> shootNeutral = PathPlannerUtils.loadPathByName("outpost-neutralZone-right");
-        Optional<PathPlannerPath> neutralShoot = PathPlannerUtils.loadPathByName("neutral_R-shoot-right");
-        Optional<PathPlannerPath> shootTower = PathPlannerUtils.loadPathByName("shoot-tower-right");
-
-        PathPlannerAuto auto;
-
-        var cmd = startOutpost.isEmpty()
-                        || outpostShoot.isEmpty()
-                        || shootNeutral.isEmpty()
-                        || neutralShoot.isEmpty()
-                        || shootTower.isEmpty()
-                ? Commands.none()
-                : Commands.sequence(
-                        shoot(),
-                        AutoBuilder.followPath(startOutpost.get()),
-                        (Commands.waitSeconds(3)),
-                        AutoBuilder.followPath(outpostShoot.get()),
-                        shoot(),
-                        followPathAndIntake(shootNeutral, 4),
-                        followPath(neutralShoot).andThen(shoot()));
-        auto = new PathPlannerAuto(cmd);
-        return auto;
-    }
-
-    public Command twoCycleNeutralOutpostTowerRight() {
-        Optional<PathPlannerPath> startNeutral = PathPlannerUtils.loadPathByName("start-neutral_R-right");
-        Optional<PathPlannerPath> neutralShoot = PathPlannerUtils.loadPathByName("neutral_R-shoot-right");
-        Optional<PathPlannerPath> shootOutpost = PathPlannerUtils.loadPathByName("shoot-outpost-right");
-        Optional<PathPlannerPath> outpostShoot = PathPlannerUtils.loadPathByName("outpost-shoot-right");
-
-        PathPlannerAuto auto;
-
-        var cmd = startNeutral.isEmpty() || neutralShoot.isEmpty() || shootOutpost.isEmpty() || outpostShoot.isEmpty()
-                ? Commands.none()
-                : Commands.sequence(
-                        followPathAndIntake(startNeutral, 0.5),
-                        followPath(neutralShoot),
-                        shoot().withTimeout(6),
-                        hoodDown(),
-                        AutoBuilder.followPath(shootOutpost.get()),
-                        Commands.waitSeconds(1.5),
-                        AutoBuilder.followPath(outpostShoot.get()),
-                        shoot().withTimeout(6),
-                        hoodDown());
-        auto = new PathPlannerAuto(cmd);
-        return auto;
-    }
-
-    public Command twoCycleNeutralTowerRight() {
-        Optional<PathPlannerPath> startNeutral = PathPlannerUtils.loadPathByName("start-neutral_R-right");
-        Optional<PathPlannerPath> neutralShoot = PathPlannerUtils.loadPathByName("neutral_R-shoot-right");
-        Optional<PathPlannerPath> shootNeutral = PathPlannerUtils.loadPathByName("outpost-neutralZone-right");
-        Optional<PathPlannerPath> shootTower = PathPlannerUtils.loadPathByName("shoot-tower-right");
-
-        PathPlannerAuto auto;
-
-        var cmd = startNeutral.isEmpty() || neutralShoot.isEmpty() || shootNeutral.isEmpty() || shootTower.isEmpty()
-                ? Commands.none()
-                : Commands.sequence(
-                        shoot(),
-                        followPathAndIntake(startNeutral, 4),
-                        followPath(neutralShoot),
-                        followPathAndIntake(shootNeutral, 4),
-                        followPath(neutralShoot).andThen(shoot()));
         auto = new PathPlannerAuto(cmd);
         return auto;
     }
