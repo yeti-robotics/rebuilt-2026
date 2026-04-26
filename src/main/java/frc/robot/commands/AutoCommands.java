@@ -204,6 +204,29 @@ public class AutoCommands {
         return auto;
     }
 
+    public Command cmpShuttleBumpAuto() {
+        Optional<PathPlannerPath> startDepot = PathPlannerUtils.loadPathByName("ShuttleAuto_1L");
+        Optional<PathPlannerPath> depotBumpNeutral = PathPlannerUtils.loadPathByName("ShuttleAutoBump_2L");
+
+        PathPlannerAuto auto;
+
+        var cmd = startDepot.isEmpty() || depotBumpNeutral.isEmpty()
+                ? Commands.none()
+                : Commands.sequence(
+                followPathAndIntake(startDepot, 0),
+                shoot().withTimeout(2),
+                hoodDown(),
+                followPath(depotBumpNeutral),
+                shuttleCycleLeft(),
+                shuttleCycleLeft(),
+                shuttleCycleLeft(),
+                shuttleCycleLeft());
+
+        auto = new PathPlannerAuto(cmd);
+
+        return auto;
+    }
+
     public Command oneCycleNeutralTowerLeft() {
         Optional<PathPlannerPath> startNeutral = PathPlannerUtils.loadPathByName("start-neutral_L-left");
         Optional<PathPlannerPath> neutralShoot = PathPlannerUtils.loadPathByName("neutral_L-shoot-left");
