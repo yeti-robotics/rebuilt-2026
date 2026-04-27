@@ -201,11 +201,15 @@ public class RobotContainer {
         // Set up simulatable mechanisms
         mechanisms = new Mechanisms();
 
-        autoChooser.addOption("Left", autoCommands.oneCycleNeutralTowerLeft());
-        autoChooser.addOption("Right", autoCommands.twoCycleNeutralOutpostTowerRight());
-        autoChooser.addOption("Cheesy Left", autoCommands.cheesyLeft());
-        autoChooser.addOption("Cheesy Right", autoCommands.cheesyRight());
-        autoChooser.addOption("DCMP L1", autoCommands.dcmpLeft());
+        autoChooser.addOption("Left", autoCommands.cheesyLeft());
+        autoChooser.addOption("Right", autoCommands.cheesyRight());
+        autoChooser.addOption("Late Grab Right", autoCommands.late_grabRight());
+        autoChooser.addOption("Late Grab Left", autoCommands.late_grabLeft());
+        autoChooser.addOption("Wraparound Right", autoCommands.wraparoundRight());
+        autoChooser.addOption("Camper Shuttle Trench Left", autoCommands.shuttleLeftAuto());
+        autoChooser.addOption("Camper Shuttle Trench Right", autoCommands.shuttleRightAuto());
+        autoChooser.addOption("Camper Shuttle Bump Left", autoCommands.shuttleLeftBumpAuto());
+        autoChooser.addOption("Camper Shuttle Bump Right", autoCommands.shuttleRightBumpAuto());
 
         SmartDashboard.putNumber("Shooter Velocity", 0);
 

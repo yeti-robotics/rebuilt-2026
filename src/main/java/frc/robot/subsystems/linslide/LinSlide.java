@@ -37,9 +37,7 @@ public class LinSlide extends SubsystemBase {
     }
 
     public Command applyPower(double power) {
-        return runEnd(() -> io.applyPower(power), () -> io.applyPower(0))
-                .until(() -> Units.RotationsPerSecond.of(inputs.velocityRPM).isNear(Units.RotationsPerSecond.of(0), 0.1)
-                        && inputs.supplyCurrent > 10);
+        return runEnd(() -> io.applyPower(power), () -> io.applyPower(0));
     }
 
     public Command zero() {
