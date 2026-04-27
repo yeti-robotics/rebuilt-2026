@@ -202,6 +202,7 @@ public class RobotContainer {
         autoChooser.addOption("Left", autoCommands.cheesyLeft());
         autoChooser.addOption("Right", autoCommands.cheesyRight());
         autoChooser.addOption("Late Grab Right", autoCommands.late_grabRight());
+        autoChooser.addOption("Late Grab Left", autoCommands.late_grabLeft());
         autoChooser.addOption("Wraparound Right", autoCommands.wraparoundRight());
         autoChooser.addOption("Camper Shuttle Trench Left", autoCommands.shuttleLeftAuto());
         autoChooser.addOption("Camper Shuttle Trench Right", autoCommands.shuttleRightAuto());

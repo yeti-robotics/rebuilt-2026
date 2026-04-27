@@ -48,16 +48,16 @@
     },
     {
       "anchor": {
-        "x": 8.075920114122681,
-        "y": 4.31318116975749
+        "x": 8.244,
+        "y": 3.420413694721826
       },
       "prevControl": {
-        "x": 8.518776074387581,
-        "y": 6.164464282340272
+        "x": 8.748607703281028,
+        "y": 5.581169757489299
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "CMP_NZ1_Left"
+      "linkedName": null
     }
   ],
   "rotationTargets": [

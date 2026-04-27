@@ -148,7 +148,7 @@ public class AutoCommands {
 
     public Command shuttleRightAuto() {
         Optional<PathPlannerPath> startDepot = PathPlannerUtils.loadPathByName("ShuttleAuto_1L");
-        Optional<PathPlannerPath> depotNeutral = PathPlannerUtils.loadPathByName("ShuttleAuto_2L");
+        Optional<PathPlannerPath> depotNeutral = PathPlannerUtils.loadPathByName("ShuttleAuto_2R");
 
         PathPlannerAuto auto;
 
@@ -188,7 +188,7 @@ public class AutoCommands {
 
     public Command shuttleRightBumpAuto() {
         Optional<PathPlannerPath> startDepot = PathPlannerUtils.loadPathByName("ShuttleAuto_1L");
-        Optional<PathPlannerPath> depotBumpNeutral = PathPlannerUtils.loadPathByName("ShuttleAutoBump_2L");
+        Optional<PathPlannerPath> depotBumpNeutral = PathPlannerUtils.loadPathByName("ShuttleAutoBump_2R");
 
         PathPlannerAuto auto;
 
@@ -215,10 +215,30 @@ public class AutoCommands {
         var cmd = late_grab1R.isEmpty() || late_grab2R.isEmpty()
                 ? Commands.none()
                 : Commands.sequence(
-                        Commands.waitSeconds(1.5),
+                        Commands.waitSeconds(2.5),
                         followPath(late_grab1R),
                         Commands.waitSeconds(2),
                         followPath(late_grab2R),
+                        shoot().withTimeout(2),
+                        hoodDown());
+
+        auto = new PathPlannerAuto(cmd);
+        return auto;
+    }
+
+    public Command late_grabLeft() {
+        Optional<PathPlannerPath> late_grab1L = PathPlannerUtils.loadPathByName("late_grab1L");
+        Optional<PathPlannerPath> late_grab2L = PathPlannerUtils.loadPathByName("late_grab2L");
+
+        PathPlannerAuto auto;
+
+        var cmd = late_grab1L.isEmpty() || late_grab2L.isEmpty()
+                ? Commands.none()
+                : Commands.sequence(
+                        Commands.waitSeconds(2.5),
+                        followPath(late_grab1L),
+                        Commands.waitSeconds(2),
+                        followPath(late_grab2L),
                         shoot().withTimeout(2),
                         hoodDown());
 

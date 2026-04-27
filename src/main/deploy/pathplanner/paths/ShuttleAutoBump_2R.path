@@ -32,16 +32,16 @@
     },
     {
       "anchor": {
-        "x": 8.075920114122681,
-        "y": 4.31318116975749
+        "x": 8.20530670470756,
+        "y": 3.82151212553495
       },
       "prevControl": {
-        "x": 7.830085592011411,
-        "y": 5.024807417974324
+        "x": 7.95947218259629,
+        "y": 4.533138373751782
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "CMP_NZ1_Left"
+      "linkedName": null
     }
   ],
   "rotationTargets": [
@@ -104,7 +104,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -178.80651057601796
+    "rotation": -165.61860540890945
   },
   "reversed": false,
   "folder": "Champs",
