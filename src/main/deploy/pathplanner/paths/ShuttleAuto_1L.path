@@ -1,0 +1,114 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 3.696241721854304,
+        "y": 5.7410844370860925
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 2.6416833095577745,
+        "y": 4.351997146932953
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 0.7267617689015686,
+        "y": 5.4647218259629105
+      },
+      "prevControl": {
+        "x": 0.8979614150340081,
+        "y": 4.883356360971502
+      },
+      "nextControl": {
+        "x": 0.10570613409415108,
+        "y": 7.573723252496434
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 2.30527817403709,
+        "y": 6.31867332382311
+      },
+      "prevControl": {
+        "x": 1.8394864479315265,
+        "y": 6.668017118402283
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "CMP_Depot_Left"
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.9552238805969997,
+      "rotationDegrees": -50.66471083635978
+    }
+  ],
+  "constraintZones": [
+    {
+      "name": "Constraints Zone",
+      "minWaypointRelativePos": 0.5671843349088648,
+      "maxWaypointRelativePos": 2.0,
+      "constraints": {
+        "maxVelocity": 1.5,
+        "maxAcceleration": 1.5,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0,
+        "nominalVoltage": 12.0,
+        "unlimited": false
+      }
+    }
+  ],
+  "pointTowardsZones": [],
+  "eventMarkers": [
+    {
+      "name": "popLintake",
+      "waypointRelativePos": 0.6,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "popLintake"
+              }
+            },
+            {
+              "type": "named",
+              "data": {
+                "name": "rollIn"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 5.0,
+    "maxAcceleration": 5.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": -48.70462744207713
+  },
+  "reversed": false,
+  "folder": "Champs",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": 0.0
+  },
+  "useDefaultConstraints": true
+}

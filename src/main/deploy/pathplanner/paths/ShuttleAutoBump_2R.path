@@ -1,0 +1,116 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 2.30527817403709,
+        "y": 6.31867332382311
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 3.0039657631954344,
+        "y": 4.403751783166904
+      },
+      "isLocked": false,
+      "linkedName": "CMP_Depot_Left"
+    },
+    {
+      "anchor": {
+        "x": 4.685991440798858,
+        "y": 5.529415121255349
+      },
+      "prevControl": {
+        "x": 3.463833985306155,
+        "y": 5.5773428646080045
+      },
+      "nextControl": {
+        "x": 7.325477888730385,
+        "y": 5.425905848787445
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 8.20530670470756,
+        "y": 3.82151212553495
+      },
+      "prevControl": {
+        "x": 7.95947218259629,
+        "y": 4.533138373751782
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": null
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.45628997867804355,
+      "rotationDegrees": -146.55152743084344
+    },
+    {
+      "waypointRelativePos": 1.138592750533049,
+      "rotationDegrees": -138.7402504884691
+    }
+  ],
+  "constraintZones": [
+    {
+      "name": "Constraints Zone",
+      "minWaypointRelativePos": 0.3997299122214708,
+      "maxWaypointRelativePos": 1.280216070222833,
+      "constraints": {
+        "maxVelocity": 2.0,
+        "maxAcceleration": 3.0,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0,
+        "nominalVoltage": 12.0,
+        "unlimited": false
+      }
+    }
+  ],
+  "pointTowardsZones": [],
+  "eventMarkers": [
+    {
+      "name": "rollin",
+      "waypointRelativePos": 1.1991897366643918,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "rollIn"
+        }
+      }
+    },
+    {
+      "name": "popLintake",
+      "waypointRelativePos": 1.1991897366644195,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "popLintake"
+        }
+      }
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 5.0,
+    "maxAcceleration": 5.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": -165.61860540890945
+  },
+  "reversed": false,
+  "folder": "Champs",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": -48.70462744207713
+  },
+  "useDefaultConstraints": true
+}

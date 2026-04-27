@@ -159,6 +159,40 @@ public class AutoAimCommands {
                 SwerveRequest.Idle::new);
     }
 
+    public static Command leftShuttleAimAuto(CommandSwerveDrivetrain drive) {
+        return drive.runEnd(
+                () -> {
+                    Translation2d targetTranslation = new Translation2d(2.35, 5.958);
+
+                    SwerveRequest.FieldCentricFacingAngle swerveRequest = new SwerveRequest.FieldCentricFacingAngle()
+                            .withHeadingPID(20, 0, 0)
+                            .withVelocityX(0)
+                            .withVelocityY(0)
+                            .withTargetDirection(calcDesiredHeading(drive.getState().Pose, targetTranslation))
+                            .withDriveRequestType(SwerveModule.DriveRequestType.Velocity);
+
+                    drive.setControl(swerveRequest);
+                },
+                SwerveRequest.Idle::new);
+    }
+
+    public static Command rightShuttleAimAuto(CommandSwerveDrivetrain drive) {
+        return drive.runEnd(
+                () -> {
+                    Translation2d targetTranslation = new Translation2d(2.35, 1.931);
+
+                    SwerveRequest.FieldCentricFacingAngle swerveRequest = new SwerveRequest.FieldCentricFacingAngle()
+                            .withHeadingPID(20, 0, 0)
+                            .withVelocityX(0)
+                            .withVelocityY(0)
+                            .withTargetDirection(calcDesiredHeading(drive.getState().Pose, targetTranslation))
+                            .withDriveRequestType(SwerveModule.DriveRequestType.Velocity);
+
+                    drive.setControl(swerveRequest);
+                },
+                SwerveRequest.Idle::new);
+    }
+
     public static Command compensationAutoAim(
             CommandSwerveDrivetrain drive,
             DoubleSupplier xVelSupplier,
