@@ -301,4 +301,46 @@ public class AutoCommands {
         auto = new PathPlannerAuto(cmd);
         return auto;
     }
+
+    public Command cheesyLeftBump() {
+        Optional<PathPlannerPath> cheesy1 = PathPlannerUtils.loadPathByName("cheesy_path1L");
+        Optional<PathPlannerPath> cheesy2 = PathPlannerUtils.loadPathByName("cheesy_path2LB");
+        Optional<PathPlannerPath> cheesy3 = PathPlannerUtils.loadPathByName("cheesy_path3L");
+        Optional<PathPlannerPath> cheesy4 = PathPlannerUtils.loadPathByName("cheesy_path4L");
+
+        PathPlannerAuto auto;
+
+        var cmd = cheesy1.isEmpty() || cheesy2.isEmpty() || cheesy3.isEmpty() || cheesy4.isEmpty()
+                ? Commands.none()
+                : Commands.sequence(
+                        followPathAndIntake(cheesy1, 0.5),
+                        followPath(cheesy2),
+                        shoot().withTimeout(3.5),
+                        hoodDown(),
+                        followPathAndIntake(cheesy3, 0.5),
+                        shoot());
+        auto = new PathPlannerAuto(cmd);
+        return auto;
+    }
+
+    public Command cheesyRightBump() {
+        Optional<PathPlannerPath> cheesy1 = PathPlannerUtils.loadPathByName("cheesy_path1right");
+        Optional<PathPlannerPath> cheesy2 = PathPlannerUtils.loadPathByName("cheesy_path2rightB");
+        Optional<PathPlannerPath> cheesy3 = PathPlannerUtils.loadPathByName("cheesy_path3right");
+        Optional<PathPlannerPath> cheesy4 = PathPlannerUtils.loadPathByName("cheesy_path4right");
+
+        PathPlannerAuto auto;
+
+        var cmd = cheesy1.isEmpty() || cheesy2.isEmpty() || cheesy3.isEmpty() || cheesy4.isEmpty()
+                ? Commands.none()
+                : Commands.sequence(
+                        followPathAndIntake(cheesy1, 0.5),
+                        followPath(cheesy2),
+                        shoot().withTimeout(3.5),
+                        hoodDown(),
+                        followPathAndIntake(cheesy3, 0.5),
+                        shoot());
+        auto = new PathPlannerAuto(cmd);
+        return auto;
+    }
 }
