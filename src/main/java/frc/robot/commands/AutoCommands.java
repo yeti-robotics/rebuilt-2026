@@ -59,7 +59,8 @@ public class AutoCommands {
     // Named Commands
     public Command popLintake() {
         return linSlide.applyPower(LinSlideConfigsBeta.DEPLOY_SPEED)
-                .until(linSlide::isDeployed).andThen(linSlide.applyPower(0.15));
+                .until(linSlide::isDeployed)
+                .andThen(linSlide.applyPower(0.15));
     }
 
     public Command rollIn() {
@@ -232,9 +233,9 @@ public class AutoCommands {
         var cmd = late_grab1R.isEmpty() || late_grab2R.isEmpty()
                 ? Commands.none()
                 : Commands.sequence(
-                        Commands.waitSeconds(2.5), // Default values
+                        Commands.waitSeconds(4), // Default values
                         followPath(late_grab1R),
-                        Commands.waitSeconds(1.5), // Default values
+                        Commands.waitSeconds(2.5), // Default values
                         followPath(late_grab2R),
                         shoot().withTimeout(2),
                         hoodDown());
