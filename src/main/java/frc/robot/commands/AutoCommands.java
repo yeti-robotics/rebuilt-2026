@@ -11,7 +11,6 @@ import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.path.PathPlannerPath;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.units.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -132,8 +131,9 @@ public class AutoCommands {
     public Command compensatePose(Pose2d pose, double velocity, double tolerance) {
         return Commands.sequence(
                 Commands.runOnce(() -> drivetrain.setControl(new SwerveRequest.PointWheelsAt()
-                    .withDriveRequestType(SwerveModule.DriveRequestType.Velocity)
-                    .withModuleDirection(pose.getRotation()))).withTimeout(0.5),
+                                .withDriveRequestType(SwerveModule.DriveRequestType.Velocity)
+                                .withModuleDirection(pose.getRotation())))
+                        .withTimeout(0.5),
                 Commands.runOnce(() -> drivetrain.setControl(new SwerveRequest.RobotCentric()
                                 .withDriveRequestType(SwerveModule.DriveRequestType.Velocity)
                                 .withVelocityX(velocity)))
@@ -324,9 +324,10 @@ public class AutoCommands {
         Optional<PathPlannerPath> cheesy3 = PathPlannerUtils.loadPathByName("cheesy_path3L");
         Optional<PathPlannerPath> cheesy4 = PathPlannerUtils.loadPathByName("cheesy_path4L");
 
-        Pose2d cheesy2EndPose = cheesy2.get().getPathPoses().get(cheesy2.get().getPathPoses().size() - 1);
-        Pose2d cheesy3EndPose = cheesy3.get().getPathPoses().get(cheesy3.get().getPathPoses().size() - 1);
-
+        Pose2d cheesy2EndPose =
+                cheesy2.get().getPathPoses().get(cheesy2.get().getPathPoses().size() - 1);
+        Pose2d cheesy3EndPose =
+                cheesy3.get().getPathPoses().get(cheesy3.get().getPathPoses().size() - 1);
 
         PathPlannerAuto auto;
 
@@ -351,8 +352,10 @@ public class AutoCommands {
         Optional<PathPlannerPath> cheesy3 = PathPlannerUtils.loadPathByName("cheesy_path3right");
         Optional<PathPlannerPath> cheesy4 = PathPlannerUtils.loadPathByName("cheesy_path4right");
 
-        Pose2d cheesy2EndPose = cheesy2.get().getPathPoses().get(cheesy2.get().getPathPoses().size() - 1);
-        Pose2d cheesy3EndPose = cheesy3.get().getPathPoses().get(cheesy3.get().getPathPoses().size() - 1);
+        Pose2d cheesy2EndPose =
+                cheesy2.get().getPathPoses().get(cheesy2.get().getPathPoses().size() - 1);
+        Pose2d cheesy3EndPose =
+                cheesy3.get().getPathPoses().get(cheesy3.get().getPathPoses().size() - 1);
 
         PathPlannerAuto auto;
 
