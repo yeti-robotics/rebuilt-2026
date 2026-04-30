@@ -96,12 +96,12 @@
     },
     {
       "anchor": {
-        "x": 2.6158059914407983,
-        "y": 5.270641940085593
+        "x": 2.299441550925926,
+        "y": 5.237181785300926
       },
       "prevControl": {
-        "x": 3.029843081312411,
-        "y": 5.477660485021398
+        "x": 2.713478640797539,
+        "y": 5.444200330236732
       },
       "nextControl": null,
       "isLocked": false,
@@ -207,7 +207,7 @@
   "folder": "Left Paths",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -47.450852637771014
+    "rotation": -47.45085263777102
   },
   "useDefaultConstraints": true
 }
