@@ -255,7 +255,7 @@ public class RobotContainer {
                 .leftTrigger()
                 .whileTrue(intake.applyPower(IntakeConfigsBeta.ROLLER_SPEED)
                         .alongWith(linSlide.applyPower(LinSlideConfigsBeta.DEPLOY_SPEED)
-                                .until(linSlide::isDeployed)));
+                                .until(linSlide::isDeployed).andThen(linSlide.applyPower(-0.3))));
 
         controller
                 .rightBumper()
