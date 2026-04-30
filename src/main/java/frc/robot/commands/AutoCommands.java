@@ -235,7 +235,7 @@ public class AutoCommands {
                 : Commands.sequence(
                         Commands.waitSeconds(4), // Default values
                         followPath(late_grab1R),
-                        Commands.waitSeconds(2.5), // Default values
+                        Commands.waitSeconds(3), // Default values
                         followPath(late_grab2R),
                         shoot().withTimeout(2),
                         hoodDown());
