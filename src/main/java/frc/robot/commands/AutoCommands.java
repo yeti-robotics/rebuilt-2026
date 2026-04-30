@@ -58,7 +58,8 @@ public class AutoCommands {
 
     // Named Commands
     public Command popLintake() {
-        return linSlide.applyPower(LinSlideConfigsBeta.DEPLOY_SPEED).until(linSlide::isDeployed);
+        return linSlide.applyPower(LinSlideConfigsBeta.DEPLOY_SPEED)
+                .until(linSlide::isDeployed).andThen(linSlide.applyPower(0.15));
     }
 
     public Command rollIn() {
