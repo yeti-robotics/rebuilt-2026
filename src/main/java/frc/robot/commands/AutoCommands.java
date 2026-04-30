@@ -215,9 +215,9 @@ public class AutoCommands {
         var cmd = late_grab1R.isEmpty() || late_grab2R.isEmpty()
                 ? Commands.none()
                 : Commands.sequence(
-                        Commands.waitSeconds(2.5),
+                        Commands.waitSeconds(2.5), // Default values
                         followPath(late_grab1R),
-                        Commands.waitSeconds(2),
+                        Commands.waitSeconds(1.5), // Default values
                         followPath(late_grab2R),
                         shoot().withTimeout(2),
                         hoodDown());
@@ -235,9 +235,9 @@ public class AutoCommands {
         var cmd = late_grab1L.isEmpty() || late_grab2L.isEmpty()
                 ? Commands.none()
                 : Commands.sequence(
-                        Commands.waitSeconds(2.5),
+                        Commands.waitSeconds(2.5), // Default values
                         followPath(late_grab1L),
-                        Commands.waitSeconds(2),
+                        Commands.waitSeconds(1.5), // Default values
                         followPath(late_grab2L),
                         shoot().withTimeout(2),
                         hoodDown());
