@@ -1,0 +1,112 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 6.885563480741797,
+        "y": 2.9619999999999997
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 5.9948183807316004,
+        "y": 3.2359978519406054
+      },
+      "isLocked": false,
+      "linkedName": "cheesy-neutral-right"
+    },
+    {
+      "anchor": {
+        "x": 5.603981626157409,
+        "y": 2.641629123263889
+      },
+      "prevControl": {
+        "x": 5.81479535985891,
+        "y": 2.7760075801788
+      },
+      "nextControl": {
+        "x": 5.393167892455907,
+        "y": 2.5072506663489778
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 3.0039657631954344,
+        "y": 2.199
+      },
+      "prevControl": {
+        "x": 3.3892324942129637,
+        "y": 2.8179902343750007
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "cheesy-shoot-right"
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.8727590460526319,
+      "rotationDegrees": 44.74946704689943
+    }
+  ],
+  "constraintZones": [
+    {
+      "name": "Constraints Zone",
+      "minWaypointRelativePos": 0.7050067658998779,
+      "maxWaypointRelativePos": 1.8037889039242143,
+      "constraints": {
+        "maxVelocity": 4.0,
+        "maxAcceleration": 4.0,
+        "maxAngularVelocity": 180.0,
+        "maxAngularAcceleration": 180.0,
+        "nominalVoltage": 12.0,
+        "unlimited": false
+      }
+    }
+  ],
+  "pointTowardsZones": [],
+  "eventMarkers": [
+    {
+      "name": "popLintake",
+      "waypointRelativePos": 0,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "popLintake"
+        }
+      }
+    },
+    {
+      "name": "rollin",
+      "waypointRelativePos": 0,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "rollIn"
+        }
+      }
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 5.0,
+    "maxAcceleration": 5.0,
+    "maxAngularVelocity": 180.0,
+    "maxAngularAcceleration": 180.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 62.48819956830655
+  },
+  "reversed": false,
+  "folder": "Right Paths",
+  "idealStartingState": {
+    "velocity": 1.0,
+    "rotation": -28.352994522387082
+  },
+  "useDefaultConstraints": false
+}

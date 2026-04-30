@@ -199,11 +199,12 @@ public class RobotContainer {
         // Set up simulatable mechanisms
         mechanisms = new Mechanisms();
 
-        autoChooser.addOption("Left", autoCommands.cheesyLeft());
-        autoChooser.addOption("Right", autoCommands.cheesyRight());
-        autoChooser.addOption("Late Grab Right", autoCommands.late_grabRight());
+        autoChooser.addOption("Left Trench", autoCommands.cheesyLeft());
+        autoChooser.addOption("Left Bump", autoCommands.cheesyLeftBump());
+        autoChooser.addOption("Right Trench", autoCommands.cheesyRight());
+        autoChooser.addOption("Right Bump", autoCommands.cheesyRightBump());
         autoChooser.addOption("Late Grab Left", autoCommands.late_grabLeft());
-        autoChooser.addOption("Wraparound Right", autoCommands.wraparoundRight());
+        autoChooser.addOption("Late Grab Right", autoCommands.late_grabRight());
         autoChooser.addOption("Camper Shuttle Trench Left", autoCommands.shuttleLeftAuto());
         autoChooser.addOption("Camper Shuttle Trench Right", autoCommands.shuttleRightAuto());
         autoChooser.addOption("Camper Shuttle Bump Left", autoCommands.shuttleLeftBumpAuto());

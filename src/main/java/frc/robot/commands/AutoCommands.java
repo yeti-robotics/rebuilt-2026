@@ -215,9 +215,9 @@ public class AutoCommands {
         var cmd = late_grab1R.isEmpty() || late_grab2R.isEmpty()
                 ? Commands.none()
                 : Commands.sequence(
-                        Commands.waitSeconds(2.5),
+                        Commands.waitSeconds(2.5), // Default values
                         followPath(late_grab1R),
-                        Commands.waitSeconds(2),
+                        Commands.waitSeconds(1.5), // Default values
                         followPath(late_grab2R),
                         shoot().withTimeout(2),
                         hoodDown());
@@ -235,9 +235,9 @@ public class AutoCommands {
         var cmd = late_grab1L.isEmpty() || late_grab2L.isEmpty()
                 ? Commands.none()
                 : Commands.sequence(
-                        Commands.waitSeconds(2.5),
+                        Commands.waitSeconds(2.5), // Default values
                         followPath(late_grab1L),
-                        Commands.waitSeconds(2),
+                        Commands.waitSeconds(1.5), // Default values
                         followPath(late_grab2L),
                         shoot().withTimeout(2),
                         hoodDown());
@@ -284,6 +284,48 @@ public class AutoCommands {
     public Command cheesyRight() {
         Optional<PathPlannerPath> cheesy1 = PathPlannerUtils.loadPathByName("cheesy_path1right");
         Optional<PathPlannerPath> cheesy2 = PathPlannerUtils.loadPathByName("cheesy_path2right");
+        Optional<PathPlannerPath> cheesy3 = PathPlannerUtils.loadPathByName("cheesy_path3right");
+        Optional<PathPlannerPath> cheesy4 = PathPlannerUtils.loadPathByName("cheesy_path4right");
+
+        PathPlannerAuto auto;
+
+        var cmd = cheesy1.isEmpty() || cheesy2.isEmpty() || cheesy3.isEmpty() || cheesy4.isEmpty()
+                ? Commands.none()
+                : Commands.sequence(
+                        followPathAndIntake(cheesy1, 0.5),
+                        followPath(cheesy2),
+                        shoot().withTimeout(3.5),
+                        hoodDown(),
+                        followPathAndIntake(cheesy3, 0.5),
+                        shoot());
+        auto = new PathPlannerAuto(cmd);
+        return auto;
+    }
+
+    public Command cheesyLeftBump() {
+        Optional<PathPlannerPath> cheesy1 = PathPlannerUtils.loadPathByName("cheesy_path1L");
+        Optional<PathPlannerPath> cheesy2 = PathPlannerUtils.loadPathByName("cheesy_path2LB");
+        Optional<PathPlannerPath> cheesy3 = PathPlannerUtils.loadPathByName("cheesy_path3L");
+        Optional<PathPlannerPath> cheesy4 = PathPlannerUtils.loadPathByName("cheesy_path4L");
+
+        PathPlannerAuto auto;
+
+        var cmd = cheesy1.isEmpty() || cheesy2.isEmpty() || cheesy3.isEmpty() || cheesy4.isEmpty()
+                ? Commands.none()
+                : Commands.sequence(
+                        followPathAndIntake(cheesy1, 0.5),
+                        followPath(cheesy2),
+                        shoot().withTimeout(3.5),
+                        hoodDown(),
+                        followPathAndIntake(cheesy3, 0.5),
+                        shoot());
+        auto = new PathPlannerAuto(cmd);
+        return auto;
+    }
+
+    public Command cheesyRightBump() {
+        Optional<PathPlannerPath> cheesy1 = PathPlannerUtils.loadPathByName("cheesy_path1right");
+        Optional<PathPlannerPath> cheesy2 = PathPlannerUtils.loadPathByName("cheesy_path2rightB");
         Optional<PathPlannerPath> cheesy3 = PathPlannerUtils.loadPathByName("cheesy_path3right");
         Optional<PathPlannerPath> cheesy4 = PathPlannerUtils.loadPathByName("cheesy_path4right");
 
