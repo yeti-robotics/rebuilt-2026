@@ -246,7 +246,7 @@ public class RobotContainer {
 
         controller.start().onTrue(Commands.runOnce(drive::seedFieldCentric, drive));
 
-        controller.x().whileTrue(linSlide.applyPower(1));
+        controller.x().whileTrue(linSlide.applyPower(0.5));
         controller
                 .b()
                 .whileTrue(linSlide.applyPower(-LinSlideConfigsBeta.DEPLOY_SPEED)
