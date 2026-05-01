@@ -242,9 +242,9 @@ public class AutoCommands {
         var cmd = late_grab1R.isEmpty() || late_grab2R.isEmpty()
                 ? Commands.none()
                 : Commands.sequence(
-                        Commands.waitSeconds(4), // Default values
+                        Commands.waitSeconds(5), // Default value: 2.5
                         followPath(late_grab1R),
-                        Commands.waitSeconds(3), // Default values
+                        Commands.waitSeconds(0), // Default value: 1.5
                         followPath(late_grab2R),
                         shoot().withTimeout(2),
                         hoodDown());
@@ -262,9 +262,9 @@ public class AutoCommands {
         var cmd = late_grab1L.isEmpty() || late_grab2L.isEmpty()
                 ? Commands.none()
                 : Commands.sequence(
-                        Commands.waitSeconds(2.5), // Default values
+                        Commands.waitSeconds(5), // Default value: 2.5
                         followPath(late_grab1L),
-                        Commands.waitSeconds(1.5), // Default values
+                        Commands.waitSeconds(0), // Default value: 1.5
                         followPath(late_grab2L),
                         shoot().withTimeout(2),
                         hoodDown());
@@ -347,11 +347,11 @@ public class AutoCommands {
                 : Commands.sequence(
                         followPathAndIntake(cheesy1, 0.5),
                         followPath(cheesy2),
-                        compensatePose(cheesy2EndPose, 2, 0.2),
+//                        compensatePose(cheesy2EndPose, 2, 0.2),
                         shoot().withTimeout(3.5),
                         hoodDown(),
                         followPathAndIntake(cheesy3, 0.5),
-                        compensatePose(cheesy3EndPose, 2, 0.2),
+//                        compensatePose(cheesy3EndPose, 2, 0.2),
                         shoot());
         auto = new PathPlannerAuto(cmd);
         return auto;
