@@ -347,11 +347,11 @@ public class AutoCommands {
                 : Commands.sequence(
                         followPathAndIntake(cheesy1, 0.5),
                         followPath(cheesy2),
-//                        compensatePose(cheesy2EndPose, 2, 0.2),
+                        //                        compensatePose(cheesy2EndPose, 2, 0.2),
                         shoot().withTimeout(3.5),
                         hoodDown(),
                         followPathAndIntake(cheesy3, 0.5),
-//                        compensatePose(cheesy3EndPose, 2, 0.2),
+                        //                        compensatePose(cheesy3EndPose, 2, 0.2),
                         shoot());
         auto = new PathPlannerAuto(cmd);
         return auto;
