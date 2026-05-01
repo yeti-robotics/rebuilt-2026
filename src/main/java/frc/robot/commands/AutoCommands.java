@@ -11,6 +11,8 @@ import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.path.PathPlannerPath;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -131,6 +133,13 @@ public class AutoCommands {
     }
 
     public Command compensatePose(Pose2d pose, double velocity, double tolerance) {
+        Pose2d currentPose = drivetrain.getState().Pose;
+        ChassisSpeeds speeds = new ChassisSpeeds(0, 0, 0);
+
+        double xDistance = pose.minus(currentPose).getX();
+        double yDistance = pose.minus(currentPose).getY();
+        Rotation2d omegaRotation = pose.minus(currentPose).getRotation();
+
         return Commands.sequence(
                 Commands.runOnce(() -> drivetrain.setControl(new SwerveRequest.PointWheelsAt()
                                 .withDriveRequestType(SwerveModule.DriveRequestType.Velocity)
