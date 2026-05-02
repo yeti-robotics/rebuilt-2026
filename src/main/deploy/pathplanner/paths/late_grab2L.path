@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 5.811654778887304,
-        "y": 5.503537803138374
+        "x": 6.128168674698795,
+        "y": 5.324469879518071
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.80674000616003,
-        "y": 5.52930484859292
+        "x": 5.1232539019715215,
+        "y": 5.350236924972617
       },
       "isLocked": false,
       "linkedName": "lategrabL-End"
     },
     {
       "anchor": {
-        "x": 4.116690442225392,
-        "y": 5.503537803138374
+        "x": 3.7350000000000003,
+        "y": 5.4993132530120485
       },
       "prevControl": {
-        "x": 4.636101460296735,
-        "y": 5.539143921663898
+        "x": 4.254411018071344,
+        "y": 5.534919371537573
       },
       "nextControl": {
-        "x": 2.620373493975903,
-        "y": 5.400963855421687
+        "x": 2.238683051750512,
+        "y": 5.396739305295362
       },
       "isLocked": false,
       "linkedName": null
@@ -54,7 +54,7 @@
     {
       "name": "Constraints Zone",
       "minWaypointRelativePos": 0.021607022282244596,
-      "maxWaypointRelativePos": 1.3828494260634525,
+      "maxWaypointRelativePos": 1.5702233250620272,
       "constraints": {
         "maxVelocity": 12.0,
         "maxAcceleration": 15.0,

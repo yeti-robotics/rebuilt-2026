@@ -246,7 +246,7 @@ public class AutoCommands {
                         followPath(late_grab1R),
                         Commands.waitSeconds(0), // Default value: 1.5
                         followPath(late_grab2R),
-                        shoot().withTimeout(2),
+                        shoot().withTimeout(7),
                         hoodDown());
 
         auto = new PathPlannerAuto(cmd);
@@ -266,7 +266,7 @@ public class AutoCommands {
                         followPath(late_grab1L),
                         Commands.waitSeconds(0), // Default value: 1.5
                         followPath(late_grab2L),
-                        shoot().withTimeout(2),
+                        shoot().withTimeout(7),
                         hoodDown());
 
         auto = new PathPlannerAuto(cmd);
