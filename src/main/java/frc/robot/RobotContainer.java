@@ -269,20 +269,9 @@ public class RobotContainer {
 
         controller
                 .leftBumper()
-                .whileTrue(Commands.either(
-                                AutoAimCommands.autoAim(
-                                                drive,
-                                                controller::getLeftY,
-                                                controller::getLeftX,
-                                                centerHubOpening.toTranslation2d())
-                                        .alongWith(AutoAimCommands.readyAim(
-                                                drive, shooter, hood, centerHubOpening.toTranslation2d())),
-                                AutoAimCommands.shuttleAim(drive, controller::getLeftY, controller::getLeftX)
-                                        .alongWith(AutoAimCommands.shuttleReadyAim(drive, shooter, hood)),
-                                () -> AllianceFlipUtil.apply(
-                                                drive.getState().Pose.getX())
-                                        < 4.9)
-                        .alongWith(linSlide.applyPower(LinSlideConfigsBeta.LINSLIDE_AUTO_SHOOT_SPEED)))
+                .whileTrue(shooter.shoot(20)
+                        .alongWith(hood.setHoodPosition(0.2)
+                                .alongWith(linSlide.applyPower(LinSlideConfigsBeta.LINSLIDE_AUTO_SHOOT_SPEED))))
                 .onFalse(hood.setHoodPosition(0));
 
         controller.povLeft().onTrue(hood.setHoodPosition(0));
