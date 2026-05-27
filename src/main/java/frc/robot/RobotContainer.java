@@ -246,7 +246,7 @@ public class RobotContainer {
 
         controller.start().onTrue(Commands.runOnce(drive::seedFieldCentric, drive));
 
-        controller.x().whileTrue(linSlide.applyPower(LinSlideConfigsBeta.DEPLOY_SPEED));
+        controller.x().whileTrue(linSlide.applyPower(0.5));
         controller
                 .b()
                 .whileTrue(linSlide.applyPower(-LinSlideConfigsBeta.DEPLOY_SPEED)
@@ -255,7 +255,8 @@ public class RobotContainer {
                 .leftTrigger()
                 .whileTrue(intake.applyPower(IntakeConfigsBeta.ROLLER_SPEED)
                         .alongWith(linSlide.applyPower(LinSlideConfigsBeta.DEPLOY_SPEED)
-                                .until(linSlide::isDeployed)));
+                                .until(linSlide::isDeployed)
+                                .andThen(linSlide.applyPower(0.15))));
 
         controller
                 .rightBumper()

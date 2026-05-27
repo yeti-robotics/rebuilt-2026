@@ -4,10 +4,15 @@ import static frc.robot.constants.FieldConstants.Hub.centerHubOpening;
 import static frc.robot.subsystems.feeder.FeederConfigsBeta.FEEDER_SPEED;
 import static frc.robot.subsystems.indexer.IndexerConfigsBeta.TEST_INDEXER_SPEED;
 
+import com.ctre.phoenix6.swerve.SwerveModule;
+import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.path.PathPlannerPath;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -55,7 +60,9 @@ public class AutoCommands {
 
     // Named Commands
     public Command popLintake() {
-        return linSlide.applyPower(LinSlideConfigsBeta.DEPLOY_SPEED).until(linSlide::isDeployed);
+        return linSlide.applyPower(LinSlideConfigsBeta.DEPLOY_SPEED)
+                .until(linSlide::isDeployed)
+                .andThen(linSlide.applyPower(0.15));
     }
 
     public Command rollIn() {
@@ -123,6 +130,26 @@ public class AutoCommands {
                 new WaitCommand(0.4).andThen(feeder.feed(FEEDER_SPEED)),
                 new WaitCommand(0.4).andThen(intake.applyPower(IntakeConfigsBeta.ROLLER_SPEED)),
                 new WaitCommand(0.4).andThen(shooter.switchSlot(1)));
+    }
+
+    public Command compensatePose(Pose2d pose, double velocity, double tolerance) {
+        Pose2d currentPose = drivetrain.getState().Pose;
+        ChassisSpeeds speeds = new ChassisSpeeds(0, 0, 0);
+
+        double xDistance = pose.minus(currentPose).getX();
+        double yDistance = pose.minus(currentPose).getY();
+        Rotation2d omegaRotation = pose.minus(currentPose).getRotation();
+
+        return Commands.sequence(
+                Commands.runOnce(() -> drivetrain.setControl(new SwerveRequest.PointWheelsAt()
+                                .withDriveRequestType(SwerveModule.DriveRequestType.Velocity)
+                                .withModuleDirection(pose.getRotation())))
+                        .withTimeout(0.5),
+                Commands.runOnce(() -> drivetrain.setControl(new SwerveRequest.RobotCentric()
+                                .withDriveRequestType(SwerveModule.DriveRequestType.Velocity)
+                                .withVelocityX(velocity)))
+                        .until(() -> drivetrain.getState().Pose.getMeasureX().isNear(pose.getMeasureX(), tolerance)
+                                && drivetrain.getState().Pose.getMeasureY().isNear(pose.getMeasureY(), tolerance)));
     }
 
     // Autos
@@ -215,11 +242,11 @@ public class AutoCommands {
         var cmd = late_grab1R.isEmpty() || late_grab2R.isEmpty()
                 ? Commands.none()
                 : Commands.sequence(
-                        Commands.waitSeconds(2.5), // Default values
+                        Commands.waitSeconds(3), // Default value: 2.5
                         followPath(late_grab1R),
-                        Commands.waitSeconds(1.5), // Default values
+                        Commands.waitSeconds(0), // Default value: 1.5
                         followPath(late_grab2R),
-                        shoot().withTimeout(2),
+                        shoot().withTimeout(7),
                         hoodDown());
 
         auto = new PathPlannerAuto(cmd);
@@ -235,11 +262,11 @@ public class AutoCommands {
         var cmd = late_grab1L.isEmpty() || late_grab2L.isEmpty()
                 ? Commands.none()
                 : Commands.sequence(
-                        Commands.waitSeconds(2.5), // Default values
+                        Commands.waitSeconds(3), // Default value: 2.5
                         followPath(late_grab1L),
-                        Commands.waitSeconds(1.5), // Default values
+                        Commands.waitSeconds(0), // Default value: 1.5
                         followPath(late_grab2L),
-                        shoot().withTimeout(2),
+                        shoot().withTimeout(7),
                         hoodDown());
 
         auto = new PathPlannerAuto(cmd);
@@ -308,6 +335,11 @@ public class AutoCommands {
         Optional<PathPlannerPath> cheesy3 = PathPlannerUtils.loadPathByName("cheesy_path3L");
         Optional<PathPlannerPath> cheesy4 = PathPlannerUtils.loadPathByName("cheesy_path4L");
 
+        Pose2d cheesy2EndPose =
+                cheesy2.get().getPathPoses().get(cheesy2.get().getPathPoses().size() - 1);
+        Pose2d cheesy3EndPose =
+                cheesy3.get().getPathPoses().get(cheesy3.get().getPathPoses().size() - 1);
+
         PathPlannerAuto auto;
 
         var cmd = cheesy1.isEmpty() || cheesy2.isEmpty() || cheesy3.isEmpty() || cheesy4.isEmpty()
@@ -315,9 +347,11 @@ public class AutoCommands {
                 : Commands.sequence(
                         followPathAndIntake(cheesy1, 0.5),
                         followPath(cheesy2),
+                        //                        compensatePose(cheesy2EndPose, 2, 0.2),
                         shoot().withTimeout(3.5),
                         hoodDown(),
                         followPathAndIntake(cheesy3, 0.5),
+                        //                        compensatePose(cheesy3EndPose, 2, 0.2),
                         shoot());
         auto = new PathPlannerAuto(cmd);
         return auto;
@@ -329,6 +363,11 @@ public class AutoCommands {
         Optional<PathPlannerPath> cheesy3 = PathPlannerUtils.loadPathByName("cheesy_path3right");
         Optional<PathPlannerPath> cheesy4 = PathPlannerUtils.loadPathByName("cheesy_path4right");
 
+        Pose2d cheesy2EndPose =
+                cheesy2.get().getPathPoses().get(cheesy2.get().getPathPoses().size() - 1);
+        Pose2d cheesy3EndPose =
+                cheesy3.get().getPathPoses().get(cheesy3.get().getPathPoses().size() - 1);
+
         PathPlannerAuto auto;
 
         var cmd = cheesy1.isEmpty() || cheesy2.isEmpty() || cheesy3.isEmpty() || cheesy4.isEmpty()
@@ -336,9 +375,11 @@ public class AutoCommands {
                 : Commands.sequence(
                         followPathAndIntake(cheesy1, 0.5),
                         followPath(cheesy2),
+                        compensatePose(cheesy2EndPose, 2, 0.2),
                         shoot().withTimeout(3.5),
                         hoodDown(),
                         followPathAndIntake(cheesy3, 0.5),
+                        compensatePose(cheesy3EndPose, 2, 0.2),
                         shoot());
         auto = new PathPlannerAuto(cmd);
         return auto;
