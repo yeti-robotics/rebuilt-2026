@@ -4,6 +4,9 @@ import static frc.robot.constants.FieldConstants.Hub.centerHubOpening;
 import static frc.robot.subsystems.feeder.FeederConfigsBeta.FEEDER_SPEED;
 import static frc.robot.subsystems.indexer.IndexerConfigsBeta.TEST_INDEXER_SPEED;
 
+import choreo.auto.AutoFactory;
+import choreo.auto.AutoRoutine;
+import choreo.auto.AutoTrajectory;
 import com.ctre.phoenix6.swerve.SwerveModule;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -37,6 +40,7 @@ public class AutoCommands {
     private final Intake intake;
     private final LinSlide linSlide;
     private final Shooter shooter;
+    private AutoFactory autoFactory;
 
     public AutoCommands(
             CommandSwerveDrivetrain drivetrain,
@@ -45,7 +49,8 @@ public class AutoCommands {
             Feeder feeder,
             Intake intake,
             LinSlide linSlide,
-            Shooter shooter) {
+            Shooter shooter,
+            AutoFactory autoFactory) {
         this.drivetrain = drivetrain;
         this.hood = hood;
         this.indexer = indexer;
@@ -53,6 +58,7 @@ public class AutoCommands {
         this.intake = intake;
         this.linSlide = linSlide;
         this.shooter = shooter;
+        this.autoFactory = autoFactory;
 
         NamedCommands.registerCommand("rollIn", rollIn());
         NamedCommands.registerCommand("popLintake", popLintake());
@@ -150,6 +156,21 @@ public class AutoCommands {
                                 .withVelocityX(velocity)))
                         .until(() -> drivetrain.getState().Pose.getMeasureX().isNear(pose.getMeasureX(), tolerance)
                                 && drivetrain.getState().Pose.getMeasureY().isNear(pose.getMeasureY(), tolerance)));
+    }
+
+    // Choreo Autos
+    public Command testChoreoAuto() {
+        AutoRoutine oneCycleTrench = autoFactory.newRoutine("OneCycleTrench");
+        AutoTrajectory startToNeutral = oneCycleTrench.trajectory("Path1");
+        AutoTrajectory neutralToShoot = oneCycleTrench.trajectory("Path2");
+
+        var cmd = autoFactory
+                .trajectoryCmd("Path1")
+                .alongWith(intake.rollIn().withTimeout(5))
+                .andThen(autoFactory.trajectoryCmd("Path2"))
+                .andThen(shooter.shoot(50));
+
+        return cmd;
     }
 
     // Autos

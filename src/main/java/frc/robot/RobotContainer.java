@@ -12,6 +12,7 @@ import static frc.robot.constants.FieldConstants.Hub.centerHubOpening;
 import static frc.robot.subsystems.feeder.FeederConfigsBeta.FEEDER_SPEED;
 import static frc.robot.subsystems.indexer.IndexerConfigsBeta.TEST_INDEXER_SPEED;
 
+import choreo.auto.AutoFactory;
 import com.ctre.phoenix6.swerve.SwerveModule;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -77,6 +78,7 @@ public class RobotContainer {
     private final Hood hood;
     private final AutoCommands autoCommands;
     private final BatteryFuelGauge battery;
+    private final AutoFactory autoFactory;
 
     // Controller
     private final CommandXboxController controller =
@@ -191,7 +193,9 @@ public class RobotContainer {
 
         drive.setStateStdDevs(VecBuilder.fill(0.33333, 0.33333, Math.toRadians(0.5)));
 
-        autoCommands = new AutoCommands(drive, hood, indexer, feeder, intake, linSlide, shooter);
+        autoFactory = new AutoFactory(() -> drive.getState().Pose, drive::resetPose, drive::applyRequest, true, drive);
+
+        autoCommands = new AutoCommands(drive, hood, indexer, feeder, intake, linSlide, shooter, autoFactory);
 
         // Set up auto routines
         autoChooser = new LoggedDashboardChooser<>("Auto Choices", AutoBuilder.buildAutoChooser());
@@ -209,6 +213,8 @@ public class RobotContainer {
         autoChooser.addOption("Camper Shuttle Trench Right", autoCommands.shuttleRightAuto());
         autoChooser.addOption("Camper Shuttle Bump Left", autoCommands.shuttleLeftBumpAuto());
         autoChooser.addOption("Camper Shuttle Bump Right", autoCommands.shuttleRightBumpAuto());
+
+        autoChooser.addOption("Choreo Auto", autoCommands.testChoreoAuto());
 
         SmartDashboard.putNumber("Shooter Velocity", 0);
 
