@@ -193,7 +193,8 @@ public class RobotContainer {
 
         drive.setStateStdDevs(VecBuilder.fill(0.33333, 0.33333, Math.toRadians(0.5)));
 
-        autoFactory = new AutoFactory(() -> drive.getState().Pose, drive::resetPose, drive::applyRequest, true, drive);
+        autoFactory = new AutoFactory(
+                () -> drive.getState().Pose, drive::resetPose, drive::followPath, true, drive);
 
         autoCommands = new AutoCommands(drive, hood, indexer, feeder, intake, linSlide, shooter, autoFactory);
 

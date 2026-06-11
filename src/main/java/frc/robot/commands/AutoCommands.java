@@ -5,8 +5,6 @@ import static frc.robot.subsystems.feeder.FeederConfigsBeta.FEEDER_SPEED;
 import static frc.robot.subsystems.indexer.IndexerConfigsBeta.TEST_INDEXER_SPEED;
 
 import choreo.auto.AutoFactory;
-import choreo.auto.AutoRoutine;
-import choreo.auto.AutoTrajectory;
 import com.ctre.phoenix6.swerve.SwerveModule;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -160,15 +158,12 @@ public class AutoCommands {
 
     // Choreo Autos
     public Command testChoreoAuto() {
-        AutoRoutine oneCycleTrench = autoFactory.newRoutine("OneCycleTrench");
-        AutoTrajectory startToNeutral = oneCycleTrench.trajectory("Path1");
-        AutoTrajectory neutralToShoot = oneCycleTrench.trajectory("Path2");
+        Command path1 = autoFactory.trajectoryCmd("Path1");
+        Command path2 = autoFactory.trajectoryCmd("Path2");
 
-        var cmd = autoFactory
-                .trajectoryCmd("Path1")
-                .alongWith(intake.rollIn().withTimeout(5))
-                .andThen(autoFactory.trajectoryCmd("Path2"))
-                .andThen(shooter.shoot(50));
+        Command intakeCycle1 = Commands.deadline(path1, intake());
+
+        var cmd = Commands.sequence(intakeCycle1, path2, shoot().withTimeout(5));
 
         return cmd;
     }
