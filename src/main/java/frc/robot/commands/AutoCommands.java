@@ -40,7 +40,7 @@ public class AutoCommands {
     private final Intake intake;
     private final LinSlide linSlide;
     private final Shooter shooter;
-    private AutoFactory autoFactory;
+    private final AutoFactory autoFactory;
 
     public AutoCommands(
             CommandSwerveDrivetrain drivetrain,
@@ -158,6 +158,10 @@ public class AutoCommands {
                                 && drivetrain.getState().Pose.getMeasureY().isNear(pose.getMeasureY(), tolerance)));
     }
 
+    public Boolean trajectoryValid(AutoTrajectory traj) {
+        return traj.getInitialPose().isPresent();
+    }
+
     // Choreo Autos
     public Command testChoreoAuto() {
         Command path1 = autoFactory.trajectoryCmd("Path1");
@@ -185,7 +189,10 @@ public class AutoCommands {
         path1Traj.atTime(0.6).onTrue(intake().until(path1Traj.doneFor(1)));
         path2Traj.done().onTrue(shoot().withTimeout(5));
 
-        autoRoutine.active().onTrue(Commands.sequence(path1Traj.resetOdometry(), path1Traj.cmd(), path2Traj.cmd()));
+        autoRoutine
+                .active()
+                .onTrue(Commands.sequence(path1Traj.resetOdometry(), path1Traj.cmd(), path2Traj.cmd())
+                        .onlyIf(() -> trajectoryValid(path1Traj) && trajectoryValid(path2Traj)));
 
         return autoRoutine.cmd();
     }
