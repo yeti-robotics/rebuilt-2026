@@ -193,8 +193,7 @@ public class RobotContainer {
 
         drive.setStateStdDevs(VecBuilder.fill(0.33333, 0.33333, Math.toRadians(0.5)));
 
-        autoFactory = new AutoFactory(
-                () -> drive.getState().Pose, drive::resetPose, drive::followPath, true, drive);
+        autoFactory = new AutoFactory(() -> drive.getState().Pose, drive::resetPose, drive::followPath, true, drive);
 
         autoCommands = new AutoCommands(drive, hood, indexer, feeder, intake, linSlide, shooter, autoFactory);
 
@@ -216,6 +215,7 @@ public class RobotContainer {
         autoChooser.addOption("Camper Shuttle Bump Right", autoCommands.shuttleRightBumpAuto());
 
         autoChooser.addOption("Choreo Auto", autoCommands.testChoreoAuto());
+        autoChooser.addOption("Choreo Auto 2", autoCommands.testChoreoAuto2());
 
         SmartDashboard.putNumber("Shooter Velocity", 0);
 

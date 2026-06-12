@@ -5,6 +5,8 @@ import static frc.robot.subsystems.feeder.FeederConfigsBeta.FEEDER_SPEED;
 import static frc.robot.subsystems.indexer.IndexerConfigsBeta.TEST_INDEXER_SPEED;
 
 import choreo.auto.AutoFactory;
+import choreo.auto.AutoRoutine;
+import choreo.auto.AutoTrajectory;
 import com.ctre.phoenix6.swerve.SwerveModule;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -161,11 +163,31 @@ public class AutoCommands {
         Command path1 = autoFactory.trajectoryCmd("Path1");
         Command path2 = autoFactory.trajectoryCmd("Path2");
 
+        AutoRoutine autoRoutine = autoFactory.newRoutine("AutoRoutine");
+        AutoTrajectory path1Traj = autoRoutine.trajectory("Path1");
+        AutoTrajectory path2Traj = autoRoutine.trajectory("Path2");
+
         Command intakeCycle1 = Commands.deadline(path1, intake());
 
-        var cmd = Commands.sequence(intakeCycle1, path2, shoot().withTimeout(5));
+        var cmd = path1Traj.getInitialPose().isEmpty()
+                        || path2Traj.getInitialPose().isEmpty()
+                ? Commands.none()
+                : Commands.sequence(intakeCycle1, path2, shoot().withTimeout(5));
 
         return cmd;
+    }
+
+    public Command testChoreoAuto2() {
+        AutoRoutine autoRoutine = autoFactory.newRoutine("Routine 1");
+        AutoTrajectory path1Traj = autoRoutine.trajectory("Path1");
+        AutoTrajectory path2Traj = autoRoutine.trajectory("Path2");
+
+        path1Traj.atTime(0.6).onTrue(intake().until(path1Traj.doneFor(1)));
+        path2Traj.done().onTrue(shoot().withTimeout(5));
+
+        autoRoutine.active().onTrue(Commands.sequence(path1Traj.resetOdometry(), path1Traj.cmd(), path2Traj.cmd()));
+
+        return autoRoutine.cmd();
     }
 
     // Autos

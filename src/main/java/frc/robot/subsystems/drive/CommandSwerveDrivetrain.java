@@ -327,13 +327,13 @@ public class CommandSwerveDrivetrain extends TunerConstantsAlpha.TunerSwerveDriv
         var targetSpeeds = sample.getChassisSpeeds();
         targetSpeeds.vxMetersPerSecond += pathXController.calculate(pose.getX(), sample.x);
         targetSpeeds.vyMetersPerSecond += pathYController.calculate(pose.getY(), sample.y);
-        targetSpeeds.omegaRadiansPerSecond += pathThetaController.calculate(pose.getRotation().getRadians(), sample.heading);
+        targetSpeeds.omegaRadiansPerSecond +=
+                pathThetaController.calculate(pose.getRotation().getRadians(), sample.heading);
 
-        setControl(
-                pathApplyFieldSpeeds.withSpeeds(targetSpeeds)
-                        .withWheelForceFeedforwardsX(sample.moduleForcesX())
-                        .withWheelForceFeedforwardsY(sample.moduleForcesY())
-        );
+        setControl(pathApplyFieldSpeeds
+                .withSpeeds(targetSpeeds)
+                .withWheelForceFeedforwardsX(sample.moduleForcesX())
+                .withWheelForceFeedforwardsY(sample.moduleForcesY()));
     }
 
     /**
