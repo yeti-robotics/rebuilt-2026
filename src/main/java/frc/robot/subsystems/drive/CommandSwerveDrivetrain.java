@@ -66,10 +66,10 @@ public class CommandSwerveDrivetrain extends TunerConstantsAlpha.TunerSwerveDriv
     /* Keep track if we've ever applied the operator perspective before or not */
     private boolean m_hasAppliedOperatorPerspective = false;
 
-    private final SwerveRequest.ApplyFieldSpeeds m_pathApplyFieldSpeeds = new SwerveRequest.ApplyFieldSpeeds();
-    private final PIDController m_pathXController = new PIDController(10, 0, 0);
-    private final PIDController m_pathYController = new PIDController(10, 0, 0);
-    private final PIDController m_pathThetaController = new PIDController(7, 0, 0);
+    private final SwerveRequest.ApplyFieldSpeeds pathApplyFieldSpeeds = new SwerveRequest.ApplyFieldSpeeds();
+    private final PIDController pathXController = new PIDController(10, 0, 0);
+    private final PIDController pathYController = new PIDController(10, 0, 0);
+    private final PIDController pathThetaController = new PIDController(7, 0, 0);
 
     /* Swerve requests to apply during SysId characterization */
     private final SwerveRequest.SysIdSwerveTranslation m_translationCharacterization =
@@ -320,23 +320,17 @@ public class CommandSwerveDrivetrain extends TunerConstantsAlpha.TunerSwerveDriv
     }
 
     public void followPath(SwerveSample sample) {
-        m_pathThetaController.enableContinuousInput(-Math.PI, Math.PI);
+        pathThetaController.enableContinuousInput(-Math.PI, Math.PI);
 
         var pose = getState().Pose;
 
         var targetSpeeds = sample.getChassisSpeeds();
-        targetSpeeds.vxMetersPerSecond += m_pathXController.calculate(
-                pose.getX(), sample.x
-        );
-        targetSpeeds.vyMetersPerSecond += m_pathYController.calculate(
-                pose.getY(), sample.y
-        );
-        targetSpeeds.omegaRadiansPerSecond += m_pathThetaController.calculate(
-                pose.getRotation().getRadians(), sample.heading
-        );
+        targetSpeeds.vxMetersPerSecond += pathXController.calculate(pose.getX(), sample.x);
+        targetSpeeds.vyMetersPerSecond += pathYController.calculate(pose.getY(), sample.y);
+        targetSpeeds.omegaRadiansPerSecond += pathThetaController.calculate(pose.getRotation().getRadians(), sample.heading);
 
         setControl(
-                m_pathApplyFieldSpeeds.withSpeeds(targetSpeeds)
+                pathApplyFieldSpeeds.withSpeeds(targetSpeeds)
                         .withWheelForceFeedforwardsX(sample.moduleForcesX())
                         .withWheelForceFeedforwardsY(sample.moduleForcesY())
         );
