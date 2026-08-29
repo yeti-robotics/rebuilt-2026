@@ -199,18 +199,20 @@ public class RobotContainer {
         // Set up simulatable mechanisms
         mechanisms = new Mechanisms();
 
-        autoChooser.addOption("Left Trench", autoCommands.cheesyLeft());
-        autoChooser.addOption("Left Bump", autoCommands.cheesyLeftBump());
-        autoChooser.addOption("Right Trench", autoCommands.cheesyRight());
-        autoChooser.addOption("Right Bump", autoCommands.cheesyRightBump());
-        autoChooser.addOption("Late Grab Left", autoCommands.late_grabLeft());
-        autoChooser.addOption("Late Grab Right", autoCommands.late_grabRight());
-        autoChooser.addOption("Camper Shuttle Trench Left", autoCommands.shuttleLeftAuto());
-        autoChooser.addOption("Camper Shuttle Trench Right", autoCommands.shuttleRightAuto());
-        autoChooser.addOption("Camper Shuttle Bump Left", autoCommands.shuttleLeftBumpAuto());
-        autoChooser.addOption("Camper Shuttle Bump Right", autoCommands.shuttleRightBumpAuto());
-        autoChooser.addOption("Cheesey Left", autoCommands.cheesyLeft());
+//        autoChooser.addOption("Left Trench", autoCommands.cheesyLeft());
+//        autoChooser.addOption("Right Trench", autoCommands.cheesyRight());
+//        autoChooser.addOption("Late Grab Left", autoCommands.late_grabLeft());
+//        autoChooser.addOption("Late Grab Right", autoCommands.late_grabRight());
+//        autoChooser.addOption("Camper Shuttle Trench Left", autoCommands.shuttleLeftAuto());
+//        autoChooser.addOption("Camper Shuttle Trench Right", autoCommands.shuttleRightAuto());
+//        autoChooser.addOption("Camper Shuttle Bump Left", autoCommands.shuttleLeftBumpAuto());
+//        autoChooser.addOption("Camper Shuttle Bump Right", autoCommands.shuttleRightBumpAuto());
+        autoChooser.addOption("Cheesy Left", autoCommands.cheesyLeft());
         autoChooser.addOption("Cheesy Right", autoCommands.cheesyRight());
+        autoChooser.addOption("Cheesy Left Bump", autoCommands.cheesyLeftBump());
+        autoChooser.addOption("Cheesy Right Bump", autoCommands.cheesyRightBump());
+
+
 
         SmartDashboard.putNumber("Shooter Velocity", 0);
 
