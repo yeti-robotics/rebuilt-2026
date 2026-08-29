@@ -18,12 +18,12 @@ public class ShooterConfigsGamma {
     static final double SENSOR_TO_MECHANISM = 1;
 
     public static final Slot0Configs SLOT_0_CONFIGS = new Slot0Configs()
-            .withKP(10)
+            .withKP(8)
             .withKI(0)
             .withKD(0)
-            .withKS(5)
-            .withKV(0.5)
-            .withKA(125);
+            .withKS(4)
+            .withKV(0.55)
+            .withKA(256);
 
     public static final Slot1Configs SLOT_1_CONFIGS = new Slot1Configs()
             .withKP(7.9)
@@ -31,11 +31,11 @@ public class ShooterConfigsGamma {
             .withKD(0)
             .withKS(5)
             .withKV(1.1)
-            .withKA(125);
+            .withKA(256);
 
     public static final MotionMagicConfigs MOTION_MAGIC_CONFIGS = new MotionMagicConfigs()
             .withMotionMagicCruiseVelocity(1)
-            .withMotionMagicAcceleration(200)
+            .withMotionMagicAcceleration(256)
             .withMotionMagicJerk(0);
 
     static final TalonFXConfiguration TOP_MOTOR_CONFIGS = new TalonFXConfiguration()
@@ -61,12 +61,12 @@ public class ShooterConfigsGamma {
         SHOOTER_MAP.put(1.928, new ShooterStateData(HoodPositions.STOW.getPosition(), 24, 0.0));
         SHOOTER_MAP.put(2.321, new ShooterStateData(Units.Rotations.of(0.07), 25, 0.0));
         SHOOTER_MAP.put(2.419, new ShooterStateData(Units.Rotations.of(0.09), 25.5, 0.0));
-        SHOOTER_MAP.put(2.615, new ShooterStateData(Units.Rotations.of(0.1), 26.5, 0.0));
-        SHOOTER_MAP.put(2.711, new ShooterStateData(Units.Rotations.of(0.14), 26.5, 0.0));
-        SHOOTER_MAP.put(2.882, new ShooterStateData(Units.Rotations.of(0.2), 27, 0.0));
-        SHOOTER_MAP.put(3.102, new ShooterStateData(Units.Rotations.of(0.3), 28, 0.0));
-        SHOOTER_MAP.put(3.363, new ShooterStateData(Units.Rotations.of(0.4), 28, 0.0));
-        SHOOTER_MAP.put(3.902, new ShooterStateData(Units.Rotations.of(0.5), 29.5, 0.0));
+        SHOOTER_MAP.put(2.615, new ShooterStateData(Units.Rotations.of(0.1), 27, 0.0));
+        SHOOTER_MAP.put(2.711, new ShooterStateData(Units.Rotations.of(0.14), 27, 0.0));
+        SHOOTER_MAP.put(2.882, new ShooterStateData(Units.Rotations.of(0.2), 26.7, 0.0));
+        SHOOTER_MAP.put(3.102, new ShooterStateData(Units.Rotations.of(0.3), 27.5, 0.0));
+        SHOOTER_MAP.put(3.363, new ShooterStateData(Units.Rotations.of(0.4), 27.7, 0.0));
+        SHOOTER_MAP.put(3.902, new ShooterStateData(Units.Rotations.of(0.5), 28.5, 0.0));
     }
 
     public static final InterpolatingTreeMap<Double, ShooterStateData> SHUTTLE_MAP =
