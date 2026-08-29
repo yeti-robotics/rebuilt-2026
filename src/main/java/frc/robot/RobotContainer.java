@@ -374,7 +374,7 @@ public class RobotContainer {
         // Undecided whether to use
         new Trigger(() -> shooter.isAtSpeed())
                 .onTrue(runOnce(() -> controller.setRumble(GenericHID.RumbleType.kBothRumble, 1))
-                        .withTimeout(0.5)
+                        .withTimeout(1)
                         .andThen(runOnce(() -> controller.setRumble(GenericHID.RumbleType.kBothRumble, 0.0))));
     }
 
