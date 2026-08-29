@@ -7,6 +7,7 @@
 
 package frc.robot;
 
+import static frc.robot.constants.Constants.VOLTAGE_FILTER_CONSTANT;
 import static frc.robot.constants.Constants.currentMode;
 import static frc.robot.constants.FieldConstants.Hub.centerHubOpening;
 import static frc.robot.subsystems.feeder.FeederConfigsBeta.FEEDER_SPEED;
@@ -17,6 +18,7 @@ import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.*;
+import edu.wpi.first.wpilibj.*;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -234,6 +236,21 @@ public class RobotContainer {
         Logger.recordOutput("Other Side Cam Transform", rightCameraPose);
     }
 
+    private double filteredVoltage = 12.0;
+
+    private double getFilteredVoltage() {
+        double raw = RobotController.getBatteryVoltage();
+        filteredVoltage = VOLTAGE_FILTER_CONSTANT * raw + (1 - VOLTAGE_FILTER_CONSTANT) * filteredVoltage;
+        return filteredVoltage;
+    }
+
+    private double getScalarDriveSpeed() {
+        double voltage = getFilteredVoltage();
+        if (voltage >= 12.0) return 1.0;
+        if (voltage < 10.5) return 0.6;
+        return 0.6 + (voltage - 10.5) / (12.0 - 10.5) * (0.4);
+    }
+
     /**
      * Use this method to define your button->command mappings. Buttons can be created by
      * instantiating a {@link GenericHID} or one of its subclasses ({@link
@@ -242,8 +259,8 @@ public class RobotContainer {
      */
     private void configureRealBindings() {
         drive.setDefaultCommand(drive.applyRequest(() -> driveRequest
-                .withVelocityX(-controller.getLeftY() * TunerConstantsBeta.kSpeedAt12Volts.magnitude())
-                .withVelocityY(-controller.getLeftX() * TunerConstantsBeta.kSpeedAt12Volts.magnitude())
+                .withVelocityX(-controller.getLeftY() * TunerConstantsBeta.kSpeedAt12Volts.magnitude() * getScalarDriveSpeed())
+                .withVelocityY(-controller.getLeftX() * TunerConstantsBeta.kSpeedAt12Volts.magnitude() * getScalarDriveSpeed())
                 .withRotationalRate(-controller.getRightX() * TunerConstantsBeta.MaFxAngularRate)));
 
         controller.start().onTrue(Commands.runOnce(drive::seedFieldCentric, drive));
@@ -378,12 +395,15 @@ public class RobotContainer {
         Translation2d currentPosition = currentPose.getTranslation();
         double distance = modifiedTarget.getDistance(currentPosition);
 
-        Logger.recordOutput("AutoAimCommands/Shooter Map/hub distance", distance);
+        Logger.recordOutput("AutoAimCommands/Shooter Map/Hub Distance", distance);
 
         Translation2d shuttleTranslation = AllianceFlipUtil.apply(new Translation2d(2.35, currentPose.getY()));
         double shuttleDistance = shuttleTranslation.getDistance(currentPosition);
 
-        Logger.recordOutput("AutoAimCommands/Shuttle Map/ideal shuttle distance", shuttleDistance);
+        Logger.recordOutput("AutoAimCommands/Shuttle Map/Ideal Shuttle Distance", shuttleDistance);
+        Logger.recordOutput("Drive/Scalar Drive Speed", getScalarDriveSpeed());
+        Logger.recordOutput("Drive/Filtered Voltage", getFilteredVoltage());
+        Logger.recordOutput("Drive/Brownout Voltage", RobotController.getBrownoutVoltage());
     }
 
     public void saveLog() {
