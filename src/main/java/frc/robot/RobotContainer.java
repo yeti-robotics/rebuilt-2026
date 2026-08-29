@@ -203,8 +203,8 @@ public class RobotContainer {
 
         //        autoChooser.addOption("Left Trench", autoCommands.cheesyLeft());
         //        autoChooser.addOption("Right Trench", autoCommands.cheesyRight());
-        //        autoChooser.addOption("Late Grab Left", autoCommands.late_grabLeft());
-        //        autoChooser.addOption("Late Grab Right", autoCommands.late_grabRight());
+        autoChooser.addOption("Late Grab Left", autoCommands.late_grabLeft());
+        autoChooser.addOption("Late Grab Right", autoCommands.late_grabRight());
         //        autoChooser.addOption("Camper Shuttle Trench Left", autoCommands.shuttleLeftAuto());
         //        autoChooser.addOption("Camper Shuttle Trench Right", autoCommands.shuttleRightAuto());
         //        autoChooser.addOption("Camper Shuttle Bump Left", autoCommands.shuttleLeftBumpAuto());
@@ -372,10 +372,11 @@ public class RobotContainer {
 
     public void configureTriggers() {
         // Undecided whether to use
-//        new Trigger(() -> shooter.isAtSpeed())
-//                .onTrue(runOnce(() -> controller.setRumble(GenericHID.RumbleType.kBothRumble, 1))
-//                        .withTimeout(1)
-//                        .andThen(runOnce(() -> controller.setRumble(GenericHID.RumbleType.kBothRumble, 0.0))));
+                new Trigger(() -> shooter.isAtSpeed())
+                        .onTrue(Commands.sequence(
+                                runOnce(() -> controller.setRumble(GenericHID.RumbleType.kBothRumble, 1)),
+                                Commands.waitSeconds(.5),
+                                runOnce(() -> controller.setRumble(GenericHID.RumbleType.kBothRumble, 0))));
     }
 
     public void updateLoggers() {
