@@ -370,6 +370,9 @@ public class RobotContainer {
 
     public void configureTriggers() {
         // Undecided whether to use
+        intake.intakeStalling.onTrue(Commands.runOnce(() -> controller.getHID().setRumble(GenericHID.RumbleType.kBothRumble, 0.2)));
+        intake.intakeStalling.onFalse(Commands.runOnce(() -> controller.getHID().setRumble(GenericHID.RumbleType.kBothRumble, 0.0)));
+
     }
 
     public void updateLoggers() {

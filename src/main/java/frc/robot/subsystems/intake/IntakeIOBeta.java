@@ -35,6 +35,8 @@ public class IntakeIOBeta implements IntakeIO {
         inputs.primaryMotorVoltage = rightIntakeMotor.getMotorVoltage().getValueAsDouble();
         inputs.secondaryMotorRPM = leftIntakeMotor.getVelocity().getValueAsDouble();
         inputs.secondaryMotorVoltage = leftIntakeMotor.getMotorVoltage().getValueAsDouble();
+        inputs.referenceVelocity = rightIntakeMotor.getClosedLoopReferenceSlope().getValueAsDouble();
+        inputs.supplyCurrent = rightIntakeMotor.getSupplyCurrent().getValueAsDouble();
     }
 
     @Override
