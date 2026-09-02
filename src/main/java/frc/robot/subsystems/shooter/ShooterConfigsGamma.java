@@ -9,21 +9,21 @@ import frc.robot.subsystems.hood.HoodPositions;
 import frc.robot.util.ShooterStateData;
 
 public class ShooterConfigsGamma {
-    static final int FIRST_SHOOTER_ID = 54;
-    static final int SECOND_SHOOTER_ID = 55;
-    static final int THIRD_SHOOTER_ID = 56;
+    static final int LEADER_SHOOTER_ID = 55;
+    static final int FOLLOWER1_SHOOTER_ID = 54;
+    static final int FOLLOWER2_SHOOTER_ID = 56;
     public static final double TEST_SHOOTER_SPEED = 0.6;
 
     static final double ROTOR_TO_SENSOR = 1;
     static final double SENSOR_TO_MECHANISM = 1;
 
     public static final Slot0Configs SLOT_0_CONFIGS = new Slot0Configs()
-            .withKP(8)
+            .withKP(9.5)
             .withKI(0)
             .withKD(0)
             .withKS(4)
-            .withKV(0.55)
-            .withKA(256);
+            .withKV(0.57)
+            .withKA(2056);
 
     public static final Slot1Configs SLOT_1_CONFIGS = new Slot1Configs()
             .withKP(7.9)
@@ -35,7 +35,7 @@ public class ShooterConfigsGamma {
 
     public static final MotionMagicConfigs MOTION_MAGIC_CONFIGS = new MotionMagicConfigs()
             .withMotionMagicCruiseVelocity(1)
-            .withMotionMagicAcceleration(256)
+            .withMotionMagicAcceleration(1028)
             .withMotionMagicJerk(0);
 
     static final TalonFXConfiguration TOP_MOTOR_CONFIGS = new TalonFXConfiguration()
