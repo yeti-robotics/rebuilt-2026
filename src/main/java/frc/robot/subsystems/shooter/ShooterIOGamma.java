@@ -22,10 +22,12 @@ public class ShooterIOGamma implements ShooterIO {
         followerMotor = new TalonFX(ShooterConfigsGamma.FOLLOWER1_SHOOTER_ID, Constants.rioBus);
         followerMotor2 = new TalonFX(ShooterConfigsGamma.FOLLOWER2_SHOOTER_ID, Constants.rioBus);
 
-        leaderMotor.setControl(new Follower(ShooterConfigsGamma.LEADER_SHOOTER_ID, MotorAlignmentValue.Opposed));
-        followerMotor2.setControl(new Follower(ShooterConfigsGamma.LEADER_SHOOTER_ID, MotorAlignmentValue.Aligned));
+        leaderMotor.getConfigurator().apply(ShooterConfigsGamma.LEADER_MOTOR_CONFIGS);
+        followerMotor.getConfigurator().apply(ShooterConfigsGamma.EMPTY_SLOT_0);
+        followerMotor2.getConfigurator().apply(ShooterConfigsGamma.EMPTY_SLOT_0);
 
-        leaderMotor.getConfigurator().apply(ShooterConfigsGamma.TOP_MOTOR_CONFIGS);
+        followerMotor.setControl(new Follower(ShooterConfigsGamma.LEADER_SHOOTER_ID, MotorAlignmentValue.Opposed));
+        followerMotor2.setControl(new Follower(ShooterConfigsGamma.LEADER_SHOOTER_ID, MotorAlignmentValue.Opposed));
 
         if (Robot.isSimulation()) {
             PhysicsSim.getInstance().addTalonFX(leaderMotor);

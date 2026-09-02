@@ -33,25 +33,42 @@ public class ShooterConfigsGamma {
             .withKV(1.1)
             .withKA(256);
 
+    public static final Slot0Configs EMPTY_SLOT_0 = new Slot0Configs()
+            .withKP(0)
+            .withKI(0)
+            .withKD(0)
+            .withKS(0)
+            .withKV(0)
+            .withKA(0);
+
+    public static final Slot1Configs EMPTY_SLOT_1 = new Slot1Configs()
+            .withKP(0)
+            .withKI(0)
+            .withKD(0)
+            .withKS(0)
+            .withKV(0)
+            .withKA(0);
+
     public static final MotionMagicConfigs MOTION_MAGIC_CONFIGS = new MotionMagicConfigs()
             .withMotionMagicCruiseVelocity(1)
             .withMotionMagicAcceleration(1028)
             .withMotionMagicJerk(0);
 
-    static final TalonFXConfiguration TOP_MOTOR_CONFIGS = new TalonFXConfiguration()
+    static final TalonFXConfiguration LEADER_MOTOR_CONFIGS = new TalonFXConfiguration()
             .withFeedback(new FeedbackConfigs()
                     .withSensorToMechanismRatio(SENSOR_TO_MECHANISM)
                     .withRotorToSensorRatio(ROTOR_TO_SENSOR))
             .withSlot0(SLOT_0_CONFIGS)
             .withSlot1(SLOT_1_CONFIGS)
             .withMotionMagic(MOTION_MAGIC_CONFIGS)
-            .withMotorOutput(new MotorOutputConfigs().withInverted(InvertedValue.CounterClockwise_Positive));
+            .withMotorOutput(new MotorOutputConfigs().withInverted(InvertedValue.Clockwise_Positive));
 
-    static final TalonFXConfiguration BOTTOM_MOTOR_CONFIGS = new TalonFXConfiguration()
+    static final TalonFXConfiguration EMPTY_MOTOR_CONFIGS = new TalonFXConfiguration()
             .withFeedback(new FeedbackConfigs()
                     .withSensorToMechanismRatio(SENSOR_TO_MECHANISM)
                     .withRotorToSensorRatio(ROTOR_TO_SENSOR))
-            .withSlot0(SLOT_0_CONFIGS)
+            .withSlot0(EMPTY_SLOT_0)
+            .withSlot1(EMPTY_SLOT_1)
             .withMotionMagic(MOTION_MAGIC_CONFIGS);
 
     public static final InterpolatingTreeMap<Double, ShooterStateData> SHOOTER_MAP =
