@@ -9,21 +9,21 @@ import frc.robot.subsystems.hood.HoodPositions;
 import frc.robot.util.ShooterStateData;
 
 public class ShooterConfigsGamma {
-    static final int FIRST_SHOOTER_ID = 54;
-    static final int SECOND_SHOOTER_ID = 55;
-    static final int THIRD_SHOOTER_ID = 56;
+    static final int LEADER_SHOOTER_ID = 55;
+    static final int FOLLOWER1_SHOOTER_ID = 54;
+    static final int FOLLOWER2_SHOOTER_ID = 56;
     public static final double TEST_SHOOTER_SPEED = 0.6;
 
     static final double ROTOR_TO_SENSOR = 1;
     static final double SENSOR_TO_MECHANISM = 1;
 
     public static final Slot0Configs SLOT_0_CONFIGS = new Slot0Configs()
-            .withKP(8)
+            .withKP(9.5)
             .withKI(0)
             .withKD(0)
             .withKS(4)
-            .withKV(0.55)
-            .withKA(256);
+            .withKV(0.57)
+            .withKA(2056);
 
     public static final Slot1Configs SLOT_1_CONFIGS = new Slot1Configs()
             .withKP(7.9)
@@ -33,25 +33,32 @@ public class ShooterConfigsGamma {
             .withKV(1.1)
             .withKA(256);
 
+    public static final Slot0Configs EMPTY_SLOT_0 =
+            new Slot0Configs().withKP(0).withKI(0).withKD(0).withKS(0).withKV(0).withKA(0);
+
+    public static final Slot1Configs EMPTY_SLOT_1 =
+            new Slot1Configs().withKP(0).withKI(0).withKD(0).withKS(0).withKV(0).withKA(0);
+
     public static final MotionMagicConfigs MOTION_MAGIC_CONFIGS = new MotionMagicConfigs()
             .withMotionMagicCruiseVelocity(1)
-            .withMotionMagicAcceleration(256)
+            .withMotionMagicAcceleration(1028)
             .withMotionMagicJerk(0);
 
-    static final TalonFXConfiguration TOP_MOTOR_CONFIGS = new TalonFXConfiguration()
+    static final TalonFXConfiguration LEADER_MOTOR_CONFIGS = new TalonFXConfiguration()
             .withFeedback(new FeedbackConfigs()
                     .withSensorToMechanismRatio(SENSOR_TO_MECHANISM)
                     .withRotorToSensorRatio(ROTOR_TO_SENSOR))
             .withSlot0(SLOT_0_CONFIGS)
             .withSlot1(SLOT_1_CONFIGS)
             .withMotionMagic(MOTION_MAGIC_CONFIGS)
-            .withMotorOutput(new MotorOutputConfigs().withInverted(InvertedValue.CounterClockwise_Positive));
+            .withMotorOutput(new MotorOutputConfigs().withInverted(InvertedValue.Clockwise_Positive));
 
-    static final TalonFXConfiguration BOTTOM_MOTOR_CONFIGS = new TalonFXConfiguration()
+    static final TalonFXConfiguration EMPTY_MOTOR_CONFIGS = new TalonFXConfiguration()
             .withFeedback(new FeedbackConfigs()
                     .withSensorToMechanismRatio(SENSOR_TO_MECHANISM)
                     .withRotorToSensorRatio(ROTOR_TO_SENSOR))
-            .withSlot0(SLOT_0_CONFIGS)
+            .withSlot0(EMPTY_SLOT_0)
+            .withSlot1(EMPTY_SLOT_1)
             .withMotionMagic(MOTION_MAGIC_CONFIGS);
 
     public static final InterpolatingTreeMap<Double, ShooterStateData> SHOOTER_MAP =

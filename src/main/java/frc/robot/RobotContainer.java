@@ -7,6 +7,7 @@
 
 package frc.robot;
 
+import static edu.wpi.first.wpilibj2.command.Commands.runOnce;
 import static frc.robot.constants.Constants.currentMode;
 import static frc.robot.constants.FieldConstants.Hub.centerHubOpening;
 import static frc.robot.subsystems.feeder.FeederConfigsBeta.FEEDER_SPEED;
@@ -23,6 +24,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.AutoAimCommands;
 import frc.robot.commands.AutoCommands;
 import frc.robot.constants.Constants;
@@ -199,18 +201,18 @@ public class RobotContainer {
         // Set up simulatable mechanisms
         mechanisms = new Mechanisms();
 
-        autoChooser.addOption("Left Trench", autoCommands.cheesyLeft());
-        autoChooser.addOption("Left Bump", autoCommands.cheesyLeftBump());
-        autoChooser.addOption("Right Trench", autoCommands.cheesyRight());
-        autoChooser.addOption("Right Bump", autoCommands.cheesyRightBump());
+        //        autoChooser.addOption("Left Trench", autoCommands.cheesyLeft());
+        //        autoChooser.addOption("Right Trench", autoCommands.cheesyRight());
         autoChooser.addOption("Late Grab Left", autoCommands.late_grabLeft());
         autoChooser.addOption("Late Grab Right", autoCommands.late_grabRight());
-        autoChooser.addOption("Camper Shuttle Trench Left", autoCommands.shuttleLeftAuto());
-        autoChooser.addOption("Camper Shuttle Trench Right", autoCommands.shuttleRightAuto());
-        autoChooser.addOption("Camper Shuttle Bump Left", autoCommands.shuttleLeftBumpAuto());
-        autoChooser.addOption("Camper Shuttle Bump Right", autoCommands.shuttleRightBumpAuto());
-        autoChooser.addOption("Cheesey Left", autoCommands.cheesyLeft());
+        //        autoChooser.addOption("Camper Shuttle Trench Left", autoCommands.shuttleLeftAuto());
+        //        autoChooser.addOption("Camper Shuttle Trench Right", autoCommands.shuttleRightAuto());
+        //        autoChooser.addOption("Camper Shuttle Bump Left", autoCommands.shuttleLeftBumpAuto());
+        //        autoChooser.addOption("Camper Shuttle Bump Right", autoCommands.shuttleRightBumpAuto());
+        autoChooser.addOption("Cheesy Left", autoCommands.cheesyLeft());
         autoChooser.addOption("Cheesy Right", autoCommands.cheesyRight());
+        autoChooser.addOption("Cheesy Left Bump", autoCommands.cheesyLeftBump());
+        autoChooser.addOption("Cheesy Right Bump", autoCommands.cheesyRightBump());
 
         SmartDashboard.putNumber("Shooter Velocity", 0);
 
@@ -246,7 +248,7 @@ public class RobotContainer {
                 .withVelocityY(-controller.getLeftX() * TunerConstantsBeta.kSpeedAt12Volts.magnitude())
                 .withRotationalRate(-controller.getRightX() * TunerConstantsBeta.MaFxAngularRate)));
 
-        controller.start().onTrue(Commands.runOnce(drive::seedFieldCentric, drive));
+        controller.start().onTrue(runOnce(drive::seedFieldCentric, drive));
 
         controller.x().whileTrue(linSlide.applyPower(0.5));
         controller
@@ -301,7 +303,7 @@ public class RobotContainer {
     }
 
     private void configureDebugBindings() {
-        controller2.start().onTrue(Commands.runOnce(drive::seedFieldCentric, drive));
+        controller2.start().onTrue(runOnce(drive::seedFieldCentric, drive));
 
         //        controller2.leftBumper().whileTrue(intake.applyPower(IntakeConfigsBeta.ROLL_IN_SPEED));
 
@@ -357,7 +359,7 @@ public class RobotContainer {
                         () -> AllianceFlipUtil.apply(drive.getState().Pose.getX()) < 4.9));
 
         controller.button(7).whileTrue(indexer.spinIndexer(80));
-        controller.button(8).onTrue(Commands.runOnce(drive::seedFieldCentric));
+        controller.button(8).onTrue(runOnce(drive::seedFieldCentric));
         controller
                 .button(9)
                 .whileTrue(AutoAimCommands.autoAimWithOrbit(
@@ -370,6 +372,11 @@ public class RobotContainer {
 
     public void configureTriggers() {
         // Undecided whether to use
+        new Trigger(() -> shooter.isAtSpeed())
+                .onTrue(Commands.sequence(
+                        runOnce(() -> controller.setRumble(GenericHID.RumbleType.kBothRumble, 1)),
+                        Commands.waitSeconds(1),
+                        runOnce(() -> controller.setRumble(GenericHID.RumbleType.kBothRumble, 0))));
     }
 
     public void updateLoggers() {

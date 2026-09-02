@@ -53,7 +53,6 @@ public class Shooter extends SubsystemBase {
 
     public void stopMotors() {
         io.stopMotors();
-        this.targetSpeed = 0;
     }
 
     public Command applyPower(double power) {
