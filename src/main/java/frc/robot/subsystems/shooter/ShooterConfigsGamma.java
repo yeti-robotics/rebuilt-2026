@@ -33,21 +33,11 @@ public class ShooterConfigsGamma {
             .withKV(1.1)
             .withKA(256);
 
-    public static final Slot0Configs EMPTY_SLOT_0 = new Slot0Configs()
-            .withKP(0)
-            .withKI(0)
-            .withKD(0)
-            .withKS(0)
-            .withKV(0)
-            .withKA(0);
+    public static final Slot0Configs EMPTY_SLOT_0 =
+            new Slot0Configs().withKP(0).withKI(0).withKD(0).withKS(0).withKV(0).withKA(0);
 
-    public static final Slot1Configs EMPTY_SLOT_1 = new Slot1Configs()
-            .withKP(0)
-            .withKI(0)
-            .withKD(0)
-            .withKS(0)
-            .withKV(0)
-            .withKA(0);
+    public static final Slot1Configs EMPTY_SLOT_1 =
+            new Slot1Configs().withKP(0).withKI(0).withKD(0).withKS(0).withKV(0).withKA(0);
 
     public static final MotionMagicConfigs MOTION_MAGIC_CONFIGS = new MotionMagicConfigs()
             .withMotionMagicCruiseVelocity(1)
