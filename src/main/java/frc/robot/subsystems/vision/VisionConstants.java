@@ -51,11 +51,16 @@ public class VisionConstants {
     public static double linearStdDevMegatag2Factor = 0.5; // More stable than full 3D solve
     public static double angularStdDevMegatag2Factor = Double.POSITIVE_INFINITY; // No rotation data available
 
+    // yellow cone = turret cam
     public static Transform3d frontCamTrans = new Transform3d(
-            new Translation3d(0.4, 0, 0.33655), new Rotation3d(0, Math.toRadians(15), Math.toRadians(0)));
+            new Translation3d(.35, -0.42, 0.47), new Rotation3d(0, Math.toRadians(-22.5), Math.toRadians(315)));
+
+    // green = left cam
     public static Transform3d leftCamTrans = new Transform3d(
-            new Translation3d(0.3429, -0.0381, 0.5715), new Rotation3d(0, Math.toRadians(15), Math.toRadians(90)));
+            new Translation3d(.35, -.1, .47), new Rotation3d(0, Math.toRadians(-22.5), Math.toRadians(45)));
+
+    // red = forward cam
     public static Transform3d rightCamTrans = new Transform3d(
-            new Translation3d(-0.32258, 0.00635, 0.4445),
-            new Rotation3d(Math.toRadians(180), Math.toRadians(15), Math.toRadians(-90)));
+            new Translation3d(.2, 0.2, 0.4445),
+            new Rotation3d(Math.toRadians(180), Math.toRadians(-15), Math.toRadians(180)));
 }
