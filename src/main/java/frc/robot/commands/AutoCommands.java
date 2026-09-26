@@ -99,9 +99,8 @@ public class AutoCommands {
     }
 
     public Command shoot() {
-        double windup = 1.4;
+        double windup = 0.3;
         return Commands.sequence(
-                shooter.stopFlywheels(),
                 Commands.parallel(
                         AutoAimCommands.readyAim(drivetrain, shooter, hood, centerHubOpening.toTranslation2d()),
                         AutoAimCommands.autoAim(drivetrain, () -> 0.0, () -> 0.0, centerHubOpening.toTranslation2d()),
@@ -110,7 +109,9 @@ public class AutoCommands {
                         new WaitCommand(windup).andThen(indexer.applyPower(TEST_INDEXER_SPEED)),
                         new WaitCommand(windup).andThen(feeder.applyPower(1)),
                         new WaitCommand(windup).andThen(intake.applyPower(IntakeConfigsBeta.ROLLER_SPEED)),
-                        new WaitCommand(windup).andThen(shooter.switchSlot(1))));
+                        new WaitCommand(windup).andThen(shooter.switchSlot(1))),
+                shooter.getDefaultCommand()
+        );
     }
 
     public Command shuttleLeft() {

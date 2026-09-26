@@ -24,7 +24,11 @@ public class Shooter extends SubsystemBase {
 
     public Shooter(ShooterIO io) {
         this.io = io;
-        setDefaultCommand(shoot(24).onlyIf(() -> RobotController.getBatteryVoltage() > 11.8));
+        setDefaultCommand(defaultCommand());
+    }
+
+    private Command defaultCommand() {
+        return shoot(24).onlyIf(() -> RobotController.getBatteryVoltage() > 11.8); // 24 bc it's in the middle of our map
     }
 
     public AngularVelocity getVelocity() {
