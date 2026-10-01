@@ -27,6 +27,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.AutoAimCommands;
 import frc.robot.commands.AutoCommands;
+import frc.robot.commands.SOTMCommand;
 import frc.robot.constants.Constants;
 import frc.robot.subsystems.battery.BatteryFuelGauge;
 import frc.robot.subsystems.drive.*;
@@ -79,6 +80,7 @@ public class RobotContainer {
     private final Hood hood;
     private final AutoCommands autoCommands;
     private final BatteryFuelGauge battery;
+    private final SOTMCommand sotmCommand;
 
     // Controller
     private final CommandXboxController controller =
@@ -191,6 +193,8 @@ public class RobotContainer {
                 break;
         }
 
+        sotmCommand= new SOTMCommand(drive, shooter, hood, centerHubOpening.toTranslation2d());
+
         drive.setStateStdDevs(VecBuilder.fill(0.33333, 0.33333, Math.toRadians(0.5)));
 
         autoCommands = new AutoCommands(drive, hood, indexer, feeder, intake, linSlide, shooter);
@@ -279,8 +283,7 @@ public class RobotContainer {
                                                 controller::getLeftY,
                                                 controller::getLeftX,
                                                 centerHubOpening.toTranslation2d())
-                                        .alongWith(AutoAimCommands.readyAim(
-                                                drive, shooter, hood, centerHubOpening.toTranslation2d())),
+                                        .alongWith(sotmCommand),
                                 AutoAimCommands.shuttleAim(drive, controller::getLeftY, controller::getLeftX)
                                         .alongWith(AutoAimCommands.shuttleReadyAim(drive, shooter, hood)),
                                 () -> AllianceFlipUtil.apply(

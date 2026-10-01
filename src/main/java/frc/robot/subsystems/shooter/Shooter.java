@@ -28,7 +28,8 @@ public class Shooter extends SubsystemBase {
     }
 
     private Command defaultCommand() {
-        return shoot(24).onlyIf(() -> RobotController.getBatteryVoltage() > 11.8); // 24 bc it's in the middle of our map
+        return shoot(24)
+                .onlyIf(() -> RobotController.getBatteryVoltage() > 11.8); // 24 bc it's in the middle of our map
     }
 
     public AngularVelocity getVelocity() {

@@ -110,8 +110,7 @@ public class AutoCommands {
                         new WaitCommand(windup).andThen(feeder.applyPower(1)),
                         new WaitCommand(windup).andThen(intake.applyPower(IntakeConfigsBeta.ROLLER_SPEED)),
                         new WaitCommand(windup).andThen(shooter.switchSlot(1))),
-                shooter.getDefaultCommand()
-        );
+                shooter.getDefaultCommand());
     }
 
     public Command shuttleLeft() {
