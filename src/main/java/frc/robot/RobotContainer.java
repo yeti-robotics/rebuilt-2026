@@ -193,7 +193,7 @@ public class RobotContainer {
                 break;
         }
 
-        sotmCommand= new SOTMCommand(drive, shooter, hood, centerHubOpening.toTranslation2d());
+        sotmCommand = new SOTMCommand(drive, shooter, hood, centerHubOpening.toTranslation2d());
 
         drive.setStateStdDevs(VecBuilder.fill(0.33333, 0.33333, Math.toRadians(0.5)));
 
@@ -278,7 +278,7 @@ public class RobotContainer {
         controller
                 .leftBumper()
                 .whileTrue(Commands.either(
-                                AutoAimCommands.autoAim(
+                                AutoAimCommands.autoAimSOTM(
                                                 drive,
                                                 controller::getLeftY,
                                                 controller::getLeftX,

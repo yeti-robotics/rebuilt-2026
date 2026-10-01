@@ -33,6 +33,8 @@ public class AutoAimCommands {
             ? TunerConstantsAlpha.kSpeedAt12Volts.magnitude()
             : TunerConstantsBeta.kSpeedAt12Volts.magnitude();
 
+    private static final double SPEED_MULTIPLIER_SOTM = 0.5;
+
     static {
         headingController.enableContinuousInput(-Math.PI, Math.PI);
     }
@@ -104,6 +106,26 @@ public class AutoAimCommands {
                             .withHeadingPID(20, 0, 0)
                             .withVelocityX(-xVelSupplier.getAsDouble() * SPEED_MULTIPLIER)
                             .withVelocityY(-yVelSupplier.getAsDouble() * SPEED_MULTIPLIER)
+                            .withTargetDirection(calcDesiredHeading(drive.getState().Pose, target))
+                            .withDriveRequestType(SwerveModule.DriveRequestType.Velocity);
+
+                    drive.setControl(request);
+                },
+                SwerveRequest.Idle::new);
+    }
+
+    public static Command autoAimSOTM(
+            CommandSwerveDrivetrain drive,
+            DoubleSupplier xVelSupplier,
+            DoubleSupplier yVelSupplier,
+            Translation2d target) {
+
+        return drive.runEnd(
+                () -> {
+                    SwerveRequest.FieldCentricFacingAngle request = new SwerveRequest.FieldCentricFacingAngle()
+                            .withHeadingPID(20, 0, 0)
+                            .withVelocityX(-xVelSupplier.getAsDouble() * SPEED_MULTIPLIER_SOTM)
+                            .withVelocityY(-yVelSupplier.getAsDouble() * SPEED_MULTIPLIER_SOTM)
                             .withTargetDirection(calcDesiredHeading(drive.getState().Pose, target))
                             .withDriveRequestType(SwerveModule.DriveRequestType.Velocity);
 
