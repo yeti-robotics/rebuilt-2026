@@ -67,15 +67,15 @@ public class ShooterConfigsGamma {
             new InterpolatingTreeMap<>(InverseInterpolator.forDouble(), ShooterStateData.interpolator);
 
     static {
-        SHOOTER_MAP.put(1.928, new ShooterStateData(HoodPositions.STOW.getPosition(), 24, 0.0));
-        SHOOTER_MAP.put(2.321, new ShooterStateData(Units.Rotations.of(0.07), 25, 0.0));
-        SHOOTER_MAP.put(2.419, new ShooterStateData(Units.Rotations.of(0.09), 25.5, 0.0));
-        SHOOTER_MAP.put(2.615, new ShooterStateData(Units.Rotations.of(0.1), 27, 0.0));
-        SHOOTER_MAP.put(2.711, new ShooterStateData(Units.Rotations.of(0.14), 27, 0.0));
-        SHOOTER_MAP.put(2.882, new ShooterStateData(Units.Rotations.of(0.2), 26.7, 0.0));
-        SHOOTER_MAP.put(3.102, new ShooterStateData(Units.Rotations.of(0.3), 27.5, 0.0));
-        SHOOTER_MAP.put(3.363, new ShooterStateData(Units.Rotations.of(0.4), 27.7, 0.0));
-        SHOOTER_MAP.put(3.902, new ShooterStateData(Units.Rotations.of(0.5), 28.5, 0.0));
+        SHOOTER_MAP.put(1.928, new ShooterStateData(HoodPositions.STOW.getPosition(), 24, 1.01));
+        SHOOTER_MAP.put(2.321, new ShooterStateData(Units.Rotations.of(0.07), 25, 0.89));
+        SHOOTER_MAP.put(2.419, new ShooterStateData(Units.Rotations.of(0.09), 25.5, 1.02));
+        SHOOTER_MAP.put(2.615, new ShooterStateData(Units.Rotations.of(0.1), 27, 0.94));
+        SHOOTER_MAP.put(2.711, new ShooterStateData(Units.Rotations.of(0.14), 27, 1.04));
+        SHOOTER_MAP.put(2.882, new ShooterStateData(Units.Rotations.of(0.2), 26.7, 0.96));
+        SHOOTER_MAP.put(3.102, new ShooterStateData(Units.Rotations.of(0.3), 27.5, 0.94));
+        SHOOTER_MAP.put(3.363, new ShooterStateData(Units.Rotations.of(0.4), 27.7, 1.02));
+        SHOOTER_MAP.put(3.902, new ShooterStateData(Units.Rotations.of(0.5), 28.5, 1.04));
     }
 
     public static final InterpolatingTreeMap<Double, ShooterStateData> SHUTTLE_MAP =

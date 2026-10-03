@@ -37,6 +37,7 @@ public class AutoCommands {
     private final Intake intake;
     private final LinSlide linSlide;
     private final Shooter shooter;
+    private final BumpCorrection bumpCorrection;
 
     public AutoCommands(
             CommandSwerveDrivetrain drivetrain,
@@ -53,6 +54,8 @@ public class AutoCommands {
         this.intake = intake;
         this.linSlide = linSlide;
         this.shooter = shooter;
+
+        bumpCorrection = new BumpCorrection(drivetrain);
 
         NamedCommands.registerCommand("rollIn", rollIn());
         NamedCommands.registerCommand("popLintake", popLintake());
@@ -153,6 +156,10 @@ public class AutoCommands {
                                 .withVelocityX(velocity)))
                         .until(() -> drivetrain.getState().Pose.getMeasureX().isNear(pose.getMeasureX(), tolerance)
                                 && drivetrain.getState().Pose.getMeasureY().isNear(pose.getMeasureY(), tolerance)));
+    }
+
+    public Command correction() {
+        return bumpCorrection.correction(0.5);
     }
 
     // Autos
@@ -306,6 +313,7 @@ public class AutoCommands {
                         shoot().withTimeout(3.5),
                         hoodDown(),
                         followPathAndIntake(cheesy3, 0.5),
+                        correction().until(() -> drivetrain.getState().Pose.getX() < 3),
                         shoot());
         auto = new PathPlannerAuto(cmd);
         return auto;
