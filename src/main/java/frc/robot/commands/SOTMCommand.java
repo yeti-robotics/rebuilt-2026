@@ -27,8 +27,6 @@ public class SOTMCommand extends Command {
         this.target = target;
     }
 
-
-
     @Override
     public void execute() {
         Pose2d currentPose = drive.getState().Pose;
