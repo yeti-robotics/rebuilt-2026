@@ -16,6 +16,7 @@ import static frc.robot.subsystems.indexer.IndexerConfigsBeta.TEST_INDEXER_SPEED
 import com.ctre.phoenix6.swerve.SwerveModule;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.*;
 import edu.wpi.first.wpilibj.GenericHID;
@@ -244,9 +245,9 @@ public class RobotContainer {
      */
     private void configureRealBindings() {
         drive.setDefaultCommand(drive.applyRequest(() -> driveRequest
-                .withVelocityX(-controller.getLeftY() * TunerConstantsBeta.kSpeedAt12Volts.magnitude())
-                .withVelocityY(-controller.getLeftX() * TunerConstantsBeta.kSpeedAt12Volts.magnitude())
-                .withRotationalRate(-controller.getRightX() * TunerConstantsBeta.MaFxAngularRate)));
+                .withVelocityX(MathUtil.applyDeadband(-controller.getLeftY(), 0.05) * TunerConstantsBeta.kSpeedAt12Volts.magnitude())
+                .withVelocityY(MathUtil.applyDeadband(-controller.getLeftX(), 0.05) * TunerConstantsBeta.kSpeedAt12Volts.magnitude())
+                .withRotationalRate(MathUtil.applyDeadband(-controller.getRightX(), 0.05) * TunerConstantsBeta.MaFxAngularRate)));
 
         controller.start().onTrue(runOnce(drive::seedFieldCentric, drive));
 
