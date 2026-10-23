@@ -245,9 +245,12 @@ public class RobotContainer {
      */
     private void configureRealBindings() {
         drive.setDefaultCommand(drive.applyRequest(() -> driveRequest
-                .withVelocityX(MathUtil.applyDeadband(-controller.getLeftY(), 0.05) * TunerConstantsBeta.kSpeedAt12Volts.magnitude())
-                .withVelocityY(MathUtil.applyDeadband(-controller.getLeftX(), 0.05) * TunerConstantsBeta.kSpeedAt12Volts.magnitude())
-                .withRotationalRate(MathUtil.applyDeadband(-controller.getRightX(), 0.05) * TunerConstantsBeta.MaFxAngularRate)));
+                .withVelocityX(MathUtil.applyDeadband(-controller.getLeftY(), 0.05)
+                        * TunerConstantsBeta.kSpeedAt12Volts.magnitude())
+                .withVelocityY(MathUtil.applyDeadband(-controller.getLeftX(), 0.05)
+                        * TunerConstantsBeta.kSpeedAt12Volts.magnitude())
+                .withRotationalRate(
+                        MathUtil.applyDeadband(-controller.getRightX(), 0.05) * TunerConstantsBeta.MaFxAngularRate)));
 
         controller.start().onTrue(runOnce(drive::seedFieldCentric, drive));
 
