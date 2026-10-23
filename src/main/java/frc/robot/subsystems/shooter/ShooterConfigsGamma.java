@@ -53,7 +53,7 @@ public class ShooterConfigsGamma {
             .withMotionMagic(MOTION_MAGIC_CONFIGS)
             .withMotorOutput(new MotorOutputConfigs().withInverted(InvertedValue.Clockwise_Positive))
             .withCurrentLimits(
-                    new CurrentLimitsConfigs().withSupplyCurrentLimit(65).withSupplyCurrentLimitEnable(true));
+                    new CurrentLimitsConfigs().withSupplyCurrentLimit(26).withSupplyCurrentLimitEnable(true));
 
     static final TalonFXConfiguration EMPTY_MOTOR_CONFIGS = new TalonFXConfiguration()
             .withFeedback(new FeedbackConfigs()
