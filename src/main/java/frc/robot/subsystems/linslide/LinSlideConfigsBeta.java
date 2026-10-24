@@ -51,7 +51,7 @@ public class LinSlideConfigsBeta {
                     .withReverseSoftLimitThreshold(0.1228)
                     .withReverseSoftLimitEnable(true)
                     .withForwardSoftLimitEnable(true)
-                    .withForwardSoftLimitThreshold(1.398682))
+                    .withForwardSoftLimitThreshold(1.6400000953674316))
             .withCurrentLimits(new CurrentLimitsConfigs()
                     .withStatorCurrentLimit(40)
                     .withSupplyCurrentLimit(70)
